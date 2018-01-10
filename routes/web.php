@@ -15,7 +15,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::group(['prefix' => 'backoffice'], function () {
 	Route::resource( 'firm', 'FirmController' );
  
 });
+
+Auth::routes();
+
+Route::get('/', 'UserController@index')->name('home');
+
+Route::resource('users','UserController');
+
+Route::resource('roles','RoleController');
+
+Route::resource('permissions','PermissionController');
+
