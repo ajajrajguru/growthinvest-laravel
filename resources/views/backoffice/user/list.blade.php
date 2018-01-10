@@ -11,27 +11,24 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Firms</div>
+                <div class="panel-heading">{{ $userType}}</div>
 
                 <div class="panel-body">
-                    <table id="datatable-firms" class="table table-striped firms-table" cellspacing="0" width="100%">
+                    <table id="datatable-users" class="table table-striped users-table" cellspacing="0" width="100%">
                        <thead>
                           
                           <tr>
                              <th width="10%"  >
-                                Logo
+                                Name
                              </th>
                              <th width="20%"  >
-                                Firm Name
+                                Email
                              </th>
                              <th width="20%"  >
-                                Firm Type
+                                Role
                              </th>
                              <th width="20%" >
-                                Parent Firm
-                             </th>
-                             <th width="20%"  >
-                                Platform GI Code
+                                 Firm
                              </th>
                              <th width="10%"  >
                                 Action
@@ -41,27 +38,24 @@
                     
                        </thead>
                        <tbody>
-                            @foreach($firms as $firm)
+                            @foreach($users as $user)
                                 <tr >
-                                    <td>  </td>
                                     <td >
-                                     {{  $firm->name}}
+                                     {{  $user->first_name.' '.$user->last_name }}
                                     </td>
                                     <td >
-                                    <div>{{  $firm->firmType()->name }}</div>
+                                    <div>{{  $user->email }}</div>
                                     </td>
                                     <td >
-                                    {{  (!empty($firm->getParentFirm())) ? $firm->getParentFirm()->name :'' }}
+                                    {{    $user->roles()->pluck('name')->implode(' ')  }}
                                     </td>
                                     <td>
-                                    {{  $firm->gi_code }}
+                                    {{   (!empty($user->firm))?$user->firm->name:'' }}
                                     </td>
                                     <td>
                                     <select data-id="78523" class="firm_actions">
                                     <option>--select--</option>
-                                    <option value="view_firm">View Firm Details</option>
-                                    <option value="view_wm_commissions">View Investment Clients</option>
-                                    <option value="view_introducer_commissions">View Business Clients</option>
+                                    <option value="edit-intermediary">Edit</option>
                                     </select>
                                     </td>
 

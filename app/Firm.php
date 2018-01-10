@@ -16,6 +16,11 @@ class Firm extends Model
     	return $firmTypes;
     }
 
+    public function users()
+    {
+        return $this->hasMany('App\User');
+    }
+
     public function firmType(){
     	$typeId = $this->type;
     	$firmType = Defaults::find($typeId);

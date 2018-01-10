@@ -2,16 +2,16 @@
 
 namespace App;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Role;
+use App\User;
 use Spatie\Permission\Traits\HasRoles;
-use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-    use HasRoles;
-    use HasApiTokens;
+    use Notifiable, HasRoles;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,8 +30,34 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function setPasswordAttribute($password)
+    public function firm()
     {
-        $this->attributes['password'] = bcrypt($password);
+        return $this->belongsTo('App\Firm', 'firm_id');
+    }
+
+    public function getIntermidiateUsers($cond=[]){
+        $users = User::join('model_has_roles', function ($join) {
+                        $join->on('users.id', '=', 'model_has_roles.model_id')
+                             ->where('model_has_roles.model_type', 'App\User');
+                    })->join('roles', function ($join) {
+                        $join->on('model_has_roles.role_id', '=', 'roles.id')
+                             ->where('roles.name', 'yet_to_be_approved_intermediary');
+                    })->where($cond)->get();
+
+        return $users; 
+    }
+
+
+    public function allUsers($cond=[]){
+        $users = User::join('model_has_roles', function ($join) {
+                        $join->on('users.id', '=', 'model_has_roles.model_id')
+                             ->where('model_has_roles.model_type', 'App\User');
+                    })->join('roles', function ($join) {
+                        $join->on('model_has_roles.role_id', '=', 'roles.id')
+                             ->where('roles.name','!=', 'yet_to_be_approved_intermediary');
+                    })->where($cond)->select('users.*')->get();
+
+        return $users; 
+      
     }
 }

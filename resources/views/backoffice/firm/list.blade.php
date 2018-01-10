@@ -18,7 +18,7 @@
                        <thead>
                           
                           <tr>
-                             <th width="10%"  >
+                             <th width="10%" class="no-sort" >
                                 Logo
                              </th>
                              <th width="20%"  >
