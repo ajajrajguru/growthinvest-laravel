@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'backoffice'], function () {
+	Route::resource( 'firm', 'FirmController' );
+ 
+});
