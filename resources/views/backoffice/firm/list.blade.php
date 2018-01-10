@@ -1,11 +1,20 @@
 @extends('layouts.backoffice')
 
-
+@section('js')
+  @parent
+ 
+  <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+ 
+@endsection
 @section('backoffice-content')
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-        <table id="datatable-firms" class="table table-striped firms-table" cellspacing="0" width="100%">
+            <div class="panel panel-default">
+                <div class="panel-heading">Firms</div>
+
+                <div class="panel-body">
+                    <table id="datatable-firms" class="table table-striped firms-table" cellspacing="0" width="100%">
                        <thead>
                           
                           <tr>
@@ -61,21 +70,9 @@
                           
                        </tbody>
                     </table>
-            <div class="panel panel-default">
-                <div class="panel-heading">Firms</div>
-
-                <div class="panel-body">
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
-
-@section('js')
-  @parent
- 
-  <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
- 
 @endsection
