@@ -15,12 +15,13 @@
         <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
+ 
             ]) !!};
         </script>
         <title>{{ (isset($pageTitle)) ? $pageTitle : config('app.name', 'Growthinvest') }}</title>
     </head>
     <body>
-         
+        @include ('layouts.navigation-menu') 
         <!-- The part of the page that begins to differ between templates -->
         @yield('content')
 
@@ -33,3 +34,4 @@
         @yield('js')
     </body>
 </html>
+ 
