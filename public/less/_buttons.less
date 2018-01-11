@@ -1,0 +1,20 @@
+.btn{
+	font-size: 0.9rem;
+}
+
+.btn-primary{
+	background-color: @brand-primary;
+	border-color: @brand-primary;
+	&:hover{
+		background-color: darken(@brand-primary, 10%);
+		border-color: darken(@brand-primary, 10%);
+	}
+	&:focus, &:active{
+		background-color: darken(@brand-primary, 12%);
+		// border-color: darken(@brand-primary, 10%);
+	}
+}
+
+.btn-link{
+	color: @brand-primary;
+}

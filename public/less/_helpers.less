@@ -1,0 +1,24 @@
+.text-primary{
+	color: @brand-primary !important;
+}
+
+.font-weight-medium{
+	font-weight: 600;
+}
+
+.bg-white{
+	background-color: #fff;
+}
+
+.border-gray{
+	border-color: #ccc;
+}
+
+.grayscale{
+	filter: grayscale(100%);
+	&.w-hover-color{
+		&:hover{
+			filter: grayscale(0);
+		}
+	}
+}

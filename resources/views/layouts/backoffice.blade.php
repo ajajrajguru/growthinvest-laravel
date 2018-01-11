@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@section('title', 'Admin-Dashboard')
 @section('css')
     <!-- Datatables -->
     <link href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
@@ -16,7 +15,7 @@
 
 @section('content')
 <!-- content -->
- 
+ 	<div style="position: relative; background-position: center center; background-size: cover; background-image: url({{ asset('img/London-skyline.jpg') }}); height:470px"></div>
 
     @yield('backoffice-content')
      
