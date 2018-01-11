@@ -49,8 +49,14 @@ class UserController extends Controller {
             $users = $user->allUsers(); 
         }
 
+        $breadcrumbs = [];
+        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
+        $breadcrumbs[] = ['url'=>'', 'name'=> $userType];
+
         $data['users'] = $users;
         $data['userType'] = $userType;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle'] = $userType;
 
         return view('backoffice.user.list')->with($data);
 

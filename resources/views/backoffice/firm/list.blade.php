@@ -10,6 +10,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+            @php
+            echo View::make('breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
+            @endphp
             <div class="panel panel-default">
                 <div class="panel-heading">Firms</div>
 
