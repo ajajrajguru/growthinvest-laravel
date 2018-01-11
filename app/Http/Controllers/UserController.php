@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Firm;
 use Auth;
 
 //Importing laravel-permission models
@@ -60,6 +61,19 @@ class UserController extends Controller {
 
         return view('backoffice.user.list')->with($data);
 
+    }
+
+    public function addUser(){
+        
+        $firmsList = getModelList('App\Firm'); 
+        $firms =$firmsList['list'];
+         
+        $data['roles'] = Role::get();
+        $data['county'] = [];
+        $data['country'] = [];
+        $data['company_description'] = [];
+        $data['firms'] = $firms;
+        return view('backoffice.user.add')->with($data);
     }
 
     /**

@@ -27,3 +27,37 @@ function getModelList($modelName,$filters=[],$skip=0,$length=0,$orderDataBy=[]){
     return ['listCount' =>$listCount,'list'=>$list ];
 
 }
+
+ 
+function hasAccess($uriPermission){
+    $guard = $uriPermission['guard'];
+    $permissions = $uriPermission['permissions'];
+    $access = false; 
+ 
+    if(!empty($permissions)){    //check for permission
+
+        if(!hasPermission($permissions,$guard))
+            $access = false;
+        else
+            $access = true;
+ 
+    }
+     
+     
+    return $access;
+}
+
+/***
+checks if user has permission 
+$uriPermission : array of permission
+**/
+
+function hasPermission($permissions,$guard){
+
+    if(Auth::check() && Auth::user()->hasAnyPermission($permissions))
+        return true;
+    else
+        return false;
+}
+ 
+ 

@@ -16,9 +16,10 @@ Route::get('/', function () {
 });
 
 
-Route::group(['middleware' => ['auth'], 'prefix' => 'backoffice'], function () {
+Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice'], function () {
 	Route::resource( 'firm', 'FirmController' );
 	Route::get('user/{usertype}','UserController@getUsers');
+	Route::get('user/add-user','UserController@addUser');
  
 });
 
