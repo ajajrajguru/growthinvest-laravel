@@ -14,8 +14,8 @@ class FirmController extends Controller
      */
     public function index()
     {
-        $firms = Firm::all(); 
-
+        $firm    = new Firm;
+        $firms = getModelList('App\Firm'); 
 
         $breadcrumbs = [];
         $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
