@@ -1,0 +1,62 @@
+.progress-indicator{
+	display: flex;
+	position: relative;
+	padding: 0;
+	&:before{
+		content: "";
+	    border-top: 1px solid @gray;
+	    position: absolute;
+	    width: 100%;
+	    display: block;
+	    left: 0;
+	    bottom: 10px;
+	}
+
+	li{
+		flex: 1;
+		position: relative;
+		padding: 0 .625rem 1.75rem;
+		list-style: none;
+		color: @gray;
+		text-align: center;
+		font-weight: 700;
+
+		a{
+			display: block;
+			position: relative;
+			text-transform: uppercase;
+			font-weight: bold;
+			color: darken(@gray, 25%);
+			&:hover{
+				text-decoration: none;
+			}
+		}
+
+		.bubble{
+			&:after{
+				content: "";
+				display: block;
+				clear: both;
+				position: absolute;
+				bottom: .125rem;
+				left: 50%;
+				width: 1.2rem;
+				height: 1.2rem;
+				margin-left: -.46875rem;
+				background: @gray;
+				border-radius: 50%;
+			}
+		}
+
+		&.active{
+			a{
+				color: @brand-primary;
+			}
+			.bubble{
+				&:after{
+					background-color: @brand-primary;
+				}
+			}
+		}
+	}
+}

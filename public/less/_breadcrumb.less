@@ -1,0 +1,17 @@
+.breadcrumb{
+	background-color: transparent;
+	padding: 0;
+}
+.breadcrumb-item{
+	font-weight: 600;
+	&+.breadcrumb-item::before{
+		font-family: FontAwesome;
+		content: "\f0da";
+		color: darken(@gray, 5%);
+	}
+}
+
+// .breadcrumb-item+.breadcrumb-item:before{
+// 	font-family: FontAwesome;
+// 	content: "\f0da";
+// }

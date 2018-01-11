@@ -15,6 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice'], function () {
+	Route::resource( 'firm', 'FirmController' );
+	Route::get('user/{usertype}','UserController@getUsers');
+	Route::get('user/add-user','UserController@addUser');
+ 
+});
+
 Auth::routes();
 
 Route::get('/', 'UserController@index')->name('home');
@@ -24,3 +32,4 @@ Route::resource('users','UserController');
 Route::resource('roles','RoleController');
 
 Route::resource('permissions','PermissionController');
+

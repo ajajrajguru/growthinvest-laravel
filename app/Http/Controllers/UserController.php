@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Firm;
 use Auth;
 
 //Importing laravel-permission models
@@ -17,7 +18,7 @@ use Session;
 class UserController extends Controller {
 
     public function __construct() {
-        $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
+        // $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
 
     /**
@@ -29,6 +30,50 @@ class UserController extends Controller {
     //Get all users and pass it to the view
         $users = User::all(); 
         return view('users.index')->with('users', $users);
+    }
+
+
+    /**
+    manage users
+    -get all users
+    -get intermidiateusers
+    */
+    public function getUsers($userType='all'){
+
+        $user = new User;
+        if($userType=='intermidiate'){
+            $userType = 'Intermidiate User';
+            $users = $user->getIntermidiateUsers(); 
+        }
+        else{
+            $userType = 'User';
+            $users = $user->allUsers(); 
+        }
+
+        $breadcrumbs = [];
+        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
+        $breadcrumbs[] = ['url'=>'', 'name'=> $userType];
+
+        $data['users'] = $users;
+        $data['userType'] = $userType;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle'] = $userType;
+
+        return view('backoffice.user.list')->with($data);
+
+    }
+
+    public function addUser(){
+        
+        $firmsList = getModelList('App\Firm'); 
+        $firms =$firmsList['list'];
+         
+        $data['roles'] = Role::get();
+        $data['county'] = [];
+        $data['country'] = [];
+        $data['company_description'] = [];
+        $data['firms'] = $firms;
+        return view('backoffice.user.add')->with($data);
     }
 
     /**
