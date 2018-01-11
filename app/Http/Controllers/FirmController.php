@@ -14,7 +14,6 @@ class FirmController extends Controller
      */
     public function index()
     {
-        $firm    = new Firm;
         $firms = getModelList('App\Firm'); 
 
         $breadcrumbs = [];
