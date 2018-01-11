@@ -10,6 +10,8 @@ class Firm extends Model
 {
     protected $table = 'firms';
 
+    // protected $guard_name = 'backoffice';
+
     public function getFirmTypes(){
     	$firmTypes = Defaults::where('type','firm_type')->where('status',1)->get();
 

@@ -25,9 +25,9 @@ class UserPermission
         $routePermission =[
             'backoffice' => 
                 [
-                    'backoffice/firm'=>['View Firms'], 
-                    'backoffice/user/{usertype}'=>['All Users'],
-                    'backoffice/user/add-user'=>['Add User'],
+                    'backoffice/firm'=>['view-firms'], 
+                    'backoffice/user/{usertype}'=>['all-users'],
+                    'backoffice/user/add-user'=>['add-User'],
                 ],
             'frontoffice' => 
                 [
