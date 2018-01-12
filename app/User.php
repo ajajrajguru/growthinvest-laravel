@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use Notifiable, HasRoles;
 
-    protected $guard_name = 'backoffice';
+    // protected $guard_name = 'backoffice';
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +35,11 @@ class User extends Authenticatable
     public function firm()
     {
         return $this->belongsTo('App\Firm', 'firm_id');
+    }
+
+    public function userData()
+    {
+        return $this->hasMany('App\UserData');
     }
 
     public function getIntermidiateUsers($cond=[]){
@@ -62,4 +67,6 @@ class User extends Authenticatable
         return $users; 
       
     }
+
+
 }
