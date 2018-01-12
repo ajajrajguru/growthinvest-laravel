@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Firm;
+use App\UserData;
 use Auth;
 
 //Importing laravel-permission models
@@ -63,17 +64,113 @@ class UserController extends Controller {
 
     }
 
-    public function addUser(){
-        
+    public function addUserStepOne(){
+        $user = new User;
         $firmsList = getModelList('App\Firm'); 
         $firms =$firmsList['list'];
+
+        $breadcrumbs = [];
+        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
+        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
          
         $data['roles'] = Role::get();
-        $data['county'] = [];
-        $data['country'] = [];
-        $data['company_description'] = [];
+        $data['countyList'] = getCounty();
+        $data['countryList'] = getCountry();
+        $data['companyDescription'] = getCompanyDescription();
+        $data['user'] = $user;
         $data['firms'] = $firms;
-        return view('backoffice.user.add')->with($data);
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle'] = 'Add User';
+        return view('backoffice.user.step-one')->with($data);
+    }
+
+    public function saveUserStepOne(Request $request){
+
+        $requestData = $request->all();
+        $firstName = $requestData['first_name'];
+        $lastName = $requestData['last_name'];
+        $email = $requestData['email'];
+        $telephone = $requestData['telephone'];
+        $password = $requestData['password'];
+        $companyName = $requestData['company_name'];
+        $companyWebsite = $requestData['company_website'];
+        $addressLine1 = $requestData['address_line_1'];
+        $addressLine2 = $requestData['address_line_2'];
+        $townCity = $requestData['town_city'];
+        $county = $requestData['county'];
+        $postcode = $requestData['postcode'];
+        $country = $requestData['country'];
+        $companyFcaNumber = $requestData['company_fca_number'];
+        $companyDescription = $requestData['company_description'];
+        $roles = $requestData['roles'];
+        $firm = $requestData['firm'];
+
+        $giArgs=array('prefix' => "GIIM",'min'=>20000001,'max' => 30000000);
+
+        $user = new User;
+        $giCode = generateGICode($user,'gi_code',$giArgs);
+        $user->login_id = $email;
+        $user->avatar = '';
+        $user->title = '';
+        $user->email = $email;
+        $user->first_name = $firstName;
+        $user->last_name = $lastName;
+        $user->password = $password;
+        $user->status = 0;
+        $user->registered_by = Auth::user()->id;
+        $user->telephone_no = $telephone;
+        $user->address_1 = $addressLine1;
+        $user->address_2 = $addressLine2;
+        $user->city = $townCity;
+        $user->postcode = $postcode;
+        $user->county = $county;
+        $user->country = $country;
+        $user->firm_id = $firm;
+        $user->gi_code = $giCode;
+        $user->save();
+
+        $userId = $user->id;
+
+        $userDetails = ['company'=>$companyName,'website'=>$companyWebsite,'companyfca'=>$companyFcaNumber,'typeaccount'=>$companyDescription]; 
+
+        $userData = new UserData;
+        $userData->user_id = $userId;
+        $userData->data_key = 'additional_info';
+        $userData->data_value = $userDetails;
+        $userData->save();
+
+        
+
+        Session::flash('success_message','User details saved successfully.');
+        return redirect(url('/user/'.$giCode.'/step-one')); 
+
+ 
+    }
+
+    public function userStepOneData($giCode){
+        $user = User::where('gi_code',$giCode)->first();
+
+        if(empty($user)){
+            abort(404);
+        }
+
+        $firmsList = getModelList('App\Firm'); 
+        $firms =$firmsList['list'];
+
+        $breadcrumbs = [];
+        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
+        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
+         
+        $data['user'] = $user;
+        $data['roles'] = Role::get();
+        $data['countyList'] = getCounty();
+        $data['countryList'] = getCountry();
+        $data['companyDescription'] = getCompanyDescription();
+        $data['firms'] = $firms;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle'] = 'Add User';
+        return view('backoffice.user.step-one')->with($data);
+
     }
 
     /**

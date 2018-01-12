@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Firm', 'firm_id');
     }
 
+    public function userData()
+    {
+        return $this->hasMany('App\UserData');
+    }
+
     public function getIntermidiateUsers($cond=[]){
         $users = User::join('model_has_roles', function ($join) {
                         $join->on('users.id', '=', 'model_has_roles.model_id')
@@ -62,4 +67,6 @@ class User extends Authenticatable
         return $users; 
       
     }
+
+
 }

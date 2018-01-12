@@ -27,7 +27,9 @@ class UserPermission
                 [
                     'backoffice/firm'=>['view-firms'], 
                     'backoffice/user/{usertype}'=>['all-users'],
-                    'backoffice/user/add-user'=>['add-User'],
+                    'backoffice/user/add/step-one'=>['add-user'],
+                    'backoffice/user/{giCode}/step-one'=>['add-user'],
+                    'backoffice/user/save-step-one'=>['add-user'],
                 ],
             'frontoffice' => 
                 [
