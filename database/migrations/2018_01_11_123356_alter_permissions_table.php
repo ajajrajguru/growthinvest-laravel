@@ -15,15 +15,15 @@ class AlterPermissionsTable extends Migration
      */
     public function up()
     {
-        // Schema::table('roles', function (Blueprint $table) {
-        //     $table->string('display_name');
-        //     $table->string('type');
-        // });
+        Schema::table('roles', function (Blueprint $table) {
+            $table->string('display_name');
+            $table->string('type');
+        });
 
-        // Schema::table('permissions', function (Blueprint $table) {
-        //     $table->string('display_name');
-        //     $table->string('type');
-        // });
+        Schema::table('permissions', function (Blueprint $table) {
+            $table->string('display_name');
+            $table->string('type');
+        });
 
         $roles = Role::get(); //Get all roles
 

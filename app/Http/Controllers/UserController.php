@@ -81,6 +81,7 @@ class UserController extends Controller {
         $data['firms'] = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle'] = 'Add User';
+        $data['mode'] = 'edit';
         return view('backoffice.user.step-one')->with($data);
     }
 
@@ -102,8 +103,9 @@ class UserController extends Controller {
         $country = $requestData['country'];
         $companyFcaNumber = $requestData['company_fca_number'];
         $companyDescription = $requestData['company_description'];
-        $roles = $requestData['roles'];
+        $role = $requestData['roles'];
         $firm = $requestData['firm'];
+        $isSuspended = ($requestData['is_suspended']) ? 1 :0 ;
 
         $giArgs=array('prefix' => "GIIM",'min'=>20000001,'max' => 30000000);
 
@@ -127,6 +129,8 @@ class UserController extends Controller {
         $user->country = $country;
         $user->firm_id = $firm;
         $user->gi_code = $giCode;
+        $user->deleted = 0;
+        $user->suspended = $isSuspended;
         $user->save();
 
         $userId = $user->id;
@@ -139,15 +143,16 @@ class UserController extends Controller {
         $userData->data_value = $userDetails;
         $userData->save();
 
-        
+        //assign role
+        $user->assignRole($role);
 
         Session::flash('success_message','User details saved successfully.');
-        return redirect(url('/user/'.$giCode.'/step-one')); 
+        return redirect(url('backoffice/user/'.$giCode.'/step-one')); 
 
  
     }
 
-    public function userStepOneData($giCode){
+    public function userStepOneData($giCode){ 
         $user = User::where('gi_code',$giCode)->first();
 
         if(empty($user)){
@@ -160,8 +165,9 @@ class UserController extends Controller {
         $breadcrumbs = [];
         $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
         $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
-         
+        $userData = $user->userAdditionalInfo(); 
         $data['user'] = $user;
+        $data['userData'] = $userData;
         $data['roles'] = Role::get();
         $data['countyList'] = getCounty();
         $data['countryList'] = getCountry();
@@ -169,6 +175,7 @@ class UserController extends Controller {
         $data['firms'] = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle'] = 'Add User';
+        $data['mode'] = 'edit';
         return view('backoffice.user.step-one')->with($data);
 
     }
