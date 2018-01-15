@@ -15,14 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffice'], function () {
-    Route::resource('firm', 'FirmController');
-    Route::get('user/add/step-one', 'UserController@addUserStepOne');
-    Route::get('user/{giCode}/step-one', 'UserController@userStepOneData');
-    Route::post('user/save-step-one', 'UserController@saveUserStepOne');
-    Route::get('user/{giCode}/step-two', 'UserController@userStepTwoData');
-    Route::get('user/{usertype}', 'UserController@getUsers');
-
  
 Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice'], function () {
 	Route::resource( 'firm', 'FirmController' );
@@ -33,7 +25,6 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post('user/save-step-two','UserController@saveUserStepTwo');
 	Route::get('user/{usertype}','UserController@getUsers');
 	
- 
  
 });
 
