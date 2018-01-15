@@ -42,6 +42,26 @@ class User extends Authenticatable
         return $this->hasMany('App\UserData');
     }
 
+    public function userAdditionalInfo()
+    {
+        $addionalData = $this->userData()->where('data_key','additional_info')->first();
+        return $addionalData;
+    }
+
+    public function userIntermidaiteCompInfo()
+    {
+        $addionalData = $this->userData()->where('data_key','intermediary_company_info')->first();
+        return $addionalData;
+    }
+
+    public function taxstructureInfo()
+    {
+        $addionalData = $this->userData()->where('data_key','taxstructure_info')->first();
+        return $addionalData;
+    }
+
+
+
     public function getIntermidiateUsers($cond=[]){
         $users = User::join('model_has_roles', function ($join) {
                         $join->on('users.id', '=', 'model_has_roles.model_id')

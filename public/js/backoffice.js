@@ -56,8 +56,20 @@
           }
         ]
       });
-      return initSerachForTable(usersTable);
+      initSerachForTable(usersTable);
     }
+    $(document).on('click', '.editUserBtn', function() {
+      $('.editmode').removeClass('d-none');
+      $('.viewmode').addClass('d-none');
+      $(this).addClass('d-none');
+      return $('.cancelUpdateBtn').removeClass('d-none');
+    });
+    return $(document).on('click', '.cancelUpdateBtn', function() {
+      $('.editmode').addClass('d-none');
+      $('.viewmode').removeClass('d-none');
+      $(this).addClass('d-none');
+      return $('.editUserBtn').removeClass('d-none');
+    });
   });
 
 }).call(this);

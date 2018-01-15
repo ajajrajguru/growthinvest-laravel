@@ -14,6 +14,7 @@
     "autosize": "^4.0.0",
     "jquery": "^3.2.1",
     "datatables.net-dt": "^3.2.2",
-    "datatables.net": "^1.10.16"
+    "datatables.net": "^1.10.16",
+    "parsleyjs": "^2.8.0"
   }
 }
