@@ -56,7 +56,7 @@ use Spatie\Permission\Models\Permission;
 Route::get('/test-cust-register-user', function () {
     //$credentials = Input::only('login_id', 'password','email','first_name');
 
-    $credentials             = array('login_id' => 'paragredkar@gmail.com', 'password' => 'temp123', 'email' => 'paragredkar@gmail.com', 'first_name' => 'parag');
+    $credentials             = array('login_id' => 'parag@ajency.in', 'password' => 'temp123', 'email' => 'parag@ajency.in', 'first_name' => 'parag');
     $credentials['password'] = Hash::make($credentials['password']);
     try {
         $user  = App\User::create($credentials);
