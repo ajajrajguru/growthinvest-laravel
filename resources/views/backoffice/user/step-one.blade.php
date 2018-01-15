@@ -37,8 +37,10 @@
                     <h6 class="mt-0">Step 1: <span class="text-primary">Intermediary Registration</span></h6>
                 </div>
                 <div class="col-6">
+                @if($user->id)
                     <a href="javascript:void(0)" class="btn btn-primary editUserBtn">Edit Details</a>
                     <a href="javascript:void(0)" class="btn btn-primary d-none cancelUpdateBtn">Cancel Updates</a>
+                @endif
                 </div>
             </div>
 

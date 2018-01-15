@@ -120,7 +120,7 @@ class UserController extends Controller {
         $companyDescription = $requestData['company_description'];
         $role = $requestData['roles'];
         $firm = $requestData['firm'];
-        $isSuspended = ($requestData['is_suspended']) ? 1 :0 ;
+        $isSuspended = (isset($requestData['is_suspended'])) ? 1 :0 ;
         $giCode = $requestData['gi_code'];
 
         $giArgs=array('prefix' => "GIIM",'min'=>20000001,'max' => 30000000);
