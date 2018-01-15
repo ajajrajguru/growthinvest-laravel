@@ -1,5 +1,10 @@
 <?php
-
+/**
+generic method to fetch list of records from model
+$modelName : 'App/User';
+$filters: ['id'=>1]
+$orderDataBy: ['id'=>'desc']
+**/
 function getModelList($modelName,$filters=[],$skip=0,$length=0,$orderDataBy=[]){
 
     $model    = new $modelName;
@@ -28,7 +33,9 @@ function getModelList($modelName,$filters=[],$skip=0,$length=0,$orderDataBy=[]){
 
 }
 
- 
+/**
+check if provided permission has access to th user
+*/ 
 function hasAccess($uriPermission){
     $guard = $uriPermission['guard'];
     $permissions = $uriPermission['permissions'];
@@ -60,6 +67,7 @@ function hasPermission($permissions,$guard){
         return false;
 }
 
+ 
 function getCounty(){
     return ['Avon','Bedfordshire','Berkshire','Borders','Buckinghamshire','Cambridgeshire','Central','Cheshire','Cleveland','Clwyd','Cornwall','County Antrim','County Armagh','County Down','County Fermanagh','County Londonderry','County Tyrone','Cumbria','Derbyshire','Devon','Dorset','Dumfries and Galloway','Durham','Dyfed','East Sussex','Essex','Fife','Gloucestershire','Grampian','Greater Manchester','Gwent','Gwynedd County','Hampshire','Herefordshire','Hertfordshire','Highlands and Islands','Humberside','Isle of Wight','Kent','Lancashire','Leicestershire','Lincolnshire','London','Lothian','Merseyside','Mid Glamorgan','Norfolk','North Yorkshire','Northamptonshire','Northumberland','Nottinghamshire','Oxfordshire','Powys','Rutland','Shropshire','Somerset','South Glamorgan','South Yorkshire','Staffordshire','Strathclyde','Suffolk','Surrey','Tayside','Tyne and Wear','Warwickshire','West Glamorgan','West Midlands','West Sussex','West Yorkshire','Wiltshire','Worcestershire'];;
 }
@@ -72,26 +80,6 @@ function getCompanyDescription(){
     return [ "Wealth Manager","Accountant","Solicitor","Business Advisor","Investment Network","Financial Advisor"];
 }
 
-function createGIcode($args=array()){
-
-  $random_no=rand($args['min'],$args['max']);
-  $gi_key='gi_platform_code';
-  // $formatted_GI=$prefix.sprintf("%0".$length."d", $random_no);
-  $formatted_GI=$args['prefix'].$random_no;
-
-  $code_exists = checkIfmetavalueExists($args['type'],$gi_key, $formatted_GI);
-
-  if(!empty($code_exists)){
-      $code_exists=createGIcode($args);
-  }
-
-  if($args['type']=='user')  
-    update_user_meta($args['id'],$gi_key,$formatted_GI);
-  else
-    update_post_meta($args['id'],$gi_key,$formatted_GI);
-
-  return $formatted_GI;
-}
 
 /***
 generates unique GI code for the modal

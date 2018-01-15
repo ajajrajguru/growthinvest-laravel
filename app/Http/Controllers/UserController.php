@@ -38,6 +38,9 @@ class UserController extends Controller {
     manage users
     -get all users
     -get intermidiateusers
+    $userType : all ,intermidiate
+    breadcrumbs : Set breadcrumb structure for the listing
+    pageTitle : define page name
     */
     public function getUsers($userType='all'){
 
@@ -64,6 +67,11 @@ class UserController extends Controller {
 
     }
 
+    /**
+    get list of all required data to be populated in form
+    send empty user object to form in create mode
+    by default mode will be edit when user is created first time
+    */
     public function addUserStepOne(){
         $user = new User;
         $firmsList = getModelList('App\Firm'); 
@@ -85,6 +93,13 @@ class UserController extends Controller {
         return view('backoffice.user.step-one')->with($data);
     }
 
+
+    /**
+    common method to add and update data
+    check if user exist
+    if does not exist set GI code for user
+    assign role to the user, if already added delete previous and add new  
+    */
     public function saveUserStepOne(Request $request){
 
         $requestData = $request->all();
@@ -169,6 +184,11 @@ class UserController extends Controller {
  
     }
 
+    /**
+    $giCode - unique id generated for the user
+    get user using GI code
+    mode will be view since user is alredy created
+    */
     public function userStepOneData($giCode){ 
         $user = User::where('gi_code',$giCode)->first();
 
@@ -197,6 +217,10 @@ class UserController extends Controller {
 
     }
 
+     /**
+    $giCode - unique id generated for the user
+    get user using GI code
+    */
     public function userStepTwoData($giCode){ 
         $user = User::where('gi_code',$giCode)->first();
 

@@ -16,8 +16,8 @@ class UserPermission
 
         /**
     define permission set for each route and ui element
-    "admin_owner_auth_check" will include permission which checks if logged in user is admin or owner of the model
-    "normal_user_check" whill skip admin/owner check
+    group back office and front office URI and its permission
+    more then one permission can be added for URI
     **/
 
     public function routePermission(){
@@ -58,6 +58,10 @@ class UserPermission
         return ['guard'=>$guard,'permissions'=>$uriPermission];
     }
 
+    /**
+    checks if the user has permission to the current URI
+    if not then it redirects to 403 page
+    */
     public function handle($request, Closure $next)
     {
         $routePerrmissions = $this->routePermission();
