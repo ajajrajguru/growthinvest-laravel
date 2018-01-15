@@ -65,12 +65,19 @@
       $(this).addClass('d-none');
       return $('.cancelUpdateBtn').removeClass('d-none');
     });
-    return $(document).on('click', '.cancelUpdateBtn', function() {
+    $(document).on('click', '.cancelUpdateBtn', function() {
       $('.editmode').addClass('d-none');
       $('.reqField').addClass('d-none');
       $('.viewmode').removeClass('d-none');
       $(this).addClass('d-none');
       return $('.editUserBtn').removeClass('d-none');
+    });
+    return $('#giMenu').mmenu({
+      navbar: {
+        title: false
+      }
+    }, {
+      clone: true
     });
   });
 

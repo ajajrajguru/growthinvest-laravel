@@ -60,6 +60,7 @@ $(document).ready ->
     $(this).addClass('d-none');
     $('.editUserBtn').removeClass('d-none');
 
-
+  # Menu JS
+  $('#giMenu').mmenu { navbar: title: false }, clone: true
          
 
