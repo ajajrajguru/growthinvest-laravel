@@ -46,7 +46,7 @@ class LogSuccessfulLogin
         }
 
         $admin_menus = $this->getUserAdminMenus($user_permissions);
-        $dashboard_menus = $this->getUserDashboardMenus($user_roles,$user_permissions);
+        //$dashboard_menus = $this->getUserDashboardMenus($user_roles,$user_permissions);
 
         session(['user_menus' => array('admin' => $admin_menus)]);
     }
@@ -143,7 +143,7 @@ class LogSuccessfulLogin
     }
 
     public function noDashboardAccessIntermediary($user_roles,$user_permissions){
-        if(!in_array('manage_options',$user_permissions) &&  in_array('yet_to_be_approved_intermediary', $user_roles) {
+        if(!in_array('manage_options',$user_permissions) &&  in_array('yet_to_be_approved_intermediary', $user_roles) ) {
             return true;
         }
         return false;

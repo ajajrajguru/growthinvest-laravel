@@ -128,7 +128,7 @@ Route::get('/test-give-permission-to-role', function (Request $request) {
 
 
 
-	$permission = Permission::create(['name' => 'Administer roles & permissions']);
+	$permission = Permission::create(['name' => 'manage_options','display_name'=>'Manage Options','type'=>'backoffice']);
 	$role = Role::findByName('administrator');
 	$role->givePermissionTo('manage_options');
 
