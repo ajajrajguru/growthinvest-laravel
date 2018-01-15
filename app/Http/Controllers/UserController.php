@@ -106,11 +106,22 @@ class UserController extends Controller {
         $role = $requestData['roles'];
         $firm = $requestData['firm'];
         $isSuspended = ($requestData['is_suspended']) ? 1 :0 ;
+        $giCode = $requestData['gi_code'];
 
         $giArgs=array('prefix' => "GIIM",'min'=>20000001,'max' => 30000000);
 
-        $user = new User;
-        $giCode = generateGICode($user,'gi_code',$giArgs);
+
+        if($giCode == ''){
+            $user = new User;
+            $giCode = generateGICode($user,'gi_code',$giArgs);
+            $user->gi_code = $giCode;
+            $user->registered_by = Auth::user()->id;
+        }
+        else{
+            $user = User::where('gi_code',$giCode)->first();
+        }
+        
+
         $user->login_id = $email;
         $user->avatar = '';
         $user->title = '';
@@ -119,7 +130,6 @@ class UserController extends Controller {
         $user->last_name = $lastName;
         $user->password = $password;
         $user->status = 0;
-        $user->registered_by = Auth::user()->id;
         $user->telephone_no = $telephone;
         $user->address_1 = $addressLine1;
         $user->address_2 = $addressLine2;
@@ -128,7 +138,6 @@ class UserController extends Controller {
         $user->county = $county;
         $user->country = $country;
         $user->firm_id = $firm;
-        $user->gi_code = $giCode;
         $user->deleted = 0;
         $user->suspended = $isSuspended;
         $user->save();
@@ -137,13 +146,21 @@ class UserController extends Controller {
 
         $userDetails = ['company'=>$companyName,'website'=>$companyWebsite,'companyfca'=>$companyFcaNumber,'typeaccount'=>$companyDescription]; 
 
-        $userData = new UserData;
-        $userData->user_id = $userId;
-        $userData->data_key = 'additional_info';
+        $userData = $user->userAdditionalInfo(); 
+        if(empty($userData)){
+            $userData = new UserData;
+            $userData->user_id = $userId;
+            $userData->data_key = 'additional_info';
+        }     
+        
         $userData->data_value = $userDetails;
         $userData->save();
 
         //assign role
+        $roleName = $user->getRoleNames()->first(); 
+        if(!empty($user->getRoleNames())){
+            $user->removeRole($roleName);
+        }
         $user->assignRole($role);
 
         Session::flash('success_message','User details saved successfully.');
@@ -167,7 +184,7 @@ class UserController extends Controller {
         $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
         $userData = $user->userAdditionalInfo(); 
         $data['user'] = $user;
-        $data['userData'] = $userData;
+        $data['userData'] = (!empty($userData)) ? $userData->data_value : [];
         $data['roles'] = Role::get();
         $data['countyList'] = getCounty();
         $data['countryList'] = getCountry();
@@ -175,9 +192,106 @@ class UserController extends Controller {
         $data['firms'] = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle'] = 'Add User';
-        $data['mode'] = 'edit';
+        $data['mode'] = 'view';
         return view('backoffice.user.step-one')->with($data);
 
+    }
+
+    public function userStepTwoData($giCode){ 
+        $user = User::where('gi_code',$giCode)->first();
+
+        if(empty($user)){
+            abort(404);
+        }
+ 
+        $breadcrumbs = [];
+        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
+        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
+
+        $intermidiatData = $user->userIntermidaiteCompInfo(); 
+        $taxstructureInfo = $user->taxstructureInfo(); 
+        $data['user'] = $user;
+        $data['intermidiatData'] = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
+        $data['taxstructureInfo'] = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
+        $data['regulationTypes'] =  getRegulationTypes();
+        $data['registeredIndRange'] = getRegisteredIndRange();
+        $data['sources'] = getSource();
+       
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle'] = 'Add User';
+        $data['mode'] = 'view';
+        return view('backoffice.user.step-two')->with($data);
+
+    }
+
+    public function saveUserStepTwo(Request $request){
+
+        $requestData = $request->all(); 
+
+        $giCode = $requestData['gi_code'];
+        if($giCode == ''){
+            Session::flash('error_message','User details saved successfully.');
+            return redirect(url('backoffice/user/add/step-one')); 
+        }
+        else{
+            $user = User::where('gi_code',$giCode)->first();
+        }
+ 
+ 
+
+        $userId = $user->id;
+        $userDetails = [
+            'con_skype' => $requestData['contact_skype_id'],
+            'con_link' => $requestData['contact_linked_in'],
+            'con_fb' => $requestData['contact_facebook'],
+            'con_twit' => $requestData['contact_twitter'],
+            'position' => $requestData['contact_job_title'],
+            'fca_approved' => $requestData['contact_fca_regulation'],
+            'personal_fca' => $requestData['contact_registration_number'],
+            'telephonenumber' => $requestData['contact_telephone'],
+            'mobile' => $requestData['contact_mobile'],
+            'company_link' => $requestData['company_linkedin'],
+            'company_fb' => $requestData['company_facebook'],
+            'company_twit' => $requestData['company_twitter'],
+            'regulationtype' => $requestData['company_regulation_type'],
+            'reg_ind_cnt' => $requestData['company_reg_ind'],
+            'regulated_total_bus_inv_aum' => $requestData['company_estimate_asset_under_mgt'],
+            'source' => $requestData['about_platform'],
+            'source_cmts' => $requestData['additional_comments'],
+            'marketingmail' => (isset($requestData['marketing_email'])) ? 'yes' : 'no',
+            'marketingmail_partner' => (isset($requestData['marketing_mails_partners'])) ? 'yes' : 'no',
+            'interested_tax_struct' => $requestData['interested_tax_structure'],
+            'contact_email' => (isset($requestData['connect_email'])) ? 'yes' : 'no',
+            'contact_phone' => (isset($requestData['connect_mobile'])) ? 'yes' : 'no',
+            'companylogo' => '',
+
+        ]; 
+
+        $userData = $user->userIntermidaiteCompInfo(); 
+        if(empty($userData)){
+            $userData = new UserData;
+            $userData->user_id = $userId;
+            $userData->data_key = 'intermediary_company_info';
+        }     
+        
+        $userData->data_value = $userDetails;
+        $userData->save();
+
+        $taxstructureInfo = $requestData['taxstructure']; 
+        $userData = $user->taxstructureInfo(); 
+        if(empty($userData)){
+            $userData = new UserData;
+            $userData->user_id = $userId;
+            $userData->data_key = 'taxstructure_info';
+        }     
+        
+        $userData->data_value = $taxstructureInfo;
+        $userData->save();
+
+       
+
+        Session::flash('success_message','User details saved successfully.');
+        return redirect(url('backoffice/user/'.$giCode.'/step-two')); 
     }
 
     /**

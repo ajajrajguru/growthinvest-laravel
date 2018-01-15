@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
-                        <a href="/growthinvest-ui/admin/add-user/" class="btn btn-primary">Add User</a>
+                        <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
                         <button type="button" class="btn btn-link">Download CSV</button>
                     </div>
                 </div>

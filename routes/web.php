@@ -22,6 +22,7 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('user/{giCode}/step-one','UserController@userStepOneData');
 	Route::post('user/save-step-one','UserController@saveUserStepOne');
 	Route::get('user/{giCode}/step-two','UserController@userStepTwoData');
+	Route::post('user/save-step-two','UserController@saveUserStepTwo');
 	Route::get('user/{usertype}','UserController@getUsers');
 	
  

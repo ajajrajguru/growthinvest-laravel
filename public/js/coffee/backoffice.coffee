@@ -45,6 +45,18 @@ $(document).ready ->
     )
     initSerachForTable(usersTable)
 
+  $(document).on 'click', '.editUserBtn', ->
+    $('.editmode').removeClass('d-none');
+    $('.viewmode').addClass('d-none'); 
+    $(this).addClass('d-none');
+    $('.cancelUpdateBtn').removeClass('d-none');
+
+  $(document).on 'click', '.cancelUpdateBtn', ->
+    $('.editmode').addClass('d-none');
+    $('.viewmode').removeClass('d-none'); 
+    $(this).addClass('d-none');
+    $('.editUserBtn').removeClass('d-none');
+
 
          
 

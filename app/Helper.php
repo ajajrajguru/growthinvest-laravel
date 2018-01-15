@@ -113,5 +113,17 @@ function generateGICode(\Illuminate\Database\Eloquent\Model $model, $refernceKey
    return $result;
 
 }
+
+function getRegulationTypes(){
+    return ['da'=>'Directly Authorised','ar'=>'Appointed Representative','uo'=>'Unregulated/Other'];
+}
+
+function getRegisteredIndRange(){
+    return ['1'=>'1','2'=>'2 - 5','3'=>'6 - 10','4'=>'11 - 25','5'=>'25 - 100','6'=>'100+'];
+}
+
+function getSource(){
+     return ['internet'=>'Internet','personal'=>'Referral','recommendation'=>'Recommendation','email'=>'Email','event'=>'Event','LGBR Capital'=>'LGBR Capital'];
+}
  
  
