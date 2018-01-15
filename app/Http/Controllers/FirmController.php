@@ -36,7 +36,14 @@ class FirmController extends Controller
      */
     public function create()
     {
-        //
+        $data = [];
+        $breadcrumbs = [];
+        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
+        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add Firm']; 
+        $data['breadcrumbs'] = $breadcrumbs;
+         
+
+        return view('backoffice.firm.add-edit-firm')->with($data);
     }
 
     /**
@@ -47,7 +54,31 @@ class FirmController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         $firm_data = array('firm_id' => $request->input('firm_id'),
+            'name'                       => is_null($request->input('first_name')) ? '' : $request->input('first_name'),
+            'description'                => is_null($request->input('description')) ? '' : $request->input('description'),
+            'parent_id'                  => is_null($request->input('parent_firm')) ? 0 : $request->input('parent_firm'),
+            'type'                       => is_null($request->input('type')) ? 0 : $request->input('type'),
+            'fca_ref_no'                 => is_null($request->input('referenceno')) ? '' : $request->input('referenceno'),
+            'wm_commission'              => is_null($request->input('wm_commission')) ? 0 : $request->input('wm_commission'),
+            'introducer_commission'      => is_null($request->input('introducer_commission')) ? 0 : $request->input('introducer_commission'),
+            'invite_key'                 => is_null($request->input('invite_key')) ? '' : $request->input('invite_key'),
+            'address1'                   => is_null($request->input('address')) ? '' : $request->input('address'),
+            'address2'                   => is_null($request->input('address2')) ? '' : $request->input('address2'),
+            'town'                       => is_null($request->input('city')) ? '' : $request->input('city'),
+            'county'                     => is_null($request->input('location')) ? '' : $request->input('location'),
+            'postcode'                   => is_null($request->input('postcode')) ? '' : $request->input('postcode'),
+            'country'                    => is_null($request->input('country')) ? '' : $request->input('country'),
+            'logoid'                     => is_null($request->input('logoid')) ? 0 : $request->input('logoid'),
+            'backgroundid'               => is_null($request->input('backgroundid')) ? 0 : $request->input('backgroundid'),
+            'frontend_display'           => $request->input('front_end_display'),
+            'backend_display'            => $request->input('back_end_display'),
+            'blog'                       => $request->input('blog'),
+
+        );
+
+        $firm   = new Firm();
+        $firmid = $firm->addFirm($firm_data);
     }
 
     /**

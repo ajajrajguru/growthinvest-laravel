@@ -112,7 +112,13 @@ class LogSuccessfulLogin
         if (!$noDashboardAccessIntermediary === false) {
             if ($this->hasAccess('view_all_investors', $user_permissions)) {
 
-                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/portfolio');
+                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/manage-clients', 'params' => array('option' => 'all', 'dashboard_view' => true));
+
+            }
+
+            if ($this->hasAccess('view_firm_investors', $user_permissions)) {
+
+                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/manage-clients', 'params' => array('option' => 'firm', 'dashboard_view' => true));
             }
 
         }

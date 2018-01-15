@@ -32,6 +32,7 @@ class UserPermission
                     'backoffice/user/{giCode}/step-two'=>['add-user'],
                     'backoffice/user/save-step-one'=>['add-user'],
                     'backoffice/user/save-step-two'=>['add-user'],
+                    'backoffice/firm/add'=>['add_firm'], 
                 ],
             'frontoffice' => 
                 [

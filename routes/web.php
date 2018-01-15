@@ -23,10 +23,13 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post('user/save-step-one','UserController@saveUserStepOne');
 	Route::get('user/{giCode}/step-two','UserController@userStepTwoData');
 	Route::post('user/save-step-two','UserController@saveUserStepTwo');
-	Route::get('user/{usertype}','UserController@getUsers');
+	Route::get('user/{usertype}','UserController@getUsers'); 
+
 	
  
 });
+
+Route::get('firm/add','FirmController@create');
 
 Auth::routes();
 
