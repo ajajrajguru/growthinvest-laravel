@@ -6,6 +6,9 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Session;
 
+/**
+ * Class for handling successful login event.
+ */
 class LogSuccessfulLogin
 {
     /**
@@ -48,8 +51,8 @@ class LogSuccessfulLogin
         $admin_menus = $this->getUserAdminMenus($user_permissions);
         //$dashboard_menus = $this->getUserDashboardMenus($user_roles,$user_permissions);
 
-        $user_data['role'] = isset($user_roles[0])?$user_roles[0]:'';
-        
+        $user_data['role'] = isset($user_roles[0]) ? $user_roles[0] : '';
+
         session(['user_data' => $user_data]);
         session(['user_menus' => array('admin' => $admin_menus)]);
     }
@@ -60,46 +63,25 @@ class LogSuccessfulLogin
 
         if (count(array_intersect($user_permissions, array('manage_options', 'edit_my_firm')) > 0)) {
 
-            $menu_object = new \stdClass();
             if (count(array_intersect($user_permissions, array('manage_options', 'view_firms'))) > 0) {
 
-                $menu_object->url  = '#manage';
-                $menu_object->name = 'Manage';
-
-                $menus[] = $menu_object;
+                $menus[] = ['url' => '#manage', 'name' => 'Manage'];
             }
 
             if (in_array('manage_options', $user_permissions)) {
-                $menu_object1       = new \stdClass();
-                $menu_object1->url  = '#Statistics';
-                $menu_object1->name = 'Statistics';
 
-                $menus[] = $menu_object1;
-
-                $menu_object2       = new \stdClass();
-                $menu_object2->url  = '#View-document-templates';
-                $menu_object2->name = 'View Document Templates';
-                $menus[]            = $menu_object2;
-
-                $menu_object3       = new \stdClass();
-                $menu_object3->url  = '#View-email-templates';
-                $menu_object3->name = 'View Email Templates';
-                $menus[]            = $menu_object3;
+                $menus[] = ['url' => '#Statistics', 'name' => 'Statistics'];
+                $menus[] = ['url' => '#View-document-templates', 'name' => 'View Document Templates'];
+                $menus[] = ['url' => '#View-email-templates', 'name' => 'View Email Templates'];
 
                 if (in_array('view_groups', $user_permissions)) {
 
-                    $menu_object5       = new \stdClass();
-                    $menu_object5->url  = '#view-groups';
-                    $menu_object5->name = 'View Groups';
-                    $menus[]            = $menu_object5;
+                    $menus[] = ['url' => '#view-groups', 'name' => 'View Groups'];
                 }
 
                 if (count(array_intersect($user_permissions, array('view_firm_leads', 'view_all_leads'))) > 0) {
 
-                    $menu_object6       = new \stdClass();
-                    $menu_object6->url  = '#view-leads';
-                    $menu_object6->name = 'View Leads';
-                    $menus[]            = $menu_object6;
+                    $menus[] = ['url' => '#view-leads', 'name' => 'View Leads'];
                 }
 
             }
@@ -143,14 +125,6 @@ class LogSuccessfulLogin
             return true;
         }
         return false;
-    }
-
-    public function getMenuObject($menu = array())
-    {
-        $menu_object       = new \stdClass();
-        $menu_object->url  = $menu['url'];
-        $menu_object->name = $menu['name'];
-        return $menu_object;
     }
 
     public function hasAccess($capabilities, $user_permissions)

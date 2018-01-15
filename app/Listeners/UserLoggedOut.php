@@ -7,7 +7,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Session;
 
-
+/**
+ * Class for user logged out Event
+ */
 class UserLoggedOut
 {
     /**

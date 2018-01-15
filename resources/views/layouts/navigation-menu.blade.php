@@ -119,7 +119,7 @@
 
          @foreach($admin_menus['admin'] as $menu_item)
          <li>
-          <a href="{{$menu_item->url}}">{{$menu_item->name}}</a>
+          <a href="{{$menu_item['url']}}">{{$menu_item['name']}}</a>
         </li>
         @endforeach
 
