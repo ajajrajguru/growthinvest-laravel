@@ -93,11 +93,11 @@
         </li>
         <li class="">
           <b>Firm Name :</b>
-          <p>GrowthInvest</p>
+          <p>{{ Auth::user()->firm->name }}</p>
         </li>
         <li class="">
           <b>Firm Type :</b>
-          <p>Wealth Management and Introducer Co.</p>
+          <p>{{ Auth::user()->firm->firmType()->name }}</p>
         </li>
       </ul>
       </li>
