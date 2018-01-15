@@ -9,13 +9,13 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
+ 
 Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice'], function () {
 	Route::resource( 'firm', 'FirmController' );
 	Route::get('user/add/step-one','UserController@addUserStepOne');
@@ -30,6 +30,8 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 
 Route::group(['middleware' => ['auth','isAdmin']], function () {
 	Route::resource('users','UserController');
+	Route::resource('roles', 'RoleController');
+	Route::resource('permissions', 'PermissionController');
  
 });
 
@@ -37,7 +39,7 @@ Auth::routes();
 
 Route::get('/', 'UserController@index')->name('home');
  
-Route::resource('roles','RoleController');
+Route::get('/logout', 'Auth\LoginController@logout');
 
-Route::resource('permissions','PermissionController');
+
 

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFirmDatasTable extends Migration
 {
@@ -15,10 +15,15 @@ class CreateFirmDatasTable extends Migration
     {
         Schema::create('firm_datas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('firm_id');
-            $table->string('key');
-            $table->longText('value');
+            $table->integer('firm_id')->unsigned();
+            $table->string('data_key');
+            $table->longText('data_value');
             $table->timestamps();
+
+            $table->foreign('firm_id')
+                ->references('id')
+                ->on('firms')
+                ->onDelete('cascade');
         });
     }
 
