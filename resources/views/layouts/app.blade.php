@@ -21,7 +21,10 @@
         <title>{{ (isset($pageTitle)) ? $pageTitle : config('app.name', 'Growthinvest') }}</title>
     </head>
     <body>
-        @include ('layouts.navigation-menu') 
+        @php
+             echo View::make('layouts.navigation-menu')->with([])
+        @endphp
+         
         <!-- The part of the page that begins to differ between templates -->
         @yield('content')
 

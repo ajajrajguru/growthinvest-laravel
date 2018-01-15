@@ -39,7 +39,7 @@ class LogSuccessfulLogin
         $user_permissions = [];
 
         $user_permissions_ar = $user->getAllPermissions();
-        $user_roles = $user->getRoleNames(); // Returns a collection
+        $user_roles          = $user->getRoleNames(); // Returns a collection
 
         foreach ($user_permissions_ar as $key => $value) {
             $user_permissions[] = ($value->getAttribute('name'));
@@ -48,11 +48,14 @@ class LogSuccessfulLogin
         $admin_menus = $this->getUserAdminMenus($user_permissions);
         //$dashboard_menus = $this->getUserDashboardMenus($user_roles,$user_permissions);
 
+        $user_data['role'] = isset($user_roles[0])?$user_roles[0]:'';
+        
+        session(['user_data' => $user_data]);
         session(['user_menus' => array('admin' => $admin_menus)]);
     }
 
-
-    public function getUserAdminMenus($user_permissions){
+    public function getUserAdminMenus($user_permissions)
+    {
         $menus = [];
 
         if (count(array_intersect($user_permissions, array('manage_options', 'edit_my_firm')) > 0)) {
@@ -106,70 +109,65 @@ class LogSuccessfulLogin
         return $menus;
     }
 
+    public function getUserDashboardMenus($user_roles, $user_permissions)
+    {
 
-    public function getUserDashboardMenus($user_roles,$user_permissions){
+        $dashboard_menus               = [];
+        $mange_options                 = in_array('manage_options', $user_permissions);
+        $is_wealth_manager             = in_array('is_wealth_manager', $user_permissions);
+        $firm_admin                    = in_array('firm_admin', $user_roles);
+        $network                       = in_array('network', $user_roles);
+        $noDashboardAccessIntermediary = $this->noDashboardAccessIntermediary($user_roles, $user_permissions);
 
-        $dashboard_menus = [];
-        $mange_options = in_array('manage_options',$user_permissions );
-        $is_wealth_manager = in_array('is_wealth_manager',$user_permissions );
-        $firm_admin = in_array('firm_admin', $user_roles);
-        $network = in_array('network', $user_roles);
-        $noDashboardAccessIntermediary = $this->noDashboardAccessIntermediary($user_roles,$user_permissions);
-
-
-        if($this->noDashboardAccessIntermediary()) {
-            $dashboard_menus[] = array('name'=>'Dashboard','url'=>'/dashboard');
+        if ($this->noDashboardAccessIntermediary()) {
+            $dashboard_menus[] = array('name' => 'Dashboard', 'url' => '/dashboard');
         }
 
-        if( $mange_options || $is_wealth_manager || $firm_admin ||  $network){
-            $dashboard_menus[] = array('name'=>'Portfolio','url'=>'/dashboard/portfolio');
+        if ($mange_options || $is_wealth_manager || $firm_admin || $network) {
+            $dashboard_menus[] = array('name' => 'Portfolio', 'url' => '/dashboard/portfolio');
         }
 
+        if (!$noDashboardAccessIntermediary === false) {
+            if ($this->hasAccess('view_all_investors', $user_permissions)) {
 
-
-        if(!$noDashboardAccessIntermediary===false){
-            if($this->hasAccess('view_all_investors',$user_permissions) ){
-
-                    $dashboard_menus[] = array('name'=>'Manage Clients','url'=>'/dashboard/portfolio');
+                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/portfolio');
             }
 
         }
 
-
-
-
-
-
     }
 
-    public function noDashboardAccessIntermediary($user_roles,$user_permissions){
-        if(!in_array('manage_options',$user_permissions) &&  in_array('yet_to_be_approved_intermediary', $user_roles) ) {
+    public function noDashboardAccessIntermediary($user_roles, $user_permissions)
+    {
+        if (!in_array('manage_options', $user_permissions) && in_array('yet_to_be_approved_intermediary', $user_roles)) {
             return true;
         }
         return false;
     }
 
-    public function getMenuObject($menu=array()){
+    public function getMenuObject($menu = array())
+    {
         $menu_object       = new \stdClass();
         $menu_object->url  = $menu['url'];
         $menu_object->name = $menu['name'];
         return $menu_object;
     }
 
+    public function hasAccess($capabilities, $user_permissions)
+    {
 
-    public function hasAccess($capabilities,$user_permissions){
+        if (is_array($capabilities)) {
+            $result = array_intersect($capabilities, $user_permissions);
+        } else {
+            if (in_array($capability, $user_permissions) === false) {
+                $result = false;
+            } else {
+                $result = true;
+            }
 
-        if(is_array($capabilities)){
-           $result =  array_intersect($capabilities, $user_permissions);
         }
-        else{
-            if(in_array($capability,$user_permissions)===false)
-                $result =  false;
-            else 
-                $result = true;    
-        }
 
-        return $result ;        
+        return $result;
     }
 
 }
