@@ -300,47 +300,47 @@
                                             <tr>
                                                 <td>SEIS</td>
                                                 <td>
-                                                <input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['seis_clients'] }}" name="taxstructure[seis_clients]">
-                                                <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['seis_clients'] }}</span>
+                                                <input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['seis_clients'])) ? $taxstructureInfo['seis_clients'] :'' }}" name="taxstructure[seis_clients]">
+                                                <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['seis_clients'])) ? $taxstructureInfo['seis_clients'] :'' }}</span>
                                                 </td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['seis_valueinvested'] }}" name="taxstructure[seis_valueinvested]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['seis_valueinvested'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['seis_valueinvested'])) ? $taxstructureInfo['seis_valueinvested'] :'' }}" name="taxstructure[seis_valueinvested]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['seis_valueinvested'])) ? $taxstructureInfo['seis_valueinvested'] :'' }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>EIS</td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['eis_clients'] }}" name="taxstructure[eis_clients]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['eis_clients'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['eis_clients'])) ? $taxstructureInfo['eis_clients'] :'' }}" name="taxstructure[eis_clients]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['eis_clients'])) ? $taxstructureInfo['eis_clients'] :'' }}</span>
                                                     </td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['eis_valueinvested'] }}" name="taxstructure[eis_valueinvested]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['eis_valueinvested'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['eis_valueinvested'])) ? $taxstructureInfo['eis_valueinvested'] :'' }}" name="taxstructure[eis_valueinvested]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['eis_valueinvested'])) ? $taxstructureInfo['eis_valueinvested'] :'' }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>VCT</td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['vct_clients'] }}" name="taxstructure[vct_clients]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['vct_clients'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['vct_clients'])) ? $taxstructureInfo['vct_clients'] :'' }}" name="taxstructure[vct_clients]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['vct_clients'])) ? $taxstructureInfo['vct_clients'] :'' }}</span>
                                                 </td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['vct_valueinvested'] }}" name="taxstructure[vct_valueinvested]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['vct_valueinvested'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['vct_valueinvested'])) ? $taxstructureInfo['vct_valueinvested'] :'' }}" name="taxstructure[vct_valueinvested]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['vct_valueinvested'])) ? $taxstructureInfo['vct_valueinvested'] :'' }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>IHT</td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['bpr_clients'] }}" name="taxstructure[bpr_clients]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['bpr_clients'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['bpr_clients'])) ? $taxstructureInfo['bpr_clients'] :'' }}" name="taxstructure[bpr_clients]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['bpr_clients'])) ? $taxstructureInfo['bpr_clients'] :'' }}</span>
                                                 </td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['bpr_valueinvested'] }}" name="taxstructure[bpr_valueinvested]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['bpr_valueinvested'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['bpr_valueinvested'])) ? $taxstructureInfo['bpr_valueinvested'] :'' }}" name="taxstructure[bpr_valueinvested]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['bpr_valueinvested'])) ? $taxstructureInfo['bpr_valueinvested'] :'' }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>SITR</td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['sitr_clients'] }}" name="taxstructure[sitr_clients]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['sitr_clients'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['sitr_clients'])) ? $taxstructureInfo['sitr_clients'] :'' }}" name="taxstructure[sitr_clients]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['sitr_clients'])) ? $taxstructureInfo['sitr_clients'] :'' }} </span>
                                                 </td>
-                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ $taxstructureInfo['sitr_valueinvested'] }}" name="taxstructure[sitr_valueinvested]">
-                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ $taxstructureInfo['sitr_valueinvested'] }}</span>
+                                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['sitr_valueinvested'])) ? $taxstructureInfo['sitr_valueinvested'] :'' }}" name="taxstructure[sitr_valueinvested]">
+                                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['seis_clients'])) ? $taxstructureInfo['sitr_valueinvested'] :'' }}</span>
                                                 </td>
                                             </tr>
                                         </tbody>

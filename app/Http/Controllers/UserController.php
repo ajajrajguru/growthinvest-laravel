@@ -15,6 +15,7 @@ use Spatie\Permission\Models\Permission;
 
 //Enables us to output flash messaging
 use Session;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller {
 
@@ -143,7 +144,7 @@ class UserController extends Controller {
         $user->email = $email;
         $user->first_name = $firstName;
         $user->last_name = $lastName;
-        $user->password = $password;
+        $user->password = Hash::make($password);
         $user->status = 0;
         $user->telephone_no = $telephone;
         $user->address_1 = $addressLine1;
@@ -172,8 +173,8 @@ class UserController extends Controller {
         $userData->save();
 
         //assign role
-        $roleName = $user->getRoleNames()->first(); 
-        if(!empty($user->getRoleNames())){
+        $roleName = $user->getRoleNames()->first();  ;
+        if(!empty($roleName)){
             $user->removeRole($roleName);
         }
         $user->assignRole($role);

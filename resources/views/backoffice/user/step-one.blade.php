@@ -53,14 +53,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>First Name <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>First Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="first_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the first name." placeholder="Eg. John" value="{{ $user->first_name}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->first_name}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Last Name <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>Last Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="last_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the last name." placeholder="Eg. Smith" value="{{ $user->last_name}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->last_name}}</span>
                         </div>
@@ -70,14 +70,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Email Address <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>Email Address <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="email" name="email" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-type="email" data-parsley-required data-parsley-required-message="Please enter email." placeholder="Eg. john_smith@mailinator.com" value="{{ $user->email}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->email}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Telephone Number <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>Telephone Number <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." placeholder="Eg: 020 7071 3945" value="{{ $user->telephone_no}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->telephone_no}}</span>
                         </div>
@@ -87,15 +87,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Choose Password <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" id="userpassword" data-parsley-required data-parsley-required-message="Please enter password." placeholder="">
+                            <label>Choose Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
+                            <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" id="userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter password." @endif placeholder="">
                             <span class="viewmode @if($mode=='edit') d-none @endif"> </span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Confirm Password <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="password" name="confirm_password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-equalto="#userpassword" data-parsley-required data-parsley-required-message="Please enter confirm password." placeholder="">
+                            <label>Confirm Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
+                            <input type="password" name="confirm_password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-equalto="#userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter confirm password." @endif placeholder="">
                             <span class="viewmode @if($mode=='edit') d-none @endif"> </span>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Company Name<span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>Company Name<span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="company_name" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter the company name." value="{{ (isset($userData['company'])) ? $userData['company'] : ''}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['company'])) ? $userData['company'] : ''}}</span>
                         </div>
@@ -170,7 +170,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Postcode <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>Postcode <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="postcode" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter postcode." value="{{ $user->postcode}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->postcode}}</span>
                         </div>
@@ -251,7 +251,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Firm <span class="text-danger @if($mode=='view') d-none @endif">*</span></label>
+                            <label>Firm <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <select class="form-control editmode @if($mode=='view') d-none @endif" name="firm" data-parsley-required data-parsley-required-message="Please select the firm.">
                                 <option value="">Please Select</option>
                                 @php

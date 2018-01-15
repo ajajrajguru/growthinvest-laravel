@@ -47,12 +47,15 @@ $(document).ready ->
 
   $(document).on 'click', '.editUserBtn', ->
     $('.editmode').removeClass('d-none');
+    $('.reqField').removeClass('d-none');
     $('.viewmode').addClass('d-none'); 
+
     $(this).addClass('d-none');
     $('.cancelUpdateBtn').removeClass('d-none');
 
   $(document).on 'click', '.cancelUpdateBtn', ->
     $('.editmode').addClass('d-none');
+    $('.reqField').addClass('d-none');
     $('.viewmode').removeClass('d-none'); 
     $(this).addClass('d-none');
     $('.editUserBtn').removeClass('d-none');
