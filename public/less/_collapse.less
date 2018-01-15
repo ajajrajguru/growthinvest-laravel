@@ -1,0 +1,32 @@
+.gi-collapse{
+	.card{
+		border: none;
+	}
+	.card-header{
+		background-color: @brand-primary;
+		padding: 5px 15px;
+		border-radius: 0;
+		a{
+			display: flex;
+			color: #fff;
+			font-weight: 600;
+			font-size: 1rem;
+			justify-content: space-between;
+			align-items: center;
+			.fa-plus-square-o{
+				display: none;
+			}
+			&.collapsed{
+				.fa-plus-square-o{
+					display: inline-block;
+				}
+				.fa-minus-square-o{
+					display: none;
+				}
+			}
+			&:hover{
+				text-decoration: none;
+			}
+		}
+	}
+}

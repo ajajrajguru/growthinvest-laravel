@@ -24,6 +24,9 @@ body {
 .grayscale.w-hover-color:hover {
   filter: grayscale(0);
 }
+.bg-primary {
+  background-color: #00a9ee !important;
+}
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 0.9rem;
@@ -35,6 +38,9 @@ h1.section-title {
 label {
   font-weight: 700;
   font-size: 0.8rem;
+}
+.form-check-label {
+  font-weight: 500;
 }
 a {
   color: #00a9ee;
@@ -91,6 +97,17 @@ a:hover {
 .form-control {
   font-size: 0.85rem;
 }
+fieldset {
+  border: 1px solid #b7b7b7;
+  padding: 10px 20px;
+  margin-bottom: 15px;
+}
+fieldset legend {
+  display: inline-block;
+  width: auto;
+  font-size: 1rem;
+  color: #3d4042;
+}
 .btn {
   font-size: 0.9rem;
 }
@@ -114,6 +131,9 @@ a:hover {
 }
 .table thead th {
   font-size: 0.8rem;
+}
+.table-no-padding td {
+  padding: 0;
 }
 .breadcrumb {
   background-color: transparent;
@@ -181,4 +201,98 @@ a:hover {
 }
 .progress-indicator li.active .bubble:after {
   background-color: #00a9ee;
+}
+.progress-indicator li.completed .bubble:after {
+  background-color: #00a9ee;
+}
+.gi-collapse .card {
+  border: none;
+}
+.gi-collapse .card-header {
+  background-color: #00a9ee;
+  padding: 5px 15px;
+  -moz-border-radius: 0;
+       border-radius: 0;
+}
+.gi-collapse .card-header a {
+  display: -moz-box;
+  display: flex;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  -moz-box-pack: justify;
+       justify-content: space-between;
+  -moz-box-align: center;
+       align-items: center;
+}
+.gi-collapse .card-header a .fa-plus-square-o {
+  display: none;
+}
+.gi-collapse .card-header a.collapsed .fa-plus-square-o {
+  display: inline-block;
+}
+.gi-collapse .card-header a.collapsed .fa-minus-square-o {
+  display: none;
+}
+.gi-collapse .card-header a:hover {
+  text-decoration: none;
+}
+@media (max-width: 600px) {
+  #giMenu {
+    display: none !important;
+  }
+}
+@media (min-width: 601px) {
+  #mm-giMenu {
+    display: none !important;
+  }
+}
+#giMenu .navbar-menu {
+  display: -moz-box;
+  display: flex;
+  -moz-box-pack: end;
+       justify-content: flex-end;
+  -moz-box-align: center;
+       align-items: center;
+  padding: 0;
+  list-style-type: none;
+}
+#giMenu .navbar-menu .gi-logo {
+  margin-right: auto;
+}
+#giMenu .navbar-menu ul {
+  padding: 0;
+}
+#giMenu .navbar-menu .submenu {
+  display: none;
+}
+#giMenu .navbar-menu .has-submenu {
+  position: relative;
+}
+#giMenu .navbar-menu .has-submenu:hover .submenu {
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  list-style-type: none;
+  background-color: #fff;
+}
+#giMenu .navbar-menu .has-submenu:hover .submenu a {
+  color: #dddddd;
+}
+#giMenu .navbar-menu > li {
+  margin: 10px 0;
+}
+#giMenu .navbar-menu > li a {
+  padding: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+}
+header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2;
 }
