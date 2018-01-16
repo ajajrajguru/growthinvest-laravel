@@ -2,37 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\User;
-use App\Firm;
 use App\UserData;
 use Auth;
+use Illuminate\Http\Request;
 
 //Importing laravel-permission models
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-
-//Enables us to output flash messaging
+use Illuminate\Support\Facades\Hash;
 use Session;
 
-class UserController extends Controller {
+//Enables us to output flash messaging
+use Spatie\Permission\Models\Role;
 
-    public function __construct() {
+class UserController extends Controller
+{
+
+    public function __construct()
+    {
         // $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function index() {
-    //Get all users and pass it to the view
-        $users = User::all(); 
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //Get all users and pass it to the view
+        $users = User::all();
         return view('users.index')->with('users', $users);
     }
-
 
     /**
     manage users
@@ -41,27 +41,27 @@ class UserController extends Controller {
     $userType : all ,intermidiate
     breadcrumbs : Set breadcrumb structure for the listing
     pageTitle : define page name
-    */
-    public function getUsers($userType='all'){
+     */
+    public function getUsers($userType = 'all')
+    {
 
         $user = new User;
-        if($userType=='intermidiate'){
+        if ($userType == 'intermidiate') {
             $userType = 'Intermidiate User';
-            $users = $user->getIntermidiateUsers(); 
-        }
-        else{
+            $users    = $user->getIntermidiateUsers();
+        } else {
             $userType = 'User';
-            $users = $user->allUsers(); 
+            $users    = $user->allUsers();
         }
 
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> $userType];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => '', 'name' => $userType];
 
-        $data['users'] = $users;
-        $data['userType'] = $userType;
+        $data['users']       = $users;
+        $data['userType']    = $userType;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle'] = $userType;
+        $data['pageTitle']   = $userType;
 
         return view('backoffice.user.list')->with($data);
 
@@ -71,313 +71,315 @@ class UserController extends Controller {
     get list of all required data to be populated in form
     send empty user object to form in create mode
     by default mode will be edit when user is created first time
-    */
-    public function addUserStepOne(){
-        $user = new User;
-        $firmsList = getModelList('App\Firm'); 
-        $firms =$firmsList['list'];
+     */
+    public function addUserStepOne()
+    {
+        $user      = new User;
+        $firmsList = getModelList('App\Firm');
+        $firms     = $firmsList['list'];
 
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
-         
-        $data['roles'] = Role::get();
-        $data['countyList'] = getCounty();
-        $data['countryList'] = getCountry();
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+        $data['roles']              = Role::get();
+        $data['countyList']         = getCounty();
+        $data['countryList']        = getCountry();
         $data['companyDescription'] = getCompanyDescription();
-        $data['user'] = $user;
-        $data['firms'] = $firms;
-        $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle'] = 'Add User';
-        $data['mode'] = 'edit';
+        $data['user']               = $user;
+        $data['firms']              = $firms;
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'Add User';
+        $data['mode']               = 'edit';
         return view('backoffice.user.step-one')->with($data);
     }
-
 
     /**
     common method to add and update data
     check if user exist
     if does not exist set GI code for user
-    assign role to the user, if already added delete previous and add new  
-    */
-    public function saveUserStepOne(Request $request){
+    assign role to the user, if already added delete previous and add new
+     */
+    public function saveUserStepOne(Request $request)
+    {
 
-        $requestData = $request->all();
-        $firstName = $requestData['first_name'];
-        $lastName = $requestData['last_name'];
-        $email = $requestData['email'];
-        $telephone = $requestData['telephone'];
-        $password = $requestData['password'];
-        $companyName = $requestData['company_name'];
-        $companyWebsite = $requestData['company_website'];
-        $addressLine1 = $requestData['address_line_1'];
-        $addressLine2 = $requestData['address_line_2'];
-        $townCity = $requestData['town_city'];
-        $county = $requestData['county'];
-        $postcode = $requestData['postcode'];
-        $country = $requestData['country'];
-        $companyFcaNumber = $requestData['company_fca_number'];
+        $requestData        = $request->all();
+        $firstName          = $requestData['first_name'];
+        $lastName           = $requestData['last_name'];
+        $email              = $requestData['email'];
+        $telephone          = $requestData['telephone'];
+        $password           = $requestData['password'];
+        $companyName        = $requestData['company_name'];
+        $companyWebsite     = $requestData['company_website'];
+        $addressLine1       = $requestData['address_line_1'];
+        $addressLine2       = $requestData['address_line_2'];
+        $townCity           = $requestData['town_city'];
+        $county             = $requestData['county'];
+        $postcode           = $requestData['postcode'];
+        $country            = $requestData['country'];
+        $companyFcaNumber   = $requestData['company_fca_number'];
         $companyDescription = $requestData['company_description'];
-        $role = $requestData['roles'];
-        $firm = $requestData['firm'];
-        $isSuspended = ($requestData['is_suspended']) ? 1 :0 ;
-        $giCode = $requestData['gi_code'];
+        $role               = $requestData['roles'];
+        $firm               = $requestData['firm'];
+        $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
+        $giCode             = $requestData['gi_code'];
 
-        $giArgs=array('prefix' => "GIIM",'min'=>20000001,'max' => 30000000);
+        $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
-
-        if($giCode == ''){
-            $user = new User;
-            $giCode = generateGICode($user,'gi_code',$giArgs);
-            $user->gi_code = $giCode;
+        if ($giCode == '') {
+            $user                = new User;
+            $giCode              = generateGICode($user, 'gi_code', $giArgs);
+            $user->gi_code       = $giCode;
             $user->registered_by = Auth::user()->id;
+        } else {
+            $user = User::where('gi_code', $giCode)->first();
         }
-        else{
-            $user = User::where('gi_code',$giCode)->first();
-        }
-        
 
-        $user->login_id = $email;
-        $user->avatar = '';
-        $user->title = '';
-        $user->email = $email;
-        $user->first_name = $firstName;
-        $user->last_name = $lastName;
-        $user->password = $password;
-        $user->status = 0;
+        $user->login_id     = $email;
+        $user->avatar       = '';
+        $user->title        = '';
+        $user->email        = $email;
+        $user->first_name   = $firstName;
+        $user->last_name    = $lastName;
+        $user->password     = Hash::make($password);
+        $user->status       = 0;
         $user->telephone_no = $telephone;
-        $user->address_1 = $addressLine1;
-        $user->address_2 = $addressLine2;
-        $user->city = $townCity;
-        $user->postcode = $postcode;
-        $user->county = $county;
-        $user->country = $country;
-        $user->firm_id = $firm;
-        $user->deleted = 0;
-        $user->suspended = $isSuspended;
+        $user->address_1    = $addressLine1;
+        $user->address_2    = $addressLine2;
+        $user->city         = $townCity;
+        $user->postcode     = $postcode;
+        $user->county       = $county;
+        $user->country      = $country;
+        $user->firm_id      = $firm;
+        $user->deleted      = 0;
+        $user->suspended    = $isSuspended;
         $user->save();
 
         $userId = $user->id;
 
-        $userDetails = ['company'=>$companyName,'website'=>$companyWebsite,'companyfca'=>$companyFcaNumber,'typeaccount'=>$companyDescription]; 
+        $userDetails = ['company' => $companyName, 'website' => $companyWebsite, 'companyfca' => $companyFcaNumber, 'typeaccount' => $companyDescription];
 
-        $userData = $user->userAdditionalInfo(); 
-        if(empty($userData)){
-            $userData = new UserData;
-            $userData->user_id = $userId;
+        $userData = $user->userAdditionalInfo();
+        if (empty($userData)) {
+            $userData           = new UserData;
+            $userData->user_id  = $userId;
             $userData->data_key = 'additional_info';
-        }     
-        
+        }
+
         $userData->data_value = $userDetails;
         $userData->save();
 
         //assign role
-        $roleName = $user->getRoleNames()->first(); 
-        if(!empty($user->getRoleNames())){
+
+        $roleName = $user->getRoleNames()->first();
+        if (!empty($roleName)) {
             $user->removeRole($roleName);
         }
-        $user->assignRole($role);
 
-        Session::flash('success_message','User details saved successfully.');
-        return redirect(url('backoffice/user/'.$giCode.'/step-one')); 
+        if($role!="")
+            $user->assignRole($role);
 
- 
+        Session::flash('success_message', 'User details saved successfully.');
+        return redirect(url('backoffice/user/' . $giCode . '/step-one'));
+
     }
 
     /**
     $giCode - unique id generated for the user
     get user using GI code
     mode will be view since user is alredy created
-    */
-    public function userStepOneData($giCode){ 
-        $user = User::where('gi_code',$giCode)->first();
+     */
+    public function userStepOneData($giCode)
+    {
+        $user = User::where('gi_code', $giCode)->first();
 
-        if(empty($user)){
+        if (empty($user)) {
             abort(404);
         }
 
-        $firmsList = getModelList('App\Firm'); 
-        $firms =$firmsList['list'];
+        $firmsList = getModelList('App\Firm');
+        $firms     = $firmsList['list'];
 
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
-        $userData = $user->userAdditionalInfo(); 
-        $data['user'] = $user;
-        $data['userData'] = (!empty($userData)) ? $userData->data_value : [];
-        $data['roles'] = Role::get();
-        $data['countyList'] = getCounty();
-        $data['countryList'] = getCountry();
+        $breadcrumbs                = [];
+        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[]              = ['url' => '', 'name' => 'Add User'];
+        $userData                   = $user->userAdditionalInfo();
+        $data['user']               = $user;
+        $data['userData']           = (!empty($userData)) ? $userData->data_value : [];
+        $data['roles']              = Role::get();
+        $data['countyList']         = getCounty();
+        $data['countryList']        = getCountry();
         $data['companyDescription'] = getCompanyDescription();
-        $data['firms'] = $firms;
-        $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle'] = 'Add User';
-        $data['mode'] = 'view';
+        $data['firms']              = $firms;
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'Add User';
+        $data['mode']               = 'view';
         return view('backoffice.user.step-one')->with($data);
 
     }
 
-     /**
+    /**
     $giCode - unique id generated for the user
     get user using GI code
-    */
-    public function userStepTwoData($giCode){ 
-        $user = User::where('gi_code',$giCode)->first();
+     */
+    public function userStepTwoData($giCode)
+    {
+        $user = User::where('gi_code', $giCode)->first();
 
-        if(empty($user)){
+        if (empty($user)) {
             abort(404);
         }
- 
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add User'];
 
-        $intermidiatData = $user->userIntermidaiteCompInfo(); 
-        $taxstructureInfo = $user->taxstructureInfo(); 
-        $data['user'] = $user;
-        $data['intermidiatData'] = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
-        $data['taxstructureInfo'] = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
-        $data['regulationTypes'] =  getRegulationTypes();
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+        $intermidiatData            = $user->userIntermidaiteCompInfo();
+        $taxstructureInfo           = $user->taxstructureInfo();
+        $data['user']               = $user;
+        $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
+        $data['taxstructureInfo']   = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
+        $data['regulationTypes']    = getRegulationTypes();
         $data['registeredIndRange'] = getRegisteredIndRange();
-        $data['sources'] = getSource();
-       
+        $data['sources']            = getSource();
+
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle'] = 'Add User';
-        $data['mode'] = 'view';
+        $data['pageTitle']   = 'Add User';
+        $data['mode']        = 'view';
         return view('backoffice.user.step-two')->with($data);
 
     }
 
-    public function saveUserStepTwo(Request $request){
+    public function saveUserStepTwo(Request $request)
+    {
 
-        $requestData = $request->all(); 
+        $requestData = $request->all();
 
         $giCode = $requestData['gi_code'];
-        if($giCode == ''){
-            Session::flash('error_message','User details saved successfully.');
-            return redirect(url('backoffice/user/add/step-one')); 
+        if ($giCode == '') {
+            Session::flash('error_message', 'User details saved successfully.');
+            return redirect(url('backoffice/user/add/step-one'));
+        } else {
+            $user = User::where('gi_code', $giCode)->first();
         }
-        else{
-            $user = User::where('gi_code',$giCode)->first();
-        }
- 
- 
 
-        $userId = $user->id;
+        $userId      = $user->id;
         $userDetails = [
-            'con_skype' => $requestData['contact_skype_id'],
-            'con_link' => $requestData['contact_linked_in'],
-            'con_fb' => $requestData['contact_facebook'],
-            'con_twit' => $requestData['contact_twitter'],
-            'position' => $requestData['contact_job_title'],
-            'fca_approved' => $requestData['contact_fca_regulation'],
-            'personal_fca' => $requestData['contact_registration_number'],
-            'telephonenumber' => $requestData['contact_telephone'],
-            'mobile' => $requestData['contact_mobile'],
-            'company_link' => $requestData['company_linkedin'],
-            'company_fb' => $requestData['company_facebook'],
-            'company_twit' => $requestData['company_twitter'],
-            'regulationtype' => $requestData['company_regulation_type'],
-            'reg_ind_cnt' => $requestData['company_reg_ind'],
+            'con_skype'                   => $requestData['contact_skype_id'],
+            'con_link'                    => $requestData['contact_linked_in'],
+            'con_fb'                      => $requestData['contact_facebook'],
+            'con_twit'                    => $requestData['contact_twitter'],
+            'position'                    => $requestData['contact_job_title'],
+            'fca_approved'                => $requestData['contact_fca_regulation'],
+            'personal_fca'                => $requestData['contact_registration_number'],
+            'telephonenumber'             => $requestData['contact_telephone'],
+            'mobile'                      => $requestData['contact_mobile'],
+            'company_link'                => $requestData['company_linkedin'],
+            'company_fb'                  => $requestData['company_facebook'],
+            'company_twit'                => $requestData['company_twitter'],
+            'regulationtype'              => $requestData['company_regulation_type'],
+            'reg_ind_cnt'                 => $requestData['company_reg_ind'],
             'regulated_total_bus_inv_aum' => $requestData['company_estimate_asset_under_mgt'],
-            'source' => $requestData['about_platform'],
-            'source_cmts' => $requestData['additional_comments'],
-            'marketingmail' => (isset($requestData['marketing_email'])) ? 'yes' : 'no',
-            'marketingmail_partner' => (isset($requestData['marketing_mails_partners'])) ? 'yes' : 'no',
-            'interested_tax_struct' => $requestData['interested_tax_structure'],
-            'contact_email' => (isset($requestData['connect_email'])) ? 'yes' : 'no',
-            'contact_phone' => (isset($requestData['connect_mobile'])) ? 'yes' : 'no',
-            'companylogo' => '',
+            'source'                      => $requestData['about_platform'],
+            'source_cmts'                 => $requestData['additional_comments'],
+            'marketingmail'               => (isset($requestData['marketing_email'])) ? 'yes' : 'no',
+            'marketingmail_partner'       => (isset($requestData['marketing_mails_partners'])) ? 'yes' : 'no',
+            'interested_tax_struct'       => $requestData['interested_tax_structure'],
+            'contact_email'               => (isset($requestData['connect_email'])) ? 'yes' : 'no',
+            'contact_phone'               => (isset($requestData['connect_mobile'])) ? 'yes' : 'no',
+            'companylogo'                 => '',
 
-        ]; 
+        ];
 
-        $userData = $user->userIntermidaiteCompInfo(); 
-        if(empty($userData)){
-            $userData = new UserData;
-            $userData->user_id = $userId;
+        $userData = $user->userIntermidaiteCompInfo();
+        if (empty($userData)) {
+            $userData           = new UserData;
+            $userData->user_id  = $userId;
             $userData->data_key = 'intermediary_company_info';
-        }     
-        
+        }
+
         $userData->data_value = $userDetails;
         $userData->save();
 
-        $taxstructureInfo = $requestData['taxstructure']; 
-        $userData = $user->taxstructureInfo(); 
-        if(empty($userData)){
-            $userData = new UserData;
-            $userData->user_id = $userId;
+        $taxstructureInfo = $requestData['taxstructure'];
+        $userData         = $user->taxstructureInfo();
+        if (empty($userData)) {
+            $userData           = new UserData;
+            $userData->user_id  = $userId;
             $userData->data_key = 'taxstructure_info';
-        }     
-        
+        }
+
         $userData->data_value = $taxstructureInfo;
         $userData->save();
 
-       
-
-        Session::flash('success_message','User details saved successfully.');
-        return redirect(url('backoffice/user/'.$giCode.'/step-two')); 
+        Session::flash('success_message', 'User details saved successfully.');
+        return redirect(url('backoffice/user/' . $giCode . '/step-two'));
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function create() {
-    //Get all roles and pass it to the view
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //Get all roles and pass it to the view
         $roles = Role::get();
-        return view('users.create', ['roles'=>$roles]);
+        return view('users.create', ['roles' => $roles]);
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
-    public function store(Request $request) {
-    //Validate name, email and password fields
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //Validate name, email and password fields
         $this->validate($request, [
-            'name'=>'required|max:120',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|confirmed'
+            'name'     => 'required|max:120',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
         ]);
 
         $user = User::create($request->only('email', 'name', 'password')); //Retrieving only the email and password data
 
         $roles = $request['roles']; //Retrieving the roles field
-    //Checking if a role was selected
+        //Checking if a role was selected
         if (isset($roles)) {
 
             foreach ($roles as $role) {
-            $role_r = Role::where('id', '=', $role)->firstOrFail();            
-            $user->assignRole($role_r); //Assigning role to user
+                $role_r = Role::where('id', '=', $role)->firstOrFail();
+                $user->assignRole($role_r); //Assigning role to user
             }
-        }        
-    //Redirect to the users.index view and display message
+        }
+        //Redirect to the users.index view and display message
         return redirect()->route('users.index')
             ->with('flash_message',
-             'User successfully added.');
+                'User successfully added.');
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-    public function show($id) {
-        return redirect('users'); 
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return redirect('users');
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-    public function edit($id) {
-        $user = User::findOrFail($id); //Get user with specified id
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $user  = User::findOrFail($id); //Get user with specified id
         $roles = Role::get(); //Get all roles
 
         return view('users.edit', compact('user', 'roles')); //pass user and roles data to view
@@ -385,49 +387,50 @@ class UserController extends Controller {
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-    public function update(Request $request, $id) {
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
         $user = User::findOrFail($id); //Get role specified by id
 
-    //Validate name, email and password fields  
+        //Validate name, email and password fields
         $this->validate($request, [
-            'name'=>'required|max:120',
-            'email'=>'required|email|unique:users,email,'.$id,
-            'password'=>'required|min:6|confirmed'
+            'name'     => 'required|max:120',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|min:6|confirmed',
         ]);
         $input = $request->only(['name', 'email', 'password']); //Retreive the name, email and password fields
         $roles = $request['roles']; //Retreive all roles
         $user->fill($input)->save();
 
-        if (isset($roles)) {        
-            $user->roles()->sync($roles);  //If one or more role is selected associate user to roles          
-        }        
-        else {
+        if (isset($roles)) {
+            $user->roles()->sync($roles); //If one or more role is selected associate user to roles
+        } else {
             $user->roles()->detach(); //If no role is selected remove exisiting role associated to a user
         }
         return redirect()->route('users.index')
             ->with('flash_message',
-             'User successfully edited.');
+                'User successfully edited.');
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  int  $id
-    * @return \Illuminate\Http\Response
-    */
-    public function destroy($id) {
-    //Find a user with a given id and delete
-        $user = User::findOrFail($id); 
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //Find a user with a given id and delete
+        $user = User::findOrFail($id);
         $user->delete();
 
         return redirect()->route('users.index')
             ->with('flash_message',
-             'User successfully deleted.');
+                'User successfully deleted.');
     }
 }

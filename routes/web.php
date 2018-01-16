@@ -29,19 +29,23 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
  
 });
 
+ 
+Route::group(['middleware' => ['auth','isAdmin']], function () {
+	Route::resource('users','UserController');
+	Route::resource('roles', 'RoleController');
+	Route::resource('permissions', 'PermissionController');
+ 
+});
+ 
+
 Route::get('firm/add','FirmController@create');
-Route::get('firm/{giCode}','FirmController@getFirmByGICode');
+Route::get('firm/{giCode}','FirmController@getFirmByGICode'); 
 
 Auth::routes();
 
 Route::get('/', 'UserController@index')->name('home');
-
-Route::resource('users', 'UserController');
-
-Route::resource('roles', 'RoleController');
-
-Route::resource('permissions', 'PermissionController');
-
+ 
 Route::get('/logout', 'Auth\LoginController@logout');
+
 
 

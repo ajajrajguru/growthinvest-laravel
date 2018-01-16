@@ -1,75 +1,79 @@
+<header>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
 
+      <div id="logo" class="gi-logo">
+        <a class="" href="https://growthinvest.com/" title="GrowthInvest">
+          <img src="{{ url('img/growthinvest-logo.png') }}" width="250" height="45" class="logo_normal" alt="GrowthInvest">
+        </a>
+    </div>
 
-<nav id="giMenu">
+    <nav id="giMenu">
 
-    <ul class="navbar-menu">
-    <li id="logo" class="gi-logo">
-          <a class="" href="https://growthinvest.com/" title="GrowthInvest">
-            <img src="{{"img/growthinvest-logo.png"}}" width="250" height="45" class="logo_normal" alt="GrowthInvest">
-          </a>
-      </li>
-      <li class="" id="">
-        <a href="#">Dashboard</a>
-      </li>
-      <li class="has-submenu">
-        <a href="#">Investments</a>
-        <ul class="submenu">
-          <li>
-            <a href="/investment-opportunities/#single-companies">EIS &amp; SEIS - Single Companies</a>
+        <ul class="navbar-menu">
+        
+          <li class="" id="">
+            <a href="#">Dashboard</a>
           </li>
-          <li>
-            <a href="/investment-opportunities/#funds">EIS &amp; SEIS - Funds &amp; Portfolios</a>
+          <li class="has-submenu">
+            <a href="#">Investments</a>
+            <ul class="submenu">
+              <li>
+                <a href="/investment-opportunities/#single-companies">EIS &amp; SEIS - Single Companies</a>
+              </li>
+              <li>
+                <a href="/investment-opportunities/#funds">EIS &amp; SEIS - Funds &amp; Portfolios</a>
+              </li>
+              <li>
+                <a href="/investment-opportunities/#vcts">VCTs</a>
+              </li>
+            </ul>
           </li>
-          <li>
-            <a href="/investment-opportunities/#vcts">VCTs</a>
+          <li class="has-submenu">
+            <a href="#">Services</a>
+            <ul class="submenu">
+              <li>
+                <a href="/what-we-offer-investors/">What We Offer Investors</a>
+              </li>
+              <li>
+                <a href="/what-we-offer-intermediaries">What We Offer Advisers</a>
+              </li>
+              <li>
+                <a href="/what-we-offer-entrepreneurs">What We Offer Entrepreneurs</a>
+              </li>
+            </ul>
           </li>
-        </ul>
-      </li>
-      <li class="has-submenu">
-        <a href="#">Services</a>
-        <ul class="submenu">
-          <li>
-            <a href="/what-we-offer-investors/">What We Offer Investors</a>
-          </li>
-          <li>
-            <a href="/what-we-offer-intermediaries">What We Offer Advisers</a>
-          </li>
-          <li>
-            <a href="/what-we-offer-entrepreneurs">What We Offer Entrepreneurs</a>
-          </li>
-        </ul>
-      </li>
-      <li class="has-submenu">
-        <a href="#" style="">More <i class="fa fa-angle-down"></i></a>
-        <ul class="submenu">
-          <li>
-            <a href="/about-us/">About Us</a>
-          </li>
-          <li>
-            <a href="/tax-efficient-investments/">Tax Efficient Investments</a>
-          </li>
-          <li>
-            <a href="/news-updates/">News</a>
-          </li>
-          <li>
-            <a href="/upcoming-eventsbak/">Events</a>
-          </li>
-          <li>
-            <a href="/press/">Press</a>
-          </li>
-          <li>
-            <a href="/publications/">Publications</a>
-          </li>
-          <li>
-            <a href="/faq/">FAQs</a>
-          </li>
-          <li>
-            <a href="/partners/">Partners</a>
-          </li>
-          <li>
-            <a href="/contact-us/">Contact Us</a>
-          </li>
-        </ul>
+          <li class="has-submenu">
+            <a href="#" style="">More <i class="fa fa-angle-down"></i></a>
+            <ul class="submenu">
+              <li>
+                <a href="/about-us/">About Us</a>
+              </li>
+              <li>
+                <a href="/tax-efficient-investments/">Tax Efficient Investments</a>
+              </li>
+              <li>
+                <a href="/news-updates/">News</a>
+              </li>
+              <li>
+                <a href="/upcoming-eventsbak/">Events</a>
+              </li>
+              <li>
+                <a href="/press/">Press</a>
+              </li>
+              <li>
+                <a href="/publications/">Publications</a>
+              </li>
+              <li>
+                <a href="/faq/">FAQs</a>
+              </li>
+              <li>
+                <a href="/partners/">Partners</a>
+              </li>
+              <li>
+                <a href="/contact-us/">Contact Us</a>
+              </li>
+            </ul>           
       </li>
       @if(Auth::check())
       <li class="has-submenu">
@@ -131,7 +135,15 @@
 
     </ul>
 
-</nav>
+
+    </nav>
+
+    </div>
+  </div>
+</header>
+
+
+
 
 
 

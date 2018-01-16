@@ -1,0 +1,63 @@
+
+@media (max-width: 600px) {
+  #giMenu {
+    display: none !important;
+  }
+}
+@media (min-width: 601px) {
+  #mm-giMenu{
+    display: none !important;
+  }
+}
+
+#giMenu{
+  .navbar-menu{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+    list-style-type: none;
+    .gi-logo{
+      margin-right: auto;
+    }
+    ul{
+      padding: 0;
+    }
+    .submenu{
+      display: none;
+    }
+    .has-submenu{
+      position: relative;
+      &:hover{
+        .submenu{
+          display: block;
+          position: absolute;
+          top: 10px;
+          right: 0;
+          list-style-type: none;
+          background-color: #fff;
+          a{
+            color: @gray;
+          }
+        }
+      }
+    }
+    &>li{
+      // float: right;
+      margin: 10px 0;
+      a{
+        padding: 8px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #fff;
+      }
+    }
+  }
+}
+header{
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2;
+}

@@ -31,8 +31,8 @@ class AlterPermissionsTable extends Migration
             $roleName = $role->name;
             $type = $role->guard_name;
 
-            $role->name = str_slug($roleName);
             $role->display_name = $roleName;
+            $role->name = str_slug($roleName,'_');
             $role->type = $type;
             $role->guard_name = 'web';
             $role->save();
@@ -45,8 +45,8 @@ class AlterPermissionsTable extends Migration
             $permissionName = $permission->name;
             $type = $permission->guard_name;
 
-            $permission->name = str_slug($permissionName);
             $permission->display_name = $permissionName;
+            $permission->name = str_slug($permissionName,'_');
             $permission->type = $type;
             $permission->guard_name = 'web';
             $permission->save();
