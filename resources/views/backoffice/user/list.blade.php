@@ -3,8 +3,17 @@
 @section('js')
   @parent
  
-  <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
  
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+        $( ".firm_actions" ).change(function() {
+           var editUrl = $(this).attr('edit-url')
+           window.open(editUrl, '_blank');
+        });
+    });
+</script>
 @endsection
 @section('backoffice-content')
 
@@ -57,7 +66,7 @@
                                 <td>{{ $user->roles()->pluck('name')->implode(' ') }} </td>
                                 <td>{{   (!empty($user->firm))?$user->firm->name:'' }}</td>
                                     <td>
-                                    <select data-id="78523" class="firm_actions">
+                                    <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>
                                     <option value="edit-intermediary">Edit</option>
                                     </select>
