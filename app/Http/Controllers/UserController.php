@@ -49,13 +49,15 @@ class UserController extends Controller
         if ($userType == 'intermidiate') {
             $userType = 'Intermediary Registrations';
             $users    = $user->getIntermidiateUsers();
+            $blade = "intermediaries";
         } else {
             $userType = 'User';
             $users    = $user->allUsers();
+            $blade = "users";
         }
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => '', 'name' => $userType];
 
         $data['users']       = $users;
@@ -63,9 +65,12 @@ class UserController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = $userType;
 
-        return view('backoffice.user.list')->with($data);
+        return view('backoffice.user.'.$blade)->with($data);
 
     }
+
+
+
 
     /**
     get list of all required data to be populated in form
@@ -149,7 +154,7 @@ class UserController extends Controller
                 return redirect()->back();
             }
 
-        
+
             $user                = new User;
             $giCode              = generateGICode($user, 'gi_code', $giArgs);
             $user->gi_code       = $giCode;
@@ -215,7 +220,7 @@ class UserController extends Controller
     public function userStepOneData($giCode)
     {
         $user = User::where('gi_code', $giCode)->first();
-
+        dd($user);
         if (empty($user)) {
             abort(404);
         }
@@ -228,7 +233,7 @@ class UserController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[]              = ['url' => '', 'name' => 'Add User'];
 
-        $userData                   = $user->userAdditionalInfo();
+        $userData                   = $user->userAdditionalInfo(); 
         $data['user']               = $user;
         $data['userData']           = (!empty($userData)) ? $userData->data_value : [];
         $data['roles']              = Role::get();
