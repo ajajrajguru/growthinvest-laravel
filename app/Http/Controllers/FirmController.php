@@ -116,13 +116,13 @@ class FirmController extends Controller
         $firm->gi_code               = $giCode;
 
 
-        print_r($firm);
+        //print_r($firm);
 
         $firm->save();
 
         $firm_id = $firm->id;
 
-        if ($firmid != false) {
+        if ($firm_id != false) {
 
             $invite_content = array('ent_invite_content' => $request->input('ent_invite_content'),
                 'inv_invite_content'                         => $request->input('inv_invite_content'),
@@ -137,11 +137,10 @@ class FirmController extends Controller
                 'additional_details'                 => $additional_firmdetails);
 
             $firm_data = new FirmData();
-            $result    = $firm_data->insertUpdateFirmdata($firm_metas, $firmid);
-
+            $result    = $firm_data->insertUpdateFirmdata($firm_metas, $firm_id);
         }
 
-       echo $firm_id;
+       return $firm_id;
 
     }
 
@@ -168,6 +167,7 @@ class FirmController extends Controller
         $data['countryList']   = getCountry();
         $data['network_firms'] = $network_firm->getAllParentFirms();
         $data['firm']          = $firm;
+        $data['firm_types']    = $firm->getFirmTypes();
         return view('backoffice.firm.add-edit-firm')->with($data);
 
     }

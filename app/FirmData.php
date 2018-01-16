@@ -21,7 +21,7 @@ class FirmData extends Model
      *
      * @var        array
      */
-    protected $fillable = ['firm_id', 'key', 'value'];
+    protected $fillable = ['firm_id', 'data_key', 'data_value'];
 
     /**
      * { function_description }
@@ -32,9 +32,9 @@ class FirmData extends Model
     public function insertUpdateFirmdata($firm_metas, $firmid)
     {
         foreach ($firm_metas as $key => $value) {
-            FirmData::updateOrCreate(['key' => $key,
+            FirmData::updateOrCreate(['data_key' => $key,
                 'firm_id'                       => $firmid],
-                ['value' => $value]);
+                ['data_value' => serialize($value) ]);
 
         }
 
