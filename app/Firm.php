@@ -39,7 +39,7 @@ class Firm extends Model
 
     public function getAllParentFirms()
     {
-        $parent_firms = Firm::where(['type' => 10]);
+        $parent_firms = Firm::where(['type' => 10])->get();
         return $parent_firms;
     }
 }

@@ -25,6 +25,9 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post('user/save-step-two','UserController@saveUserStepTwo');
 	Route::get('user/{usertype}','UserController@getUsers'); 
 
+	Route::get('firms/add','FirmController@create');
+	Route::post('firms/save-firm','FirmController@store');
+	Route::get('firms/{giCode}/edit','FirmController@getFirmByGICode'); 
 	
  
 });
@@ -38,8 +41,7 @@ Route::group(['middleware' => ['auth','isAdmin']], function () {
 });
  
 
-Route::get('firm/add','FirmController@create');
-Route::get('firm/{giCode}','FirmController@getFirmByGICode'); 
+
 
 Auth::routes();
 

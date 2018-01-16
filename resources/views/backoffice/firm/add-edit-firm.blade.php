@@ -2,12 +2,13 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-    
+  <script src="//cdn.ckeditor.com/4.8.0/standard/ckeditor.js" onload="loadCkeditor();"></script>
+
 @endsection
 
-@section('backoffice-content') 
+@section('backoffice-content')
 
 <div class="container">
 
@@ -20,13 +21,14 @@
 
 		<div class="p-4">
 
-			<form>
+			 <form method="post" action="{{ url('backoffice/firms/save-firm') }}"   data-parsley-validate  name="form-add-edit-firm" id="form-add-edit-firm" enctype="multipart/form-data">
 
+				{{ csrf_field() }}
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Firm Name <span class="text-danger">*</span></label>
-							<input type="text" class="form-control" placeholder="" name="name" value="{{$firm->name}}" >
+							<input type="text" class="form-control" placeholder="" name="name" value="{{$firm->name}}"  data-parsley-required data-parsley-required-message="Please enter Firm Name" >
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -52,7 +54,7 @@
 							<legend>Firm Address</legend>
 							<div class="form-group">
 								<label>Address Line 1 <span class="text-danger">*</span></label>
-								<textarea class="form-control" name="address1" value="{{$firm->address1}}"></textarea> 
+								<textarea class="form-control" name="address1" value="{{$firm->address1}}"  data-parsley-required data-parsley-required-message="Please enter Address 1" ></textarea>
 							</div>
 							<div class="form-group">
 								<label>Address Line 2</label>
@@ -69,9 +71,18 @@
 									<div class="form-group">
 										<label>County</label>
 										<select class="form-control" name="county" value="{{$firm->county}}" >
-											<option>Please Select</option>
-											<option>County 1</option>
-											<option>County 2</option>
+											<option value="">Please Select</option>
+											@php
+			                                $countyName = '';
+			                                @endphp
+			                                @foreach($countyList as $county)
+			                                    @php
+			                                    if($firm->county == $county)
+			                                        $countyName = $county;
+
+			                                    @endphp
+			                                    <option value="{{ $county }}" @if($firm->county == $county) selected @endif>{{ $county }}</option>
+			                                @endforeach
 										</select>
 									</div>
 								</div>
@@ -81,16 +92,25 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Postcode <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" placeholder=""  name="postcode" value="{{$firm->postcode}}" >
+										<input type="text" class="form-control" placeholder=""  name="postcode" value="{{$firm->postcode}}"  data-parsley-required data-parsley-required-message="Please enter Postcode"  >
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Country</label>
 										<select class="form-control"  name="country" value="{{$firm->country}}" >
-											<option>Please Select</option>
-											<option>India</option>
-											<option>USA</option>
+											<option value="">Please Select</option>
+											@php
+			                                $countryName = '';
+			                                @endphp
+			                                @foreach($countryList as $code=>$country)
+			                                    @php
+			                                    if($firm->country == $code)
+			                                        $countryName = $country;
+
+			                                    @endphp
+			                                    <option value="{{ $code }}" @if($firm->country == $code) selected @endif>{{ $country }}</option>
+			                                @endforeach
 										</select>
 									</div>
 								</div>
@@ -103,7 +123,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Name <span class="text-danger">*</span></label>
-							<input type="text" class="form-control" placeholder="" name="pri_contactname" value="{{$firm->pri_contactname}}">
+							<input type="text" class="form-control" placeholder="" name="pri_contactname" value="{{$firm->pri_contactname}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Name">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -118,13 +138,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Email Address <span class="text-danger">*</span></label>
-							<input type="email" class="form-control" placeholder=""  name="pri_contactemail" value="{{$firm->pri_contactemail}}">
+							<input type="email" class="form-control" placeholder=""  name="pri_contactemail" value="{{$firm->pri_contactemail}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Email">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Phone Number <span class="text-danger">*</span></label>
-							<input type="tel" class="form-control" placeholder=""   name="pri_contactphoneno" value="{{$firm->pri_contactphoneno}}">
+							<input type="tel" class="form-control" placeholder=""   name="pri_contactphoneno" value="{{$firm->pri_contactphoneno}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Phone No">
 						</div>
 					</div>
 				</div>
@@ -134,9 +154,20 @@
 						<div class="form-group">
 							<label>Firm Type </label>
 							<select class="form-control"  name="type" value="{{$firm->type}}">
-								<option>Please Select</option>
-								<option>Accountant</option>
-								<option>Legal</option>
+								<option value="">Please Select</option>
+								@php
+                                $firmtypeName = '';
+                                @endphp
+                                @foreach($firm_types as $firm_type)
+                                    @php
+                                    if($firm->type == $firm_type->id)
+                                        $firmtypeName = $firm_type->name;
+
+
+                                    @endphp
+                                <option value="{{ $firm_type->id }}" @if($firm->type == $firm_type->id) selected @endif>{{ $firm_type->name }}</option>
+                                @endforeach
+
 							</select>
 							<small>Please contact the GrowthInvest team to amend your firm type to add investors, entrepreneurs or other intermediaries</small>
 						</div>
@@ -145,9 +176,19 @@
 						<div class="form-group">
 							<label>Parent Firm </label>
 							<select class="form-control" name="parent_id" value="{{$firm->parent_id}}">
-								<option>Please Select</option>
-								<option>88</option>
-								<option>AV Trinity</option>
+								<option value="">Please Select</option>
+								@php
+                                $firmName = '';
+                                @endphp
+                                @foreach($network_firms as $firm)
+                                    @php
+                                    if($firm->parent_id == $firm->id)
+                                        $firmName = $firm->name;
+
+
+                                    @endphp
+                                <option value="{{ $firm->id }}" @if($firm->parent_id == $firm->id) selected @endif>{{ $firm->name }}</option>
+                                @endforeach
 							</select>
 						</div>
 					</div>
@@ -238,7 +279,7 @@
 						<label>Logo</label>
 					</div>
 					<div class="col-md-3">
-
+						<input type="hidden" name="logoid" value="" />
 					</div>
 				</div>
 
@@ -249,17 +290,18 @@
 					<div class="col-md-3">
 
 						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="" id="imgFrontEnd">
+							<input class="form-check-input" type="checkbox" value="" id="imgFrontEnd" name="frontend_display" >
 							<label class="form-check-label" for="imgFrontEnd">
 						    	Display Image for Frontend Users
 							</label>
 						</div>
 						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="" id="imgBackEnd">
+							<input class="form-check-input" type="checkbox" value="" id="imgBackEnd" name="backend_display" >
 							<label class="form-check-label" for="imgBackEnd">
 						    	Display Image for Backend Users
 							</label>
 						</div>
+						<input type="hidden" name="backgroundid" value="" />
 					</div>
 				</div>
 
@@ -275,17 +317,24 @@
 </div>
 
 <script type="text/javascript">
-	  // CKEDITOR.replace( 'rich-editor' );
-	  // CKEDITOR.replaceClass('rich-editor');
-	  var elements = CKEDITOR.document.find( '.rich-editor' ),
-	      i = 0,
-	      element;
 
-	  while ( ( element = elements.getItem( i++ ) ) ) {
-	      CKEDITOR.replace( element );
-	  }
+
+	 function loadCkeditor(){
+		// CKEDITOR.replace( 'rich-editor' );
+		// CKEDITOR.replaceClass('rich-editor');
+		var elements = CKEDITOR.document.find( '.rich-editor' ),
+		    i = 0,
+		    element;
+
+		while ( ( element = elements.getItem( i++ ) ) ) {
+		    CKEDITOR.replace( element );
+		}
+	}
+
+
+
 </script>
- 
+
 
 
 

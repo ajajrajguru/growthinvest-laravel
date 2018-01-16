@@ -36,9 +36,7 @@ class LogSuccessfulLogin
     public function storeUserMenus($event)
     {
         $user = $event->user;
-        /*$user->last_login_at = date('Y-m-d H:i:s');
-        $user->last_login_ip = $this->request->ip();
-        $user->save();*/
+        
         $user_permissions = [];
 
         $user_permissions_ar = $user->getAllPermissions();

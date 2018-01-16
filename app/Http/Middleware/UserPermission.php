@@ -32,6 +32,8 @@ class UserPermission
                     'backoffice/user/{giCode}/step-two'=>['add_user'],
                     'backoffice/user/save-step-one'=>['add_user'],
                     'backoffice/user/save-step-two'=>['add_user'],
+                    'backoffice/firms/add'=>['add_firm'],
+                    'backoffice/firms/save-firm'=>['manage_options']
                 ],
             'frontoffice' => 
                 [
@@ -66,7 +68,7 @@ class UserPermission
     {
         $routePerrmissions = $this->routePermission();
         $router = app()->make('router');
-        $uriPath = $router->getCurrentRoute()->uri; 
+        $uriPath = $router->getCurrentRoute()->uri; //dd($uriPath);
 
         $uriPermission =  $this->getUriPermissions($uriPath);
  
