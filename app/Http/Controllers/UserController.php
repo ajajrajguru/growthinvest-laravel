@@ -220,7 +220,7 @@ class UserController extends Controller
     public function userStepOneData($giCode)
     {
         $user = User::where('gi_code', $giCode)->first();
-        dd($user);
+         
         if (empty($user)) {
             abort(404);
         }

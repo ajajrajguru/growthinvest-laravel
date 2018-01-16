@@ -27,17 +27,14 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <h1 class="section-title font-weight-medium text-primary mb-0">{{ $userType}}</h1>
-                    @if($userType == 'User')
-                    <p class="text-muted">View all Intermediaries registered with us.</p>
-                    @else
+                    <h1 class="section-title font-weight-medium text-primary mb-0">Intermediary Registrations</h1>
                     <p class="text-muted">Please see below all current unapproved registration for intermediaries.</p>
-                    @endif
+                    
                 </div>
                 <div class="col-md-6">
-                    <div class="float-right">
-                        <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
-                        <button type="button" class="btn btn-link">Download CSV</button>
+                    <div class="float-right ">
+                       <!--  <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
+                        <button type="button" class="btn btn-link">Download CSV</button> -->
                     </div>
                 </div>
             </div>
@@ -71,7 +68,7 @@
                             $compInfo = (!empty($user->userAdditionalInfo())) ? $user->userAdditionalInfo()->data_value : [];   
                             @endphp
                             <tr >
-                                <td>{{  title_case($user->first_name.' '.$user->last_name) }} <br>{{  $user->email }}</td>
+                                <td><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br><a class="investor_email" href="mailto: {{  $user->email }}">{{  $user->email }}</a></td>
                                 
                                 <td>{{ (isset($compInfo['company'])) ? title_case($compInfo['company']) : ''}} </td>
                                 <td>{{ (isset($compInfo['typeaccount']) && $compInfo['typeaccount']) ? title_case($compInfo['typeaccount']) : ''}}</td>

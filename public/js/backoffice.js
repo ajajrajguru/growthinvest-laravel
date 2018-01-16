@@ -17,6 +17,7 @@
       firmsTable = $('#datatable-firms').DataTable({
         "paging": false,
         "info": false,
+        'aaSorting': [[1, 'asc']],
         'columns': [
           {
             'data': 'logo',
@@ -41,6 +42,7 @@
       usersTable = $('#datatable-users').DataTable({
         "paging": false,
         "info": false,
+        'aaSorting': [[0, 'asc']],
         'columns': [
           {
             'data': 'name'
@@ -84,7 +86,7 @@
       $('#change_pwd').removeClass('d-none');
       return $('.setpassword-cont').addClass('d-none');
     });
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
     return $('#giMenu').mmenu({
       navbar: {
         title: false

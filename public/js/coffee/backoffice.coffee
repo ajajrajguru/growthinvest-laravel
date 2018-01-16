@@ -16,7 +16,7 @@ $(document).ready ->
     firmsTable = $('#datatable-firms').DataTable(
       "paging": false
       "info": false
-
+      'aaSorting': [[1,'asc']]
       'columns': [
         { 'data': 'logo' , "orderable": false}
         { 'data': 'name' }
@@ -33,7 +33,7 @@ $(document).ready ->
     usersTable = $('#datatable-users').DataTable(
       "paging": false
       "info": false
-
+      'aaSorting': [[0,'asc']]
       'columns': [
         { 'data': 'name' }
         { 'data': 'email' }
@@ -72,7 +72,7 @@ $(document).ready ->
     $('#change_pwd').removeClass('d-none'); 
     $('.setpassword-cont').addClass('d-none');
 
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="popover"]').popover()
   # Menu JS
   $('#giMenu').mmenu { navbar: title: false }, clone: true
 
