@@ -22,7 +22,7 @@
     </head>
     <body>
         @php
-             echo View::make('layouts.navigation-menu')->with([])
+             echo View::make('includes.navigation-menu')->with([])
         @endphp
          
         <!-- The part of the page that begins to differ between templates -->

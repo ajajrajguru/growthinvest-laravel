@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Firm;
+use Illuminate\Http\Request;
 
 class FirmController extends Controller
 {
@@ -14,17 +14,16 @@ class FirmController extends Controller
      */
     public function index()
     {
-        $firmsList = getModelList('App\Firm'); 
-        $firms =$firmsList['list'];
+        $firmsList = getModelList('App\Firm');
+        $firms     = $firmsList['list'];
 
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> 'Firm'];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Firm'];
 
-
-        $data['firms'] = $firms;
+        $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle'] = 'Firms';
+        $data['pageTitle']   = 'Firms';
 
         return view('backoffice.firm.list')->with($data);
     }
@@ -36,13 +35,17 @@ class FirmController extends Controller
      */
     public function create()
     {
-        $data = [];
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> 'Add Firm']; 
-        $data['breadcrumbs'] = $breadcrumbs;
-         
-
+        $network_firm          = new Firm;
+        $firm                  = new Firm;
+        $data                  = [];
+        $breadcrumbs           = [];
+        $breadcrumbs[]         = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[]         = ['url' => '', 'name' => 'Add Firm'];
+        $data['breadcrumbs']   = $breadcrumbs;
+        $data['countyList']    = getCounty();
+        $data['countryList']   = getCountry();
+        $data['network_firms'] = $network_firm->getAllParentFirms();
+        $data['firm']          = $firm;
         return view('backoffice.firm.add-edit-firm')->with($data);
     }
 
@@ -54,8 +57,8 @@ class FirmController extends Controller
      */
     public function store(Request $request)
     {
-         $firm_data = array('firm_id' => $request->input('firm_id'),
-            'name'                       => is_null($request->input('first_name')) ? '' : $request->input('first_name'),
+        $firm_data = array('firm_id' => $request->input('firm_id'),
+            'name'                       => is_null($request->input('name')) ? '' : $request->input('name'),
             'description'                => is_null($request->input('description')) ? '' : $request->input('description'),
             'parent_id'                  => is_null($request->input('parent_firm')) ? 0 : $request->input('parent_firm'),
             'type'                       => is_null($request->input('type')) ? 0 : $request->input('type'),
@@ -87,9 +90,25 @@ class FirmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($giCode)
     {
-        //
+
+        $network_firm = new Firm;
+        $firm         = Firm::where('gi_code', $giCode)->first();
+        if (empty($firm)) {
+            abort(404);
+        }
+        $data                  = [];
+        $breadcrumbs           = [];
+        $breadcrumbs[]         = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[]         = ['url' => '', 'name' => 'Add Firm'];
+        $data['breadcrumbs']   = $breadcrumbs;
+        $data['countyList']    = getCounty();
+        $data['countryList']   = getCountry();
+        $data['network_firms'] = $network_firm->getAllParentFirms();
+        $data['firm']          = $firm;
+        return view('backoffice.firm.add-edit-firm')->with($data);
+
     }
 
     /**

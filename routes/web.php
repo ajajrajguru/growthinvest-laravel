@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 });
 
 Route::get('firm/add','FirmController@create');
+Route::get('firm/{giCode}','FirmController@getFirmByGICode');
 
 Auth::routes();
 

@@ -26,13 +26,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Firm Name <span class="text-danger">*</span></label>
-							<input type="text" class="form-control" placeholder="">
+							<input type="text" class="form-control" placeholder="" name="name" value="{{$firm->name}}" >
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>FCA Firm Reference Number</label>
-							<input type="text" class="form-control" placeholder="">
+							<input type="text" class="form-control" placeholder="" name="fca_ref_no" value="{{$firm->fca_ref_no}}" >
 						</div>
 					</div>
 				</div>
@@ -41,7 +41,7 @@
 					<div class="col-md-12">
 						<div class="form-group">
 							<label>Description</label>
-							<textarea class="form-control"></textarea>
+							<textarea class="form-control"  name="description" value="{{$firm->description}}" ></textarea>
 						</div>
 					</div>
 				</div>
@@ -52,23 +52,23 @@
 							<legend>Firm Address</legend>
 							<div class="form-group">
 								<label>Address Line 1 <span class="text-danger">*</span></label>
-								<textarea class="form-control"></textarea>
+								<textarea class="form-control" name="address1" value="{{$firm->address1}}"></textarea> 
 							</div>
 							<div class="form-group">
 								<label>Address Line 2</label>
-								<textarea class="form-control"></textarea>
+								<textarea class="form-control" name="address2" value="{{$firm->address2}}" ></textarea>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Town/City</label>
-										<input type="text" class="form-control" placeholder="">
+										<input type="text" class="form-control" placeholder="" name="town" value="{{$firm->town}}" >
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>County</label>
-										<select class="form-control">
+										<select class="form-control" name="county" value="{{$firm->county}}" >
 											<option>Please Select</option>
 											<option>County 1</option>
 											<option>County 2</option>
@@ -81,13 +81,13 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Postcode <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" placeholder="">
+										<input type="text" class="form-control" placeholder=""  name="postcode" value="{{$firm->postcode}}" >
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Country</label>
-										<select class="form-control">
+										<select class="form-control"  name="country" value="{{$firm->country}}" >
 											<option>Please Select</option>
 											<option>India</option>
 											<option>USA</option>
@@ -103,13 +103,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Name <span class="text-danger">*</span></label>
-							<input type="text" class="form-control" placeholder="">
+							<input type="text" class="form-control" placeholder="" name="pri_contactname" value="{{$firm->pri_contactname}}">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact’s FCA Number </label>
-							<input type="text" class="form-control" placeholder="">
+							<input type="text" class="form-control" placeholder="" name="pri_contactfcano" value="{{$firm->pri_contactfcano}}">
 						</div>
 					</div>
 				</div>
@@ -118,13 +118,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Email Address <span class="text-danger">*</span></label>
-							<input type="email" class="form-control" placeholder="">
+							<input type="email" class="form-control" placeholder=""  name="pri_contactemail" value="{{$firm->pri_contactemail}}">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Phone Number <span class="text-danger">*</span></label>
-							<input type="tel" class="form-control" placeholder="">
+							<input type="tel" class="form-control" placeholder=""   name="pri_contactphoneno" value="{{$firm->pri_contactphoneno}}">
 						</div>
 					</div>
 				</div>
@@ -133,7 +133,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Firm Type </label>
-							<select class="form-control">
+							<select class="form-control"  name="type" value="{{$firm->type}}">
 								<option>Please Select</option>
 								<option>Accountant</option>
 								<option>Legal</option>
@@ -144,7 +144,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Parent Firm </label>
-							<select class="form-control">
+							<select class="form-control" name="parent_id" value="{{$firm->parent_id}}">
 								<option>Please Select</option>
 								<option>88</option>
 								<option>AV Trinity</option>
@@ -170,7 +170,7 @@
 				      				<div class="form-group">
 				      					<label>WM Commission %</label>
 				      					<div class="input-group">
-				      						<input type="text" class="form-control" placeholder="">
+				      						<input type="text" class="form-control" placeholder="" name="wm_commission" value="{{$firm->wm_commission}}">
 				      						<div class="input-group-append">
 				      							<span class="input-group-text">%</span>
 				      						</div>
@@ -181,7 +181,7 @@
 				      				<div class="form-group">
 				      					<label>Introducer Commission %</label>
 				      					<div class="input-group">
-				      						<input type="text" class="form-control" placeholder="">
+				      						<input type="text" class="form-control" placeholder="" name="introducer_commission" value="{{$firm->introducer_commission}}">
 				      						<div class="input-group-append">
 				      							<span class="input-group-text">%</span>
 				      						</div>
@@ -207,7 +207,7 @@
 				    				<label>Entrepreneur invite content</label>
 				    			</div>
 				    			<div class="col-md-9">
-				    				<textarea class="rich-editor"></textarea>
+				    				<textarea class="rich-editor" name="ent_invite_content" value="{{$firm->ent_invite_content}}"></textarea>
 				    			</div>
 				    		</div>
 
@@ -216,7 +216,7 @@
 				    				<label>Investor invite content</label>
 				    			</div>
 				    			<div class="col-md-9">
-				    				<textarea class="rich-editor"></textarea>
+				    				<textarea class="rich-editor"  name="inv_invite_content" value="{{$firm->inv_invite_content}}"></textarea>
 				    			</div>
 				    		</div>
 
@@ -225,7 +225,7 @@
 				    				<label>Fund Manager invite content</label>
 				    			</div>
 				    			<div class="col-md-9">
-				    				<textarea class="rich-editor"></textarea>
+				    				<textarea class="rich-editor"  name="fundmanager_invite_content" value="{{$firm->fundmanager_invite_content}}"></textarea>
 				    			</div>
 				    		</div>
 				    	</div>
