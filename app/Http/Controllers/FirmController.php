@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Firm;
 
 class FirmController extends Controller
 {
@@ -14,17 +13,16 @@ class FirmController extends Controller
      */
     public function index()
     {
-        $firmsList = getModelList('App\Firm'); 
-        $firms =$firmsList['list'];
+        $firmsList = getModelList('App\Firm');
+        $firms     = $firmsList['list'];
 
-        $breadcrumbs = [];
-        $breadcrumbs[] = ['url'=>url('/'), 'name'=>"Home"];
-        $breadcrumbs[] = ['url'=>'', 'name'=> 'Firm'];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Firm'];
 
-
-        $data['firms'] = $firms;
+        $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle'] = 'Firms';
+        $data['pageTitle']   = 'Firms';
 
         return view('backoffice.firm.list')->with($data);
     }
