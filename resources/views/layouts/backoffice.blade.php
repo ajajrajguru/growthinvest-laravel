@@ -19,6 +19,7 @@
 @section('content')
 <!-- content -->
  	<div style="position: relative; background-position: center center; background-size: cover; background-image: url({{ asset('img/London-skyline.jpg') }}); height:470px"></div>
+ 	
 
     @yield('backoffice-content')
      

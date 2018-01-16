@@ -74,6 +74,17 @@
       $(this).addClass('d-none');
       return $('.editUserBtn').removeClass('d-none');
     });
+    $(document).on('click', '#change_pwd', function() {
+      $(this).addClass('d-none');
+      $('#cancel_pwd').removeClass('d-none');
+      return $('.setpassword-cont').removeClass('d-none');
+    });
+    $(document).on('click', '#cancel_pwd', function() {
+      $(this).addClass('d-none');
+      $('#change_pwd').removeClass('d-none');
+      return $('.setpassword-cont').addClass('d-none');
+    });
+    $('[data-toggle="tooltip"]').tooltip();
     return $('#giMenu').mmenu({
       navbar: {
         title: false
