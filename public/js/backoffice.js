@@ -62,6 +62,7 @@
       $('.editmode').removeClass('d-none');
       $('.reqField').removeClass('d-none');
       $('.viewmode').addClass('d-none');
+      $('.disabledInput').attr('disabled', false);
       $(this).addClass('d-none');
       return $('.cancelUpdateBtn').removeClass('d-none');
     });
@@ -69,6 +70,7 @@
       $('.editmode').addClass('d-none');
       $('.reqField').addClass('d-none');
       $('.viewmode').removeClass('d-none');
+      $('.disabledInput').attr('disabled', true);
       $(this).addClass('d-none');
       return $('.editUserBtn').removeClass('d-none');
     });

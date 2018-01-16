@@ -49,6 +49,7 @@ $(document).ready ->
     $('.editmode').removeClass('d-none');
     $('.reqField').removeClass('d-none');
     $('.viewmode').addClass('d-none'); 
+    $('.disabledInput').attr('disabled',false)
 
     $(this).addClass('d-none');
     $('.cancelUpdateBtn').removeClass('d-none');
@@ -57,6 +58,7 @@ $(document).ready ->
     $('.editmode').addClass('d-none');
     $('.reqField').addClass('d-none');
     $('.viewmode').removeClass('d-none'); 
+    $('.disabledInput').attr('disabled',true)
     $(this).addClass('d-none');
     $('.editUserBtn').removeClass('d-none');
 

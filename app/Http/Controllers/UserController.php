@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $user = new User;
         if ($userType == 'intermidiate') {
-            $userType = 'Intermidiate User';
+            $userType = 'Intermediary Registrations';
             $users    = $user->getIntermidiateUsers();
         } else {
             $userType = 'User';
@@ -80,6 +80,7 @@ class UserController extends Controller
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
 
         $data['roles']              = Role::get();
@@ -202,7 +203,9 @@ class UserController extends Controller
 
         $breadcrumbs                = [];
         $breadcrumbs[]              = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[]              = ['url' => '', 'name' => 'Add User'];
+
         $userData                   = $user->userAdditionalInfo();
         $data['user']               = $user;
         $data['userData']           = (!empty($userData)) ? $userData->data_value : [];
@@ -234,7 +237,7 @@ class UserController extends Controller
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
 
-        $intermidiatData            = $user->userIntermidaiteCompInfo();
+        $intermidiatData            = $user->userIntermidaiteCompInfo(); 
         $taxstructureInfo           = $user->taxstructureInfo();
         $data['user']               = $user;
         $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
@@ -284,7 +287,7 @@ class UserController extends Controller
             'source_cmts'                 => $requestData['additional_comments'],
             'marketingmail'               => (isset($requestData['marketing_email'])) ? 'yes' : 'no',
             'marketingmail_partner'       => (isset($requestData['marketing_mails_partners'])) ? 'yes' : 'no',
-            'interested_tax_struct'       => $requestData['interested_tax_structure'],
+            'interested_tax_struct'       => (isset($requestData['interested_tax_structure']) && !empty($requestData['interested_tax_structure'])) ? implode(',',$requestData['interested_tax_structure']) : '',
             'contact_email'               => (isset($requestData['connect_email'])) ? 'yes' : 'no',
             'contact_phone'               => (isset($requestData['connect_mobile'])) ? 'yes' : 'no',
             'companylogo'                 => '',

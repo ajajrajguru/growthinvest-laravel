@@ -28,11 +28,12 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
  
 });
 
-Route::group(['middleware' => ['auth','isAdmin']], function () {
+
 	Route::resource('users','UserController');
 	Route::resource('roles', 'RoleController');
 	Route::resource('permissions', 'PermissionController');
- 
+
+Route::group(['middleware' => ['auth']], function () { 
 });
 
 Auth::routes();

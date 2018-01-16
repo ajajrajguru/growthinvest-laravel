@@ -10,7 +10,7 @@
     $(document).ready(function() {
         $( ".firm_actions" ).change(function() {
            var editUrl = $(this).attr('edit-url')
-           window.open(editUrl, '_blank');
+           window.open(editUrl);
         });
     });
 </script>
@@ -28,7 +28,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="section-title font-weight-medium text-primary mb-0">{{ $userType}}</h1>
-                    <p class="text-muted">View all {{ $userType}}</p>
+                    @if($userType == 'User')
+                    <p class="text-muted">View all Intermediaries registered with us.</p>
+                    @else
+                    <p class="text-muted">Please see below all current unapproved registration for intermediaries.</p>
+                    @endif
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
@@ -61,9 +65,9 @@
                     <tbody>
                         @foreach($users as $user)
                             <tr >
-                                <td>{{  $user->first_name.' '.$user->last_name }}</td>
+                                <td>{{  title_case($user->first_name.' '.$user->last_name) }}</td>
                                 <td>{{  $user->email }}</td>
-                                <td>{{ $user->roles()->pluck('name')->implode(' ') }} </td>
+                                <td>{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
                                 <td>{{   (!empty($user->firm))?$user->firm->name:'' }}</td>
                                     <td>
                                     <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">

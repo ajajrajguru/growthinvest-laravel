@@ -287,7 +287,7 @@
 
                 <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
                 @if($user->id)
-                <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-two')}}" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Next</a>
+                <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-two')}}" class="btn btn-primary mt-3 ">Next</a>
                 @endif
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $user->gi_code }}">
