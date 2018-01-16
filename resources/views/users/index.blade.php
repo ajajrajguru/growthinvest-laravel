@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div class="col-lg-10 col-lg-offset-1">
+<div class="container mt-5">
     <h1><i class="fa fa-users"></i> User Administration <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
     <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h1>
     <hr>
@@ -26,7 +26,7 @@
                 @foreach ($users as $user)
                 <tr>
 
-                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->first_name .' '. $user->last_name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
                     <td>{{  $user->roles()->pluck('name')->implode(' ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
