@@ -33,7 +33,7 @@
             </li>
         </ul>
 
-        <div class="profile-content p-4">
+        <div class="profile-content px-md-4 px-sm-0">
             <div class="row">
                 <div class="col-6">
                     <h6 class="mt-0">Step 1: <span class="text-primary">Intermediary Registration</span></h6>
