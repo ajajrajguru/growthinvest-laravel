@@ -16,6 +16,7 @@
     "datatables.net-dt": "^3.2.2",
     "datatables.net": "^1.10.16",
     "parsleyjs": "^2.8.0",
-    "jQuery.mmenu": "mmenu#^7.0.0"
+    "jQuery.mmenu": "mmenu#^7.0.0",
+    "datatables.net-bs4": "^3.2.2"
   }
 }

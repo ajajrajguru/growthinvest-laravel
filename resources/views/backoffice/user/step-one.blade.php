@@ -2,9 +2,9 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-  <script src='https://www.google.com/recaptcha/api.js'></script>  
+  <script src='https://www.google.com/recaptcha/api.js'></script>
 @endsection
 @section('backoffice-content')
 
@@ -20,7 +20,7 @@
         <h1 class="section-title font-weight-medium text-primary mb-0">Add User</h1>
         <p class="text-muted">Add details of intermediary.</p>
 
-        
+
 
         <ul class="progress-indicator my-5">
             <li class="active">
@@ -46,11 +46,11 @@
                 </div>
             </div>
 
-            
+
             <hr class="my-3">
 
             <form method="post" action="{{ url('backoffice/user/save-step-one') }}" data-parsley-validate name="add-user-step1" id="add-user-step1" enctype="multipart/form-data">
-            
+
 
                 <div class="row">
                     <div class="col-md-6">
@@ -88,9 +88,9 @@
 
                 @if($user->id)
                 <div class="row editmode @if($mode=='view') d-none @endif">
-                    <div class="col-md-12"> 
+                    <div class="col-md-12">
                         <a id="change_pwd" href="javascript:void(0)"><i class="fa fa-unlock-alt"></i> Set password</a>
-                        <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn-link">Cancel</a>                
+                        <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn-link">Cancel</a>
                     </div>
                 </div>
                 @endif
@@ -168,7 +168,7 @@
                                     @php
                                     if($user->county == $county)
                                         $countyName = $county;
- 
+
                                     @endphp
                                     <option value="{{ $county }}" @if($user->county == $county) selected @endif>{{ $county }}</option>
                                 @endforeach
@@ -198,7 +198,7 @@
                                     @php
                                     if($user->country == $code)
                                         $countryName = $country;
- 
+
                                     @endphp
                                     <option value="{{ $code }}" @if($user->country == $code) selected @endif>{{ $country }}</option>
                                 @endforeach
@@ -213,7 +213,7 @@
                         <div class="form-group">
                             <label>Company FCA number</label>
                             <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" name="company_fca_number" placeholder="" value="{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}">
-                            <i class=" editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</i>
+                            <em class="small editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</em>
 
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}</span>
                         </div>
@@ -230,7 +230,7 @@
                                     @php
                                     if(isset($userData['typeaccount']) && $userData['typeaccount'] == $description)
                                         $compDescription = $description;
- 
+
                                     @endphp
                                     <option value="{{ $description }}" @if(isset($userData['typeaccount']) && $userData['typeaccount'] == $description) selected @endif>{{ $description }}</option>
                                 @endforeach
@@ -253,12 +253,12 @@
                                     @php
                                     if($user->hasRole($role->name))
                                         $roleName = $role->display_name;
- 
+
                                     @endphp
                                 <option value="{{ $role->name }}" @if($user->hasRole($role->name)) selected @endif>{{ $role->display_name }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $roleName }}</span> 
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $roleName }}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -277,7 +277,7 @@
                                         $firmGICode = $firm->gi_code;
                                     }
 
-                                     
+
                                     @endphp
                                 <option value="{{ $firm->id }}" @if($user->firm_id == $firm->id) selected @endif>{{ $firm->name }}</option>
                                 @endforeach
@@ -292,25 +292,25 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Platform Account Number</label>
-                               {{ $firmGICode }}  
-                             
+                               {{ $firmGICode }}
+
 
                         </div>
                     </div>
                     <div class="col-md-6">
-                       
+
                     </div>
                 </div>
                 @endif
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif placeholder="">
                             <label>Suspended</label>
-                            <input type="checkbox" class="form-control editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif placeholder=""> 
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ ($user->suspended) ?  'Yes' : 'No' }}</span>
+                            <span class="form-check-label viewmode @if($mode=='edit') d-none @endif">{{ ($user->suspended) ?  'Yes' : 'No' }}</span>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         @if(!$user->id)
                         <div class="g-recaptcha" data-sitekey="{{ env('captcha_site_key') }}"></div>
                         @endif
@@ -333,6 +333,6 @@
             display: none;
         }
     </style>
- 
+
 @endsection
 

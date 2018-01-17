@@ -87,6 +87,7 @@ a:hover {
 }
 .parsley-errors-list li {
   color: red;
+  font-size: 0.8rem;
 }
 .nav-tabs--vertical {
   border-bottom: none;
@@ -171,6 +172,11 @@ fieldset legend {
 }
 .table thead th {
   font-size: 0.8rem;
+}
+.table thead th:before,
+.table thead th:after {
+  font-size: 1.2rem;
+  bottom: 0.5em !important;
 }
 .table-no-padding td {
   padding: 0;
