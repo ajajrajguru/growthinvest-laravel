@@ -70,7 +70,7 @@
                                     <td>
                                     <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>
-                                    <option value="edit-intermediary">Edit</option>
+                                    <option value="edit-intermediary">Edit Profile</option>
                                     </select>
                                 </td>
 

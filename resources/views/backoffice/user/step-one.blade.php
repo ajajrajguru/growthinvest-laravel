@@ -28,7 +28,7 @@
                 <span class="bubble"></span>
             </li>
             <li>
-                <a href="javascript:void(0)">Intermediary Profile</a>
+                <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-two')}}">Intermediary Profile</a>
                 <span class="bubble"></span>
             </li>
         </ul>

@@ -67,6 +67,14 @@ class User extends Authenticatable
         return $addionalData;
     }
 
+    public function isCompanyWealthManager(){
+        $compInfo = (!empty($this->userAdditionalInfo())) ? $this->userAdditionalInfo()->data_value : [];  
+        if(isset($compInfo['typeaccount']) && $compInfo['typeaccount'] == 'Wealth Manager')
+            return true;
+        else
+            return false; 
+    }
+
     public function taxstructureInfo()
     {
         $addionalData = $this->userData()->where('data_key','taxstructure_info')->first();
