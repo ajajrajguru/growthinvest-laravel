@@ -207,7 +207,7 @@ class UserController extends Controller
         if($role!="")
             $user->assignRole($role);
 
-        Session::flash('success_message', 'User details saved successfully.');
+        Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
         return redirect(url('backoffice/user/' . $giCode . '/step-one'));
 
     }
@@ -290,7 +290,7 @@ class UserController extends Controller
 
         $giCode = $requestData['gi_code'];
         if ($giCode == '') {
-            Session::flash('error_message', 'User details saved successfully.');
+            Session::flash('error_message', 'Intermediary Registration Has Been Successfully Updated.');
             return redirect(url('backoffice/user/add/step-one'));
         } else {
             $user = User::where('gi_code', $giCode)->first();
@@ -465,5 +465,11 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('flash_message',
                 'User successfully deleted.');
+    }
+
+    public function deleteUsers(Request $request){
+        $requestData        = $request->all(); dd($requestData);
+
+        return response()->json(['results' => $jobTitles, 'options' => []]);
     }
 }
