@@ -56,14 +56,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>First Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="first_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the first name." placeholder="Eg. John" value="{{ $user->first_name}}">
+                            <input type="text" name="first_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the first name." placeholder="Eg. John" value="{{ ($user->id) ? $user->first_name :old('first_name')}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->first_name}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Last Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="last_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the last name." placeholder="Eg. Smith" value="{{ $user->last_name}}">
+                            <input type="text" name="last_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the last name." placeholder="Eg. Smith" value="{{ ($user->id) ? $user->last_name :old('last_name') }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->last_name}}</span>
                         </div>
                     </div>
@@ -73,14 +73,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Email Address <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="email" name="email" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-type="email" data-parsley-required data-parsley-required-message="Please enter email." placeholder="Eg. john_smith@mailinator.com" value="{{ $user->email}}">
+                            <input type="email" name="email" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-type="email" data-parsley-required data-parsley-required-message="Please enter email." placeholder="Eg. john_smith@mailinator.com" value="{{ ($user->id) ? $user->email :old('email')}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->email}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone Number <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" placeholder="Eg: 020 7071 3945" value="{{ $user->telephone_no}}">
+                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" placeholder="Eg: 020 7071 3945" value="{{ ($user->id) ? $user->telephone_no :old('telephone') }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->telephone_no}}</span>
                         </div>
                     </div>
@@ -116,14 +116,31 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Company Name<span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="company_name" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter the company name." value="{{ (isset($userData['company'])) ? $userData['company'] : ''}}">
+                            @php
+                            if($user->id){
+                               $compName =  (isset($userData['company'])) ? $userData['company'] : '';
+                            }
+                            else{
+                                $compName = old('company_name');
+                             } 
+                            @endphp
+                            <input type="text" name="company_name" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter the company name." value="{{ $compName }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['company'])) ? $userData['company'] : ''}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Company Website</label>
-                            <input type="text" name="company_website" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-type="url" value="{{ (isset($userData['website'])) ? $userData['website'] : ''}}">
+                            @php
+                            if($user->id){
+                               $compWebsite =  (isset($userData['website'])) ? $userData['website'] : '';
+                            }
+                            else{
+                                $compWebsite = old('company_website');
+                             } 
+                            @endphp
+
+                            <input type="text" name="company_website" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-type="url" value="{{ $compWebsite }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['website'])) ? $userData['website'] : ''}}</span>
                         </div>
                     </div>
@@ -133,7 +150,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Address Line 1 </label>
-                            <input type="text" name="address_line_1" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ $user->address_1}}">
+                            <input type="text" name="address_line_1" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($user->id) ? $user->address_1 :old('address_line_1') }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->address_1}}</span>
                         </div>
                     </div>
@@ -142,7 +159,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Address Line 2 </label>
-                            <input type="text" name="address_line_2" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ $user->address_2}}">
+                            <input type="text" name="address_line_2" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($user->id) ? $user->address_2 :old('address_line_2') }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->address_2}}</span>
                         </div>
                     </div>
@@ -152,13 +169,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Town/City</label>
-                            <input type="text" name="town_city" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ $user->city}}">
+                            <input type="text" name="town_city" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($user->id) ? $user->city :old('town_city')  }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->city}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>County</label>
+                            <label>County</label>{{ old('county') }}
                             <select class="form-control editmode @if($mode=='view') d-none @endif" name="county">
                                 <option value="">Please Select</option>
                                 @php
@@ -166,11 +183,17 @@
                                 @endphp
                                 @foreach($countyList as $county)
                                     @php
-                                    if($user->county == $county)
+                                    $selected = '';
+                                    if($user->county == $county){
                                         $countyName = $county;
+                                        $selected = 'selected';
+                                    }
+
+                                    if(!$user->id && old('county') == $county)
+                                        $selected = 'selected';
  
                                     @endphp
-                                    <option value="{{ $county }}" @if($user->county == $county) selected @endif>{{ $county }}</option>
+                                    <option value="{{ $county }}" {{ $selected }}>{{ $county }}</option>
                                 @endforeach
                             </select>
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $countyName}}</span>
@@ -182,7 +205,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Postcode <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="postcode" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter postcode." value="{{ $user->postcode}}">
+                            <input type="text" name="postcode" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter postcode." value="{{ ($user->id) ? $user->postcode :old('postcode')  }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->postcode}}</span>
                         </div>
                     </div>
@@ -196,11 +219,17 @@
                                 @endphp
                                 @foreach($countryList as $code=>$country)
                                     @php
-                                    if($user->country == $code)
+                                    $selected = '';
+                                    if($user->country == $code){
                                         $countryName = $country;
+                                        $selected = 'selected';
+                                    }
+
+                                    if(!$user->id && old('country') == $code)
+                                        $selected = 'selected';
  
                                     @endphp
-                                    <option value="{{ $code }}" @if($user->country == $code) selected @endif>{{ $country }}</option>
+                                    <option value="{{ $code }}" {{ $selected }}>{{ $country }}</option>
                                 @endforeach
                             </select>
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $countryName }}</span>
@@ -212,7 +241,16 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Company FCA number</label>
-                            <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" name="company_fca_number" placeholder="" value="{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}">
+                            @php
+                            if($user->id){
+                               $compFcaCode =  (isset($userData['companyfca'])) ? $userData['companyfca'] : '';
+                            }
+                            else{
+                                $compFcaCode = old('company_fca_number');
+                             } 
+                            @endphp
+
+                            <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" name="company_fca_number" placeholder="" value="{{ $compFcaCode }}">
                             <i class=" editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</i>
 
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}</span>
@@ -228,11 +266,17 @@
                                 @endphp
                                 @foreach($companyDescription as $description)
                                     @php
-                                    if(isset($userData['typeaccount']) && $userData['typeaccount'] == $description)
+                                    $selected = '';
+                                    if(isset($userData['typeaccount']) && $userData['typeaccount'] == $description){
                                         $compDescription = $description;
+                                        $selected = 'selected';
+                                    }
+
+                                    if(!$user->id && old('company_description') == $description)
+                                        $selected = 'selected';
  
                                     @endphp
-                                    <option value="{{ $description }}" @if(isset($userData['typeaccount']) && $userData['typeaccount'] == $description) selected @endif>{{ $description }}</option>
+                                    <option value="{{ $description }}" {{ $selected }}>{{ $description }}</option>
                                 @endforeach
                             </select>
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $compDescription}}</span>
@@ -251,11 +295,17 @@
                                 @endphp
                                 @foreach($roles as $role)
                                     @php
-                                    if($user->hasRole($role->name))
+                                    $selected = '';
+                                    if($user->hasRole($role->name)){
                                         $roleName = $role->display_name;
+                                        $selected = 'selected';
+                                    }
+
+                                    if(!$user->id && old('roles') == $role->name)
+                                        $selected = 'selected';
  
                                     @endphp
-                                <option value="{{ $role->name }}" @if($user->hasRole($role->name)) selected @endif>{{ $role->display_name }}</option>
+                                <option value="{{ $role->name }}" {{ $selected }}>{{ $role->display_name }}</option>
                                 @endforeach
                             </select>
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $roleName }}</span> 
@@ -272,14 +322,19 @@
                                 @endphp
                                 @foreach($firms as $firm)
                                     @php
+                                    $selected = '';
                                     if($user->firm_id == $firm->id){
                                         $firmName = $firm->name;
                                         $firmGICode = $firm->gi_code;
+                                        $selected = 'selected';
                                     }
+
+                                    if(!$user->id && old('firm') == $firm->id)
+                                        $selected = 'selected';
 
                                      
                                     @endphp
-                                <option value="{{ $firm->id }}" @if($user->firm_id == $firm->id) selected @endif>{{ $firm->name }}</option>
+                                <option value="{{ $firm->id }}" {{ $selected }}>{{ $firm->name }}</option>
                                 @endforeach
                             </select>
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $firmName }}</span>
@@ -305,8 +360,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Suspended</label>
-                            <input type="checkbox" class="form-control editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif placeholder=""> 
+                            <label>Suspended</label> 
+                            <input type="checkbox" class="form-control editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif @if(!$user->id && old('is_suspended')=='on') checked @endif placeholder=""> 
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ ($user->suspended) ?  'Yes' : 'No' }}</span>
                         </div>
                     </div>

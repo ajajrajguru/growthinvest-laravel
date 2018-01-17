@@ -145,13 +145,13 @@ class UserController extends Controller
                  
                 if ($jsonResponse->success ==''){
                     Session::flash('error_message', 'Please verify that you are not a robot.');
-                    return redirect()->back();
+                    return redirect()->back()->withInput();
                    
                 }
             }
             else{
                 Session::flash('error_message', 'Please verify that you are not a robot.');
-                return redirect()->back();
+                return redirect()->back()->withInput();
             }
 
 
