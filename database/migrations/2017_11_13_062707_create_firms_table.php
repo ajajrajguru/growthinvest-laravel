@@ -21,25 +21,25 @@ class CreateFirmsTable extends Migration
             $table->string('gi_code');//->unique();
         /*    $table->string('firm_id')->unique();*/
             $table->string('name');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->integer('parent_id')->default(0);
             $table->integer('type')->unsigned();
             $table->foreign('type')->references('id')->on('defaults')->onDelete('cascade');;
-            $table->string('fca_ref_no');
-            $table->float('wm_commission')->default(0);
-            $table->float('introducer_commission')->default(0);
+            $table->string('fca_ref_no'->nullable());
+            $table->float('wm_commission')->nullable();
+            $table->float('introducer_commission')->nullable();
             $table->string('invite_key');
             $table->longText('address1');
-            $table->longText('address2');
-            $table->string('town');
-            $table->string('county');
+            $table->longText('address2')->nullable();
+            $table->string('town')->nullable();
+            $table->string('county')->nullable();
             $table->string('postcode');
-            $table->string('country');
-            $table->integer('logoid');
-            $table->integer('backgroundid');
-            $table->char('frontend_display',3);
-            $table->char('backend_display',3);
-            $table->integer('blog');
+            $table->string('country')->nullable();
+            $table->integer('logoid')->nullable();
+            $table->integer('backgroundid')->nullable();
+            $table->char('frontend_display',3)->nullable();
+            $table->char('backend_display',3)->nullable();
+            $table->integer('blog')->nullable();
             $table->timestamps();
              
         });

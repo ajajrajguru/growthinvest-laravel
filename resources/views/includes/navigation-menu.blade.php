@@ -73,65 +73,68 @@
               <li>
                 <a href="/contact-us/">Contact Us</a>
               </li>
-            </ul>
-          </li>
-          @if(Auth::check())
-          <li class="has-submenu">
-          <a class="#" href="#" id="">
-            <img alt="GrowthInvest" class="" height="40" src="{{ url('img/dummy/avatar.png') }}" width="40">
-          </a>
-          
-          <ul class="submenu user-submenu">
-            <li class="avatar-name">
-              <b>Ajency Admin</b>
-            </li>
-            <li class="">
-              <a href="/profile/#view-profile">View Profile</a>
-            </li>
-            <li class="">
-              <b>Role :</b>
-              <?php $role = Session::get('user_data'); ?>
-              <p>{{$role['role']}}</p>
-            </li>
-            <li class="">
-              <b>Firm Name :</b>
-              <p>GrowthInvest</p>
-            </li>
-            <li class="">
-              <b>Firm Type :</b>
-              <p>Wealth Management and Introducer Co.</p>
-            </li>
-          </ul>
-          </li>
+            </ul>           
+      </li>
+      @if(Auth::check())
+      <li class="has-submenu">
+      <a class="#" href="#" id="">
+        <img alt="GrowthInvest" class="" height="40" src="{{"img/dummy/avatar.png"}}" width="40">
+      </a>
+      <a class="" href="#">
+        VIEW PROFILE
+      </a>
+      <ul class="submenu">
+        <li class="avatar-name">
+          <b>Ajency Admin</b>
+        </li>
+        <li class="">
+          <a href="/profile/#view-profile">View Profile</a>
+        </li>
+        <li class="">
+          <b>Role :</b>
+          <?php $role = Session::get('user_data'); ?>
+          <p>{{$role['role']}}</p>
+        </li>
+        <li class="">
+          <b>Firm Name :</b>
+          <p>{{ Auth::user()->firm->name }}</p>
+        </li>
+        <li class="">
+          <b>Firm Type :</b>
+          <p>{{ Auth::user()->firm->firmType()->name }}</p>
+        </li>
+      </ul>
+      </li>
 
-          <li>
-            <a class="" href="/logout">LOGOUT</a>
-          </li>
-          @endif
-
-
-
-          <?php $admin_menus = Session::get('user_menus')?>
-          @if(count($admin_menus['admin'])>0 )
+      <li>
+        <a class="" href="/logout">LOGOUT</a>
+      </li>
+      @endif
 
 
-          <li class="admin-dd-btn has-submenu">
-          <a href="#" class="">Admin</a>
-          <ul class="submenu">
 
-             @foreach($admin_menus['admin'] as $menu_item)
-             <li>
-              <a href="{{$menu_item['url']}}">{{$menu_item['name']}}</a>
-            </li>
-            @endforeach
+      <?php $admin_menus = Session::get('user_menus')?>
+      @if(count($admin_menus['admin'])>0 )
 
 
-          </ul>
-          </li>
-          @endif
+      <li class="admin-dd-btn has-submenu">
+      <a href="#" class="">Admin</a>
+      <ul class="submenu">
+
+         @foreach($admin_menus['admin'] as $menu_item)
+         <li>
+          <a href="{{$menu_item['url']}}">{{$menu_item['name']}}</a>
+        </li>
+        @endforeach
 
 
-        </ul>
+      </ul>
+      </li>
+      @endif
+
+
+    </ul>
+
 
     </nav>
 

@@ -23,11 +23,16 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post('user/save-step-one','UserController@saveUserStepOne');
 	Route::get('user/{giCode}/step-two','UserController@userStepTwoData');
 	Route::post('user/save-step-two','UserController@saveUserStepTwo');
-	Route::get('user/{usertype}','UserController@getUsers');
+	Route::get('user/{usertype}','UserController@getUsers'); 
+
+	Route::get('firms/add','FirmController@create');
+	Route::post('firms/save-firm','FirmController@store');
+	Route::get('firms/{giCode}/edit','FirmController@show'); 
 	
  
 });
 
+ 
 
 	Route::resource('users','UserController');
 	Route::resource('roles', 'RoleController');
@@ -35,6 +40,9 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 
 Route::group(['middleware' => ['auth']], function () { 
 });
+ 
+
+
 
 Auth::routes();
 

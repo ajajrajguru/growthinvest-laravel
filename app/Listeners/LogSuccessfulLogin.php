@@ -36,9 +36,7 @@ class LogSuccessfulLogin
     public function storeUserMenus($event)
     {
         $user = $event->user;
-        /*$user->last_login_at = date('Y-m-d H:i:s');
-        $user->last_login_ip = $this->request->ip();
-        $user->save();*/
+        
         $user_permissions = [];
 
         $user_permissions_ar = $user->getAllPermissions();
@@ -112,7 +110,13 @@ class LogSuccessfulLogin
         if (!$noDashboardAccessIntermediary === false) {
             if ($this->hasAccess('view_all_investors', $user_permissions)) {
 
-                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/portfolio');
+                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/manage-clients', 'params' => array('option' => 'all', 'dashboard_view' => true));
+
+            }
+
+            if ($this->hasAccess('view_firm_investors', $user_permissions)) {
+
+                $dashboard_menus[] = array('name' => 'Manage Clients', 'url' => '/dashboard/manage-clients', 'params' => array('option' => 'firm', 'dashboard_view' => true));
             }
 
         }

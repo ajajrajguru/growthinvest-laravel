@@ -76,6 +76,20 @@
       $(this).addClass('d-none');
       return $('.editUserBtn').removeClass('d-none');
     });
+    $(document).on('click', '.editFirmBtn', function() {
+      $('.editmode').removeClass('d-none');
+      $('.reqField').removeClass('d-none');
+      $('.viewmode').addClass('d-none');
+      $(this).addClass('d-none');
+      return $('.cancelFirmUpdateBtn').removeClass('d-none');
+    });
+    $(document).on('click', '.cancelFirmUpdateBtn', function() {
+      $('.editmode').addClass('d-none');
+      $('.reqField').addClass('d-none');
+      $('.viewmode').removeClass('d-none');
+      $(this).addClass('d-none');
+      return $('.editFirmBtn').removeClass('d-none');
+    });
     $(document).on('click', '#change_pwd', function() {
       $(this).addClass('d-none');
       $('#cancel_pwd').removeClass('d-none');

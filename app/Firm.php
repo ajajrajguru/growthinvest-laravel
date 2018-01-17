@@ -5,17 +5,17 @@ namespace App;
 use App\Defaults;
 use Illuminate\Database\Eloquent\Model;
 
-
 class Firm extends Model
 {
     protected $table = 'firms';
 
     // protected $guard_name = 'backoffice';
 
-    public function getFirmTypes(){
-    	$firmTypes = Defaults::where('type','firm_type')->where('status',1)->get();
+    public function getFirmTypes()
+    {
+        $firmTypes = Defaults::where('type', 'firm_type')->where('status', 1)->get();
 
-    	return $firmTypes;
+        return $firmTypes;
     }
 
     public function users()
@@ -23,15 +23,38 @@ class Firm extends Model
         return $this->hasMany('App\User');
     }
 
-    public function firmType(){
-    	$typeId = $this->type;
-    	$firmType = Defaults::find($typeId);
-    	return $firmType;
+    public function firmData()
+    {
+        return $this->hasMany('App\FirmData');
     }
 
-    public function getParentFirm(){
-    	$parentFirmId = $this->parent_id;
-    	$parentFirm = Firm::find($parentFirmId);
-    	return $parentFirm;
+    public function firmType()
+    {
+        $typeId   = $this->type;
+        $firmType = Defaults::find($typeId);
+        return $firmType;
+    }
+
+    public function getParentFirm()
+    {
+        $parentFirmId = $this->parent_id;
+        $parentFirm   = Firm::find($parentFirmId);
+        return $parentFirm;
+    }
+
+    public function getAllParentFirms()
+    {
+        $parent_firms = Firm::where(['type' => 10])->get();
+        return $parent_firms;
+    }
+
+    public function getFirmAdditionalInfo(){
+        $addionalData = $this->firmData()->where('data_key','additional_details')->first();
+        return $addionalData;
+    }
+
+    public function getFirmInviteContent(){
+        $addionalData = $this->firmData()->where('data_key','invite_content')->first();
+        return $addionalData;
     }
 }

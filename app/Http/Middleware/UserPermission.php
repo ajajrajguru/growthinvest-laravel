@@ -20,6 +20,7 @@ class UserPermission
     more then one permission can be added for URI
      **/
 
+
     public function routePermission()
     {
 
@@ -33,6 +34,9 @@ class UserPermission
                 'backoffice/user/{giCode}/step-two' => ['add_user'],
                 'backoffice/user/save-step-one'     => ['add_user'],
                 'backoffice/user/save-step-two'     => ['add_user'],
+                'backoffice/firms/add'              => ['add_firm'],
+                'backoffice/firms/save-firm'        => ['add_firm','edit_firm','edit_my_firm'],
+                'backoffice/firms/{giCode}/edit'    => ['edit_firm','edit_my_firm'],
             ],
             'frontoffice' =>
             [
@@ -66,6 +70,7 @@ class UserPermission
     public function handle($request, Closure $next)
     {
         $routePerrmissions = $this->routePermission();
+
         $router            = app()->make('router');
         $uriPath           = $router->getCurrentRoute()->uri;
 
