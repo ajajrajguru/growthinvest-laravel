@@ -88,7 +88,7 @@ class UserController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
  
-        $data['roles']              = Role::get();
+        $data['roles']              = Role::where('type','backoffice')->get();
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
         $data['companyDescription'] = getCompanyDescription();
