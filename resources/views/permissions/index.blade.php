@@ -6,10 +6,10 @@
 @section('content')
 
 <div class="container mt-5">
-    <h1><i class="fa fa-key"></i>Available Permissions
+    <h3><i class="fa fa-key"></i>Available Permissions
 
     <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
-    <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a></h1>
+    <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a></h3>
     <hr>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">

@@ -7,7 +7,7 @@
 
 <div class='container mt-5'>
 
-    <h1><i class='fa fa-key'></i> Add Permission</h1>
+    <h3><i class='fa fa-key'></i> Add Permission</h3>
     <br>
 
     {{ Form::open(array('url' => 'permissions')) }}

@@ -6,7 +6,7 @@
 
 <div class='container mt-5'>
 
-    <h1><i class='fa fa-key'></i> Add Role</h1>
+    <h3><i class='fa fa-key'></i> Add Role</h3>
     <hr>
 
     {{ Form::open(array('url' => 'roles')) }}
