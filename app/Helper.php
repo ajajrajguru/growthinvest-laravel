@@ -11,7 +11,7 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
     $model = new $modelName;
 
     if (empty($filters)) {
-        $modelQuery = $model::all();
+        $modelQuery = $model::select('*');
     } else {
         $modelQuery = $model::where($filters);
     }
@@ -24,7 +24,7 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
         $listCount = $modelQuery->get()->count();
         $list      = $modelQuery->skip($skip)->take($length)->get();
     } else {
-        $list      = (empty($filters)) ? $modelQuery : $modelQuery->get();
+        $list      = $modelQuery->get();
         $listCount = $list->count();
     }
 
