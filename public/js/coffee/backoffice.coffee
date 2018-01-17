@@ -45,6 +45,67 @@ $(document).ready ->
     )
     initSerachForTable(usersTable)
 
+  if $('#datatable-Intermediary').length
+    IntermediaryTable = $('#datatable-Intermediary').DataTable(
+      "paging": false
+      "info": false
+      'aaSorting': [[1,'asc']]
+      'columns': [
+        { 'data': 'ckbox'  , "orderable": false}
+        { 'data': 'intm_details' }
+        { 'data': 'comp_name' }
+        { 'data': 'comp_desc'}
+        { 'data': 'submitted_on' }
+        { 'data': 'lbgr'  , "orderable": false}
+        { 'data': 'action' , "orderable": false}
+      ]
+
+    )
+    initSerachForTable(IntermediaryTable)
+
+  $(document).on 'change', '.delete_intm_users', ->
+    if($('input[name="intermediary_user_delete[]"]:checked').length > 0)
+      $('.delete-all-user').removeClass('d-none');
+    else
+      $('.delete-all-user').addClass('d-none');
+
+
+   
+  $(document).on 'click', '.select-all-user', ->
+    $(this).addClass('d-none');
+    $('.select-none-user').removeClass('d-none');
+    $('.delete-all-user').removeClass('d-none');
+    $(".delete_intm_users").prop('checked',true);
+
+  $(document).on 'click', '.select-none-user', ->
+    $(this).addClass('d-none');
+    $('.select-all-user').removeClass('d-none');
+    $('.delete-all-user').addClass('d-none');
+    $(".delete_intm_users").prop('checked',false);
+
+  $(document).on 'click', '.delete-all-user', ->
+    userIds = ''
+
+    $('.delete_intm_users').each ->
+      if $(this).is(':checked')
+        userIds += $(this).val()+','
+ 
+    $.ajax
+      type: 'post'
+      url: '/backoffice/user/delete-user'
+      headers:  
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      data:
+        'user_id': userIds
+      success: (data) ->
+        if data.status
+          $('.gi-success #message').html "Intermediaries Deleted Successfully." 
+        else
+          $('.gi-danger #message').html "Failed to delete intermediaries."
+          
+
+
+
   $(document).on 'click', '.editUserBtn', ->
     $('.editmode').removeClass('d-none');
     $('.reqField').removeClass('d-none');

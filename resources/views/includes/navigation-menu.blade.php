@@ -78,12 +78,10 @@
       @if(Auth::check())
       <li class="has-submenu">
       <a class="#" href="#" id="">
-        <img alt="GrowthInvest" class="" height="40" src="{{"img/dummy/avatar.png"}}" width="40">
+        <img alt="GrowthInvest" class="" height="40" src="{{ url('img/dummy/avatar.png') }}" width="40">
       </a>
-      <a class="" href="#">
-        VIEW PROFILE
-      </a>
-      <ul class="submenu">
+      
+      <ul class="submenu user-submenu">
         <li class="avatar-name">
           <b>Ajency Admin</b>
         </li>

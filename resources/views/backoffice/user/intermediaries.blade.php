@@ -22,6 +22,8 @@
         @php
             echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
         @endphp
+        
+        @include('includes.notification')
 
         <div class="mt-4 bg-white border border-gray p-4">
 
@@ -35,14 +37,20 @@
                     <div class="float-right ">
                        <!--  <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
                         <button type="button" class="btn btn-link">Download CSV</button> -->
+                        <button type="button" class="btn btn-primary mt-3 select-all-user">Select All</button>
+                        <button type="button" class="btn btn-primary mt-3 select-none-user d-none">Select None</button>
+                        <button type="button" class="btn btn-primary mt-3 delete-all-user d-none">Delete Selected Entries</button>
+
+                        
                     </div>
                 </div>
             </div>
 
             <div class="table-responsive mt-3">
-                <table id="datatable-users" class="table dataFilterTable table-hover table-striped-bg">
+                <table id="datatable-Intermediary" class="table dataFilterTable table-hover table-striped-bg">
                     <thead>
                         <tr>
+                            <th style="min-width: 20px;"></th>
                             <th class="w-search">Intermediary Details</th>
                             <th class="w-search">Company Name</th>
                             <th class="w-search">Company Decription</th>
@@ -53,6 +61,7 @@
                     </thead>
                     <thead>
                         <tr class="filters">
+                            <td></td>
                             <td class=""></td>
                             <td class=""></td>
                             <td class=""></td>
@@ -68,6 +77,7 @@
                             $compInfo = (!empty($user->userAdditionalInfo())) ? $user->userAdditionalInfo()->data_value : [];   
                             @endphp
                             <tr >
+                                <td><input type="checkbox" class="form-control delete_intm_users" name="intermediary_user_delete[]" id="" value="{{ $user->id }}"></td>
                                 <td><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br><a class="investor_email" href="mailto: {{  $user->email }}">{{  $user->email }}</a></td>
                                 
                                 <td>{{ (isset($compInfo['company'])) ? title_case($compInfo['company']) : ''}} </td>
@@ -90,7 +100,7 @@
     </div>
 
     <style type="text/css">
-        #datatable-users_filter{
+        #datatable-Intermediary_filter{
             display: none;
         }
     </style>

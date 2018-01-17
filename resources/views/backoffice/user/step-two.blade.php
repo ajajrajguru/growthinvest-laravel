@@ -23,11 +23,11 @@
         
 
         <ul class="progress-indicator my-5">
-            <li class="active">
+            <li class="completed">
                 <a href="javascript:void(0)">Intermediary Registration</a>
                 <span class="bubble"></span>
             </li>
-            <li>
+            <li class="active">
                 <a href="javascript:void(0)">Intermediary Profile</a>
                 <span class="bubble"></span>
             </li>
