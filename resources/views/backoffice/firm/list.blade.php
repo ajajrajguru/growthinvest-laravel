@@ -33,10 +33,10 @@
                     <thead>
                         <tr>
                             <th class="w-search">Logo</th>
-                            <th class="w-search">Name</th>
-                            <th class="w-search">Email</th>
-                            <th class="w-search">Role</th>
-                            <th class="w-search">Firm</th>
+                            <th class="w-search">Firm Name</th>
+                            <th class="w-search">Firm Type</th>
+                            <th class="w-search">Parent Firm</th>
+                            <th class="w-search">Platform GI Code</th>
                             <th style="min-width: 100px;">Action</th>
                         </tr>
                     </thead>
@@ -54,7 +54,7 @@
                         @foreach($firms as $firm)
                                 <tr >
                                     <td></td>
-                                    <td>{{ $firm->name}} </td>
+                                    <td><a>{{ $firm->name}} </a></td>
                                     <td>{{ $firm->firmType()->name }} </td>
                                     <td>{{ (!empty($firm->getParentFirm())) ? $firm->getParentFirm()->name :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>

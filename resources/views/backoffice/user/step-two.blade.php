@@ -14,6 +14,8 @@
             echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
         @endphp
 
+         @include('includes.notification')
+
         <div class="mt-4 bg-white border border-gray p-4">
         <h1 class="section-title font-weight-medium text-primary mb-0">Add User</h1>
         <p class="text-muted">Add details of intermediary.</p>
@@ -111,11 +113,11 @@
                                 <label>Are you a UK FCA regulated individual?</label>
                                 <div class=" editmode @if($mode=='view') d-none @endif">
                                     <div class="form-check form-check-inline">
-                                      <input class="form-check-input" type="radio"  name="contact_fca_regulation" id="fca_yes" value="yes" @if(isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='yes') checked @endif>
+                                      <input class="form-check-input disabledInput" type="radio" @if($mode=='view') disabled @endif  name="contact_fca_regulation" id="fca_yes" value="yes" checked>
                                       <label class="form-check-label" for="fca_yes">Yes</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                      <input class="form-check-input" type="radio" name="contact_fca_regulation" id="fca_no" value="no" @if(isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='no') checked @endif>
+                                      <input class="form-check-input disabledInput" type="radio" @if($mode=='view') disabled @endif  name="contact_fca_regulation" id="fca_no" value="no" @if(isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='no') checked @endif>
                                       <label class="form-check-label" for="fca_no">No</label>
                                     </div>
                                 </div>
@@ -238,7 +240,12 @@
                             </div>
                         </div>
                     </div>
-
+                    @php
+                    if(isset($intermidiatData['interested_tax_struct'])  && !empty($intermidiatData['interested_tax_struct']))
+                        $taxStructure = explode(',',$intermidiatData['interested_tax_struct']);
+                    else
+                        $taxStructure = [];
+                    @endphp
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -246,7 +253,7 @@
                                 <div class="row  editmode @if($mode=='view') d-none @endif">
                                     <div class="col-sm-4">
                                         <div class="form-check">
-                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="SEIS" id="seis" @if(isset($intermidiatData['interested_tax_struct']) && in_array("SEIS",$intermidiatData['interested_tax_struct'])) checked @endif>
+                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="SEIS" id="seis" @if(!empty($taxStructure) && in_array("SEIS",$taxStructure)) checked @endif>
                                           <label class="form-check-label" for="seis">
                                             SEIS
                                           </label>
@@ -254,7 +261,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-check">
-                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="EIS" id="eis" @if(isset($intermidiatData['interested_tax_struct']) && in_array("EIS",$intermidiatData['interested_tax_struct'])) checked @endif>
+                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="EIS" id="eis" @if(!empty($taxStructure) && in_array("EIS",$taxStructure)) checked @endif>
                                           <label class="form-check-label" for="eis">
                                             EIS
                                           </label>
@@ -262,7 +269,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-check">
-                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="VCT" id="vct" @if(isset($intermidiatData['interested_tax_struct']) && in_array("VCT",$intermidiatData['interested_tax_struct'])) checked @endif>
+                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="VCT" id="vct" @if(!empty($taxStructure) && in_array("VCT",$taxStructure)) checked @endif>
                                           <label class="form-check-label" for="vct">
                                             VCT
                                           </label>
@@ -270,7 +277,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-check">
-                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="IHT" id="iht" @if(isset($intermidiatData['interested_tax_struct']) && in_array("IHT",$intermidiatData['interested_tax_struct'])) checked @endif>
+                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="IHT" id="iht" @if(!empty($taxStructure) && in_array("IHT",$taxStructure)) checked @endif>
                                           <label class="form-check-label" for="iht">
                                             IHT
                                           </label>
@@ -278,14 +285,14 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-check">
-                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="SITR" id="sitr" @if(isset($intermidiatData['interested_tax_struct']) && in_array("SITR",$intermidiatData['interested_tax_struct'])) checked @endif>
+                                          <input class="form-check-input" name="interested_tax_structure[]" type="checkbox" value="SITR" id="sitr" @if(!empty($taxStructure) && in_array("SITR",$taxStructure)) checked @endif>
                                           <label class="form-check-label" for="sitr">
                                             SITR
                                           </label>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="viewmode @if($mode=='edit') d-none @endif">@if(isset($intermidiatData['interested_tax_struct']) && !empty($intermidiatData['interested_tax_struct'])) {{ implode(',',$intermidiatData['interested_tax_struct']) }} @endif</span>
+                                <span class="viewmode @if($mode=='edit') d-none @endif">@if(isset($intermidiatData['interested_tax_struct']) && !empty($intermidiatData['interested_tax_struct'])) {{  $intermidiatData['interested_tax_struct']  }} @endif</span>
 
                                 <div class="table-responsive my-4">
                                     <table class="table table-bordered">
@@ -383,11 +390,11 @@
                                             <label>Contact Preferences</label>
                                             <p>I am happy to be contacted by:</p>
                                             <div class="form-check form-check-inline">
-                                              <input name="connect_email" class="form-check-input " type="checkbox" id="yes" value="email" @if(isset($intermidiatData['contact_email']) && $intermidiatData['contact_email']=='yes') checked @endif>
+                                              <input name="connect_email" class="form-check-input disabledInput" type="checkbox" @if($mode=='view') disabled @endif id="email" value="email" @if(isset($intermidiatData['contact_email']) && $intermidiatData['contact_email']=='yes') checked @endif>
                                               <label class="form-check-label" for="email">Email</label>
                                             </div>
                                             <div class="form-check form-check-inline ">
-                                              <input name="connect_mobile" class="form-check-input " type="checkbox" id="yes" value="phone" @if(isset($intermidiatData['contact_phone']) && $intermidiatData['contact_phone']=='yes') checked @endif>
+                                              <input name="connect_mobile" class="form-check-input disabledInput" type="checkbox" @if($mode=='view') disabled @endif id="phone" value="phone" @if(isset($intermidiatData['contact_phone']) && $intermidiatData['contact_phone']=='yes') checked @endif>
                                               <label class="form-check-label" for="phone">Phone</label>
                                             </div>
 
@@ -400,7 +407,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="form-check">
-                                              <input class="form-check-input" name="marketing_email" type="checkbox" value="yes" id="yes_marketing_mails" @if(isset($intermidiatData['marketingmail']) && $intermidiatData['marketingmail']=='yes') checked @endif>
+                                              <input class="form-check-input disabledInput" name="marketing_email" type="checkbox" @if($mode=='view') disabled @endif value="yes" id="yes_marketing_mails" @if(isset($intermidiatData['marketingmail']) && $intermidiatData['marketingmail']=='yes') checked @endif>
                                               <label class="form-check-label" for="yes_marketing_mails">
                                                 Yes, I am happy to receive marketing emails from the platform
                                               </label>
@@ -408,7 +415,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="form-check">
-                                              <input class="form-check-input" name="marketing_mails_partners" type="checkbox" value="yes" id="yes_marketing_mails_partners" @if(isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes') checked @endif>
+                                              <input class="form-check-input disabledInput" name="marketing_mails_partners" @if($mode=='view') disabled @endif type="checkbox" value="yes" id="yes_marketing_mails_partners" @if(isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes') checked @endif>
                                               <label class="form-check-label" for="yes_marketing_mails_partners" >
                                                 Yes, I am happy to receive marketing emails from the platform from selected partners of the platform
                                               </label>
@@ -427,10 +434,11 @@
 
                 <div class="d-flex justify-content-between">
                     <div class="">
-                        <button type="button" class="btn btn-primary mt-3"><i class="fa fa-angle-double-left"></i> Prev</button>
+                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
+                     
                     </div>
                     <div class="">
-                        <button type="submit" class="btn btn-primary mt-3">Save</button>
+                        <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
                     </div>
                 </div>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">

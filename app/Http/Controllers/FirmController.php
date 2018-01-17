@@ -7,6 +7,7 @@ use App\FirmData;
 use Illuminate\Http\Request;
 use Session;
 
+
 class FirmController extends Controller
 {
     /**

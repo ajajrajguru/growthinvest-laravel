@@ -17,6 +17,7 @@
       firmsTable = $('#datatable-firms').DataTable({
         "paging": false,
         "info": false,
+        'aaSorting': [[1, 'asc']],
         'columns': [
           {
             'data': 'logo',
@@ -41,6 +42,7 @@
       usersTable = $('#datatable-users').DataTable({
         "paging": false,
         "info": false,
+        'aaSorting': [[0, 'asc']],
         'columns': [
           {
             'data': 'name'
@@ -62,6 +64,7 @@
       $('.editmode').removeClass('d-none');
       $('.reqField').removeClass('d-none');
       $('.viewmode').addClass('d-none');
+      $('.disabledInput').attr('disabled', false);
       $(this).addClass('d-none');
       return $('.cancelUpdateBtn').removeClass('d-none');
     });
@@ -69,9 +72,11 @@
       $('.editmode').addClass('d-none');
       $('.reqField').addClass('d-none');
       $('.viewmode').removeClass('d-none');
+      $('.disabledInput').attr('disabled', true);
       $(this).addClass('d-none');
       return $('.editUserBtn').removeClass('d-none');
     });
+
     $(document).on('click', '.editFirmBtn', function() {
       $('.editmode').removeClass('d-none');
       $('.reqField').removeClass('d-none');
@@ -94,6 +99,19 @@
       $('.percentlbl').addClass('d-none');
       return $('.editFirmBtn').removeClass('d-none');
     });
+
+    $(document).on('click', '#change_pwd', function() {
+      $(this).addClass('d-none');
+      $('#cancel_pwd').removeClass('d-none');
+      return $('.setpassword-cont').removeClass('d-none');
+    });
+    $(document).on('click', '#cancel_pwd', function() {
+      $(this).addClass('d-none');
+      $('#change_pwd').removeClass('d-none');
+      return $('.setpassword-cont').addClass('d-none');
+    });
+    $('[data-toggle="popover"]').popover();
+
     return $('#giMenu').mmenu({
       navbar: {
         title: false

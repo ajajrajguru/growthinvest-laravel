@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Role;
 use App\User;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -60,28 +61,41 @@ class User extends Authenticatable
         return $addionalData;
     }
 
+    public function getbackOfficeAccessRoleIds(){
+        $roleIds = Permission::join('role_has_permissions', function ($join) {
+                        $join->on('permissions.id', '=', 'role_has_permissions.permission_id')
+                             ->where('permissions.name', 'backoffice_access');
+                    })->pluck('role_has_permissions.role_id')->toArray();
+
+        return $roleIds;
+    }
+
 
 
     public function getIntermidiateUsers($cond=[]){
+        $backOfficeRoleIds = $this->getbackOfficeAccessRoleIds();
+
         $users = User::join('model_has_roles', function ($join) {
                         $join->on('users.id', '=', 'model_has_roles.model_id')
                              ->where('model_has_roles.model_type', 'App\User');
-                    })->join('roles', function ($join) {
+                    })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
-                             ->where('roles.name', 'yet_to_be_approved_intermediary');
-                    })->where($cond)->get();
+                             ->where('roles.name', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
+                    })->where($cond)->select('users.*')->get();
 
         return $users; 
     }
 
 
     public function allUsers($cond=[]){
+        $backOfficeRoleIds = $this->getbackOfficeAccessRoleIds();
+
         $users = User::join('model_has_roles', function ($join) {
                         $join->on('users.id', '=', 'model_has_roles.model_id')
                              ->where('model_has_roles.model_type', 'App\User');
-                    })->join('roles', function ($join) {
+                    })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
-                             ->where('roles.name','!=', 'yet_to_be_approved_intermediary');
+                            ->where('roles.name','!=', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
                     })->where($cond)->select('users.*')->get();
 
         return $users; 
