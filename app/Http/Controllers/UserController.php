@@ -468,8 +468,17 @@ class UserController extends Controller
     }
 
     public function deleteUsers(Request $request){
-        $requestData        = $request->all(); dd($requestData);
+        $requestData = $request->all();  
+        $userIdStr = $requestData['user_id'];
+        $userIds = explode(',', $userIdStr);
+        $userIds = array_filter($userIds);
 
-        return response()->json(['results' => $jobTitles, 'options' => []]);
+        foreach ($userIds as $key => $userId) {
+            $user = User::findOrFail($userId); 
+            $user->delete();
+        }
+
+
+        return response()->json(['status' => true,]);
     }
 }
