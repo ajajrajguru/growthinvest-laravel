@@ -84,10 +84,10 @@ class UserController extends Controller
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
-
+ 
         $data['roles']              = Role::get();
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
@@ -229,9 +229,10 @@ class UserController extends Controller
         $firms     = $firmsList['list'];
 
         $breadcrumbs                = [];
-        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
-        $breadcrumbs[]              = ['url' => '', 'name' => 'Add User'];
+        $breadcrumbs[]              = ['url' => '#', 'name' => $user->first_name.' '.$user->last_name ];
+        $breadcrumbs[]              = ['url' => '', 'name' => 'Edit Profile'];
 
         $userData                   = $user->userAdditionalInfo(); 
         $data['user']               = $user;
@@ -260,9 +261,11 @@ class UserController extends Controller
             abort(404);
         }
 
-        $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+        $breadcrumbs                = [];
+        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
+        $breadcrumbs[]              = ['url' => '#', 'name' => $user->first_name.' '.$user->last_name ];
+        $breadcrumbs[]              = ['url' => '', 'name' => 'Edit Profile'];
 
         $intermidiatData            = $user->userIntermidaiteCompInfo(); 
         $taxstructureInfo           = $user->taxstructureInfo();

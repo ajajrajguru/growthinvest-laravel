@@ -33,6 +33,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function getFirstNameAttribute( $value ) { 
+        $value = title_case( $value );      
+        return $value;
+    }
+
+    public function getLastNameAttribute( $value ) { 
+        $value = title_case( $value );      
+        return $value;
+    }
+
     public function firm()
     {
         return $this->belongsTo('App\Firm', 'firm_id');
