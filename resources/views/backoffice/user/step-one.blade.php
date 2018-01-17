@@ -4,7 +4,7 @@
   @parent
  
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-    
+  <script src='https://www.google.com/recaptcha/api.js'></script>  
 @endsection
 @section('backoffice-content')
 
@@ -13,6 +13,8 @@
         @php
             echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
         @endphp
+
+        @include('includes.notification')
 
         <div class="mt-4 bg-white border border-gray p-4">
         <h1 class="section-title font-weight-medium text-primary mb-0">Add User</h1>
@@ -78,17 +80,26 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone Number <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." placeholder="Eg: 020 7071 3945" value="{{ $user->telephone_no}}">
+                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" placeholder="Eg: 020 7071 3945" value="{{ $user->telephone_no}}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->telephone_no}}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
+                @if($user->id)
+                <div class="row editmode @if($mode=='view') d-none @endif">
+                    <div class="col-md-12"> 
+                        <a id="change_pwd" href="javascript:void(0)"><i class="fa fa-unlock-alt"></i> Set password</a>
+                        <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn-link">Cancel</a>                
+                    </div>
+                </div>
+                @endif
+                <div class="row setpassword-cont @if($user->id) d-none @endif">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Choose Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" id="userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter password." @endif placeholder="">
+                            <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-pattern="/^(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9!@#$%^&*]{6,99}$/" data-parsley-pattern-message="The password does not meet the minimum requirements!" id="userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter password." @endif placeholder="" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="<ul class='pwd-rules clearfix'> <li>PASSWORD RULES</li> <li>At least 6 characters</li> <li>At least 1 x letter</li> <li>At least 1 x number</li> </ul>"  data-original-title="" >
+
                             <span class="viewmode @if($mode=='edit') d-none @endif"> </span>
                         </div>
                     </div>
@@ -231,8 +242,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Roles</label>
-                            <select class="form-control editmode @if($mode=='view') d-none @endif" name="roles">
+                            <label>Role  <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
+                            <select class="form-control editmode @if($mode=='view') d-none @endif" name="roles" data-parsley-required data-parsley-required-message="Please select role.">
                                 <option value="">Please Select</option>
                                 @php
                                 $roleName = '';
@@ -256,11 +267,14 @@
                                 <option value="">Please Select</option>
                                 @php
                                 $firmName = '';
+                                $firmGICode = '';
                                 @endphp
                                 @foreach($firms as $firm)
                                     @php
-                                    if($user->firm_id == $firm->id)
+                                    if($user->firm_id == $firm->id){
                                         $firmName = $firm->name;
+                                        $firmGICode = $firm->gi_code;
+                                    }
 
                                      
                                     @endphp
@@ -272,6 +286,21 @@
                     </div>
                 </div>
 
+                @if($user->id && $user->firm_id)
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Platform Account Number</label>
+                               {{ $firmGICode }}  
+                             
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                       
+                    </div>
+                </div>
+                @endif
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -281,7 +310,9 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                       
+                        @if(!$user->id)
+                        <div class="g-recaptcha" data-sitekey="{{ env('captcha_site_key') }}"></div>
+                        @endif
                     </div>
                 </div>
 

@@ -81,7 +81,7 @@ class User extends Authenticatable
                     })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
                              ->where('roles.name', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
-                    })->where($cond)->get();
+                    })->where($cond)->select('users.*')->get();
 
         return $users; 
     }

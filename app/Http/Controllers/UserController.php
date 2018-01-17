@@ -49,13 +49,15 @@ class UserController extends Controller
         if ($userType == 'intermidiate') {
             $userType = 'Intermediary Registrations';
             $users    = $user->getIntermidiateUsers();
+            $blade = "intermediaries";
         } else {
             $userType = 'User';
             $users    = $user->allUsers();
+            $blade = "users";
         }
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => '', 'name' => $userType];
 
         $data['users']       = $users;
@@ -63,9 +65,12 @@ class UserController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = $userType;
 
-        return view('backoffice.user.list')->with($data);
+        return view('backoffice.user.'.$blade)->with($data);
 
     }
+
+
+
 
     /**
     get list of all required data to be populated in form
@@ -92,6 +97,8 @@ class UserController extends Controller
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Add User';
         $data['mode']               = 'edit';
+
+
         return view('backoffice.user.step-one')->with($data);
     }
 
@@ -104,7 +111,7 @@ class UserController extends Controller
     public function saveUserStepOne(Request $request)
     {
 
-        $requestData        = $request->all();
+        $requestData        = $request->all(); 
         $firstName          = $requestData['first_name'];
         $lastName           = $requestData['last_name'];
         $email              = $requestData['email'];
@@ -125,9 +132,29 @@ class UserController extends Controller
         $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode             = $requestData['gi_code'];
 
+        
+             
+ 
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
-        if ($giCode == '') {
+            if ($giCode == '') {
+
+                if (isset($requestData['g-recaptcha-response'])) {
+                 
+                $jsonResponse = recaptcha_validate($requestData['g-recaptcha-response']);
+                 
+                if ($jsonResponse->success ==''){
+                    Session::flash('error_message', 'Please verify that you are not a robot.');
+                    return redirect()->back();
+                   
+                }
+            }
+            else{
+                Session::flash('error_message', 'Please verify that you are not a robot.');
+                return redirect()->back();
+            }
+
+
             $user                = new User;
             $giCode              = generateGICode($user, 'gi_code', $giArgs);
             $user->gi_code       = $giCode;
@@ -193,12 +220,12 @@ class UserController extends Controller
     public function userStepOneData($giCode)
     {
         $user = User::where('gi_code', $giCode)->first();
-
+         
         if (empty($user)) {
             abort(404);
         }
 
-        $firmsList = getModelList('App\Firm');
+        $firmsList = getModelList('App\Firm',[],0,0,['name'=>'asc']);
         $firms     = $firmsList['list'];
 
         $breadcrumbs                = [];
@@ -206,7 +233,7 @@ class UserController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[]              = ['url' => '', 'name' => 'Add User'];
 
-        $userData                   = $user->userAdditionalInfo();
+        $userData                   = $user->userAdditionalInfo(); 
         $data['user']               = $user;
         $data['userData']           = (!empty($userData)) ? $userData->data_value : [];
         $data['roles']              = Role::get();
