@@ -2,9 +2,9 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-  <script src='https://www.google.com/recaptcha/api.js'></script>  
+  <script src='https://www.google.com/recaptcha/api.js'></script>
 @endsection
 @section('backoffice-content')
 
@@ -20,7 +20,7 @@
         <h1 class="section-title font-weight-medium text-primary mb-0">Add User</h1>
         <p class="text-muted">Add details of intermediary.</p>
 
-        
+
 
         <ul class="progress-indicator my-5">
             <li class="active">
@@ -46,11 +46,11 @@
                 </div>
             </div>
 
-            
+
             <hr class="my-3">
 
             <form method="post" action="{{ url('backoffice/user/save-step-one') }}" data-parsley-validate name="add-user-step1" id="add-user-step1" enctype="multipart/form-data">
-            
+
 
                 <div class="row">
                     <div class="col-md-6">
@@ -88,9 +88,9 @@
 
                 @if($user->id)
                 <div class="row editmode @if($mode=='view') d-none @endif">
-                    <div class="col-md-12"> 
+                    <div class="col-md-12">
                         <a id="change_pwd" href="javascript:void(0)"><i class="fa fa-unlock-alt"></i> Set password</a>
-                        <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn-link">Cancel</a>                
+                        <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn-link">Cancel</a>
                     </div>
                 </div>
                 @endif
@@ -122,7 +122,7 @@
                             }
                             else{
                                 $compName = old('company_name');
-                             } 
+                             }
                             @endphp
                             <input type="text" name="company_name" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter the company name." value="{{ $compName }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['company'])) ? $userData['company'] : ''}}</span>
@@ -137,7 +137,7 @@
                             }
                             else{
                                 $compWebsite = old('company_website');
-                             } 
+                             }
                             @endphp
 
                             <input type="text" name="company_website" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-type="url" value="{{ $compWebsite }}">
@@ -191,7 +191,7 @@
 
                                     if(!$user->id && old('county') == $county)
                                         $selected = 'selected';
- 
+
                                     @endphp
                                     <option value="{{ $county }}" {{ $selected }}>{{ $county }}</option>
                                 @endforeach
@@ -227,7 +227,7 @@
 
                                     if(!$user->id && old('country') == $code)
                                         $selected = 'selected';
- 
+
                                     @endphp
                                     <option value="{{ $code }}" {{ $selected }}>{{ $country }}</option>
                                 @endforeach
@@ -247,11 +247,11 @@
                             }
                             else{
                                 $compFcaCode = old('company_fca_number');
-                             } 
+                             }
                             @endphp
 
                             <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" name="company_fca_number" placeholder="" value="{{ $compFcaCode }}">
-                            <i class=" editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</i>
+                            <em class="small editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</em>
 
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}</span>
                         </div>
@@ -274,7 +274,7 @@
 
                                     if(!$user->id && old('company_description') == $description)
                                         $selected = 'selected';
- 
+
                                     @endphp
                                     <option value="{{ $description }}" {{ $selected }}>{{ $description }}</option>
                                 @endforeach
@@ -303,12 +303,12 @@
 
                                     if(!$user->id && old('roles') == $role->name)
                                         $selected = 'selected';
- 
+
                                     @endphp
                                 <option value="{{ $role->name }}" {{ $selected }}>{{ $role->display_name }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $roleName }}</span> 
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $roleName }}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -332,7 +332,7 @@
                                     if(!$user->id && old('firm') == $firm->id)
                                         $selected = 'selected';
 
-                                     
+
                                     @endphp
                                 <option value="{{ $firm->id }}" {{ $selected }}>{{ $firm->name }}</option>
                                 @endforeach
@@ -347,25 +347,25 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Platform Account Number</label>
-                               {{ $firmGICode }}  
-                             
+                               {{ $firmGICode }}
+
 
                         </div>
                     </div>
                     <div class="col-md-6">
-                       
+
                     </div>
                 </div>
                 @endif
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Suspended</label> 
-                            <input type="checkbox" class="form-control editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif @if(!$user->id && old('is_suspended')=='on') checked @endif placeholder=""> 
+                    <div class="col-md-12">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif @if(!$user->id && old('is_suspended')=='on') checked @endif placeholder="">
+                            <label class="form-check-label">Suspended</label>
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ ($user->suspended) ?  'Yes' : 'No' }}</span>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         @if(!$user->id)
                         <div class="g-recaptcha" data-sitekey="{{ env('captcha_site_key') }}"></div>
                         @endif
@@ -388,6 +388,6 @@
             display: none;
         }
     </style>
- 
+
 @endsection
 

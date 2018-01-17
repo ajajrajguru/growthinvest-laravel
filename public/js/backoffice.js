@@ -1,6 +1,6 @@
 (function() {
   $(document).ready(function() {
-    var IntermediaryTable, firmsTable, initSerachForTable, usersTable;
+    var IntermediaryTable, api, firmsTable, initSerachForTable, usersTable;
     $('.dataFilterTable thead th.w-search').each(function() {
       var title;
       title = $(this).text();
@@ -184,12 +184,31 @@
       return $('.setpassword-cont').addClass('d-none');
     });
     $('[data-toggle="popover"]').popover();
-    return $('#giMenu').mmenu({
+    $('#giMenu').mmenu({
       navbar: {
         title: false
-      }
+      },
+      extensions: ['pagedim-black', 'theme-dark']
     }, {
       clone: true
+    });
+    api = $('#mm-giMenu').data('mmenu');
+    api.bind('open:start', function() {
+      return $('.mobile-menu-toggle').addClass('is-active');
+    });
+    api.bind('close:start', function() {
+      return $('.mobile-menu-toggle').removeClass('is-active');
+    });
+    return $(window).scroll(function() {
+      var scroll;
+      scroll = $(window).scrollTop();
+      if (scroll >= 1) {
+        $('header').addClass('sticky');
+        return $('.navbar-menu').addClass('dark');
+      } else {
+        $('header').removeClass('sticky');
+        return $('.navbar-menu').removeClass('dark');
+      }
     });
   });
 

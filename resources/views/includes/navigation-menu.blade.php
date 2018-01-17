@@ -4,14 +4,14 @@
 
       <div id="logo" class="gi-logo">
         <a class="" href="https://growthinvest.com/" title="GrowthInvest">
-          <img src="{{ url('img/growthinvest-logo.png') }}" width="250" height="45" class="logo_normal" alt="GrowthInvest">
+          <img src="{{ url('img/growthinvest-logo.png') }}" width="250" height="" class="logo_normal" alt="GrowthInvest">
         </a>
     </div>
 
     <nav id="giMenu">
 
         <ul class="navbar-menu">
-        
+
           <li class="" id="">
             <a href="#">Dashboard</a>
           </li>
@@ -44,7 +44,7 @@
             </ul>
           </li>
           <li class="has-submenu">
-            <a href="#" style="">More <i class="fa fa-angle-down"></i></a>
+            <a href="#" style="">More</a>
             <ul class="submenu">
               <li>
                 <a href="/about-us/">About Us</a>
@@ -73,20 +73,21 @@
               <li>
                 <a href="/contact-us/">Contact Us</a>
               </li>
-            </ul>           
+            </ul>
       </li>
       @if(Auth::check())
       <li class="has-submenu">
-      <a class="#" href="#" id="">
+      <a class="d-flex align-items-center" href="#" id="">
         <img alt="GrowthInvest" class="" height="40" src="{{ url('img/dummy/avatar.png') }}" width="40">
+        <div class="d-sm-none ml-2 small"><b>Ajency Admin</b></div>
       </a>
-      
+
       <ul class="submenu user-submenu">
-        <li class="avatar-name">
+        <li class="avatar-name d-none d-md-block">
           <b>Ajency Admin</b>
         </li>
         <li class="">
-          <a href="/profile/#view-profile">View Profile</a>
+          <a href="/profile/#view-profile" class="text-primary">View Profile</a>
         </li>
         <li class="">
           <b>Role :</b>
@@ -140,12 +141,8 @@
   </div>
 </header>
 
-
-
-
-
-
-
-
-
-
+<a class="hamburger hamburger--spin mobile-menu-toggle" href="#giMenu">
+  <span class="hamburger-box">
+    <span class="hamburger-inner"></span>
+  </span>
+</a>
