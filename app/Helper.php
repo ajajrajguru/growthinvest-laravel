@@ -114,4 +114,25 @@ function getSource(){
      return ['internet'=>'Internet','personal'=>'Referral','recommendation'=>'Recommendation','email'=>'Email','event'=>'Event','LGBR Capital'=>'LGBR Capital'];
 }
  
+/** Generate Firm Invite Key
+***/
+function generate_firm_invite_key(\Illuminate\Database\Eloquent\Model $model,$firm_id){
+
+    //  if($firm_id=="")
+    //    return '';
+    $firn_invite_key = uniqid().$firm_id;
+    // $firn_invite_key = time()+rand();
+
+    $record = $model->where(['invite_key'=> $firn_invite_key])->first();
+
+   if(empty($record)){
+      $result = $firn_invite_key;
+   }else{
+      $result = generate_firm_invite_key($model, $firm_id);
+   }
+
+   return $result;
+
+    
+}
  

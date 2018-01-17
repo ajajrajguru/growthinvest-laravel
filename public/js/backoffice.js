@@ -72,6 +72,28 @@
       $(this).addClass('d-none');
       return $('.editUserBtn').removeClass('d-none');
     });
+    $(document).on('click', '.editFirmBtn', function() {
+      $('.editmode').removeClass('d-none');
+      $('.reqField').removeClass('d-none');
+      $('.viewmode').addClass('d-none');
+      $(this).addClass('d-none');
+      $('#cke_ent_invite_content').removeClass('d-none')
+      $('#cke_inv_invite_content').removeClass('d-none')
+      $('#cke_fundmanager_invite_content').removeClass('d-none')
+      $('.percentlbl').removeClass('d-none');
+      return $('.cancelFirmUpdateBtn').removeClass('d-none');
+    });
+    $(document).on('click', '.cancelFirmUpdateBtn', function() {
+      $('.editmode').addClass('d-none');
+      $('.reqField').addClass('d-none');
+      $('.viewmode').removeClass('d-none');
+      $(this).addClass('d-none');
+      $('#cke_ent_invite_content').addClass('d-none')
+      $('#cke_inv_invite_content').addClass('d-none')
+      $('#cke_fundmanager_invite_content').addClass('d-none')
+      $('.percentlbl').addClass('d-none');
+      return $('.editFirmBtn').removeClass('d-none');
+    });
     return $('#giMenu').mmenu({
       navbar: {
         title: false

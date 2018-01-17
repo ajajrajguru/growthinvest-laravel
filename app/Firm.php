@@ -23,6 +23,11 @@ class Firm extends Model
         return $this->hasMany('App\User');
     }
 
+    public function firmData()
+    {
+        return $this->hasMany('App\FirmData');
+    }
+
     public function firmType()
     {
         $typeId   = $this->type;
@@ -41,5 +46,15 @@ class Firm extends Model
     {
         $parent_firms = Firm::where(['type' => 10])->get();
         return $parent_firms;
+    }
+
+    public function getFirmAdditionalInfo(){
+        $addionalData = $this->firmData()->where('data_key','additional_details')->first();
+        return $addionalData;
+    }
+
+    public function getFirmInviteContent(){
+        $addionalData = $this->firmData()->where('data_key','invite_content')->first();
+        return $addionalData;
     }
 }

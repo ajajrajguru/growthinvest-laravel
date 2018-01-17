@@ -47,4 +47,11 @@ class FirmData extends Model
         return $firmm_metas;
     }
 
+    
+    public function getDataValueAttribute( $value ) { 
+        $value = @unserialize( $value );
+         
+        return $value;
+    }
+
 }

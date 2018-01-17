@@ -60,6 +60,22 @@ $(document).ready ->
     $(this).addClass('d-none');
     $('.editUserBtn').removeClass('d-none');
 
+
+  $(document).on 'click', '.editFirmBtn', ->
+    $('.editmode').removeClass('d-none');
+    $('.reqField').removeClass('d-none');
+    $('.viewmode').addClass('d-none'); 
+
+    $(this).addClass('d-none');
+    $('.cancelFirmUpdateBtn').removeClass('d-none');
+
+  $(document).on 'click', '.cancelFirmUpdateBtn', ->
+    $('.editmode').addClass('d-none');
+    $('.reqField').addClass('d-none');
+    $('.viewmode').removeClass('d-none'); 
+    $(this).addClass('d-none');
+    $('.editFirmBtn').removeClass('d-none');
+
   # Menu JS
   $('#giMenu').mmenu { navbar: title: false }, clone: true
          
