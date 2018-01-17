@@ -5,7 +5,7 @@
 @section('content')
 
 <div class='container mt-5'>
-    <h1><i class='fa fa-key'></i> Edit Role: {{$role->name}}</h1>
+    <h3><i class='fa fa-key'></i> Edit Role: {{$role->name}}</h3>
     <hr>
 
     {{ Form::model($role, array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
