@@ -8,10 +8,12 @@ use App\Role;
 use App\User;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles,SoftDeletes;
+ 
 
     // protected $guard_name = 'backoffice';
 

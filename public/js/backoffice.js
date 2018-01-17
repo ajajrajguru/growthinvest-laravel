@@ -126,8 +126,18 @@
         },
         success: function(data) {
           if (data.status) {
-            return $('.gi-success #message').html("Intermediaries Deleted Successfully.");
+            $('.delete_intm_users').each(function() {
+              if ($(this).is(':checked')) {
+                return IntermediaryTable.row($(this).closest('tr')).remove();
+              }
+            });
+            $('.gi-success').removeClass('d-none');
+            $('.gi-danger').addClass('d-none');
+            $('.gi-success #message').html("Intermediaries Deleted Successfully.");
+            return IntermediaryTable.draw();
           } else {
+            $('.gi-success').addClass('d-none');
+            $('.gi-danger').removeClass('d-none');
             return $('.gi-danger #message').html("Failed to delete intermediaries.");
           }
         }

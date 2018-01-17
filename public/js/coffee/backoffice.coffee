@@ -99,8 +99,18 @@ $(document).ready ->
         'user_id': userIds
       success: (data) ->
         if data.status
+          $('.delete_intm_users').each ->
+            if $(this).is(':checked')
+               IntermediaryTable.row($(this).closest('tr')).remove()
+
+          $('.gi-success').removeClass('d-none')
+          $('.gi-danger').addClass('d-none')
           $('.gi-success #message').html "Intermediaries Deleted Successfully." 
+
+          IntermediaryTable.draw()
         else
+          $('.gi-success').addClass('d-none')
+          $('.gi-danger').removeClass('d-none')
           $('.gi-danger #message').html "Failed to delete intermediaries."
           
 
