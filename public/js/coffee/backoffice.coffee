@@ -70,7 +70,7 @@ $(document).ready ->
       $('.delete-all-user').addClass('d-none');
 
 
-   
+
   $(document).on 'click', '.select-all-user', ->
     $(this).addClass('d-none');
     $('.select-none-user').removeClass('d-none');
@@ -89,11 +89,11 @@ $(document).ready ->
     $('.delete_intm_users').each ->
       if $(this).is(':checked')
         userIds += $(this).val()+','
- 
+
     $.ajax
       type: 'post'
       url: '/backoffice/user/delete-user'
-      headers:  
+      headers:
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       data:
         'user_id': userIds
@@ -105,21 +105,21 @@ $(document).ready ->
 
           $('.gi-success').removeClass('d-none')
           $('.gi-danger').addClass('d-none')
-          $('.gi-success #message').html "Intermediaries Deleted Successfully." 
+          $('.gi-success #message').html "Intermediaries Deleted Successfully."
 
           IntermediaryTable.draw()
         else
           $('.gi-success').addClass('d-none')
           $('.gi-danger').removeClass('d-none')
           $('.gi-danger #message').html "Failed to delete intermediaries."
-          
+
 
 
 
   $(document).on 'click', '.editUserBtn', ->
     $('.editmode').removeClass('d-none');
     $('.reqField').removeClass('d-none');
-    $('.viewmode').addClass('d-none'); 
+    $('.viewmode').addClass('d-none');
     $('.disabledInput').attr('disabled',false)
 
     $(this).addClass('d-none');
@@ -128,7 +128,7 @@ $(document).ready ->
   $(document).on 'click', '.cancelUpdateBtn', ->
     $('.editmode').addClass('d-none');
     $('.reqField').addClass('d-none');
-    $('.viewmode').removeClass('d-none'); 
+    $('.viewmode').removeClass('d-none');
     $('.disabledInput').attr('disabled',true)
     $(this).addClass('d-none');
     $('.editUserBtn').removeClass('d-none');
@@ -137,7 +137,7 @@ $(document).ready ->
   $(document).on 'click', '.editFirmBtn', ->
     $('.editmode').removeClass('d-none');
     $('.reqField').removeClass('d-none');
-    $('.viewmode').addClass('d-none'); 
+    $('.viewmode').addClass('d-none');
 
     $(this).addClass('d-none');
     $('.cancelFirmUpdateBtn').removeClass('d-none');
@@ -145,26 +145,41 @@ $(document).ready ->
   $(document).on 'click', '.cancelFirmUpdateBtn', ->
     $('.editmode').addClass('d-none');
     $('.reqField').addClass('d-none');
-    $('.viewmode').removeClass('d-none'); 
+    $('.viewmode').removeClass('d-none');
     $(this).addClass('d-none');
     $('.editFirmBtn').removeClass('d-none');
 
 
   $(document).on 'click', '#change_pwd', ->
     $(this).addClass('d-none');
-    $('#cancel_pwd').removeClass('d-none'); 
-    $('.setpassword-cont').removeClass('d-none'); 
+    $('#cancel_pwd').removeClass('d-none');
+    $('.setpassword-cont').removeClass('d-none');
 
   $(document).on 'click', '#cancel_pwd', ->
     $(this).addClass('d-none');
-    $('#change_pwd').removeClass('d-none'); 
+    $('#change_pwd').removeClass('d-none');
     $('.setpassword-cont').addClass('d-none');
 
   $('[data-toggle="popover"]').popover()
 
   # Menu JS
-  $('#giMenu').mmenu { navbar: title: false }, clone: true
+  $('#giMenu').mmenu {
+    navbar: title: false
+    extensions: [ 'pagedim-black' ]
+  }, clone: true
+  api = $('#mm-giMenu').data('mmenu')
+  api.bind 'open:start', ->
+    $('.mobile-menu-toggle').addClass 'is-active'
+  api.bind 'close:start', ->
+    $('.mobile-menu-toggle').removeClass 'is-active'
 
 
-         
+  $(window).scroll ->
+    scroll = $(window).scrollTop()
+    if scroll >= 1
+      $('header').addClass 'sticky'
+      $('.navbar-menu').addClass 'dark'
+    else
+      $('header').removeClass 'sticky'
+      $('.navbar-menu').removeClass 'dark'
 

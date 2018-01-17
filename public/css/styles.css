@@ -11,6 +11,34 @@ body {
     display: none;
   }
 }
+@media (max-width: 767px) {
+  .gi-logo {
+    padding: 10px 0;
+  }
+  .gi-logo img {
+    width: 200px;
+  }
+}
+.mobile-menu-toggle {
+  position: fixed;
+  right: 0;
+  top: 5px;
+  z-index: 2;
+}
+header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  width: 100%;
+  -moz-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+header.sticky {
+  background-color: white;
+  -moz-box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+       box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+}
 .text-primary {
   color: #00a9ee !important;
 }
@@ -374,10 +402,52 @@ fieldset legend {
   background-color: #0085bb;
   color: #fff;
 }
-header {
-  position: fixed;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 2;
+#giMenu .navbar-menu.dark > li a {
+  color: #444444;
+}
+#giMenu .navbar-menu.dark > li a:hover {
+  color: #00a9ee;
+  text-decoration: none;
+}
+#giMenu .navbar-menu.dark .admin-dd-btn > a {
+  color: #fff;
+}
+#giMenu .navbar-menu.dark .admin-dd-btn > a:hover {
+  color: #fff;
+  background-color: #0085bb;
+}
+#giMenu .navbar-menu.dark .admin-dd-btn:hover > a {
+  background-color: #0085bb;
+  color: #fff;
+}
+#mm-giMenu .admin-dd-btn {
+  background-color: #00a9ee;
+}
+#mm-giMenu .admin-dd-btn a {
+  color: #fff;
+  font-weight: 600;
+}
+.user-submenu {
+  padding: 5px 15px;
+  margin-top: 20px;
+  min-width: 250px;
+}
+.user-submenu a {
+  padding: 5px 0 0;
+  color: #00a9ee;
+  font-weight: normal;
+}
+.user-submenu li {
+  padding: 5px 0 10px;
+}
+.user-submenu b {
+  font-size: 0.75rem;
+}
+.user-submenu p {
+  margin-bottom: 0;
+  font-size: 0.85rem;
+}
+.mm-wrapper_opened header {
+  -moz-transform: translateY(-100px);
+       transform: translateY(-100px);
 }
