@@ -213,6 +213,7 @@
                         <div class="form-group">
                             <label>Company FCA number</label>
                             <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" name="company_fca_number" placeholder="" value="{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}">
+                            <i class=" editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</i>
 
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}</span>
                         </div>
