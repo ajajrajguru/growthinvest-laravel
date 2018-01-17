@@ -54,6 +54,7 @@
         }
         .submenu{
           display: block;
+          animation: fadeInUp .3s ease-out 1;
           a{
             &:hover{
               color: @brand-primary;
@@ -107,6 +108,7 @@
         text-transform: uppercase;
         font-weight: 600;
         color: #fff;
+        transition: all 0.3s ease-out;
         &:hover{
           color: @brand-primary;
           text-decoration: none;
@@ -195,10 +197,17 @@
 
 .mm-wrapper_opened{
   header{
-    // z-index: -1;
     transform: translateY(-100px);
   }
-  // .mm-menu_offcanvas{
-  //   z-index: 3;
-  // }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

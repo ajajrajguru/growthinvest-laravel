@@ -165,7 +165,7 @@ $(document).ready ->
   # Menu JS
   $('#giMenu').mmenu {
     navbar: title: false
-    extensions: [ 'pagedim-black' ]
+    extensions: [ 'pagedim-black', 'theme-dark' ]
   }, clone: true
   api = $('#mm-giMenu').data('mmenu')
   api.bind 'open:start', ->

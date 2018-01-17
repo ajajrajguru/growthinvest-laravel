@@ -335,6 +335,8 @@ fieldset legend {
 }
 #giMenu .navbar-menu .has-submenu:hover .submenu {
   display: block;
+  -moz-animation: fadeInUp 0.3s ease-out 1;
+       animation: fadeInUp 0.3s ease-out 1;
 }
 #giMenu .navbar-menu .has-submenu:hover .submenu a:hover {
   color: #00a9ee;
@@ -382,6 +384,8 @@ fieldset legend {
   text-transform: uppercase;
   font-weight: 600;
   color: #fff;
+  -moz-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
 #giMenu .navbar-menu > li a:hover {
   color: #00a9ee;
@@ -450,4 +454,28 @@ fieldset legend {
 .mm-wrapper_opened header {
   -moz-transform: translateY(-100px);
        transform: translateY(-100px);
+}
+@-moz-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(10px);
+         transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    -moz-transform: translateY(0);
+         transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(10px);
+         transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    -moz-transform: translateY(0);
+         transform: translateY(0);
+  }
 }

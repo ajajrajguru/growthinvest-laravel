@@ -188,7 +188,7 @@
       navbar: {
         title: false
       },
-      extensions: ['pagedim-black']
+      extensions: ['pagedim-black', 'theme-dark']
     }, {
       clone: true
     });
