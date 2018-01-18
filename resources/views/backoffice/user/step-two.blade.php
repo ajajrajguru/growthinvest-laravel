@@ -2,9 +2,9 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-    
+
 @endsection
 @section('backoffice-content')
 
@@ -20,7 +20,7 @@
         <h1 class="section-title font-weight-medium text-primary mb-0">Add User</h1>
         <p class="text-muted">Add details of intermediary.</p>
 
-        
+
 
         <ul class="progress-indicator my-5">
             <li class="completed">
@@ -35,9 +35,9 @@
 
         <div class="profile-content p-4">
 
-        
+
         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
-     
+
 
             <div class="row">
                 <div class="col-6">
@@ -59,7 +59,9 @@
                         <div class="col-md-3 text-center">
                             <label class="d-block">Profile Picture</label>
                             <img src="{{ url('img/dummy/avatar.png')}}'" alt="..." class="img-thumbnail">
+                            @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
+                            @endif
                         </div>
                         <div class="col-md-9">
                             <div class="row">
@@ -163,7 +165,9 @@
                         <div class="col-md-3 text-center">
                             <label class="d-block">Logo</label>
                             <img src="{{ url('img/dummy/avatar.png') }}" alt="..." class="img-thumbnail">
+                            @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
+                            @endif
                         </div>
                         <div class="col-md-9">
                             <div class="row">
@@ -197,12 +201,12 @@
                                     @php
                                     $regTypeName = '';
                                     @endphp
-                                    
+
                                     @foreach($regulationTypes as $key =>$regType)
                                     @php
                                     if(isset($intermidiatData['regulationtype']) && $intermidiatData['regulationtype']==$key)
                                         $regTypeName = $regType;
- 
+
                                     @endphp
 
                                     <option @if(isset($intermidiatData['regulationtype']) && $intermidiatData['regulationtype']==$key) selected @endif  value="{{ $key }}">{{ $regType }}</option>
@@ -223,16 +227,16 @@
                                     @php
                                     if(isset($intermidiatData['reg_ind_cnt']) && $intermidiatData['reg_ind_cnt']==$key)
                                         $rangeName = $range;
- 
+
                                     @endphp
                                    <option @if(isset($intermidiatData['reg_ind_cnt']) && $intermidiatData['reg_ind_cnt']==$key) selected @endif  value="{{ $key }}">{{ $range }}</option>
-                                    @endforeach                          
+                                    @endforeach
                                 </select>
                                 <span class="viewmode @if($mode=='edit') d-none @endif">{{ $rangeName }}</span>
                             </div>
                         </div>
                     </div>
- 
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -361,15 +365,15 @@
                                         <div class="form-group">
                                             <label>How did you hear about the Platform?</label>
                                             <select name="about_platform" class="form-control editmode @if($mode=='view') d-none @endif" name="">
-                                                <option value="">Select</option>  
+                                                <option value="">Select</option>
                                                  @php
                                                 $sourceName = '';
-                                                @endphp                      
+                                                @endphp
                                                  @foreach($sources as $key =>$source)
                                                     if(isset($intermidiatData['source']) && $intermidiatData['source']==$key)
                                                         $sourceName = $range;
                                                    <option @if(isset($intermidiatData['source']) && $intermidiatData['source']==$key) selected @endif  value="{{ $key }}">{{ $source }}</option>
-                                                    @endforeach                     
+                                                    @endforeach
                                             </select>
                                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $sourceName }}</span>
                                         </div>
@@ -400,7 +404,7 @@
                                               <label class="form-check-label" for="phone">Phone</label>
                                             </div>
 
-                                             
+
                                         </div>
                                     </div>
                                 </div>
@@ -438,7 +442,7 @@
                 <div class="d-flex justify-content-between">
                     <div class="">
                         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
-                     
+
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
@@ -456,6 +460,6 @@
             display: none;
         }
     </style>
- 
+
 @endsection
 
