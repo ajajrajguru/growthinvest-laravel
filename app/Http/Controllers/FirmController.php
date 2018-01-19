@@ -31,6 +31,28 @@ class FirmController extends Controller
         return view('backoffice.firm.list')->with($data);
     }
 
+    public function exportFirms()
+    {
+        $firmsList = getModelList('App\Firm');
+
+        $fileName = 'firms_list_as_on_'.date('d-m-Y');
+        $header   = ['Platform GI Code', 'Name','Firm Type','Parent Firm'];
+        $firmData = [];
+ 
+        foreach ($users as $user) {
+            $userData[] = [ $firm->gi_code, 
+                            title_case($firm->name),
+                            title_case($firm->firmType()->name),
+                            (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :''
+            ];
+        }
+         
+        generateCSV($header,$userData,$fileName);
+
+        return true;
+
+    }
+
     /**
      * Show the form for creating a new Firm.
      *

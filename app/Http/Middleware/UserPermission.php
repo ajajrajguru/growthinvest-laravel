@@ -29,6 +29,7 @@ class UserPermission
             [
                 'backoffice/firm'                   => ['view_firms'],
                 'backoffice/user/{usertype}'        => ['users'],
+                'backoffice/user/export-users'      => ['users'],
                 'backoffice/user/add/step-one'      => ['add_user'],
                 'backoffice/user/{giCode}/step-one' => ['add_user'],
                 'backoffice/user/{giCode}/step-two' => ['add_user'],

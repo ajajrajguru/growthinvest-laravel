@@ -49,11 +49,11 @@ class UserController extends Controller
         if ($userType == 'intermidiate') {
             $userType = 'Intermediary Registrations';
             $users    = $user->getIntermidiateUsers();
-            $blade = "intermediaries";
+            $blade    = "intermediaries";
         } else {
             $userType = 'User';
             $users    = $user->allUsers();
-            $blade = "users";
+            $blade    = "users";
         }
 
         $breadcrumbs   = [];
@@ -65,12 +65,9 @@ class UserController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = $userType;
 
-        return view('backoffice.user.'.$blade)->with($data);
+        return view('backoffice.user.' . $blade)->with($data);
 
     }
-
-
-
 
     /**
     get list of all required data to be populated in form
@@ -87,8 +84,8 @@ class UserController extends Controller
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
- 
-        $data['roles']              = Role::where('type','backoffice')->get();
+
+        $data['roles']              = Role::where('type', 'backoffice')->get();
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
         $data['companyDescription'] = getCompanyDescription();
@@ -97,7 +94,6 @@ class UserController extends Controller
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Add User';
         $data['mode']               = 'edit';
-
 
         return view('backoffice.user.step-one')->with($data);
     }
@@ -111,7 +107,7 @@ class UserController extends Controller
     public function saveUserStepOne(Request $request)
     {
 
-        $requestData        = $request->all(); 
+        $requestData        = $request->all();
         $firstName          = $requestData['first_name'];
         $lastName           = $requestData['last_name'];
         $email              = $requestData['email'];
@@ -132,28 +128,23 @@ class UserController extends Controller
         $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode             = $requestData['gi_code'];
 
-        
-             
- 
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
-            if ($giCode == '') {
+        if ($giCode == '') {
 
-                if (isset($requestData['g-recaptcha-response'])) {
-                 
+            if (isset($requestData['g-recaptcha-response'])) {
+
                 $jsonResponse = recaptcha_validate($requestData['g-recaptcha-response']);
-                 
-                if ($jsonResponse->success ==''){
+
+                if ($jsonResponse->success == '') {
                     Session::flash('error_message', 'Please verify that you are not a robot.');
                     return redirect()->back()->withInput();
-                   
+
                 }
-            }
-            else{
+            } else {
                 Session::flash('error_message', 'Please verify that you are not a robot.');
                 return redirect()->back()->withInput();
             }
-
 
             $user                = new User;
             $giCode              = generateGICode($user, 'gi_code', $giArgs);
@@ -204,8 +195,9 @@ class UserController extends Controller
             $user->removeRole($roleName);
         }
 
-        if($role!="")
+        if ($role != "") {
             $user->assignRole($role);
+        }
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
         return redirect(url('backoffice/user/' . $giCode . '/step-one'));
@@ -220,21 +212,21 @@ class UserController extends Controller
     public function userStepOneData($giCode)
     {
         $user = User::where('gi_code', $giCode)->first();
-         
+
         if (empty($user)) {
             abort(404);
         }
 
-        $firmsList = getModelList('App\Firm',[],0,0,['name'=>'asc']);
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $breadcrumbs                = [];
-        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
-        $breadcrumbs[]              = ['url' => '#', 'name' => $user->first_name.' '.$user->last_name ];
-        $breadcrumbs[]              = ['url' => '', 'name' => 'Edit Profile'];
+        $breadcrumbs[] = ['url' => '#', 'name' => $user->first_name . ' ' . $user->last_name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Edit Profile'];
 
-        $userData                   = $user->userAdditionalInfo(); 
+        $userData                   = $user->userAdditionalInfo();
         $data['user']               = $user;
         $data['userData']           = (!empty($userData)) ? $userData->data_value : [];
         $data['roles']              = Role::get();
@@ -261,13 +253,13 @@ class UserController extends Controller
             abort(404);
         }
 
-        $breadcrumbs                = [];
-        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
-        $breadcrumbs[]              = ['url' => '#', 'name' => $user->first_name.' '.$user->last_name ];
-        $breadcrumbs[]              = ['url' => '', 'name' => 'Edit Profile'];
+        $breadcrumbs[] = ['url' => '#', 'name' => $user->first_name . ' ' . $user->last_name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Edit Profile'];
 
-        $intermidiatData            = $user->userIntermidaiteCompInfo(); 
+        $intermidiatData            = $user->userIntermidaiteCompInfo();
         $taxstructureInfo           = $user->taxstructureInfo();
         $data['user']               = $user;
         $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
@@ -317,7 +309,7 @@ class UserController extends Controller
             'source_cmts'                 => $requestData['additional_comments'],
             'marketingmail'               => (isset($requestData['marketing_email'])) ? 'yes' : 'no',
             'marketingmail_partner'       => (isset($requestData['marketing_mails_partners'])) ? 'yes' : 'no',
-            'interested_tax_struct'       => (isset($requestData['interested_tax_structure']) && !empty($requestData['interested_tax_structure'])) ? implode(',',$requestData['interested_tax_structure']) : '',
+            'interested_tax_struct'       => (isset($requestData['interested_tax_structure']) && !empty($requestData['interested_tax_structure'])) ? implode(',', $requestData['interested_tax_structure']) : '',
             'contact_email'               => (isset($requestData['connect_email'])) ? 'yes' : 'no',
             'contact_phone'               => (isset($requestData['connect_mobile'])) ? 'yes' : 'no',
             'companylogo'                 => '',
@@ -347,6 +339,30 @@ class UserController extends Controller
 
         Session::flash('success_message', 'User details saved successfully.');
         return redirect(url('backoffice/user/' . $giCode . '/step-two'));
+    }
+
+    public function exportUsers()
+    {
+        $userObj = new User;
+        $users = $userObj->allUsers();
+
+        $fileName = 'approved_intermediary';
+        $header   = ['Platform GI Code Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+        $userData = [];
+
+        foreach ($users as $user) {
+            $userData[] = [ $user->gi_code, 
+                            title_case($user->first_name . ' ' . $user->last_name),
+                            $user->email,
+                            (!empty($user->firm)) ? $user->firm->name : '',
+                            $user->telephone_no
+            ];
+        }
+         
+        generateCSV($header,$userData,$fileName);
+
+        return true;
+
     }
 
     /**
@@ -467,18 +483,18 @@ class UserController extends Controller
                 'User successfully deleted.');
     }
 
-    public function deleteUsers(Request $request){
-        $requestData = $request->all();  
-        $userIdStr = $requestData['user_id'];
-        $userIds = explode(',', $userIdStr);
-        $userIds = array_filter($userIds);
+    public function deleteUsers(Request $request)
+    {
+        $requestData = $request->all();
+        $userIdStr   = $requestData['user_id'];
+        $userIds     = explode(',', $userIdStr);
+        $userIds     = array_filter($userIds);
 
         foreach ($userIds as $key => $userId) {
-            $user = User::findOrFail($userId); 
+            $user = User::findOrFail($userId);
             $user->delete();
         }
 
-
-        return response()->json(['status' => true,]);
+        return response()->json(['status' => true]);
     }
 }

@@ -54,9 +54,9 @@
                         @foreach($firms as $firm)
                                 <tr >
                                     <td></td>
-                                    <td><a>{{ $firm->name}} </a></td>
-                                    <td>{{ $firm->firmType()->name }} </td>
-                                    <td>{{ (!empty($firm->getParentFirm())) ? $firm->getParentFirm()->name :'' }}</td>
+                                    <td><a>{{ title_case($firm->name) }} </a></td>
+                                    <td>{{ title_case($firm->firmType()->name) }} </td>
+                                    <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>
                                     <td>
                                         <select data-id="78523" class="firm_actions">
