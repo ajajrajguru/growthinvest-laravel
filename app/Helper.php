@@ -86,6 +86,8 @@ function getCompanyDescription()
     return ["Wealth Manager", "Accountant", "Solicitor", "Business Advisor", "Investment Network", "Financial Advisor"];
 }
 
+
+
 /***
 generates unique GI code for the modal
  ***/
@@ -119,6 +121,12 @@ function getRegisteredIndRange()
 function getSource()
 {
     return ['internet' => 'Internet', 'personal' => 'Referral', 'recommendation' => 'Recommendation', 'email' => 'Email', 'event' => 'Event', 'LGBR Capital' => 'LGBR Capital'];
+}
+
+
+function certificationTypes()
+{
+    return ['internet' => 'Self Certified', 'approved' => 'Approved', 'uncertified' => 'Uncertified'];
 }
 
 

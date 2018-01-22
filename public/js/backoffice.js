@@ -218,7 +218,7 @@
     });
     investorTable = $('#datatable-investors').DataTable({
       'pageLength': 50,
-      'processing': true,
+      'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
       'aaSorting': [[1, 'desc']],
@@ -228,6 +228,12 @@
         data: function(data) {
           var filters;
           filters = {};
+          filters.firm_name = $('select[name="firm_name"]').val();
+          filters.investor_name = $('select[name="investor_name"]').val();
+          filters.client_category = $('select[name="client_category"]').val();
+          filters.client_certification = $('select[name="client_certification"]').val();
+          filters.investor_nominee = $('select[name="investor_nominee"]').val();
+          filters.idverified = $('select[name="idverified"]').val();
           data.filters = filters;
           return data;
         },
@@ -253,7 +259,7 @@
         }
       ]
     });
-    return $('.jobsearchinput').change(function() {
+    return $('.investorSearchinput').change(function() {
       investorTable.ajax.reload();
       return;
     });

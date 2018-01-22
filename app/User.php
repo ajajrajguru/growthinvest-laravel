@@ -128,4 +128,17 @@ class User extends Authenticatable
     }
 
 
+    public function getInvestorUsers($cond=[]){
+        $users = User::join('model_has_roles', function ($join) {
+                        $join->on('users.id', '=', 'model_has_roles.model_id')
+                             ->where('model_has_roles.model_type', 'App\User');
+                        })->join('roles', function ($join) {
+                            $join->on('model_has_roles.role_id', '=', 'roles.id')
+                                ->where('roles.name', 'investor');
+                        })->where($cond)->select('users.*')->get();
+
+        return $users; 
+    }
+
+
 }

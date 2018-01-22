@@ -15,13 +15,26 @@ class InvestorController extends Controller
      */
     public function index()
     {
-               
+        $user = new User;
+        $investors = $user->getInvestorUsers();    
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];  
+
+        $clientCategoriesList = getModelList('App\Defaults',['type'=>'certification'], 0, 0, ['name' => 'asc']);
+        $clientCategories     = $clientCategoriesList['list']; 
+
+        $certificationTypes = certificationTypes();
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Investors'];
 
+        $data['certificationTypes'] = $certificationTypes;
+        $data['clientCategories'] = $clientCategories;
+        $data['firms'] = $firms;
+        $data['investors'] = $investors;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Investors';
 
@@ -35,8 +48,9 @@ class InvestorController extends Controller
         $skip = $requestData['start'];
         $length = $requestData['length'];
         $orderValue = $requestData['order'][0];
-      
-       
+        $filters = $requestData['filters'];
+
+ 
         $columnOrder = array( );
  
         if(isset($columnOrder[$orderValue['column']]))
@@ -54,7 +68,48 @@ class InvestorController extends Controller
                                 ->where('roles.name', 'investor');
                         })->leftjoin('user_has_certifications', function ($join) {
                             $join->on('users.id', 'user_has_certifications.user_id');
-                        })->groupBy('users.id')->select('users.*');    
+                        });
+
+        if(isset($filters['firm_name']) && $filters['firm_name']!=""){
+            $investorQuery->where('users.firm_id',$filters['firm_name']);
+        } 
+
+        if(isset($filters['investor_name']) && $filters['investor_name']!=""){
+            $investorQuery->where('users.id',$filters['investor_name']);
+        }  
+
+        if(isset($filters['client_category']) && $filters['client_category']!=""){
+            $investorQuery->where('user_has_certifications.certification_default_id',$filters['client_category']);
+        }  
+
+        if(isset($filters['client_certification']) && $filters['client_certification']!=""){
+            if($filters['client_certification'] == 'uncertified')
+                $investorQuery->whereNull('user_has_certifications.created_at');
+        } 
+
+        $nomineeJoin = false;
+        if(isset($filters['investor_nominee']) && $filters['investor_nominee']!=""){
+            $investorQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
+            $nomineeJoin = true;
+            if($filters['investor_nominee'] == 'nominee')
+                $investorQuery->whereNotNull('nominee_applications.user_id');
+            else
+                $investorQuery->whereNull('nominee_applications.user_id');
+        }     
+
+        if(isset($filters['idverified']) && $filters['idverified']!=""){
+            if(!$nomineeJoin)
+                $investorQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
+ 
+            if($filters['idverified'] == 'no')
+                $verificationStatus = ['no','progress','requested','not_yet_requested'];
+            else
+                $verificationStatus = ['yes','completed'];
+
+            $investorQuery->whereIn('nominee_applications.id_verification_status',$verificationStatus); 
+        }         
+
+        $investorQuery->groupBy('users.id')->select('users.*');  
         
         if($length>1)
         {  

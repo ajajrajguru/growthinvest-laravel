@@ -41,8 +41,56 @@
 
                         </div>
 
+                        <div>
                         <div class="col-md-6">
                             <h5 class="  text-primary mb-0">Selection Filters</h5>
+                        </div>
+
+                         <label for="">Firm Name</label>
+                        <select name="firm_name" class="form-control investorSearchinput" id="investor_nominee">
+                            <option value="">All Firms</option>      
+                            @foreach($firms as $firm)
+                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>      
+                            @endforeach
+
+                             
+                        </select>
+                         <label for="">Investor Name</label>
+                        <select name="investor_name" class="form-control investorSearchinput" id="investor_nominee">
+                            <option value="">--</option>            
+                            @foreach($investors as $investor)
+                            <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>      
+                            @endforeach       
+                        </select>
+                         <label for="">Client Categories</label>
+                        <select name="client_category" class="form-control investorSearchinput" id="investor_nominee">
+                            <option value="">All client categories</option>             
+                            @foreach($clientCategories as $clientCategory)
+                            <option value="{{ $clientCategory->id }}">{{ $clientCategory->name }}</option>      
+                            @endforeach 
+                        </select>
+
+                        <label for="">Client Certifications</label>
+                        <select name="client_certification" class="form-control investorSearchinput" id="investor_nominee">
+                            <option value="">All Certifications</option>            
+                            @foreach($certificationTypes as $key=>$certificationType)
+                            <option value="{{ $key }}">{{ $certificationType }}</option>      
+                            @endforeach      
+                        </select>
+
+                        <label for="">Nominee Account</label>
+                        <select name="investor_nominee" class="form-control investorSearchinput" id="investor_nominee">
+                            <option value="">--</option>            
+                            <option value="nominee">Yes</option>            
+                            <option value="non_nominee">No</option>        
+                        </select>
+
+                        <label for="">ID Verification</label>
+                        <select name="idverified" class="form-control investorSearchinput" id="idverified">
+                            <option value="">--</option>            
+                            <option value="yes">Yes</option>            
+                            <option value="no">No</option>        
+                        </select>
                         </div>
 
                         <div class="col-md-6">

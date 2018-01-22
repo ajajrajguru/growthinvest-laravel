@@ -77,7 +77,7 @@ class UserController extends Controller
     public function addUserStepOne()
     {
         $user      = new User;
-        $firmsList = getModelList('App\Firm');
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
