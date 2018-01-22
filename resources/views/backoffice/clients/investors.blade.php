@@ -4,19 +4,19 @@
   @parent
 
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
- 
 
- 
+
+
 @endsection
 @section('backoffice-content')
- 
+
 <div class="container">
     @php
         echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
     @endphp
     <div class="d-flex flex-row mt-5 bg-white border border-gray">
         @include('includes.side-menu')
-        
+
         <div class="tab-content">
             <div class="tab-pane fade" id="home" role="tabpanel">
                 <h1>Lorem</h1>
@@ -33,77 +33,78 @@
                 <p>In faucibus tempus ante, et tempor magna luctus id. Ut a maximus ipsum. Duis eu velit nec libero pretium pellentesque. Maecenas auctor hendrerit pulvinar. Donec sed tortor interdum, sodales elit vel, tempor turpis. In tristique vestibulum eros vel congue. Vivamus maximus posuere fringilla. Nullam in est commodo, tristique ligula eu, tincidunt enim. Duis iaculis sodales lectus vitae cursus.</p>
             </div>
             <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
-                 <div class="mt-4 bg-white border border-gray p-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h1 class="section-title font-weight-medium text-primary mb-0">Investors</h1>
+                 <div class="mt-4 p-2">
+                    <h1 class="section-title font-weight-medium text-primary mb-0">Investors</h1>
+                    <p class="text-muted">View the profile and the portfolio of the investors registered with us.</p>
 
-                            <p class="text-muted">View the profile and the portfolio of the investors registered with us.</p>
-
+                    <h5 class="mt-2 mb-0">Selection Filters</h5>
+                    <div class="p-3 bg-gray">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">Firm Name</label>
+                                <select name="firm_name" class="form-control investorSearchinput" id="investor_nominee">
+                                    <option value="">All Firms</option>
+                                    @foreach($firms as $firm)
+                                    <option value="{{ $firm->id }}">{{ $firm->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">Investor Name</label>
+                                <select name="investor_name" class="form-control investorSearchinput" id="investor_nominee">
+                                    <option value="">--</option>
+                                    @foreach($investors as $investor)
+                                    <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-
-                        <div>
-                        <div class="col-md-6">
-                            <h5 class="  text-primary mb-0">Selection Filters</h5>
-                        </div>
-
-                         <label for="">Firm Name</label>
-                        <select name="firm_name" class="form-control investorSearchinput" id="investor_nominee">
-                            <option value="">All Firms</option>      
-                            @foreach($firms as $firm)
-                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>      
-                            @endforeach
-
-                             
-                        </select>
-                         <label for="">Investor Name</label>
-                        <select name="investor_name" class="form-control investorSearchinput" id="investor_nominee">
-                            <option value="">--</option>            
-                            @foreach($investors as $investor)
-                            <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>      
-                            @endforeach       
-                        </select>
-                         <label for="">Client Categories</label>
-                        <select name="client_category" class="form-control investorSearchinput" id="investor_nominee">
-                            <option value="">All client categories</option>             
-                            @foreach($clientCategories as $clientCategory)
-                            <option value="{{ $clientCategory->id }}">{{ $clientCategory->name }}</option>      
-                            @endforeach 
-                        </select>
-
-                        <label for="">Client Certifications</label>
-                        <select name="client_certification" class="form-control investorSearchinput" id="investor_nominee">
-                            <option value="">All Certifications</option>            
-                            @foreach($certificationTypes as $key=>$certificationType)
-                            <option value="{{ $key }}">{{ $certificationType }}</option>      
-                            @endforeach      
-                        </select>
-
-                        <label for="">Nominee Account</label>
-                        <select name="investor_nominee" class="form-control investorSearchinput" id="investor_nominee">
-                            <option value="">--</option>            
-                            <option value="nominee">Yes</option>            
-                            <option value="non_nominee">No</option>        
-                        </select>
-
-                        <label for="">ID Verification</label>
-                        <select name="idverified" class="form-control investorSearchinput" id="idverified">
-                            <option value="">--</option>            
-                            <option value="yes">Yes</option>            
-                            <option value="no">No</option>        
-                        </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="float-right">
-                                <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary">Add Investors</a>
-                                <a href="javascript:void(0)" class="btn btn-link download-investor-csv" >Download CSV</a>
-                             
+                        <div class="row mt-3">
+                            <div class="col-md-3">
+                                <label for="">Client Categories</label>
+                                <select name="client_category" class="form-control investorSearchinput" id="investor_nominee">
+                                    <option value="">All client categories</option>
+                                    @foreach($clientCategories as $clientCategory)
+                                    <option value="{{ $clientCategory->id }}">{{ $clientCategory->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Client Certifications</label>
+                                <select name="client_certification" class="form-control investorSearchinput" id="investor_nominee">
+                                    <option value="">All Certifications</option>
+                                    @foreach($certificationTypes as $key=>$certificationType)
+                                    <option value="{{ $key }}">{{ $certificationType }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Nominee Account</label>
+                                <select name="investor_nominee" class="form-control investorSearchinput" id="investor_nominee">
+                                    <option value="">--</option>
+                                    <option value="nominee">Yes</option>
+                                    <option value="non_nominee">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">ID Verification</label>
+                                <select name="idverified" class="form-control investorSearchinput" id="idverified">
+                                    <option value="">--</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="table-responsives mt-3">
+                    <div class="d-flex justify-content-end">
+                        <div class="mt-3">
+                            <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary btn-sm">Add Investors</a>
+                            <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm download-investor-csv" >Download CSV</a>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mt-3">
                         <table id="datatable-investors" class="table dataFilterTable table-hover table-striped-bg">
                             <thead>
                                 <tr>
@@ -117,7 +118,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                 
+
                             </tbody>
                         </table>
                     </div>
@@ -134,7 +135,7 @@
     </div>
 
 </div>
- 
+
 
 
     <style type="text/css">

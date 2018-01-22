@@ -103,7 +103,7 @@ class InvestorController extends Controller
 
             $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select>
+            $actionHtml = '<select class="form-control">
             <option id="select" value="">-Select-</option>
             <option value="edit_profile">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
@@ -313,7 +313,7 @@ class InvestorController extends Controller
         if (empty($investor)) {
             abort(404);
         }
- 
+
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
@@ -403,7 +403,7 @@ class InvestorController extends Controller
 
         $investorId = $investor->id;
 
-         
+
 
         $investorData = $investor->userAdditionalInfo();
         if (empty($investorData)) {
