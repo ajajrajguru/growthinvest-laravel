@@ -35,8 +35,10 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post('user/delete-user','UserController@deleteUsers');
 	
 	//users
+	Route::get('investor/export-investors','InvestorController@exportInvestors');
  	Route::resource( 'investor', 'InvestorController' );
  	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
+
 });
 
  

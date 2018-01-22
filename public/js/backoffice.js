@@ -221,7 +221,7 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
-      'aaSorting': [[1, 'desc']],
+      'aaSorting': [[1, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investors',
         type: 'post',
@@ -250,14 +250,32 @@
         }, {
           'data': 'client_categorisation'
         }, {
-          'data': 'parent_firm'
+          'data': 'parent_firm',
+          "orderable": false
         }, {
-          'data': 'registered_date'
+          'data': 'registered_date',
+          "orderable": false
         }, {
           'data': 'action',
           "orderable": false
         }
       ]
+    });
+    $('.download-investor-csv').click(function() {
+      var client_category, client_certification, firm_name, idverified, investor_name, investor_nominee, userIds;
+      firm_name = $('select[name="firm_name"]').val();
+      investor_name = $('select[name="investor_name"]').val();
+      client_category = $('select[name="client_category"]').val();
+      client_certification = $('select[name="client_certification"]').val();
+      investor_nominee = $('select[name="investor_nominee"]').val();
+      idverified = $('select[name="idverified"]').val();
+      userIds = '';
+      $('.ck_investor').each(function() {
+        if ($(this).is(':checked')) {
+          return userIds += $(this).val() + ',';
+        }
+      });
+      return window.open("/backoffice/investor/export-investors?firm_name=" + firm_name + "&investor_name=" + investor_name + "&client_category=" + client_category + "&client_certification=" + client_certification + "&investor_nominee=" + investor_nominee + "&idverified=" + idverified + "&user_ids=" + userIds);
     });
     return $('.investorSearchinput').change(function() {
       investorTable.ajax.reload();

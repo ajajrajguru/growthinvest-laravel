@@ -4,6 +4,7 @@
   @parent
 
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+ 
 
  
 @endsection
@@ -96,7 +97,7 @@
                         <div class="col-md-6">
                             <div class="float-right">
                                 <a href="{{ url(' ')}}" class="btn btn-primary">Add Investors</a>
-                                <a href="{{ url(' ')}}" class="btn btn-link">Download CSV</a>
+                                <a href="javascript:void(0)" class="btn btn-link download-investor-csv" >Download CSV</a>
                              
                             </div>
                         </div>
