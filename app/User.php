@@ -134,7 +134,7 @@ class User extends Authenticatable
                              ->where('model_has_roles.model_type', 'App\User');
                         })->join('roles', function ($join) {
                             $join->on('model_has_roles.role_id', '=', 'roles.id')
-                                ->where('roles.name', 'investor');
+                                ->whereIn('roles.name', ['investor','yet_to_be_approved_investor']);
                         })->where($cond)->select('users.*')->get();
 
         return $users; 

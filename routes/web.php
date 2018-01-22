@@ -36,8 +36,12 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	
 	//users
 	Route::get('investor/export-investors','InvestorController@exportInvestors');
+	Route::get('investor/registration','InvestorController@registration');
+	Route::get('investor/{giCode}/registration','InvestorController@editRegistration');
+	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
+	Route::post( 'investor/save-registration', 'InvestorController@saveRegistration' );
  	Route::resource( 'investor', 'InvestorController' );
- 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
+ 	
 
 });
 

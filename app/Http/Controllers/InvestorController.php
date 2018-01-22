@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\User;
 use App\Defaults;
+use App\User;
+use App\UserData;
+use Auth;
+use Illuminate\Http\Request;
+
+//Importing laravel-permission models
+use Illuminate\Support\Facades\Hash;
+use Session;
+
+//Enables us to output flash messaging
+use Spatie\Permission\Models\Role;
 
 class InvestorController extends Controller
 {
@@ -15,14 +24,14 @@ class InvestorController extends Controller
      */
     public function index()
     {
-        $user = new User;
-        $investors = $user->getInvestorUsers();    
+        $user      = new User;
+        $investors = $user->getInvestorUsers();
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
-        $firms     = $firmsList['list'];  
+        $firms     = $firmsList['list'];
 
-        $clientCategoriesList = getModelList('App\Defaults',['type'=>'certification'], 0, 0, ['name' => 'asc']);
-        $clientCategories     = $clientCategoriesList['list']; 
+        $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
+        $clientCategories     = $clientCategoriesList['list'];
 
         $certificationTypes = certificationTypes();
 
@@ -32,252 +41,390 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Investors'];
 
         $data['certificationTypes'] = $certificationTypes;
-        $data['clientCategories'] = $clientCategories;
-        $data['firms'] = $firms;
-        $data['investors'] = $investors;
-        $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'Investors';
+        $data['clientCategories']   = $clientCategories;
+        $data['firms']              = $firms;
+        $data['investors']          = $investors;
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'Investors';
 
         return view('backoffice.clients.investors')->with($data);
     }
 
-    public function getInvestors(Request $request){
+    public function getInvestors(Request $request)
+    {
 
-        $requestData = $request->all();  //dd($requestData);
-        $data =[];
-        $skip = $requestData['start'];
-        $length = $requestData['length'];
-        $orderValue = $requestData['order'][0];
-        $filters = $requestData['filters'];
+        $requestData = $request->all(); //dd($requestData);
+        $data        = [];
+        $skip        = $requestData['start'];
+        $length      = $requestData['length'];
+        $orderValue  = $requestData['order'][0];
+        $filters     = $requestData['filters'];
 
-        $columnOrder = array( 
-                                '1'=> 'users.first_name',
-                                '2'=> 'user_has_certifications.created_at',
-                                '3'=> 'user_has_certifications.active',
-                                );
- 
-         
- 
+        $columnOrder = array(
+            '1' => 'users.first_name',
+            '2' => 'user_has_certifications.created_at',
+            '3' => 'user_has_certifications.active',
+        );
+
         $columnName = 'users.first_name';
-        $orderBy = 'asc';
-   
-        if(isset($columnOrder[$orderValue['column']]))
-        {   
+        $orderBy    = 'asc';
+
+        if (isset($columnOrder[$orderValue['column']])) {
             $columnName = $columnOrder[$orderValue['column']];
-            $orderBy = $orderValue['dir'];
+            $orderBy    = $orderValue['dir'];
         }
 
-            
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterInvestors = $this->getFilteredInvestors($filters,$skip,$length,$orderDataBy);
-        $investors =  $filterInvestors['list'];
-        $totalInvestors =  $filterInvestors['totalInvestors'];
- 
+        $filterInvestors = $this->getFilteredInvestors($filters, $skip, $length, $orderDataBy);
+        $investors       = $filterInvestors['list'];
+        $totalInvestors  = $filterInvestors['totalInvestors'];
+
         $investorsData = [];
         $certification = [];
         foreach ($investors as $key => $investor) {
 
-            $userCertification =$investor->userCertification()->orderBy('created_at','desc')->first();
+            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->first();
 
-            $certificationName ='Uncertified Investors';
-            $certificationDate ='-';
+            $certificationName = 'Uncertified Investors';
+            $certificationDate = '-';
 
-            if(!empty($userCertification)){
+            if (!empty($userCertification)) {
 
-                if(isset($certification[$userCertification->certification_default_id]))
+                if (isset($certification[$userCertification->certification_default_id])) {
                     $certificationName = $certification[$userCertification->certification_default_id];
-                else{
-                    $certificationName = Defaults::find($userCertification->certification_default_id)->name;
-                    $certification[$userCertification->certification_default_id]=$certificationName;
+                } else {
+                    $certificationName                                           = Defaults::find($userCertification->certification_default_id)->name;
+                    $certification[$userCertification->certification_default_id] = $certificationName;
                 }
 
-                $certificationDate =  date('d/m/Y', strtotime($userCertification->created_at));
+                $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
             }
 
- 
-            $nameHtml =  '<b><a href=="">'. $investor->first_name.' '.$investor->last_name.'</a></b><br><a class="investor_email" href="mailto: '.$investor->email.'">'.$investor->email.'</a><br>'.$certificationName;
+            $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select> 
-            <option id="select" value="">-Select-</option> 
-            <option value="edit_profile">View Profile</option>                                    
-            <option value="view_portfolio">View Portfolio</option>                                                            
-            <option value="manage_documents">View Investor Documents</option>                                        
-            <option value="message_board">View Message Board</option>                    
-            <option value="nominee_application">Investment Account</option>                                                            
-            <option value="investoffers">Investment Offers</option>                                                
+            $actionHtml = '<select>
+            <option id="select" value="">-Select-</option>
+            <option value="edit_profile">View Profile</option>
+            <option value="view_portfolio">View Portfolio</option>
+            <option value="manage_documents">View Investor Documents</option>
+            <option value="message_board">View Message Board</option>
+            <option value="nominee_application">Investment Account</option>
+            <option value="investoffers">Investment Offers</option>
             </select>';
 
+            $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
 
-            $active = (!empty($userCertification) && $userCertification->active)? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>'; 
-            
-            
- 
-            $investorsData[] = [ 
-                            '#' => '<input type="checkbox" class="ck_investor" name="ck_investor" value="'.$investor->id.'">',
-                            'name' => $nameHtml,
-                            'certification_date' => $certificationDate,
-                            'client_categorisation' => $active,
-                            'parent_firm' =>(!empty($investor->firm))?$investor->firm->name:'',
-                            'registered_date' => date('d/m/Y', strtotime($investor->created_at)),
-                            'action' => $actionHtml,
-                            
-                            ];
-            
+            $investorsData[] = [
+                '#'                     => '<input type="checkbox" class="ck_investor" name="ck_investor" value="' . $investor->id . '">',
+                'name'                  => $nameHtml,
+                'certification_date'    => $certificationDate,
+                'client_categorisation' => $active,
+                'parent_firm'           => (!empty($investor->firm)) ? $investor->firm->name : '',
+                'registered_date'       => date('d/m/Y', strtotime($investor->created_at)),
+                'action'                => $actionHtml,
+
+            ];
+
         }
 
- 
-
         $json_data = array(
-                "draw"            => intval( $requestData['draw'] ),
-                "recordsTotal"    => intval( $totalInvestors ),
-                "recordsFiltered" => intval( $totalInvestors ),
-                "data"            => $investorsData,
-            );
-              
+            "draw"            => intval($requestData['draw']),
+            "recordsTotal"    => intval($totalInvestors),
+            "recordsFiltered" => intval($totalInvestors),
+            "data"            => $investorsData,
+        );
+
         return response()->json($json_data);
 
     }
 
-    public function getFilteredInvestors($filters,$skip,$length,$orderDataBy){
-
+    public function getFilteredInvestors($filters, $skip, $length, $orderDataBy)
+    {
 
         $investorQuery = User::join('model_has_roles', function ($join) {
-                        $join->on('users.id', '=', 'model_has_roles.model_id')
-                             ->where('model_has_roles.model_type', 'App\User');
-                        })->join('roles', function ($join) {
-                            $join->on('model_has_roles.role_id', '=', 'roles.id')
-                                ->where('roles.name', 'investor');
-                        })->leftjoin('user_has_certifications', function ($join) {
-                            $join->on('users.id', 'user_has_certifications.user_id');
-                        });
+            $join->on('users.id', '=', 'model_has_roles.model_id')
+                ->where('model_has_roles.model_type', 'App\User');
+        })->join('roles', function ($join) {
+            $join->on('model_has_roles.role_id', '=', 'roles.id')
+                ->whereIn('roles.name', ['investor','yet_to_be_approved_investor']);
+        })->leftjoin('user_has_certifications', function ($join) {
+            $join->on('users.id', 'user_has_certifications.user_id');
+        });
 
-        if(isset($filters['firm_name']) && $filters['firm_name']!=""){
-            $investorQuery->where('users.firm_id',$filters['firm_name']);
-        } 
+        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
+            $investorQuery->where('users.firm_id', $filters['firm_name']);
+        }
 
-        if(isset($filters['user_ids']) && $filters['user_ids']!=""){
+        if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
             $userIds = explode(',', $filters['user_ids']);
             $userIds = array_filter($userIds);
 
-            $investorQuery->whereIn('users.id',$userIds);
+            $investorQuery->whereIn('users.id', $userIds);
         }
 
-        if(isset($filters['investor_name']) && $filters['investor_name']!=""){
-            $investorQuery->where('users.id',$filters['investor_name']);
-        }  
+        if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
+            $investorQuery->where('users.id', $filters['investor_name']);
+        }
 
-        if(isset($filters['client_category']) && $filters['client_category']!=""){
-            $investorQuery->where('user_has_certifications.certification_default_id',$filters['client_category']);
-        }  
+        if (isset($filters['client_category']) && $filters['client_category'] != "") {
+            $investorQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
+        }
 
-        if(isset($filters['client_certification']) && $filters['client_certification']!=""){
-            if($filters['client_certification'] == 'uncertified')
+        if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
+            if ($filters['client_certification'] == 'uncertified') {
                 $investorQuery->whereNull('user_has_certifications.created_at');
-        } 
+            }
+
+        }
 
         $nomineeJoin = false;
-        if(isset($filters['investor_nominee']) && $filters['investor_nominee']!=""){
+        if (isset($filters['investor_nominee']) && $filters['investor_nominee'] != "") {
             $investorQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
             $nomineeJoin = true;
-            if($filters['investor_nominee'] == 'nominee')
+            if ($filters['investor_nominee'] == 'nominee') {
                 $investorQuery->whereNotNull('nominee_applications.user_id');
-            else
+            } else {
                 $investorQuery->whereNull('nominee_applications.user_id');
-        }     
+            }
 
-        if(isset($filters['idverified']) && $filters['idverified']!=""){
-            if(!$nomineeJoin)
+        }
+
+        if (isset($filters['idverified']) && $filters['idverified'] != "") {
+            if (!$nomineeJoin) {
                 $investorQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
- 
-            if($filters['idverified'] == 'no')
-                $verificationStatus = ['no','progress','requested','not_yet_requested'];
-            else
-                $verificationStatus = ['yes','completed'];
+            }
 
-            $investorQuery->whereIn('nominee_applications.id_verification_status',$verificationStatus); 
-        }         
+            if ($filters['idverified'] == 'no') {
+                $verificationStatus = ['no', 'progress', 'requested', 'not_yet_requested'];
+            } else {
+                $verificationStatus = ['yes', 'completed'];
+            }
 
-        $investorQuery->groupBy('users.id')->select('users.*');  
+            $investorQuery->whereIn('nominee_applications.id_verification_status', $verificationStatus);
+        }
+
+        $investorQuery->groupBy('users.id')->select('users.*');
 
         foreach ($orderDataBy as $columnName => $orderBy) {
-            $investorQuery->orderBy($columnName,$orderBy);
-        }
-        
-        if($length>1)
-        {  
-
-            $totalInvestors = $investorQuery->get()->count(); 
-            $investors    = $investorQuery->skip($skip)->take($length)->get();   
-        }
-        else
-        {
-            $investors    = $investorQuery->get();  
-            $totalInvestors = $investorQuery->count();  
+            $investorQuery->orderBy($columnName, $orderBy);
         }
 
+        if ($length > 1) {
 
-        return ['totalInvestors' => $totalInvestors, 'list'=> $investors] ;
+            $totalInvestors = $investorQuery->get()->count();
+            $investors      = $investorQuery->skip($skip)->take($length)->get();
+        } else {
+            $investors      = $investorQuery->get();
+            $totalInvestors = $investorQuery->count();
+        }
+
+        return ['totalInvestors' => $totalInvestors, 'list' => $investors];
 
     }
 
-    public function exportInvestors(Request $request){
-        
-        $data =[];
+    public function exportInvestors(Request $request)
+    {
+
+        $data    = [];
         $filters = $request->all();
 
-        
         $columnName = 'users.first_name';
-        $orderBy = 'asc';
-               
+        $orderBy    = 'asc';
+
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterInvestors = $this->getFilteredInvestors($filters,0,0,$orderDataBy);
-        $investors = $filterInvestors['list'];
+        $filterInvestors = $this->getFilteredInvestors($filters, 0, 0, $orderDataBy);
+        $investors       = $filterInvestors['list'];
 
-
-        $fileName = 'all_investors_as_on_'.date('d-m-Y');
-        $header   = ['Platform GI Code','Investor Name','Email ID','Certification Role','Certification Date','Client Categorisation','Parent Firm','Registered Date'];
+        $fileName = 'all_investors_as_on_' . date('d-m-Y');
+        $header   = ['Platform GI Code', 'Investor Name', 'Email ID', 'Certification Role', 'Certification Date', 'Client Categorisation', 'Parent Firm', 'Registered Date'];
         $userData = [];
 
         $certification = [];
         foreach ($investors as $investor) {
 
-            $userCertification =$investor->userCertification()->orderBy('created_at','desc')->first();
+            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->first();
 
-            $certificationName ='Uncertified Investors';
-            $certificationDate ='-';
+            $certificationName = 'Uncertified Investors';
+            $certificationDate = '-';
 
-            if(!empty($userCertification)){
+            if (!empty($userCertification)) {
 
-                if(isset($certification[$userCertification->certification_default_id]))
+                if (isset($certification[$userCertification->certification_default_id])) {
                     $certificationName = $certification[$userCertification->certification_default_id];
-                else{
-                    $certificationName = Defaults::find($userCertification->certification_default_id)->name;
-                    $certification[$userCertification->certification_default_id]=$certificationName;
+                } else {
+                    $certificationName                                           = Defaults::find($userCertification->certification_default_id)->name;
+                    $certification[$userCertification->certification_default_id] = $certificationName;
                 }
 
-                $certificationDate =  date('d/m/Y', strtotime($userCertification->created_at));
+                $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
             }
 
-            $active = (!empty($userCertification) && $userCertification->active)? 'Active' : 'Not Active'; 
+            $active = (!empty($userCertification) && $userCertification->active) ? 'Active' : 'Not Active';
 
-            $userData[] = [ $investor->gi_code, 
-                            title_case($investor->first_name . ' ' . $investor->last_name),
-                            $investor->email,
-                            $certificationName,
-                            $certificationDate,
-                            $active,
-                            (!empty($investor->firm))?$investor->firm->name:'',
-                            date('d/m/Y', strtotime($investor->created_at)),
+            $userData[] = [$investor->gi_code,
+                title_case($investor->first_name . ' ' . $investor->last_name),
+                $investor->email,
+                $certificationName,
+                $certificationDate,
+                $active,
+                (!empty($investor->firm)) ? $investor->firm->name : '',
+                date('d/m/Y', strtotime($investor->created_at)),
 
             ];
         }
-         
-        generateCSV($header,$userData,$fileName);
+
+        generateCSV($header, $userData, $fileName);
 
         return true;
 
+    }
+
+    public function registration()
+    {
+
+        $investor  = new User;
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+        $data['countyList']  = getCounty();
+        $data['countryList'] = getCountry();
+        $data['investor']    = $investor;
+        $data['firms']       = $firms;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'Add Investor';
+        $data['mode']        = 'edit';
+
+        return view('backoffice.clients.registration')->with($data);
+
+    }
+
+    public function editRegistration($giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+
+        if (empty($investor)) {
+            abort(404);
+        }
+ 
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+        $data['countyList']  = getCounty();
+        $data['countryList'] = getCountry();
+        $data['investor']    = $investor;
+        $data['firms']       = $firms;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'Add Investor';
+        $data['mode']        = 'view';
+
+        return view('backoffice.clients.registration')->with($data);
+
+    }
+
+    public function saveRegistration(Request $request)
+    {
+        $requestData        = $request->all();
+        $title          = $requestData['title'];
+        $firstName          = $requestData['first_name'];
+        $lastName           = $requestData['last_name'];
+        $email              = $requestData['email'];
+        $telephone          = $requestData['telephone'];
+        $password           = $requestData['password'];
+        $addressLine1       = $requestData['address_line_1'];
+        $addressLine2       = $requestData['address_line_2'];
+        $townCity           = $requestData['town_city'];
+        $county             = $requestData['county'];
+        $postcode           = $requestData['postcode'];
+        $country            = $requestData['country'];
+        $firm               = $requestData['firm'];
+        $investmentAccountNumber               = $requestData['investment_account_number'];
+        $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
+        $giCode             = $requestData['gi_code'];
+
+        $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
+
+        if ($giCode == '') {
+
+            if (isset($requestData['g-recaptcha-response'])) {
+
+                $jsonResponse = recaptcha_validate($requestData['g-recaptcha-response']);
+
+                if ($jsonResponse->success == '') {
+                    Session::flash('error_message', 'Please verify that you are not a robot.');
+                    return redirect()->back()->withInput();
+
+                }
+            } else {
+                Session::flash('error_message', 'Please verify that you are not a robot.');
+                return redirect()->back()->withInput();
+            }
+
+            $investor                = new User;
+            $giCode              = generateGICode($investor, 'gi_code', $giArgs);
+            $investor->gi_code       = $giCode;
+            $investor->registered_by = Auth::user()->id;
+        } else {
+            $investor = User::where('gi_code', $giCode)->first();
+        }
+
+        $investor->login_id     = $email;
+        $investor->avatar       = '';
+        $investor->title        = $title;
+        $investor->email        = $email;
+        $investor->first_name   = $firstName;
+        $investor->last_name    = $lastName;
+        $investor->password     = Hash::make($password);
+        $investor->status       = 0;
+        $investor->telephone_no = $telephone;
+        $investor->address_1    = $addressLine1;
+        $investor->address_2    = $addressLine2;
+        $investor->city         = $townCity;
+        $investor->postcode     = $postcode;
+        $investor->county       = $county;
+        $investor->country      = $country;
+        $investor->firm_id      = $firm;
+        $investor->suspended    = $isSuspended;
+        $investor->deleted      = 0;
+        $investor->save();
+
+        $investorId = $investor->id;
+
+         
+
+        $investorData = $investor->userAdditionalInfo();
+        if (empty($investorData)) {
+            $investorData           = new UserData;
+            $investorData->user_id  = $investorId;
+            $investorData->data_key = 'p1code';
+        }
+
+        $investorData->data_value = $investmentAccountNumber;
+        $investorData->save();
+
+
+        //assign role
+
+        $roleName = $investor->getRoleNames()->first();
+        if (empty($roleName)) {
+            $investor->assignRole('yet_to_be_approved_investor');
+        }
+
+        Session::flash('success_message', 'Investor Registration Has Been Successfully Updated.');
+        return redirect(url('backoffice/investor/' . $giCode . '/registration'));
     }
 
     /**
