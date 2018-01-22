@@ -179,8 +179,8 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label>Firm Type </label>
-							<select class="form-control editmode @if($mode=='view') d-none @endif""  name="type" value="{{$firm->type}}">
+							<label>Firm Type <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
+							<select class="form-control editmode @if($mode=='view') d-none @endif""  name="type" value="{{$firm->type}}"  data-parsley-required data-parsley-required-message="Please select firm type" >
 								<option value="">Please Select</option>
 								@php
                                 $firmtypeName = '';
@@ -356,7 +356,7 @@
 						<input type="hidden" name="backgroundid" value="{{$firm->backgroundid}}" />
 					</div>
 				</div>
-				<input type="hidden" name="" value="{{$firm->blog}}"/>
+				<input type="hidden" name="blog" value="{{$firm->blog}}"/>
 
 
 
