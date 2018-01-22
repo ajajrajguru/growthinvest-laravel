@@ -33,7 +33,7 @@
             </li>
         </ul>
 
-        <div class="profile-content p-4">
+        <div class="profile-content px-md-4 px-sm-0">
 
 
         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
@@ -439,7 +439,6 @@
                 <div class="d-flex justify-content-between">
                     <div class="">
                         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
-
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
