@@ -16,6 +16,8 @@
         echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
     @endphp
 
+    @include('includes.notification')
+
 	<div class="mt-4 bg-white border border-gray p-4">
 		<!-- <h1 class="section-title font-weight-medium text-primary mb-0">Add Firm</h1> -->
 		<div class="row">
