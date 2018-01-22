@@ -170,7 +170,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Phone Number <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
-							<input type="tel" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder=""   name="pri_contactphoneno" value="{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Phone No">
+							<input type="tel" class="form-control editmode @if($mode=='view') d-none @endif"" name="pri_contactphoneno" value="{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}" data-parsley-required data-parsley-type="number" placeholder="Eg: 020 7071 3945" data-parsley-required-message="Please enter Primary Contact Phone No">
 							<span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}</span>
 						</div>
 					</div>
