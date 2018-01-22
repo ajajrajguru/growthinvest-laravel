@@ -2,9 +2,9 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-    
+
 @endsection
 @section('backoffice-content')
 
@@ -20,14 +20,14 @@
         <h1 class="section-title font-weight-medium text-primary mb-0">Add User</h1>
         <p class="text-muted">Add details of intermediary.</p>
 
-        
+
 
         <ul class="progress-indicator my-5">
-            <li class="active">
-                <a href="javascript:void(0)">Intermediary Registration</a>
+            <li class="completed">
+                <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">Intermediary Registration</a>
                 <span class="bubble"></span>
             </li>
-            <li>
+            <li class="active">
                 <a href="javascript:void(0)">Intermediary Profile</a>
                 <span class="bubble"></span>
             </li>
@@ -35,9 +35,9 @@
 
         <div class="profile-content p-4">
 
-        
+
         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
-     
+
 
             <div class="row">
                 <div class="col-6">
@@ -59,7 +59,9 @@
                         <div class="col-md-3 text-center">
                             <label class="d-block">Profile Picture</label>
                             <img src="{{ url('img/dummy/avatar.png')}}'" alt="..." class="img-thumbnail">
+                            @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
+                            @endif
                         </div>
                         <div class="col-md-9">
                             <div class="row">
@@ -97,6 +99,7 @@
                         </div>
                     </div>
 
+                    @if($user->isCompanyWealthManager())
                     <div class="row mt-4">
                         <div class="col-md-6">
                            <div class="form-group">
@@ -113,11 +116,11 @@
                                 <label>Are you a UK FCA regulated individual?</label>
                                 <div class=" editmode @if($mode=='view') d-none @endif">
                                     <div class="form-check form-check-inline">
-                                      <input class="form-check-input disabledInput" type="radio" @if($mode=='view') disabled @endif  name="contact_fca_regulation" id="fca_yes" value="yes" checked>
+                                      <input class="form-check-input disabledInput" type="radio" @if($mode=='view') disabled @endif  name="contact_fca_regulation" id="fca_yes" value="yes" @if(isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='yes') checked @endif>
                                       <label class="form-check-label" for="fca_yes">Yes</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                      <input class="form-check-input disabledInput" type="radio" @if($mode=='view') disabled @endif  name="contact_fca_regulation" id="fca_no" value="no" @if(isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='no') checked @endif>
+                                      <input class="form-check-input disabledInput" type="radio" @if($mode=='view') disabled @endif  name="contact_fca_regulation" id="fca_no" value="no" @if((isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='no') || !isset($intermidiatData['fca_approved'])) checked @endif>
                                       <label class="form-check-label" for="fca_no">No</label>
                                     </div>
                                 </div>
@@ -137,23 +140,24 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Telephone - Direct Dial</label>
-                                <input type="tel" name="contact_telephone" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: 020 7071 3945" value="{{ (isset($intermidiatData['telephonenumber']))? $intermidiatData['telephonenumber'] :'' }}">
+                                <input type="tel" name="contact_telephone" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: 020 7071 3945" value="{{ (isset($intermidiatData['telephonenumber']))? $intermidiatData['telephonenumber'] :'' }}" data-parsley-type="number">
                                 <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($intermidiatData['telephonenumber']))? $intermidiatData['telephonenumber'] :'' }}</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Telephone - Mobile</label>
-                                <input type="tel" name="contact_mobile" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: 01344 747418" value="{{ (isset($intermidiatData['mobile']))? $intermidiatData['mobile'] :'' }}">
+                                <input type="tel" name="contact_mobile" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: 01344 747418" value="{{ (isset($intermidiatData['mobile']))? $intermidiatData['mobile'] :'' }}" data-parsley-type="number">
                                 <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($intermidiatData['mobile']))? $intermidiatData['mobile'] :'' }}</span>
                             </div>
                         </div>
                     </div>
+                    @endif
 
                   </div>
                 </div>
 
-
+                @if($user->isCompanyWealthManager())
                 <div class="card border-light mb-3">
                   <div class="card-header text-white bg-primary font-weight-medium">Company Information</div>
                   <div class="card-body">
@@ -161,7 +165,9 @@
                         <div class="col-md-3 text-center">
                             <label class="d-block">Logo</label>
                             <img src="{{ url('img/dummy/avatar.png') }}" alt="..." class="img-thumbnail">
+                            @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
+                            @endif
                         </div>
                         <div class="col-md-9">
                             <div class="row">
@@ -195,12 +201,12 @@
                                     @php
                                     $regTypeName = '';
                                     @endphp
-                                    
+
                                     @foreach($regulationTypes as $key =>$regType)
                                     @php
                                     if(isset($intermidiatData['regulationtype']) && $intermidiatData['regulationtype']==$key)
                                         $regTypeName = $regType;
- 
+
                                     @endphp
 
                                     <option @if(isset($intermidiatData['regulationtype']) && $intermidiatData['regulationtype']==$key) selected @endif  value="{{ $key }}">{{ $regType }}</option>
@@ -221,16 +227,16 @@
                                     @php
                                     if(isset($intermidiatData['reg_ind_cnt']) && $intermidiatData['reg_ind_cnt']==$key)
                                         $rangeName = $range;
- 
+
                                     @endphp
                                    <option @if(isset($intermidiatData['reg_ind_cnt']) && $intermidiatData['reg_ind_cnt']==$key) selected @endif  value="{{ $key }}">{{ $range }}</option>
-                                    @endforeach                          
+                                    @endforeach
                                 </select>
                                 <span class="viewmode @if($mode=='edit') d-none @endif">{{ $rangeName }}</span>
                             </div>
                         </div>
                     </div>
- 
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -359,15 +365,15 @@
                                         <div class="form-group">
                                             <label>How did you hear about the Platform?</label>
                                             <select name="about_platform" class="form-control editmode @if($mode=='view') d-none @endif" name="">
-                                                <option value="">Select</option>  
+                                                <option value="">Select</option>
                                                  @php
                                                 $sourceName = '';
-                                                @endphp                      
+                                                @endphp
                                                  @foreach($sources as $key =>$source)
                                                     if(isset($intermidiatData['source']) && $intermidiatData['source']==$key)
                                                         $sourceName = $range;
                                                    <option @if(isset($intermidiatData['source']) && $intermidiatData['source']==$key) selected @endif  value="{{ $key }}">{{ $source }}</option>
-                                                    @endforeach                     
+                                                    @endforeach
                                             </select>
                                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $sourceName }}</span>
                                         </div>
@@ -398,7 +404,7 @@
                                               <label class="form-check-label" for="phone">Phone</label>
                                             </div>
 
-                                             
+
                                         </div>
                                     </div>
                                 </div>
@@ -407,7 +413,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="form-check">
-                                              <input class="form-check-input disabledInput" name="marketing_email" type="checkbox" @if($mode=='view') disabled @endif value="yes" id="yes_marketing_mails" @if(isset($intermidiatData['marketingmail']) && $intermidiatData['marketingmail']=='yes') checked @endif>
+                                              <input class="form-check-input disabledInput" name="marketing_email" type="checkbox" @if($mode=='view') disabled @endif value="yes" id="yes_marketing_mails" @if(isset($intermidiatData['marketingmail']) && $intermidiatData['marketingmail']=='yes') checked @endif @if(!isset($intermidiatData['marketingmail'])) checked @endif>
                                               <label class="form-check-label" for="yes_marketing_mails">
                                                 Yes, I am happy to receive marketing emails from the platform
                                               </label>
@@ -415,7 +421,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="form-check">
-                                              <input class="form-check-input disabledInput" name="marketing_mails_partners" @if($mode=='view') disabled @endif type="checkbox" value="yes" id="yes_marketing_mails_partners" @if(isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes') checked @endif>
+                                              <input class="form-check-input disabledInput" name="marketing_mails_partners" @if($mode=='view') disabled @endif type="checkbox" value="yes" id="yes_marketing_mails_partners" @if(isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes') checked @endif @if(!isset($intermidiatData['marketingmail_partner'])) checked @endif>
                                               <label class="form-check-label" for="yes_marketing_mails_partners" >
                                                 Yes, I am happy to receive marketing emails from the platform from selected partners of the platform
                                               </label>
@@ -431,11 +437,12 @@
 
                   </div>
                 </div>
+                @endif
 
                 <div class="d-flex justify-content-between">
                     <div class="">
                         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
-                     
+
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
@@ -453,6 +460,6 @@
             display: none;
         }
     </style>
- 
+
 @endsection
 

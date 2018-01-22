@@ -57,7 +57,7 @@ class UserController extends Controller
         }
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => $userType];
 
         $data['users']       = $users;
@@ -84,11 +84,11 @@ class UserController extends Controller
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
-
-        $data['roles']              = Role::get();
+ 
+        $data['roles']              = Role::where('type','backoffice')->get();
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
         $data['companyDescription'] = getCompanyDescription();
@@ -145,13 +145,13 @@ class UserController extends Controller
                  
                 if ($jsonResponse->success ==''){
                     Session::flash('error_message', 'Please verify that you are not a robot.');
-                    return redirect()->back();
+                    return redirect()->back()->withInput();
                    
                 }
             }
             else{
                 Session::flash('error_message', 'Please verify that you are not a robot.');
-                return redirect()->back();
+                return redirect()->back()->withInput();
             }
 
 
@@ -207,7 +207,7 @@ class UserController extends Controller
         if($role!="")
             $user->assignRole($role);
 
-        Session::flash('success_message', 'User details saved successfully.');
+        Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
         return redirect(url('backoffice/user/' . $giCode . '/step-one'));
 
     }
@@ -225,13 +225,14 @@ class UserController extends Controller
             abort(404);
         }
 
-        $firmsList = getModelList('App\Firm');
+        $firmsList = getModelList('App\Firm',[],0,0,['name'=>'asc']);
         $firms     = $firmsList['list'];
 
         $breadcrumbs                = [];
-        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
-        $breadcrumbs[]              = ['url' => '', 'name' => 'Add User'];
+        $breadcrumbs[]              = ['url' => '#', 'name' => $user->first_name.' '.$user->last_name ];
+        $breadcrumbs[]              = ['url' => '', 'name' => 'Edit Profile'];
 
         $userData                   = $user->userAdditionalInfo(); 
         $data['user']               = $user;
@@ -260,9 +261,11 @@ class UserController extends Controller
             abort(404);
         }
 
-        $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+        $breadcrumbs                = [];
+        $breadcrumbs[]              = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
+        $breadcrumbs[]              = ['url' => '#', 'name' => $user->first_name.' '.$user->last_name ];
+        $breadcrumbs[]              = ['url' => '', 'name' => 'Edit Profile'];
 
         $intermidiatData            = $user->userIntermidaiteCompInfo(); 
         $taxstructureInfo           = $user->taxstructureInfo();
@@ -287,7 +290,7 @@ class UserController extends Controller
 
         $giCode = $requestData['gi_code'];
         if ($giCode == '') {
-            Session::flash('error_message', 'User details saved successfully.');
+            Session::flash('error_message', 'Intermediary Registration Has Been Successfully Updated.');
             return redirect(url('backoffice/user/add/step-one'));
         } else {
             $user = User::where('gi_code', $giCode)->first();
@@ -462,5 +465,20 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('flash_message',
                 'User successfully deleted.');
+    }
+
+    public function deleteUsers(Request $request){
+        $requestData = $request->all();  
+        $userIdStr = $requestData['user_id'];
+        $userIds = explode(',', $userIdStr);
+        $userIds = array_filter($userIds);
+
+        foreach ($userIds as $key => $userId) {
+            $user = User::findOrFail($userId); 
+            $user->delete();
+        }
+
+
+        return response()->json(['status' => true,]);
     }
 }

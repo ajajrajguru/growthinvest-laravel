@@ -2,11 +2,11 @@
 
 @section('js')
   @parent
- 
+
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
- 
+
 <script type="text/javascript">
-    
+
     $(document).ready(function() {
         $( ".firm_actions" ).change(function() {
            var editUrl = $(this).attr('edit-url')
@@ -28,9 +28,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="section-title font-weight-medium text-primary mb-0">View Users</h1>
-                
+
                     <p class="text-muted">View all Intermediaries registered with us.</p>
-                    
+
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="table-responsive mt-3">
+            <div class="table-responsives mt-3">
                 <table id="datatable-users" class="table dataFilterTable table-hover table-striped-bg">
                     <thead>
                         <tr>
@@ -68,9 +68,9 @@
                                 <td>{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
                                 <td>{{   (!empty($user->firm))?$user->firm->name:'' }}</td>
                                     <td>
-                                    <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
+                                    <select data-id="78523" class="firm_actions form-control form-control-sm" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>
-                                    <option value="edit-intermediary">Edit</option>
+                                    <option value="edit-intermediary">Edit Profile</option>
                                     </select>
                                 </td>
 
@@ -87,6 +87,6 @@
             display: none;
         }
     </style>
- 
+
 @endsection
 

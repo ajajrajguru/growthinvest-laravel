@@ -8,10 +8,12 @@ use App\Role;
 use App\User;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles,SoftDeletes;
+ 
 
     // protected $guard_name = 'backoffice';
 
@@ -33,6 +35,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function getFirstNameAttribute( $value ) { 
+        $value = title_case( $value );      
+        return $value;
+    }
+
+    public function getLastNameAttribute( $value ) { 
+        $value = title_case( $value );      
+        return $value;
+    }
+
     public function firm()
     {
         return $this->belongsTo('App\Firm', 'firm_id');
@@ -53,6 +65,14 @@ class User extends Authenticatable
     {
         $addionalData = $this->userData()->where('data_key','intermediary_company_info')->first();
         return $addionalData;
+    }
+
+    public function isCompanyWealthManager(){
+        $compInfo = (!empty($this->userAdditionalInfo())) ? $this->userAdditionalInfo()->data_value : [];  
+        if(isset($compInfo['typeaccount']) && $compInfo['typeaccount'] == 'Wealth Manager')
+            return true;
+        else
+            return false; 
     }
 
     public function taxstructureInfo()

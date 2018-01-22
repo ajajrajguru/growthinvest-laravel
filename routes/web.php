@@ -28,6 +28,8 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('firms/add','FirmController@create');
 	Route::post('firms/save-firm','FirmController@store');
 	Route::get('firms/{giCode}/edit','FirmController@show'); 
+
+	Route::post('user/delete-user','UserController@deleteUsers');
 	
  
 });

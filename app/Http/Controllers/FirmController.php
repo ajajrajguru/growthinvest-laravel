@@ -21,7 +21,7 @@ class FirmController extends Controller
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Firm'];
 
         $data['firms']       = $firms;

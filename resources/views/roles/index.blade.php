@@ -6,18 +6,18 @@
 @section('content')
 
 <div class="container mt-5">
-    <h1><i class="fa fa-key"></i> Roles
+    <h3><i class="fa fa-key"></i> Roles
 
     <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
-    <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h1>
+    <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h3>
     <hr>
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped" style="word-break: break-all;">
             <thead>
                 <tr>
-                    <th>Role</th>
-                    <th>Permissions</th>
-                    <th>Operation</th>
+                    <th width="15%">Role</th>
+                    <th width="70%">Permissions</th>
+                    <th width="15%">Operation</th>
                 </tr>
             </thead>
 

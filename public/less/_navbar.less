@@ -1,10 +1,10 @@
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   #giMenu {
     display: none !important;
   }
 }
-@media (min-width: 601px) {
+@media (min-width: 768px) {
   #mm-giMenu{
     display: none !important;
   }
@@ -16,49 +16,198 @@
     justify-content: flex-end;
     align-items: center;
     padding: 0;
+    margin: 0;
     list-style-type: none;
-    .gi-logo{
-      margin-right: auto;
-    }
+
     ul{
       padding: 0;
     }
     .submenu{
       display: none;
+      min-width: 170px;
+      transition: all 0.3s ease-out;
+      border-top: 2px solid @brand-primary;
+      position: absolute;
+      top: 40px;
+      right: 0;
+      list-style-type: none;
+      background-color: #fff;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+      li{
+        border-bottom: 1px solid @gray;
+        &:last-child{
+          border-bottom: 0;
+        }
+      }
+      a{
+        display: block;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        color: darken(@gray, 40%);
+      }
     }
     .has-submenu{
       position: relative;
       &:hover{
+        &>a{
+          color: @brand-primary;
+        }
         .submenu{
           display: block;
-          position: absolute;
-          top: 10px;
-          right: 0;
-          list-style-type: none;
-          background-color: #fff;
+          animation: fadeInUp .3s ease-out 1;
           a{
-            color: @gray;
+            &:hover{
+              color: @brand-primary;
+            }
+          }
+          &:before{
+            bottom: 100%;
+            right: 15%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-bottom-color: @brand-primary;
+            border-width: 7px;
+          }
+        }
+        .user-submenu{
+          &:before{
+            right: 9%;
           }
         }
       }
     }
+    .user-submenu{
+      padding: 5px 15px;
+      margin-top: 20px;
+      min-width: 250px;
+      a{
+        padding: 5px 0 0;
+        color: @brand-primary;
+        font-weight: normal;
+      }
+      li{
+        padding: 5px 0 10px;
+      }
+      b{
+        font-size: 0.75rem;
+      }
+      p{
+        margin-bottom: 0;
+        font-size: 0.85rem;
+      }
+    }
     &>li{
       // float: right;
-      margin: 10px 0;
+      padding: 10px 0;
       a{
         padding: 8px;
         text-transform: uppercase;
         font-weight: 600;
         color: #fff;
+        transition: all 0.3s ease-out;
+        &:hover{
+          color: @brand-primary;
+          text-decoration: none;
+        }
+      }
+    }
+
+    .admin-dd-btn{
+      &>a{
+        background-color: @brand-primary;
+        padding: 8px 20px;
+        border-radius: 3px;
+        font-size: 0.75rem;
+        &:hover{
+          color: #fff;
+          background-color: darken(@brand-primary, 10%);
+        }
+      }
+      &:hover{
+        &>a{
+          background-color: darken(@brand-primary, 10%);
+          color: #fff;
+        }
+      }
+    }
+
+    &.dark{
+      &>li{
+        a{
+          color: darken(@gray, 60%);
+          &:hover{
+            color: @brand-primary;
+            text-decoration: none;
+          }
+        }
+      }
+      .admin-dd-btn{
+        &>a{
+          color: #fff;
+          &:hover{
+            color: #fff;
+            background-color: darken(@brand-primary, 10%);
+          }
+        }
+        &:hover{
+          &>a{
+            background-color: darken(@brand-primary, 10%);
+            color: #fff;
+          }
+        }
       }
     }
   }
 }
-header{
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 2;
+
+#mm-giMenu{
+  .admin-dd-btn{
+    background-color: @brand-primary;
+    a{
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}
+
+.user-submenu{
+  padding: 5px 15px;
+  margin-top: 20px;
+  min-width: 250px;
+  a{
+    padding: 5px 0 0;
+    color: @brand-primary;
+    font-weight: normal;
+  }
+  li{
+    padding: 5px 0 10px;
+  }
+  b{
+    font-size: 0.75rem;
+  }
+  p{
+    margin-bottom: 0;
+    font-size: 0.85rem;
+  }
+}
+
+.mm-wrapper_opened{
+  header{
+    transform: translateY(-100px);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

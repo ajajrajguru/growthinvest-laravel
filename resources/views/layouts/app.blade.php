@@ -10,12 +10,12 @@
 
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
-        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
         @yield('css')
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
         <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
- 
+
             ]) !!};
         </script>
         <title>{{ (isset($pageTitle)) ? $pageTitle : config('app.name', 'Growthinvest') }}</title>
@@ -24,7 +24,7 @@
         @php
              echo View::make('includes.navigation-menu')->with([])
         @endphp
-         
+
         <!-- The part of the page that begins to differ between templates -->
         @yield('content')
 
@@ -32,9 +32,9 @@
 
         <!-- BS Script -->
         <script type="text/javascript" src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
- 
+
         <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
         @yield('js')
     </body>
 </html>
- 
+
