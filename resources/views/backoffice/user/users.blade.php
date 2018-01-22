@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <div class="float-right">
                         <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
-                        <a href="{{ url('backoffice/user/export-users')}}" class="btn btn-primary">Download CSV</a>
+                        <a href="{{ url('backoffice/user/export-users')}}" class="btn btn-link">Download CSV</a>
                      
                     </div>
                 </div>

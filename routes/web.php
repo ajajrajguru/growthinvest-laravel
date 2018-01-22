@@ -18,10 +18,11 @@ Route::get('/', function () {
  
 Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice'], function () {
 	//firms
-	Route::resource( 'firm', 'FirmController' );
 	Route::get('firms/add','FirmController@create');
 	Route::post('firms/save-firm','FirmController@store');
 	Route::get('firms/{giCode}/edit','FirmController@show'); 
+	Route::get('firm/export-firm','FirmController@exportFirms');
+	Route::resource( 'firm', 'FirmController' );
 
 	//users
 	Route::get('user/add/step-one','UserController@addUserStepOne');
@@ -33,8 +34,9 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('user/{usertype}','UserController@getUsers');
 	Route::post('user/delete-user','UserController@deleteUsers');
 	
-	
- 
+	//users
+ 	Route::resource( 'investor', 'InvestorController' );
+ 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
 });
 
  

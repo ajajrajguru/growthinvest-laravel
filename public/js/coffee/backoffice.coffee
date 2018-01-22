@@ -1,3 +1,5 @@
+$.ajaxSetup headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
 $(document).ready ->
   $('.dataFilterTable thead th.w-search').each ->
     title = $(this).text()
@@ -182,4 +184,44 @@ $(document).ready ->
     else
       $('header').removeClass 'sticky'
       $('.navbar-menu').removeClass 'dark'
+
+
+  investorTable = $('#datatable-investors').DataTable(
+    'pageLength': 50
+    'processing': true
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'desc']]
+    'ajax':
+      url: '/backoffice/investor/get-investors'
+      type: 'post'
+      data: (data) ->
+        
+        filters = {}
+        
+        data.filters = filters
+        data
+      
+      error: ->
+
+        return
+    'columns': [
+      { 'data': '#' , "orderable": false}
+      { 'data': 'name' }
+      { 'data': 'certification_date'}
+      { 'data': 'client_categorisation' }
+      { 'data': 'parent_firm' }
+      { 'data': 'registered_date'}
+      { 'data': 'action' , "orderable": false}
+    ])
+
+ 
+
+  $('.jobsearchinput').change ->
+    investorTable.ajax.reload()
+    return
+
+ 
+    
+    return
 

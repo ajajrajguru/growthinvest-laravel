@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->hasMany('App\UserData');
     }
 
+    public function userCertification()
+    {
+        return $this->hasMany('App\UserHasCertification');
+    }
+
     public function userAdditionalInfo()
     {
         $addionalData = $this->userData()->where('data_key','additional_info')->first();

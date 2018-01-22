@@ -1,6 +1,12 @@
 (function() {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
   $(document).ready(function() {
-    var IntermediaryTable, api, firmsTable, initSerachForTable, usersTable;
+    var IntermediaryTable, api, firmsTable, initSerachForTable, investorTable, usersTable;
     $('.dataFilterTable thead th.w-search').each(function() {
       var title;
       title = $(this).text();
@@ -199,7 +205,7 @@
     api.bind('close:start', function() {
       return $('.mobile-menu-toggle').removeClass('is-active');
     });
-    return $(window).scroll(function() {
+    $(window).scroll(function() {
       var scroll;
       scroll = $(window).scrollTop();
       if (scroll >= 1) {
@@ -209,6 +215,47 @@
         $('header').removeClass('sticky');
         return $('.navbar-menu').removeClass('dark');
       }
+    });
+    investorTable = $('#datatable-investors').DataTable({
+      'pageLength': 50,
+      'processing': true,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'desc']],
+      'ajax': {
+        url: '/backoffice/investor/get-investors',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': '#',
+          "orderable": false
+        }, {
+          'data': 'name'
+        }, {
+          'data': 'certification_date'
+        }, {
+          'data': 'client_categorisation'
+        }, {
+          'data': 'parent_firm'
+        }, {
+          'data': 'registered_date'
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ]
+    });
+    return $('.jobsearchinput').change(function() {
+      investorTable.ajax.reload();
+      return;
     });
   });
 

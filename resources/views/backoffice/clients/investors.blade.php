@@ -1,0 +1,98 @@
+@extends('layouts.backoffice')
+
+@section('js')
+  @parent
+
+<script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+
+ 
+@endsection
+@section('backoffice-content')
+ 
+<div class="container">
+    @php
+        echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
+    @endphp
+    <div class="d-flex flex-row mt-5 bg-white border border-gray">
+        @include('includes.side-menu')
+        
+        <div class="tab-content">
+            <div class="tab-pane fade" id="home" role="tabpanel">
+                <h1>Lorem</h1>
+
+                <p>Aenean sed lacus id mi scelerisque tristique. Nunc sed ex sed turpis fringilla aliquet in in neque. Praesent posuere, neque rhoncus sollicitudin fermentum, erat ligula volutpat dui, nec dapibus ligula lorem ac mauris. Etiam et leo venenatis purus pharetra dictum.</p>
+
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin tempor mi ut risus laoreet molestie. Duis augue risus, fringilla et nibh ac, convallis cursus purus. Suspendisse potenti. Praesent pretium eros eleifend posuere facilisis. Proin ut magna vitae nulla suscipit eleifend. Ut bibendum pulvinar sapien, vel tristique felis scelerisque et. Sed elementum sapien magna, placerat interdum lacus placerat ut. Integer varius, ligula bibendum laoreet sollicitudin, eros metus fringilla lectus, quis consequat nisl nibh ut nisi. Aenean dignissim, nibh ac fermentum condimentum, ante nisl rutrum sapien, at commodo eros sapien vulputate arcu. Fusce neque leo, blandit nec lectus eu, vestibulum commodo tellus. Aliquam sem libero, tristique at condimentum ac, luctus nec nulla.</p>
+            </div>
+            <div class="tab-pane fade" id="manage_clients" role="tabpanel">
+                <h1>Ipsum</h1>
+
+                <p>Aenean pharetra risus quis placerat euismod. Praesent mattis lorem eget massa euismod sollicitudin. Donec porta nulla ut blandit vehicula. Mauris sagittis lorem nec mauris placerat, et molestie elit vehicula. Donec libero ex, condimentum et mi dapibus, euismod ornare ligula.</p>
+
+                <p>In faucibus tempus ante, et tempor magna luctus id. Ut a maximus ipsum. Duis eu velit nec libero pretium pellentesque. Maecenas auctor hendrerit pulvinar. Donec sed tortor interdum, sodales elit vel, tempor turpis. In tristique vestibulum eros vel congue. Vivamus maximus posuere fringilla. Nullam in est commodo, tristique ligula eu, tincidunt enim. Duis iaculis sodales lectus vitae cursus.</p>
+            </div>
+            <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
+                 <div class="mt-4 bg-white border border-gray p-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1 class="section-title font-weight-medium text-primary mb-0">Investors</h1>
+
+                            <p class="text-muted">View the profile and the portfolio of the investors registered with us.</p>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="  text-primary mb-0">Selection Filters</h5>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="float-right">
+                                <a href="{{ url(' ')}}" class="btn btn-primary">Add Investors</a>
+                                <a href="{{ url(' ')}}" class="btn btn-link">Download CSV</a>
+                             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsives mt-3">
+                        <table id="datatable-investors" class="table dataFilterTable table-hover table-striped-bg">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="w-search">Investor Name</th>
+                                    <th class="w-search">Certification Date</th>
+                                    <th class="w-search">Client Categorisation</th>
+                                    <th class="w-search"> Parent Firm </th>
+                                    <th class="w-search"> Registered Date </th>
+                                    <th style="min-width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="investment_offers" role="tabpanel">
+                <h1>Ipsum</h1>
+
+                <p>Aenean pharetra risus quis placerat euismod. Praesent mattis lorem eget massa euismod sollicitudin. Donec porta nulla ut blandit vehicula. Mauris sagittis lorem nec mauris placerat, et molestie elit vehicula. Donec libero ex, condimentum et mi dapibus, euismod ornare ligula.</p>
+
+                <p>In faucibus tempus ante, et tempor magna luctus id. Ut a maximus ipsum. Duis eu velit nec libero pretium pellentesque. Maecenas auctor hendrerit pulvinar. Donec sed tortor interdum, sodales elit vel, tempor turpis. In tristique vestibulum eros vel congue. Vivamus maximus posuere fringilla. Nullam in est commodo, tristique ligula eu, tincidunt enim. Duis iaculis sodales lectus vitae cursus.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+ 
+
+
+    <style type="text/css">
+        #datatable-investors_filter{
+            display: none;
+        }
+    </style>
+
+@endsection
+
