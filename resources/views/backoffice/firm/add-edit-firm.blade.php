@@ -277,13 +277,13 @@
 				    	@if($firm->id)
 				    	<div class="form-group">
 								<label>Investor Invite Link</label>
-								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="inv_invite_link" value="/register/investor/?{{$firm->invite_key}}" disabled>
-								<span class="viewmode @if($mode=='edit') d-none @endif">/register/investor/?{{$firm->invite_key}}</span>
+								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="inv_invite_link" value="http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor" disabled>
+								<span class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor</span>
 						</div>
 						<div class="form-group">
 								<label>Entrepreneur Invite Link</label>
-								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="ent_invite_link" value="/register/investor/?{{$firm->invite_key}}" disabled>
-								<span class="viewmode @if($mode=='edit') d-none @endif">/register/investor/?{{$firm->invite_key}}</span>
+								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="ent_invite_link" value="http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner" disabled>
+								<span class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner</span>
 						</div>
 						@endif
 						
