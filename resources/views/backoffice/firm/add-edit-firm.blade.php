@@ -240,7 +240,7 @@
 				      				<div class="form-group">
 				      					<label>WM Commission %</label>
 				      					<div class="input-group">
-				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="wm_commission" value="{{$firm->wm_commission}}">
+				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="wm_commission" value="{{$firm->wm_commission}}" data-parsley-type="number" >
 				      						<div class="input-group-append percentlbl @if($mode=='view') d-none @endif">
 				      							<span class="input-group-text">%</span>
 				      						</div>
@@ -252,7 +252,7 @@
 				      				<div class="form-group">
 				      					<label>Introducer Commission %</label>
 				      					<div class="input-group">
-				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="introducer_commission" value="{{$firm->introducer_commission}}">
+				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="introducer_commission" value="{{$firm->introducer_commission}}" data-parsley-type="number" >
 				      						<div class="input-group-append  percentlbl @if($mode=='view') d-none @endif">
 				      							<span class="input-group-text">%</span>
 				      						</div>

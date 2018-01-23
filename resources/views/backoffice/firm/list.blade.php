@@ -4,6 +4,24 @@
   @parent
  
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+  <script type="text/javascript">
+    
+    $(document).ready(function() {
+        $( ".firm_actions" ).change(function() {
+
+            var gi_code = $(this).attr('gi_code')
+            var sel_val = $(this).val();
+            switch(sel_val){
+                case 'edit' : 
+                            var action_url = '/backoffice/firms/'+gi_code;
+                            window.open(action_url);
+                break;
+            }
+           
+        });
+    });
+</script>
+
  
 @endsection
 @section('backoffice-content')
@@ -22,7 +40,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
-                        <a href="/growthinvest-ui/admin/add-user/" class="btn btn-primary">Add Firm</a>
+                        <a href="/backoffice/firms/add" class="btn btn-primary">Add Firm</a>
                         <button type="button" class="btn btn-link">Download CSV</button>
                     </div>
                 </div>
@@ -59,9 +77,9 @@
                                     <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>
                                     <td>
-                                        <select data-id="78523" class="firm_actions">
+                                        <select data-id="78523" class="firm_actions" gi_code="{{ $firm->gi_code }}">
                                         <option>--select--</option>
-                                        <option value="view_firm">View Firm Details</option>
+                                        <option value="edit">View Firm Details</option>
                                         <option value="view_wm_commissions">View Investment Clients</option>
                                         <option value="view_introducer_commissions">View Business Clients</option>
                                         </select>

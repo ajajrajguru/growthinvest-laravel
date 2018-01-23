@@ -41,16 +41,20 @@ class FirmController extends Controller
         $data        = [];
         $breadcrumbs = [];
 
-        $breadcrumbs[]         = ['url' => url('/'), 'name' => "Manage"];
-        $breadcrumbs[]         = ['url' => '/backoffice/firm', 'name' => 'Firms'];
-        $breadcrumbs[]         = ['url' => '', 'name' => 'Add Firm'];
-        $data['breadcrumbs']   = $breadcrumbs;
-        $data['countyList']    = getCounty();
-        $data['countryList']   = getCountry();
-        $data['network_firms'] = $firm->getAllParentFirms();
-        $data['firm']          = $firm;
-        $data['firm_types']    = $firm->getFirmTypes();
-        $data['mode']          = 'edit';
+        $invite_content = $firm->getInviteContent();
+
+        $breadcrumbs[]          = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[]          = ['url' => '/backoffice/firm', 'name' => 'Firms'];
+        $breadcrumbs[]          = ['url' => '', 'name' => 'Add Firm'];
+        $data['breadcrumbs']    = $breadcrumbs;
+        $data['countyList']     = getCounty();
+        $data['countryList']    = getCountry();
+        $data['network_firms']  = $firm->getAllParentFirms();
+        $data['firm']           = $firm;
+        $data['firm_types']     = $firm->getFirmTypes();
+        $data['mode']           = 'edit';
+        $data['invite_content'] = $invite_content;
+
         return view('backoffice.firm.add-edit-firm')->with($data);
     }
 
@@ -149,7 +153,7 @@ class FirmController extends Controller
         //return $firm_id;
 
         Session::flash('success_message', 'Firm details saved successfully.');
-        return redirect(url('backoffice/firms/' . $giCode . '/edit'));
+        return redirect(url('backoffice/firms/' . $giCode ));
     }
 
     /**

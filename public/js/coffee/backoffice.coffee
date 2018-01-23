@@ -140,6 +140,10 @@ $(document).ready ->
     $('.viewmode').addClass('d-none');
 
     $(this).addClass('d-none');
+    $('#cke_ent_invite_content').removeClass('d-none')
+    $('#cke_inv_invite_content').removeClass('d-none')
+    $('#cke_fundmanager_invite_content').removeClass('d-none')
+    $('.percentlbl').removeClass('d-none');
     $('.cancelFirmUpdateBtn').removeClass('d-none');
 
   $(document).on 'click', '.cancelFirmUpdateBtn', ->
@@ -147,6 +151,10 @@ $(document).ready ->
     $('.reqField').addClass('d-none');
     $('.viewmode').removeClass('d-none');
     $(this).addClass('d-none');
+    $('#cke_ent_invite_content').addClass('d-none')
+    $('#cke_inv_invite_content').addClass('d-none')
+    $('#cke_fundmanager_invite_content').addClass('d-none')
+    $('.percentlbl').addClass('d-none');
     $('.editFirmBtn').removeClass('d-none');
 
 
