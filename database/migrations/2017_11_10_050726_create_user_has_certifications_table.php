@@ -20,6 +20,8 @@ class CreateUserHasCertificationsTable extends Migration
             $table->longText('details');
             $table->integer('active')->default(0);
             $table->integer('file_id');
+            $table->string('certification')->nullable();
+            
             $table->timestamps();
 
             $table->foreign('user_id')

@@ -19,6 +19,7 @@ class CreateDefaultsTable extends Migration
             $table->string('slug');
             $table->string('type');
             $table->integer('status')->default(0);
+            $table->text('meta_data')->nullable();
             $table->timestamps();
         });
     }
