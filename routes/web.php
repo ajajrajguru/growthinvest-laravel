@@ -38,6 +38,8 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('investor/export-investors','InvestorController@exportInvestors');
 	Route::get('investor/registration','InvestorController@registration');
 	Route::get('investor/{giCode}/registration','InvestorController@editRegistration');
+	Route::get('investor/{giCode}/client-categorisation','InvestorController@clientCategorisation');
+	Route::post('investor/{giCode}/save-client-categorisation','InvestorController@saveClientCategorisation');
 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
 	Route::post( 'investor/save-registration', 'InvestorController@saveRegistration' );
  	Route::resource( 'investor', 'InvestorController' );

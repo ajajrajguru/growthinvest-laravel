@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Defaults;
 use App\User;
 use App\UserData;
+use App\UserHasCertification;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Session;
 
 //Enables us to output flash messaging
-use Spatie\Permission\Models\Role;
 
 class InvestorController extends Controller
 {
@@ -147,7 +147,7 @@ class InvestorController extends Controller
                 ->where('model_has_roles.model_type', 'App\User');
         })->join('roles', function ($join) {
             $join->on('model_has_roles.role_id', '=', 'roles.id')
-                ->whereIn('roles.name', ['investor','yet_to_be_approved_investor']);
+                ->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
         })->leftjoin('user_has_certifications', function ($join) {
             $join->on('users.id', 'user_has_certifications.user_id');
         });
@@ -328,7 +328,7 @@ class InvestorController extends Controller
         $data['investor']    = $investor;
         $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'Add Investor';
+        $data['pageTitle']   = 'Add Investor : Registration';
         $data['mode']        = 'view';
 
         return view('backoffice.clients.registration')->with($data);
@@ -337,23 +337,23 @@ class InvestorController extends Controller
 
     public function saveRegistration(Request $request)
     {
-        $requestData        = $request->all();
-        $title          = $requestData['title'];
-        $firstName          = $requestData['first_name'];
-        $lastName           = $requestData['last_name'];
-        $email              = $requestData['email'];
-        $telephone          = $requestData['telephone'];
-        $password           = $requestData['password'];
-        $addressLine1       = $requestData['address_line_1'];
-        $addressLine2       = $requestData['address_line_2'];
-        $townCity           = $requestData['town_city'];
-        $county             = $requestData['county'];
-        $postcode           = $requestData['postcode'];
-        $country            = $requestData['country'];
-        $firm               = $requestData['firm'];
-        $investmentAccountNumber               = $requestData['investment_account_number'];
-        $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
-        $giCode             = $requestData['gi_code'];
+        $requestData             = $request->all();
+        $title                   = $requestData['title'];
+        $firstName               = $requestData['first_name'];
+        $lastName                = $requestData['last_name'];
+        $email                   = $requestData['email'];
+        $telephone               = $requestData['telephone'];
+        $password                = $requestData['password'];
+        $addressLine1            = $requestData['address_line_1'];
+        $addressLine2            = $requestData['address_line_2'];
+        $townCity                = $requestData['town_city'];
+        $county                  = $requestData['county'];
+        $postcode                = $requestData['postcode'];
+        $country                 = $requestData['country'];
+        $firm                    = $requestData['firm'];
+        $investmentAccountNumber = $requestData['investment_account_number'];
+        $isSuspended             = (isset($requestData['is_suspended'])) ? 1 : 0;
+        $giCode                  = $requestData['gi_code'];
 
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
@@ -374,7 +374,7 @@ class InvestorController extends Controller
             }
 
             $investor                = new User;
-            $giCode              = generateGICode($investor, 'gi_code', $giArgs);
+            $giCode                  = generateGICode($investor, 'gi_code', $giArgs);
             $investor->gi_code       = $giCode;
             $investor->registered_by = Auth::user()->id;
         } else {
@@ -403,8 +403,6 @@ class InvestorController extends Controller
 
         $investorId = $investor->id;
 
-
-
         $investorData = $investor->userAdditionalInfo();
         if (empty($investorData)) {
             $investorData           = new UserData;
@@ -415,7 +413,6 @@ class InvestorController extends Controller
         $investorData->data_value = $investmentAccountNumber;
         $investorData->save();
 
-
         //assign role
 
         $roleName = $investor->getRoleNames()->first();
@@ -423,8 +420,89 @@ class InvestorController extends Controller
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
-        Session::flash('success_message', 'Investor Registration Has Been Successfully Updated.');
-        return redirect(url('backoffice/investor/' . $giCode . '/registration'));
+        Session::flash('success_message', 'Your client registration details added successfully and being redirected to certification stage');
+        return redirect(url('backoffice/investor/' . $giCode . '/client-categorisation'));
+    }
+
+    public function clientCategorisation($giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+
+        if (empty($investor)) {
+            abort(404);
+        }
+        
+        $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
+        $clientCategories     = $clientCategoriesList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
+        
+        $data['investor']    = $investor;
+        $data['clientCategories']    = $clientCategories;
+        $data['certificationTypes']    = certificationTypes();
+        $data['investorCertification']    = $investor->getActiveCertification(); 
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'Add Investor : Client Categorisation';
+        $data['mode']        = 'view';
+
+        return view('backoffice.clients.client-categorisation')->with($data);
+
+    }
+
+    public function saveClientCategorisation(Request $request,$giCode){
+
+        $investor = User::where('gi_code', $giCode)->first();
+
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $requestData = $request->all();
+
+        $activeCertification = $investor->getActiveCertification();
+        if(!empty($activeCertification)){
+            $activeCertification->active = 0;
+            $activeCertification->save();
+        }
+        
+
+        $details = [];
+        if($requestData['save-type'] == 'retail'){
+            $details = $this->getRetailData($requestData);
+        }
+
+        $hasCertification = $investor->userCertification()->where('certification_default_id',$requestData['client_category_id'])->first();
+        if(empty($hasCertification)){
+            $hasCertification = new UserHasCertification;
+            $hasCertification->user_id = $investor->id;
+            $hasCertification->certification_default_id = $requestData['client_category_id'];
+            $hasCertification->file_id = 0;
+        }
+        
+        $hasCertification->certification = $requestData['certification_type'];;
+        $hasCertification->active = 1;
+        $hasCertification->details = $details;
+        $hasCertification->save(); 
+
+        if(!$investor->hasRole('investor')){
+            $investor->removeRole('yet_to_be_approved_investor');
+            $investor->assignRole('investor');
+        }
+ 
+        return response()->json(['success'=>true]);
+
+    }
+
+    public function getRetailData($requestData){
+        $retailCkStr = $requestData['input_name'];
+        $retailCkExp = explode(',', $retailCkStr);
+        $retailCk['conditions'] = array_filter($retailCkExp);
+
+        return $retailCk;
     }
 
     /**

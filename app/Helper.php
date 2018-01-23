@@ -208,5 +208,11 @@ function generateCSV($header,$data,$filename){
     unlink($filePath);
     exit();
 }
+
+function getCertificationQuesionnaire(){
+    $questionnaires = \App\CertificationQuestionaire::select('*')->orderBy('certification_default_id','asc')->orderBy('order','asc')->get()->toArray();
+
+    return $questionnaires;
+}
  
  

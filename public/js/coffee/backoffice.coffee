@@ -242,7 +242,68 @@ $(document).ready ->
     investorTable.ajax.reload()
     return
 
- 
+  validateQuiz = (btnObj) ->  
+    err = 0
+    $(btnObj).closest('.quiz-container').find('.questions').each ->
+      if($(this).find('input[data-correct="1"]:checked').length == 0)
+        $(this).find('.quiz-question').addClass('text-danger')
+        err++
+      else
+        $(this).find('.quiz-question').removeClass('text-danger')
+
+    return err
+
+
+  $('.submit-quiz').click ->
+    err = validateQuiz($(this))
+    console.log err
+
+    if err > 0
+      $(this).closest('.quiz-container').find('.quiz-success').addClass('d-none')
+      $(this).closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
+      $(this).closest('.quiz-container').find('.quiz-danger').find('#message').html("I'm sorry you got "+err+" answers wrong, please try again")
+    else
+      $(this).closest('.quiz-container').find('.quiz-success').removeClass('d-none')
+      $(this).closest('.quiz-container').find('.quiz-danger').addClass('d-none')
+      $(this).closest('.quiz-container').find('.quiz-success').find('#message').html("Congratulations you answered all questions correctly. Please now read the following statement and make the declaration thereafter")
+      $(this).addClass('d-none')
+      $(this).attr('submit-quiz',"true")
+
+  $('.save-retial-certification').click ->
+    btnObj = $(this)
+    err = validateQuiz($(".retail-quiz-btn"))
     
-    return
+    if err > 0
+      $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
+      $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
+    else
+      clientCategoryId = $(this).attr('client-category')
+      giCode = $(this).attr('inv-gi-code')
+      certification_type = $('select[name="certification_type"]').val()
+      inputData = '';
+      $('.retail-input').each ->
+        if $(this).is(':checked')
+          inputData += $(this).attr('name')+','
+
+      $.ajax
+        type: 'post'
+        url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
+        headers:
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        data:
+          'save-type': 'retail'
+          'certification_type': certification_type
+          'client_category_id': clientCategoryId
+          'input_name': inputData
+        success: (data) ->
+          btnObj.addClass('d-none')
+
+      
+
+      
+     
+
+ 
+   
+ 
 

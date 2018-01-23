@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function userCertification()
     {
-        return $this->hasMany('App\UserHasCertification');
+        return $this->hasMany('App\UserHasCertification', 'user_id');
     }
 
     public function userAdditionalInfo()
@@ -84,6 +84,11 @@ class User extends Authenticatable
     {
         $addionalData = $this->userData()->where('data_key','taxstructure_info')->first();
         return $addionalData;
+    }
+
+    public function getActiveCertification(){
+        $activeCertification = $this->userCertification()->where('active',1)->first();
+        return $activeCertification;
     }
 
     public function getbackOfficeAccessRoleIds(){

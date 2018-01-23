@@ -20,37 +20,38 @@ class UserPermission
     more then one permission can be added for URI
      **/
 
-
     public function routePermission()
     {
 
         $routePermission = [
             'backoffice'  =>
             [
-                'backoffice/user/{usertype}'        => ['users'],
-                'backoffice/user/export-users'      => ['users'],
-                'backoffice/user/add/step-one'      => ['add_user'],
-                'backoffice/user/{giCode}/step-one' => ['add_user'],
-                'backoffice/user/{giCode}/step-two' => ['add_user'],
-                'backoffice/user/save-step-one'     => ['add_user'],
-                'backoffice/user/save-step-two'     => ['add_user'],
-                'backoffice/user/delete-user'       => ['remove_users','delete_users','delete_user'],
-                
-                'backoffice/firm'                   => ['view_firms'],
-                'backoffice/firm/export-firm'       => ['view_firms'],
-                'backoffice/firms/add'              => ['add_firm'],
-                'backoffice/firms/save-firm'        => ['add_firm','edit_firm','edit_my_firm'],
-                'backoffice/firms/{giCode}/edit'    => ['edit_firm','edit_my_firm'],
+                'backoffice/user/{usertype}'                   => ['users'],
+                'backoffice/user/export-users'                 => ['users'],
+                'backoffice/user/add/step-one'                 => ['add_user'],
+                'backoffice/user/{giCode}/step-one'            => ['add_user'],
+                'backoffice/user/{giCode}/step-two'            => ['add_user'],
+                'backoffice/user/save-step-one'                => ['add_user'],
+                'backoffice/user/save-step-two'                => ['add_user'],
+                'backoffice/user/delete-user'                  => ['remove_users', 'delete_users', 'delete_user'],
 
-                'backoffice/investor'               => ['view_all_investors','investors','view_investors'],
-                'backoffice/investor/get-investors' => ['view_all_investors','investors','view_investors'],
-                'backoffice/investor/export-investors' => ['view_all_investors','investors','view_investors'],
-                'backoffice/investor/registration' => ['add_investor'],
-                'backoffice/investor/{giCode}/registration' => ['add_investor'],
-                'backoffice/investor/save-registration' => ['add_investor'],
-                
-            ],  
-            
+                'backoffice/firm'                              => ['view_firms'],
+                'backoffice/firm/export-firm'                  => ['view_firms'],
+                'backoffice/firms/add'                         => ['add_firm'],
+                'backoffice/firms/save-firm'                   => ['add_firm', 'edit_firm', 'edit_my_firm'],
+                'backoffice/firms/{giCode}/edit'               => ['edit_firm', 'edit_my_firm'],
+
+                'backoffice/investor'                          => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/get-investors'            => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/export-investors'         => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/registration'             => ['add_investor'],
+                'backoffice/investor/{giCode}/registration'    => ['add_investor'],
+                'backoffice/investor/save-registration'        => ['add_investor'],
+                'backoffice/investor/{giCode}/client-categorisation'      => ['add_investor'],
+                'backoffice/investor/{giCode}/save-client-categorisation' => ['add_investor'],
+
+            ],
+
             'frontoffice' =>
             [
 
@@ -84,11 +85,11 @@ class UserPermission
     {
         $routePerrmissions = $this->routePermission();
 
-        $router            = app()->make('router');
-        $uriPath           = $router->getCurrentRoute()->uri;
+        $router  = app()->make('router');
+        $uriPath = $router->getCurrentRoute()->uri;
 
         $uriPermission = $this->getUriPermissions($uriPath);
-      
+
         if (!hasAccess($uriPermission)) {
             abort(403);
         }
