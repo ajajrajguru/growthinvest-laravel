@@ -1,0 +1,15 @@
+.pagination{
+	justify-content: flex-end;
+}
+
+.page-link{
+	color: @brand-primary;
+	&:focus, &:hover{
+		color: darken(@brand-primary, 10%);
+	}
+}
+
+.page-item.active .page-link {
+    background-color: @brand-primary;
+    border-color: @brand-primary
+}

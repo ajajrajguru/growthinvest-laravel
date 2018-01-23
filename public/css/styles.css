@@ -93,7 +93,7 @@ header.sticky {
   background-color: #00a9ee !important;
 }
 .bg-gray {
-  background-color: #eaeaea !important;
+  background-color: #ececec !important;
 }
 .border-primary {
   border-color: #00a9ee !important;
@@ -147,6 +147,9 @@ a:hover {
   color: #e40000;
   font-size: 0.8rem;
 }
+.text-small {
+  font-size: 85%;
+}
 .nav-tabs--vertical {
   border-bottom: none;
   border-right: 1px solid #dddddd;
@@ -155,9 +158,6 @@ a:hover {
   -moz-box-orient: vertical;
   -moz-box-direction: normal;
        flex-flow: column nowrap;
-}
-.nav-tabs--left {
-  margin: 0 15px 0 0;
 }
 .nav-tabs--left .nav-link {
   -moz-transition: border-color 0.125s ease-in;
@@ -364,8 +364,19 @@ fieldset legend {
   font-size: 1.2rem;
   bottom: 0.5em !important;
 }
+.table td,
+.table th {
+  padding: .75rem 0.5rem;
+}
 .table-no-padding td {
   padding: 0;
+}
+.table-responsive > .dataTables_wrapper > .row {
+  width: 100%;
+}
+.dataTables_length label {
+  -moz-box-pack: start;
+       justify-content: flex-start;
 }
 .breadcrumb {
   background-color: transparent;
@@ -673,4 +684,22 @@ fieldset legend {
 }
 .alert-primary {
   background-color: #e4f7ff;
+}
+.badge-danger {
+  background-color: rgba(228, 0, 0, 0.8);
+}
+.pagination {
+  -moz-box-pack: end;
+       justify-content: flex-end;
+}
+.page-link {
+  color: #00a9ee;
+}
+.page-link:focus,
+.page-link:hover {
+  color: #0085bb;
+}
+.page-item.active .page-link {
+  background-color: #00a9ee;
+  border-color: #00a9ee;
 }

@@ -196,7 +196,7 @@ $(document).ready ->
       url: '/backoffice/investor/get-investors'
       type: 'post'
       data: (data) ->
-   
+
         filters = {}
         filters.firm_name = $('select[name="firm_name"]').val()
         filters.investor_name = $('select[name="investor_name"]').val()
@@ -204,13 +204,16 @@ $(document).ready ->
         filters.client_certification = $('select[name="client_certification"]').val()
         filters.investor_nominee = $('select[name="investor_nominee"]').val()
         filters.idverified = $('select[name="idverified"]').val()
-        
+
         data.filters = filters
         data
-      
+
       error: ->
 
+
         return
+
+
     'columns': [
       { 'data': '#' , "orderable": false}
       { 'data': 'name' }
@@ -221,7 +224,7 @@ $(document).ready ->
       { 'data': 'action' , "orderable": false}
     ])
 
- 
+
   $('.download-investor-csv').click ->
     firm_name = $('select[name="firm_name"]').val()
     investor_name = $('select[name="investor_name"]').val()
@@ -242,7 +245,7 @@ $(document).ready ->
     investorTable.ajax.reload()
     return
 
- 
-    
+
+
     return
 

@@ -101,9 +101,9 @@ class InvestorController extends Controller
                 $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
             }
 
-            $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
+            $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select class="form-control">
+            $actionHtml = '<select class="form-control form-control-sm">
             <option id="select" value="">-Select-</option>
             <option value="edit_profile">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
@@ -116,7 +116,7 @@ class InvestorController extends Controller
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
 
             $investorsData[] = [
-                '#'                     => '<input type="checkbox" class="ck_investor" name="ck_investor" value="' . $investor->id . '">',
+                '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investor->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $investor->id . '"><label class="custom-control-label" for="ch' . $investor->id . '"></label></div> ',
                 'name'                  => $nameHtml,
                 'certification_date'    => $certificationDate,
                 'client_categorisation' => $active,
