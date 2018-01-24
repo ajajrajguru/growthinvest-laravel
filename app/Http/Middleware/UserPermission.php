@@ -26,6 +26,7 @@ class UserPermission
         $routePermission = [
             'backoffice'  =>
             [
+
  
                 'backoffice/user/{usertype}'                   => ['users'],
                 'backoffice/user/export-users'                 => ['users'],
@@ -50,6 +51,10 @@ class UserPermission
                 'backoffice/investor/save-registration'        => ['add_investor'],
                 'backoffice/investor/{giCode}/client-categorisation'      => ['add_investor'],
                 'backoffice/investor/{giCode}/save-client-categorisation' => ['add_investor'],
+
+
+                'backoffice/enterpreneurs'          => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/fundmanagers'          => ['view_all_fund_managers', 'view_firm_fund_managers'],
 
  
             ],
