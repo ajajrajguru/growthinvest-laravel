@@ -45,7 +45,9 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
 	Route::post( 'investor/save-registration', 'InvestorController@saveRegistration' );
  	Route::resource( 'investor', 'InvestorController' );
- 	
+
+ 	//business
+ 	Route::resource( 'business-listings', 'BusinessListingController' );
 
 });
 
