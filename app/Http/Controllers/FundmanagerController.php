@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\UserData;
 
-class EntrepreneurController extends Controller
+class FundmanagerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class EntrepreneurController extends Controller
     public function index()
     {
         $user      = new User;
-        $entrepreneurs = $user->getEntrepreneurs();
+        $fundmanagers = $user->getFundmanagers();
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list']; 
         
@@ -24,16 +24,16 @@ class EntrepreneurController extends Controller
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Entrepreneurs'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Fund Managers'];
 
         
       
         $data['firms']              = $firms;
-        $data['entrepreneurs']          = $entrepreneurs;
+        $data['fundmanagers']       = $fundmanagers;
         $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'Entrepreneurs';
+        $data['pageTitle']          = 'Fund Managers';
 
-        return view('backoffice.clients.entrepreneurs')->with($data);
+        return view('backoffice.clients.fundmanagers')->with($data);
     }
 
     /**

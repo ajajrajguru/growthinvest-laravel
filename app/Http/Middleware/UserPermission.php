@@ -36,9 +36,10 @@ class UserPermission
                 'backoffice/user/save-step-two'     => ['add_user'],
                 'backoffice/firms/add'              => ['add_firm'],
                 'backoffice/firms/save-firm'        => ['add_firm','edit_firm','edit_my_firm'],
-                'backoffice/firms/{giCode}'    => ['edit_firm','edit_my_firm'],
+                'backoffice/firms/{giCode}'         => ['edit_firm','edit_my_firm'],
                 'backoffice/user/delete-user'       => ['remove_users','delete_users','delete_user'],
-                'backoffice/enterpreneurs'          => ['view_all_business_owners', 'manage_options'],
+                'backoffice/enterpreneurs'          => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/fundmanagers'          => ['view_all_fund_managers', 'view_firm_fund_managers'],
             ],
             'frontoffice' =>
             [
