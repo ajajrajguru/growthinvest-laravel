@@ -304,19 +304,19 @@
                               <div class="text-primary">
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
+                                       <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="ri_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
+                                       <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="ri_retailinvestor" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="ri_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
+                                       <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="ri_riskwarning" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_riskwarning">I have read and understand the risk warning.</label>
                                     </div>
                                  </div>
@@ -413,7 +413,7 @@
                                 <div class="alert bg-gray mb-5">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_0" id="ch7" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_0" id="ch7" @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch7">
                                                 He/She has been a member of a network or syndicate of business angels for at least the six months preceding the date of the certificate.
                                             </label>
@@ -421,7 +421,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_1" id="ch8" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_1" id="ch8" @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch8">
                                                 He/She has made more than one investment in an unlisted company in the two years preceding that date.
                                             </label>
@@ -429,7 +429,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_2" id="ch9"  @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_2',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_2" id="ch9"  @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_2',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch9">
                                                 He/She has worked, in the two years preceding that date, in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises.
                                             </label>
@@ -437,7 +437,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_3" id="ch10"  @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_3',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_3" id="ch10"  @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_3',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch10">
                                                 He/She has been, in the two years preceding that date, a director of a company with an annual turnover of at least £1 million.
                                             </label>
@@ -521,7 +521,7 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input hi-terms-input" name="sic_option_0" id="ch15" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input hi-terms-input" name="sic_option_0" id="ch15" @if($isHighNetworth && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label normal" for="ch15">
                                                 He/she had, during the financial year immediately preceding the date below, an annual income to the value of £100,000 or more;
                                             </label>
@@ -529,7 +529,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch16" name="sic_option_1" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch16" name="sic_option_1" @if($isHighNetworth && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label normal" for="ch16">
                                                 He/she held, throughout the financial year immediately preceding the date below, net assets to the value of £250,000 or more. Net assets for these purposes do not include:
                                             </label>

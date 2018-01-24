@@ -12,7 +12,8 @@
         "laravel/passport": "^4.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5",
-        "spatie/laravel-permission": "^2.6"
+        "spatie/laravel-permission": "^2.6",
+        "spipu/html2pdf": "^5.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
