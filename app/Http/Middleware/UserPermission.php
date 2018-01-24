@@ -38,6 +38,7 @@ class UserPermission
                 'backoffice/firms/save-firm'        => ['add_firm','edit_firm','edit_my_firm'],
                 'backoffice/firms/{giCode}'    => ['edit_firm','edit_my_firm'],
                 'backoffice/user/delete-user'       => ['remove_users','delete_users','delete_user'],
+                'backoffice/enterpreneurs'          => ['view_all_business_owners', 'manage_options'],
             ],
             'frontoffice' =>
             [

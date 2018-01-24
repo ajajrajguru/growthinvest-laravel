@@ -29,14 +29,14 @@ class CreateBusinessListings extends Migration
             $table->double('pledged_amount');
             $table->double('funded_amount');
             $table->integer('watchlist_count');  
-            $table->integer('owner_id'); 
+            $table->integer('owner_id')->unsigned(); 
             $table->string('gi_code');             
             $table->timestamps();
 
-            /*$table->foreign('owner_id')
+            $table->foreign('owner_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('cascade');*/
+                ->onDelete('cascade');
         });
     }
 

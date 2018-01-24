@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('firms/{giCode}','FirmController@show'); 
 
 	Route::post('user/delete-user','UserController@deleteUsers');
+	Route::resource( 'enterpreneurs', 'EntrepreneurController' );
 	
  
 });

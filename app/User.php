@@ -9,7 +9,8 @@ use App\User;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+    
+use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
     use Notifiable, HasRoles,SoftDeletes;
@@ -120,6 +121,29 @@ class User extends Authenticatable
 
         return $users; 
       
+    }
+
+
+
+
+    public function getEntrepreneurs($cond=[]){
+        $users = User::join('model_has_roles', function ($join) {
+                        $join->on('users.id', '=', 'model_has_roles.model_id')
+                             ->where('model_has_roles.model_type', 'App\User');
+                        })->join('roles', function ($join) {
+                            $join->on('model_has_roles.role_id', '=', 'roles.id')
+                                ->whereIn('roles.name', ['business_owner']);
+                        })
+                        ->join('business_listings', function ($join) {
+                                                    $join->on('users.id', '=', 'business_listings.owner_id')
+                                                        /*->groupBy('business_listings.owner_id')*/
+                                                        /*->select(DB::raw(" GROUP_CONCAT(business_listings.title SEPARATOR ',') as business"))*/ ;
+                                                })
+                        ->groupBy('business_listings.owner_id')
+                        ->where($cond)->select(DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"))
+                        ->get();
+
+        return $users; 
     }
 
 
