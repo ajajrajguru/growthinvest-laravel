@@ -442,9 +442,11 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
         
         $data['investor']    = $investor;
+        $data['countyList']  = getCounty();
+        $data['countryList'] = getCountry();
         $data['clientCategories']    = $clientCategories;
         $data['certificationTypes']    = certificationTypes();
-        $data['investorCertification']    = $investor->getActiveCertification(); 
+        $data['investorCertification']    = $investor->getActiveCertification();  
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Add Investor : Client Categorisation';
         $data['mode']        = 'view';
@@ -477,6 +479,20 @@ class InvestorController extends Controller
         elseif($requestData['save-type'] == 'sophisticated'){
             $details = $this->getSophisticatedData($requestData);
         }
+        elseif($requestData['save-type'] == 'high_net_worth'){
+            $details = $this->getHighNetWorthData($requestData);
+        }
+        elseif($requestData['save-type'] == 'professsional_investors'){
+            $details = $this->getProfessionalInvData($requestData);
+        }
+        elseif($requestData['save-type'] == 'advice_investors'){
+            $details = $this->getAdviceInvestorsData($requestData);
+        }
+        elseif($requestData['save-type'] == 'elective_prof'){
+            $details = $this->getElectiveProfData($requestData);
+        }
+
+       
 
         $hasCertification = $investor->userCertification()->where('certification_default_id',$requestData['client_category_id'])->first();
         if(empty($hasCertification)){
@@ -501,11 +517,13 @@ class InvestorController extends Controller
     }
 
     public function getRetailData($requestData){
-        $retailCkStr = $requestData['input_name'];
+        $data = [];
+        $retailCkStr = $requestData['conditions'];
         $retailCkExp = explode(',', $retailCkStr);
-        $retailCk['conditions'] = array_filter($retailCkExp);
+        $data['conditions'] = array_filter($retailCkExp);
+        $data['quiz_answers'] = $requestData['quiz_answers'];
 
-        return $retailCk;
+        return $data;
     }
 
     public function getSophisticatedData($requestData){ 
@@ -521,6 +539,45 @@ class InvestorController extends Controller
         return $data;
     }
 
+    public function getHighNetWorthData($requestData){ 
+        $data = [];
+        $termsStr = $requestData['terms'];
+        $termsExp = explode(',', $termsStr);
+        $data['terms'] = array_filter($termsExp);
+
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+
+        return $data;
+    }
+
+    public function getProfessionalInvData($requestData){ 
+        $data = [];
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+
+        return $data;
+    }
+
+    public function getAdviceInvestorsData($requestData){ 
+        $data = [];
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+        $data['financial_advisor_info'] = $requestData['financial_advisor_info'];
+
+        return $data;
+    }
+
+    public function getElectiveProfData($requestData){
+        $data = [];
+        $data['quiz_answers'] = $requestData['quiz_answers'];
+        $data['investor_statement'] = $requestData['investor_statement'];
+
+        return $data;
+    }
     
 
     /**

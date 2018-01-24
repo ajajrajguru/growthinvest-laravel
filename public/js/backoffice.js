@@ -304,7 +304,6 @@
     $('.submit-quiz').click(function() {
       var err;
       err = validateQuiz($(this));
-      console.log(err);
       if (err > 0) {
         $(this).closest('.quiz-container').find('.quiz-success').addClass('d-none');
         $(this).closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
@@ -318,7 +317,7 @@
       }
     });
     $('.save-retial-certification').click(function() {
-      var btnObj, certification_type, clientCategoryId, err, giCode, inputData;
+      var btnObj, certification_type, clientCategoryId, conditions, err, giCode, quizAnswers;
       btnObj = $(this);
       err = validateQuiz($(".retail-quiz-btn"));
       if (err > 0) {
@@ -329,10 +328,19 @@
         clientCategoryId = $(this).attr('client-category');
         giCode = $(this).attr('inv-gi-code');
         certification_type = $('select[name="certification_type"]').val();
-        inputData = '';
+        conditions = '';
         $('.retail-input').each(function() {
           if ($(this).is(':checked')) {
-            return inputData += $(this).attr('name') + ',';
+            return conditions += $(this).attr('name') + ',';
+          }
+        });
+        quizAnswers = {};
+        $(".retail-quiz-btn").closest('.quiz-container').find('.questions').each(function() {
+          var optionLabel, qid;
+          if ($(this).find('input[data-correct="1"]:checked').length > 0) {
+            qid = $(this).find('input[data-correct="1"]:checked').attr('data-qid');
+            optionLabel = $(this).find('input[data-correct="1"]:checked').attr('data-label');
+            return quizAnswers[qid] = optionLabel;
           }
         });
         return $.ajax({
@@ -345,10 +353,16 @@
             'save-type': 'retail',
             'certification_type': certification_type,
             'client_category_id': clientCategoryId,
-            'input_name': inputData
+            'conditions': conditions,
+            'quiz_answers': quizAnswers
           },
           success: function(data) {
-            return btnObj.addClass('d-none');
+            $('.elective-prof-inv-btn').removeClass('d-none');
+            $(".submit-quiz").removeClass('d-none');
+            $(".retail-quiz-btn").addClass('d-none');
+            $(".save-certification").removeClass('d-none');
+            btnObj.addClass('d-none');
+            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
           }
         });
       }
@@ -391,12 +405,15 @@
             'terms': terms
           },
           success: function(data) {
-            return btnObj.addClass('d-none');
+            $('.elective-prof-inv-btn').removeClass('d-none');
+            $(".save-certification").removeClass('d-none');
+            btnObj.addClass('d-none');
+            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
           }
         });
       }
     });
-    return $('.save-high-net-worth').click(function() {
+    $('.save-high-net-worth').click(function() {
       var btnObj, certification_type, clientCategoryId, conditions, giCode, terms;
       btnObj = $(this);
       clientCategoryId = $(this).attr('client-category');
@@ -432,7 +449,142 @@
             'conditions': conditions,
             'terms': terms
           },
-          success: function(data) {}
+          success: function(data) {
+            $('.elective-prof-inv-btn').removeClass('d-none');
+            $(".save-certification").removeClass('d-none');
+            btnObj.addClass('d-none');
+            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          }
+        });
+      }
+    });
+    $('.save-professsional-inv').click(function() {
+      var btnObj, certification_type, clientCategoryId, conditions, giCode;
+      btnObj = $(this);
+      clientCategoryId = $(this).attr('client-category');
+      giCode = $(this).attr('inv-gi-code');
+      certification_type = $('select[name="certification_type"]').val();
+      conditions = '';
+      $('.pi-conditions-input').each(function() {
+        if ($(this).is(':checked')) {
+          return conditions += $(this).attr('name') + ',';
+        }
+      });
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+          'save-type': 'professsional_investors',
+          'certification_type': certification_type,
+          'client_category_id': clientCategoryId,
+          'conditions': conditions
+        },
+        success: function(data) {
+          $('.elective-prof-inv-btn').removeClass('d-none');
+          $(".save-certification").removeClass('d-none');
+          btnObj.addClass('d-none');
+          return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+        }
+      });
+    });
+    $('.save-advised-investor').click(function() {
+      var btnObj, certification_type, clientCategoryId, conditions, financialAdvisorInfo, giCode;
+      btnObj = $(this);
+      clientCategoryId = $(this).attr('client-category');
+      giCode = $(this).attr('inv-gi-code');
+      certification_type = $('select[name="certification_type"]').val();
+      if ($('form[name="advised_investor"]').parsley().validate()) {
+        conditions = '';
+        $('.ai-conditions-input').each(function() {
+          if ($(this).is(':checked')) {
+            return conditions += $(this).attr('name') + ',';
+          }
+        });
+        financialAdvisorInfo = {};
+        financialAdvisorInfo['havefinancialadvisor'] = $('input[name="havefinancialadvisor"]:checked').val();
+        financialAdvisorInfo['advicefromauthorised'] = $('input[name="advicefromauthorised"]:checked').val();
+        financialAdvisorInfo['companyname'] = $('input[name="companyname"]').val();
+        financialAdvisorInfo['fcanumber'] = $('input[name="fcanumber"]').val();
+        financialAdvisorInfo['principlecontact'] = $('input[name="principlecontact"]').val();
+        financialAdvisorInfo['primarycontactfca'] = $('input[name="primarycontactfca"]').val();
+        financialAdvisorInfo['email'] = $('input[name="email"]').val();
+        financialAdvisorInfo['telephone'] = $('input[name="telephone"]').val();
+        financialAdvisorInfo['address'] = $('textarea[name="address"]').val();
+        financialAdvisorInfo['address2'] = $('textarea[name="address2"]').val();
+        financialAdvisorInfo['city'] = $('input[name="city"]').val();
+        financialAdvisorInfo['county'] = $('select[name="county"]').val();
+        financialAdvisorInfo['postcode'] = $('input[name="postcode"]').val();
+        financialAdvisorInfo['country'] = $('select[name="country"]').val();
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'advice_investors',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'conditions': conditions,
+            'financial_advisor_info': financialAdvisorInfo
+          },
+          success: function(data) {
+            $('.elective-prof-inv-btn').removeClass('d-none');
+            $(".save-certification").removeClass('d-none');
+            btnObj.addClass('d-none');
+            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          }
+        });
+      }
+    });
+    $('.elective-prof-inv-btn').click(function() {
+      return $(this).attr('data-agree', "yes");
+    });
+    return $('.save-elective-prof-inv').click(function() {
+      var btnObj, certification_type, clientCategoryId, err, giCode, quizAnswers;
+      btnObj = $(this);
+      err = validateQuiz($(".elective-prof-inv-quiz-btn"));
+      if (err > 0) {
+        $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
+        return $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.");
+      } else {
+        $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none');
+        clientCategoryId = $(this).attr('client-category');
+        giCode = $(this).attr('inv-gi-code');
+        certification_type = $('select[name="certification_type"]').val();
+        quizAnswers = {};
+        $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.questions').each(function() {
+          var optionLabel, qid;
+          if ($(this).find('input[data-correct="1"]:checked').length > 0) {
+            qid = $(this).find('input[data-correct="1"]:checked').attr('data-qid');
+            optionLabel = $(this).find('input[data-correct="1"]:checked').attr('data-label');
+            return quizAnswers[qid] = optionLabel;
+          }
+        });
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'elective_prof',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'quiz_answers': quizAnswers,
+            'investor_statement': $('.elective-prof-inv-btn').attr('data-agree')
+          },
+          success: function(data) {
+            $('.elective-prof-inv-btn').addClass('d-none');
+            $(".submit-quiz").removeClass('d-none');
+            $(".elective-prof-inv-quiz-btn").addClass('d-none');
+            $(".save-certification").removeClass('d-none');
+            btnObj.addClass('d-none');
+            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          }
         });
       }
     });
