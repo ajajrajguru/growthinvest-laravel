@@ -34,14 +34,14 @@
         </ul>
 
         <div class="profile-content px-md-4 px-sm-0">
-            <div class="row">
-                <div class="col-6">
-                    <h6 class="mt-0">Step 1: <span class="text-primary">Intermediary Registration</span></h6>
+            <div class="d-flex justify-content-between">
+                <div class="">
+                    <h5 class="mt-0">Step 1: <span class="text-primary">Intermediary Registration</span></h5>
                 </div>
-                <div class="col-6">
+                <div class="">
                 @if($user->id)
-                    <a href="javascript:void(0)" class="btn btn-primary editUserBtn">Edit Details</a>
-                    <a href="javascript:void(0)" class="btn btn-primary d-none cancelUpdateBtn">Cancel Updates</a>
+                    <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
                 @endif
                 </div>
             </div>
@@ -57,14 +57,14 @@
                         <div class="form-group">
                             <label>First Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="first_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the first name." placeholder="Eg. John" value="{{ ($user->id) ? $user->first_name :old('first_name')}}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->first_name}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ $user->first_name}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Last Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="last_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the last name." placeholder="Eg. Smith" value="{{ ($user->id) ? $user->last_name :old('last_name') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->last_name}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->last_name}}</div>
                         </div>
                     </div>
                 </div>
@@ -74,43 +74,42 @@
                         <div class="form-group">
                             <label>Email Address <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="email" name="email" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-type="email" data-parsley-required data-parsley-required-message="Please enter email." placeholder="Eg. john_smith@mailinator.com" value="{{ ($user->id) ? $user->email :old('email')}}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->email}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->email}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone Number <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" placeholder="Eg: 020 7071 3945" value="{{ ($user->id) ? $user->telephone_no :old('telephone') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->telephone_no}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->telephone_no}}</div>
                         </div>
                     </div>
                 </div>
 
-                @if($user->id)
-                <div class="row editmode @if($mode=='view') d-none @endif">
-                    <div class="col-md-12">
-                        <a id="change_pwd" href="javascript:void(0)"><i class="fa fa-unlock-alt"></i> Set password</a>
-                        <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn-link">Cancel</a>
-                    </div>
-                </div>
-                @endif
                 <div class="row setpassword-cont @if($user->id) d-none @endif">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Choose Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-pattern="/^(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9!@#$%^&*]{6,99}$/" data-parsley-pattern-message="The password does not meet the minimum requirements!" id="userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter password." @endif placeholder="" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" data-content="<ul class='pwd-rules clearfix'> <li>PASSWORD RULES</li> <li>At least 6 characters</li> <li>At least 1 x letter</li> <li>At least 1 x number</li> </ul>"  data-original-title="" >
 
-                            <span class="viewmode @if($mode=='edit') d-none @endif"> </span>
+                            <div class="viewmode @if($mode=='edit') d-none @endif"> </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Confirm Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="password" name="confirm_password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-equalto="#userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter confirm password." @endif placeholder="">
-                            <span class="viewmode @if($mode=='edit') d-none @endif"> </span>
+                            <div class="viewmode @if($mode=='edit') d-none @endif"> </div>
                         </div>
                     </div>
                 </div>
+
+                @if($user->id)
+                <div class="mb-4 editmode @if($mode=='view') d-none @endif">
+                    <a id="change_pwd" class="btn btn-outline-primary btn-sm" href="javascript:void(0)"><i class="fa fa-unlock-alt"></i> Set password</a>
+                    <a id="cancel_pwd" href="javascript:void(0)"  class="d-none btn btn-outline-danger btn-sm">Cancel</a>
+                </div>
+                @endif
 
                 <div class="row">
                     <div class="col-md-6">
@@ -125,7 +124,7 @@
                              }
                             @endphp
                             <input type="text" name="company_name" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter the company name." value="{{ $compName }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['company'])) ? $userData['company'] : ''}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (isset($userData['company'])) ? $userData['company'] : ''}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -141,7 +140,7 @@
                             @endphp
 
                             <input type="text" name="company_website" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-type="url" value="{{ $compWebsite }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['website'])) ? $userData['website'] : ''}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (isset($userData['website'])) ? $userData['website'] : ''}}</div>
                         </div>
                     </div>
                 </div>
@@ -151,7 +150,7 @@
                         <div class="form-group">
                             <label>Address Line 1 </label>
                             <input type="text" name="address_line_1" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($user->id) ? $user->address_1 :old('address_line_1') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->address_1}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->address_1}}</div>
                         </div>
                     </div>
                 </div>
@@ -160,7 +159,7 @@
                         <div class="form-group">
                             <label>Address Line 2 </label>
                             <input type="text" name="address_line_2" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($user->id) ? $user->address_2 :old('address_line_2') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->address_2}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->address_2}}</div>
                         </div>
                     </div>
                 </div>
@@ -170,7 +169,7 @@
                         <div class="form-group">
                             <label>Town/City</label>
                             <input type="text" name="town_city" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($user->id) ? $user->city :old('town_city')  }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->city}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->city}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -196,7 +195,7 @@
                                     <option value="{{ $county }}" {{ $selected }}>{{ $county }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $countyName}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $countyName}}</div>
                         </div>
                     </div>
                 </div>
@@ -206,7 +205,7 @@
                         <div class="form-group">
                             <label>Postcode <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
                             <input type="text" name="postcode" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter postcode." value="{{ ($user->id) ? $user->postcode :old('postcode')  }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $user->postcode}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->postcode}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -232,7 +231,7 @@
                                     <option value="{{ $code }}" {{ $selected }}>{{ $country }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $countryName }}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $countryName }}</div>
                         </div>
                     </div>
                 </div>
@@ -253,7 +252,7 @@
                             <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" name="company_fca_number" placeholder="" value="{{ $compFcaCode }}">
                             <em class="small editmode @if($mode=='view') d-none @endif">FCA number if a regulated UK intermediary firm</em>
 
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (isset($userData['companyfca'])) ? $userData['companyfca'] : ''}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -279,7 +278,7 @@
                                     <option value="{{ $description }}" {{ $selected }}>{{ $description }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $compDescription}}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $compDescription}}</div>
                         </div>
                     </div>
                 </div>
@@ -308,7 +307,7 @@
                                 <option value="{{ $role->name }}" {{ $selected }}>{{ $role->display_name }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $roleName }}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $roleName }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -337,7 +336,7 @@
                                 <option value="{{ $firm->id }}" {{ $selected }}>{{ $firm->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $firmName }}</span>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $firmName }}</div>
                         </div>
                     </div>
                 </div>
@@ -347,9 +346,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Platform Account Number</label>
-                               {{ $firmGICode }}
-
-
+                               <div class="editmode @if($mode=='view') d-none @endif">{{ $firmGICode }}</div>
+                               <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $firmGICode }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -359,10 +357,16 @@
                 @endif
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($user->suspended) checked @endif @if(!$user->id && old('is_suspended')=='on') checked @endif placeholder="">
-                            <label class="form-check-label">Suspended</label>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ ($user->suspended) ?  'Yes' : 'No' }}</span>
+                        <div class="viewmode @if($mode=='edit') d-none @endif">
+                            <label>Suspended</label>
+                            <div class="form-check-label text-large text-primary">{{ ($user->suspended) ?  'Yes' : 'No' }}</div>
+                        </div>
+
+                        <div class="editmode @if($mode=='view') d-none @endif">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input " id="suspendedUser" name="is_suspended" @if($user->suspended) checked @endif @if(!$user->id && old('is_suspended')=='on') checked @endif>
+                                <label class="custom-control-label" for="suspendedUser">Suspended</label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -372,10 +376,20 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
-                @if($user->id)
-                <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-two')}}" class="btn btn-primary mt-3 ">Next</a>
-                @endif
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button type="submit" class="btn btn-primary mt-2 ld-ext-right editmode save-btn @if($mode=='view') d-none @endif">
+                            Save <i class="fa fa-check"></i>
+                             <div class="ld ld-ring ld-spin"></div>
+                        </button>
+                    </div>
+                    @if($user->id)
+                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-two')}}" class="btn btn-outline-primary mt-2 ">Next <i class="fa fa-angle-double-right"></i></a>
+                    @endif
+                </div>
+
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $user->gi_code }}">
             </form>

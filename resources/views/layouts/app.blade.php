@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700" rel="stylesheet">
         <!-- <link href="https://use.fontawesome.com/releases/v5.0.3/css/all.css" rel="stylesheet"> -->
         <script src="https://use.fontawesome.com/f78b0fef8f.js"></script>
 

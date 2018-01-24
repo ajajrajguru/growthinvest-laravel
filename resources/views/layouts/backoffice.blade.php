@@ -4,6 +4,8 @@
     <link href="{{ asset('/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/bower_components/jQuery.mmenu/dist/jquery.mmenu.all.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/hamburgers.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loading-btn.css') }}">
 @endsection
 
 @section('js')

@@ -168,6 +168,12 @@ $(document).ready ->
     $('#change_pwd').removeClass('d-none');
     $('.setpassword-cont').addClass('d-none');
 
+
+  $('form').parsley().on 'form:success', ->
+    $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
+    $(this)[0].$element.find('.save-btn').addClass 'running'
+
+
   $('[data-toggle="popover"]').popover()
 
   # Menu JS
