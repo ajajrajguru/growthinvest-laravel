@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="table-responsives mt-3">
+            <div class="table-responsive mt-3">
                 <table id="datatable-users" class="table dataFilterTable table-hover table-striped-bg">
                     <thead>
                         <tr>
