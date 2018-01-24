@@ -86,6 +86,8 @@ function getCompanyDescription()
     return ["Wealth Manager", "Accountant", "Solicitor", "Business Advisor", "Investment Network", "Financial Advisor"];
 }
 
+
+
 /***
 generates unique GI code for the modal
  ***/
@@ -119,6 +121,12 @@ function getRegisteredIndRange()
 function getSource()
 {
     return ['internet' => 'Internet', 'personal' => 'Referral', 'recommendation' => 'Recommendation', 'email' => 'Email', 'event' => 'Event', 'LGBR Capital' => 'LGBR Capital'];
+}
+
+
+function certificationTypes()
+{
+    return ['internet' => 'Self Certified', 'approved' => 'Approved', 'uncertified' => 'Uncertified'];
 }
 
 
@@ -169,6 +177,42 @@ function generate_firm_invite_key(\Illuminate\Database\Eloquent\Model $model,$fi
    return $result;
 
     
+}
+/**
+$fileName = 'approved_intermediary';
+$header = ['Platform GI Code Name','Email','Role','Firm','Telephone No'];
+$userData = [ 
+                [FIRMCR272, 272 User, user272@mail.com, Wealth Manager, '01010100'  ]
+                [FIRMCR272, 272 User, user272@mail.com, Wealth Manager, '01010100'  ]
+            ];
+ */
+function generateCSV($header,$data,$filename){
+    $filePath = public_path("export-csv/".$filename.".csv");
+    $handle = fopen($filePath, 'w');
+    fputcsv($handle, $header);
+
+    foreach($data as $row) {
+        fputcsv($handle, $row);
+    }
+ 
+
+    header('Content-type: text/csv');
+    header('Content-Length: ' . filesize($filePath));
+    header('Content-Disposition: attachment; filename='.$filename.'.csv');
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    readfile($filePath);
+
+    //Remove the local original file once all sizes are generated and uploaded
+    unlink($filePath);
+    exit();
+}
+
+function getCertificationQuesionnaire(){
+    $questionnaires = \App\CertificationQuestionaire::select('*')->orderBy('certification_default_id','asc')->orderBy('order','asc')->get()->toArray();
+
+    return $questionnaires;
 }
  
  

@@ -40,8 +40,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
-                        <a href="/backoffice/firms/add" class="btn btn-primary">Add Firm</a>
-                        <button type="button" class="btn btn-link">Download CSV</button>
+ 
+                        <a href="{{ url('/backoffice/firms/add')}}" class="btn btn-primary">Add Firm</a>
+                        <a href="{{ url('backoffice/firm/export-firm')}}" class="btn btn-link">Download CSV</a>
+                
+ 
                     </div>
                 </div>
             </div>

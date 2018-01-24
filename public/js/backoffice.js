@@ -1,6 +1,12 @@
 (function() {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
   $(document).ready(function() {
-    var IntermediaryTable, api, firmsTable, initSerachForTable, usersTable;
+    var IntermediaryTable, api, firmsTable, initSerachForTable, investorTable, usersTable, validateQuiz;
     $('.dataFilterTable thead th.w-search').each(function() {
       var title;
       title = $(this).text();
@@ -164,9 +170,9 @@
       $('.reqField').removeClass('d-none');
       $('.viewmode').addClass('d-none');
       $(this).addClass('d-none');
-      $('#cke_ent_invite_content').removeClass('d-none')
-      $('#cke_inv_invite_content').removeClass('d-none')
-      $('#cke_fundmanager_invite_content').removeClass('d-none')
+      $('#cke_ent_invite_content').removeClass('d-none');
+      $('#cke_inv_invite_content').removeClass('d-none');
+      $('#cke_fundmanager_invite_content').removeClass('d-none');
       $('.percentlbl').removeClass('d-none');
       return $('.cancelFirmUpdateBtn').removeClass('d-none');
     });
@@ -175,9 +181,9 @@
       $('.reqField').addClass('d-none');
       $('.viewmode').removeClass('d-none');
       $(this).addClass('d-none');
-      $('#cke_ent_invite_content').addClass('d-none')
-      $('#cke_inv_invite_content').addClass('d-none')
-      $('#cke_fundmanager_invite_content').addClass('d-none')
+      $('#cke_ent_invite_content').addClass('d-none');
+      $('#cke_inv_invite_content').addClass('d-none');
+      $('#cke_fundmanager_invite_content').addClass('d-none');
       $('.percentlbl').addClass('d-none');
       return $('.editFirmBtn').removeClass('d-none');
     });
@@ -207,7 +213,7 @@
     api.bind('close:start', function() {
       return $('.mobile-menu-toggle').removeClass('is-active');
     });
-    return $(window).scroll(function() {
+    $(window).scroll(function() {
       var scroll;
       scroll = $(window).scrollTop();
       if (scroll >= 1) {
@@ -216,6 +222,218 @@
       } else {
         $('header').removeClass('sticky');
         return $('.navbar-menu').removeClass('dark');
+      }
+    });
+    investorTable = $('#datatable-investors').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/investor/get-investors',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_name = $('select[name="firm_name"]').val();
+          filters.investor_name = $('select[name="investor_name"]').val();
+          filters.client_category = $('select[name="client_category"]').val();
+          filters.client_certification = $('select[name="client_certification"]').val();
+          filters.investor_nominee = $('select[name="investor_nominee"]').val();
+          filters.idverified = $('select[name="idverified"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': '#',
+          "orderable": false
+        }, {
+          'data': 'name'
+        }, {
+          'data': 'certification_date'
+        }, {
+          'data': 'client_categorisation'
+        }, {
+          'data': 'parent_firm',
+          "orderable": false
+        }, {
+          'data': 'registered_date',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ]
+    });
+    $('.download-investor-csv').click(function() {
+      var client_category, client_certification, firm_name, idverified, investor_name, investor_nominee, userIds;
+      firm_name = $('select[name="firm_name"]').val();
+      investor_name = $('select[name="investor_name"]').val();
+      client_category = $('select[name="client_category"]').val();
+      client_certification = $('select[name="client_certification"]').val();
+      investor_nominee = $('select[name="investor_nominee"]').val();
+      idverified = $('select[name="idverified"]').val();
+      userIds = '';
+      $('.ck_investor').each(function() {
+        if ($(this).is(':checked')) {
+          return userIds += $(this).val() + ',';
+        }
+      });
+      return window.open("/backoffice/investor/export-investors?firm_name=" + firm_name + "&investor_name=" + investor_name + "&client_category=" + client_category + "&client_certification=" + client_certification + "&investor_nominee=" + investor_nominee + "&idverified=" + idverified + "&user_ids=" + userIds);
+    });
+    $('.investorSearchinput').change(function() {
+      investorTable.ajax.reload();
+    });
+    validateQuiz = function(btnObj) {
+      var err;
+      err = 0;
+      $(btnObj).closest('.quiz-container').find('.questions').each(function() {
+        if ($(this).find('input[data-correct="1"]:checked').length === 0) {
+          $(this).find('.quiz-question').addClass('text-danger');
+          return err++;
+        } else {
+          return $(this).find('.quiz-question').removeClass('text-danger');
+        }
+      });
+      return err;
+    };
+    $('.submit-quiz').click(function() {
+      var err;
+      err = validateQuiz($(this));
+      console.log(err);
+      if (err > 0) {
+        $(this).closest('.quiz-container').find('.quiz-success').addClass('d-none');
+        $(this).closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
+        return $(this).closest('.quiz-container').find('.quiz-danger').find('#message').html("I'm sorry you got " + err + " answers wrong, please try again");
+      } else {
+        $(this).closest('.quiz-container').find('.quiz-success').removeClass('d-none');
+        $(this).closest('.quiz-container').find('.quiz-danger').addClass('d-none');
+        $(this).closest('.quiz-container').find('.quiz-success').find('#message').html("Congratulations you answered all questions correctly. Please now read the following statement and make the declaration thereafter");
+        $(this).addClass('d-none');
+        return $(this).attr('submit-quiz', "true");
+      }
+    });
+    $('.save-retial-certification').click(function() {
+      var btnObj, certification_type, clientCategoryId, err, giCode, inputData;
+      btnObj = $(this);
+      err = validateQuiz($(".retail-quiz-btn"));
+      if (err > 0) {
+        $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
+        return $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.");
+      } else {
+        $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none');
+        clientCategoryId = $(this).attr('client-category');
+        giCode = $(this).attr('inv-gi-code');
+        certification_type = $('select[name="certification_type"]').val();
+        inputData = '';
+        $('.retail-input').each(function() {
+          if ($(this).is(':checked')) {
+            return inputData += $(this).attr('name') + ',';
+          }
+        });
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'retail',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'input_name': inputData
+          },
+          success: function(data) {
+            return btnObj.addClass('d-none');
+          }
+        });
+      }
+    });
+    $('.save-sophisticated-Investor').click(function() {
+      var btnObj, certification_type, clientCategoryId, conditions, giCode, terms;
+      btnObj = $(this);
+      clientCategoryId = $(this).attr('client-category');
+      giCode = $(this).attr('inv-gi-code');
+      certification_type = $('select[name="certification_type"]').val();
+      terms = '';
+      $('.sop-terms-input').each(function() {
+        if ($(this).is(':checked')) {
+          return terms += $(this).attr('name') + ',';
+        }
+      });
+      conditions = '';
+      $('.sop-conditions-input').each(function() {
+        if ($(this).is(':checked')) {
+          return conditions += $(this).attr('name') + ',';
+        }
+      });
+      console.log(terms);
+      if (terms === '') {
+        $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none');
+        return $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the Sophisticated Investor criteria.");
+      } else {
+        $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none');
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'sophisticated',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'conditions': conditions,
+            'terms': terms
+          },
+          success: function(data) {
+            return btnObj.addClass('d-none');
+          }
+        });
+      }
+    });
+    return $('.save-high-net-worth').click(function() {
+      var btnObj, certification_type, clientCategoryId, conditions, giCode, terms;
+      btnObj = $(this);
+      clientCategoryId = $(this).attr('client-category');
+      giCode = $(this).attr('inv-gi-code');
+      certification_type = $('select[name="certification_type"]').val();
+      terms = '';
+      $('.hi-terms-input').each(function() {
+        if ($(this).is(':checked')) {
+          return terms += $(this).attr('name') + ',';
+        }
+      });
+      conditions = '';
+      $('.hi-conditions-input').each(function() {
+        if ($(this).is(':checked')) {
+          return conditions += $(this).attr('name') + ',';
+        }
+      });
+      if (terms === '') {
+        $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none');
+        return $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the High Net Worth Individual criteria.");
+      } else {
+        $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none');
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'high_net_worth',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'conditions': conditions,
+            'terms': terms
+          },
+          success: function(data) {}
+        });
       }
     });
   });

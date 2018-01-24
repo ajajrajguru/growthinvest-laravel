@@ -24,5 +24,22 @@
 }
 
 .bg-primary {
-    background-color: @brand-primary!important;
+    background-color: @brand-primary !important;
 }
+.bg-gray {
+    background-color: lighten(@gray, 6%) !important;
+}
+
+.border-primary{
+	border-color: @brand-primary !important;
+}
+
+// Border width
+.border-width-loop (@index) when (@index > 0) {
+  .border-@{index} {
+    border-width: unit(@index, px) !important;
+  }
+  .border-width-loop(@index - 1);
+}
+
+.border-width-loop(5);

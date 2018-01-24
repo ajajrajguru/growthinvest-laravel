@@ -16,10 +16,30 @@
 			}
 		}
 	}
+	td, th{
+		padding: .75rem 0.5rem;
+	}
 }
+
 
 .table-no-padding{
 	td{
 		padding: 0;
+	}
+}
+
+
+// Datatable fixes
+.table-responsive{
+	&>.dataTables_wrapper{
+		&>.row{
+			width: 100%;
+		}
+	}
+}
+
+.dataTables_length{
+	label{
+		justify-content: flex-start;
 	}
 }

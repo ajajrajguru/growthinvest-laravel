@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->hasMany('App\UserData');
     }
 
+    public function userCertification()
+    {
+        return $this->hasMany('App\UserHasCertification', 'user_id');
+    }
+
     public function userAdditionalInfo()
     {
         $addionalData = $this->userData()->where('data_key','additional_info')->first();
@@ -80,6 +85,11 @@ class User extends Authenticatable
     {
         $addionalData = $this->userData()->where('data_key','taxstructure_info')->first();
         return $addionalData;
+    }
+
+    public function getActiveCertification(){
+        $activeCertification = $this->userCertification()->where('active',1)->first();
+        return $activeCertification;
     }
 
     public function getbackOfficeAccessRoleIds(){
@@ -124,6 +134,7 @@ class User extends Authenticatable
     }
 
 
+ 
 
 
     public function getEntrepreneurs($cond=[]){
@@ -155,16 +166,31 @@ class User extends Authenticatable
                              ->where('model_has_roles.model_type', 'App\User');
                         })->join('roles', function ($join) {
                             $join->on('model_has_roles.role_id', '=', 'roles.id')
-                                ->whereIn('roles.name', ['fundmanager']);
+                                        ->whereIn('roles.name', ['fundmanager']);
                         })
-                        /*->join('business_listings', function ($join) {
+                        ->join('business_listings', function ($join) {
                                                     $join->on('users.id', '=', 'business_listings.owner_id')
                                                    ->whereIn('business_listings.type', ['proposal','fund']);                                                          
                                                 })
                         ->groupBy('business_listings.owner_id')
-                        ->where($cond)->select(DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"))*/
-                        ->where($cond)->select("users.*")
+                        ->where($cond)->select(DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*")) 
+                        /*->where($cond)->select("users.*")*/
                         ->get();
+            return $users; 
+    }
+
+
+    public function getInvestorUsers($cond=[]){
+
+        $users = User::join('model_has_roles', function ($join) {
+                        $join->on('users.id', '=', 'model_has_roles.model_id')
+                             ->where('model_has_roles.model_type', 'App\User');
+                        })->join('roles', function ($join) {
+                            $join->on('model_has_roles.role_id', '=', 'roles.id')
+
+                                ->whereIn('roles.name', ['investor','yet_to_be_approved_investor']);
+                        })->where($cond)->select('users.*')->get();
+
 
         return $users; 
     }
