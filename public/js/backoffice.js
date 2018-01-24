@@ -309,7 +309,7 @@
         return $(this).attr('submit-quiz', "true");
       }
     });
-    return $('.save-retial-certification').click(function() {
+    $('.save-retial-certification').click(function() {
       var btnObj, certification_type, clientCategoryId, err, giCode, inputData;
       btnObj = $(this);
       err = validateQuiz($(".retail-quiz-btn"));
@@ -317,6 +317,7 @@
         $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
         return $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.");
       } else {
+        $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none');
         clientCategoryId = $(this).attr('client-category');
         giCode = $(this).attr('inv-gi-code');
         certification_type = $('select[name="certification_type"]').val();
@@ -341,6 +342,89 @@
           success: function(data) {
             return btnObj.addClass('d-none');
           }
+        });
+      }
+    });
+    $('.save-sophisticated-Investor').click(function() {
+      var btnObj, certification_type, clientCategoryId, conditions, giCode, terms;
+      btnObj = $(this);
+      clientCategoryId = $(this).attr('client-category');
+      giCode = $(this).attr('inv-gi-code');
+      certification_type = $('select[name="certification_type"]').val();
+      terms = '';
+      $('.sop-terms-input').each(function() {
+        if ($(this).is(':checked')) {
+          return terms += $(this).attr('name') + ',';
+        }
+      });
+      conditions = '';
+      $('.sop-conditions-input').each(function() {
+        if ($(this).is(':checked')) {
+          return conditions += $(this).attr('name') + ',';
+        }
+      });
+      console.log(terms);
+      if (terms === '') {
+        $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none');
+        return $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the Sophisticated Investor criteria.");
+      } else {
+        $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none');
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'sophisticated',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'conditions': conditions,
+            'terms': terms
+          },
+          success: function(data) {
+            return btnObj.addClass('d-none');
+          }
+        });
+      }
+    });
+    return $('.save-high-net-worth').click(function() {
+      var btnObj, certification_type, clientCategoryId, conditions, giCode, terms;
+      btnObj = $(this);
+      clientCategoryId = $(this).attr('client-category');
+      giCode = $(this).attr('inv-gi-code');
+      certification_type = $('select[name="certification_type"]').val();
+      terms = '';
+      $('.hi-terms-input').each(function() {
+        if ($(this).is(':checked')) {
+          return terms += $(this).attr('name') + ',';
+        }
+      });
+      conditions = '';
+      $('.hi-conditions-input').each(function() {
+        if ($(this).is(':checked')) {
+          return conditions += $(this).attr('name') + ',';
+        }
+      });
+      if (terms === '') {
+        $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none');
+        return $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the High Net Worth Individual criteria.");
+      } else {
+        $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none');
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            'save-type': 'high_net_worth',
+            'certification_type': certification_type,
+            'client_category_id': clientCategoryId,
+            'conditions': conditions,
+            'terms': terms
+          },
+          success: function(data) {}
         });
       }
     });

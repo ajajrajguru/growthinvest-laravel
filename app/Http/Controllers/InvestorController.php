@@ -474,6 +474,9 @@ class InvestorController extends Controller
         if($requestData['save-type'] == 'retail'){
             $details = $this->getRetailData($requestData);
         }
+        elseif($requestData['save-type'] == 'sophisticated'){
+            $details = $this->getSophisticatedData($requestData);
+        }
 
         $hasCertification = $investor->userCertification()->where('certification_default_id',$requestData['client_category_id'])->first();
         if(empty($hasCertification)){
@@ -504,6 +507,21 @@ class InvestorController extends Controller
 
         return $retailCk;
     }
+
+    public function getSophisticatedData($requestData){ 
+        $data = [];
+        $termsStr = $requestData['terms'];
+        $termsExp = explode(',', $termsStr);
+        $data['terms'] = array_filter($termsExp);
+
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+
+        return $data;
+    }
+
+    
 
     /**
      * Show the form for creating a new resource.

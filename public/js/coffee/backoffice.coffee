@@ -280,6 +280,7 @@ $(document).ready ->
       $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
       $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
     else
+      $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none')
       clientCategoryId = $(this).attr('client-category')
       giCode = $(this).attr('inv-gi-code')
       certification_type = $('select[name="certification_type"]').val()
@@ -300,5 +301,75 @@ $(document).ready ->
           'input_name': inputData
         success: (data) ->
           btnObj.addClass('d-none')
+
+  $('.save-sophisticated-Investor').click ->
+    btnObj = $(this)
+    clientCategoryId = $(this).attr('client-category')
+    giCode = $(this).attr('inv-gi-code')
+    certification_type = $('select[name="certification_type"]').val()
+    terms = '';
+    $('.sop-terms-input').each ->
+      if $(this).is(':checked')
+        terms += $(this).attr('name')+','
+
+    conditions = '';
+    $('.sop-conditions-input').each ->
+      if $(this).is(':checked')
+        conditions += $(this).attr('name')+','
+
+    console.log terms
+    if(terms == '')
+      $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none')
+      $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the Sophisticated Investor criteria.")
+    else
+      $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none')
+      $.ajax
+        type: 'post'
+        url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
+        headers:
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        data:
+          'save-type': 'sophisticated'
+          'certification_type': certification_type
+          'client_category_id': clientCategoryId
+          'conditions': conditions
+          'terms': terms
+        success: (data) ->
+          btnObj.addClass('d-none')
+
+  $('.save-high-net-worth').click ->
+    btnObj = $(this)
+    clientCategoryId = $(this).attr('client-category')
+    giCode = $(this).attr('inv-gi-code')
+    certification_type = $('select[name="certification_type"]').val()
+    terms = '';
+    $('.hi-terms-input').each ->
+      if $(this).is(':checked')
+        terms += $(this).attr('name')+','
+
+    conditions = '';
+    $('.hi-conditions-input').each ->
+      if $(this).is(':checked')
+        conditions += $(this).attr('name')+','
+
+ 
+    if(terms == '')
+      $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none')
+      $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the High Net Worth Individual criteria.")
+    else
+      $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none')
+      $.ajax
+        type: 'post'
+        url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
+        headers:
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        data:
+          'save-type': 'high_net_worth'
+          'certification_type': certification_type
+          'client_category_id': clientCategoryId
+          'conditions': conditions
+          'terms': terms
+        success: (data) ->
+          # btnObj.addClass('d-none')
  
 

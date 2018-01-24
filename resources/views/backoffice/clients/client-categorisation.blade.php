@@ -304,20 +304,20 @@
                               <div class="text-primary">
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
-                                       <label class="custom-control-label normal text-primary" for="acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                       <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
+                                       <label class="custom-control-label normal text-primary" for="ri_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
-                                       <label class="custom-control-label normal text-primary" for="retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                       <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="ri_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
+                                       <label class="custom-control-label normal text-primary" for="ri_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
-                                       <label class="custom-control-label normal text-primary" for="riskwarning">I have read and understand the risk warning.</label>
+                                       <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="ri_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
+                                       <label class="custom-control-label normal text-primary" for="ri_riskwarning">I have read and understand the risk warning.</label>
                                     </div>
                                  </div>
                                  <div class="mb-3">
@@ -331,7 +331,7 @@
                                     Name: {{ $investor->first_name .' '.$investor->last_name}} 
                                  </div>
                                  <div>
-                                    Date: {{ date('d/m/Y') }}
+                                    Date: {{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}
                                  </div>
                               </div>
                            </div>
@@ -359,7 +359,7 @@
                            <div class="alert bg-gray certification-success d-none">
                                 <div class="pull-left l-30">                                                                                
                                     <i class="icon icon-ok text-success"></i> Certified on                                           
-                                 <span class="date-rem">                                                23/01/2018                                                
+                                 <span class="date-rem">{{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}                                          
                                     <a href="">(Click to download)</a>
                                 </span>&nbsp;                                            
                                 <span class="text-danger">
@@ -375,7 +375,17 @@
                             <h4 class="my-3 text-primary">
                                 Sophisticated Investor
                             </h4>
+
+                            <div class="alert alert-danger d-none" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                               <span id="message"></span>
+                            </div>
+
                             <form>
+                                @php
+                                $clientCategory = $clientCategories->firstWhere('slug','sophisticated_investor'); 
+                                $isSophisticatedInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
+                                @endphp
                                 <span class="mb-5">
                                     <p>
                                         <b>Your client can be considered a Sophisticated Investor if any of the following applies:
@@ -403,7 +413,7 @@
                                 <div class="alert bg-gray mb-5">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input" id="ch7">
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_0" id="ch7" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch7">
                                                 He/She has been a member of a network or syndicate of business angels for at least the six months preceding the date of the certificate.
                                             </label>
@@ -411,7 +421,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input" id="ch8" checked="">
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_1" id="ch8" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch8">
                                                 He/She has made more than one investment in an unlisted company in the two years preceding that date.
                                             </label>
@@ -419,7 +429,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input" id="ch9" checked="">
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_2" id="ch9"  @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_2',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch9">
                                                 He/She has worked, in the two years preceding that date, in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises.
                                             </label>
@@ -427,7 +437,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input" id="ch10" checked="">
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_3" id="ch10"  @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_3',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch10">
                                                 He/She has been, in the two years preceding that date, a director of a company with an annual turnover of at least £1 million.
                                             </label>
@@ -454,32 +464,34 @@
                                     <div class="text-primary">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="acceptInvestments">
-                                                <label class="custom-control-label normal text-primary" for="acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                                <input type="checkbox" class="custom-control-input sop-conditions-input"  name="si_check_0" id="si_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('si_check_0',$investorCertification->details['conditions'])) checked @endif>
+                                                <label class="custom-control-label normal text-primary" for="si_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="retailinvestor">
-                                                <label class="custom-control-label normal text-primary" for="retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                                <input type="checkbox" class="custom-control-input sop-conditions-input" name="si_check_1"  id="si_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('si_check_1',$investorCertification->details['conditions'])) checked @endif>
+                                                <label class="custom-control-label normal text-primary" for="si_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="riskwarning">
-                                                <label class="custom-control-label normal text-primary" for="riskwarning">I have read and understand the risk warning.</label>
+                                                <input type="checkbox" class="custom-control-input sop-conditions-input" name="si_check_2"  id="si_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('si_check_2',$investorCertification->details['conditions'])) checked @endif>
+                                                <label class="custom-control-label normal text-primary" for="si_riskwarning">I have read and understand the risk warning.</label>
                                             </div>
                                         </div>
+                                        @if(!$isSophisticatedInv)
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary" type="button">Submit</button>
+                                                <button class="btn btn-primary save-sophisticated-Investor" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
                                             </div>
                                         </div>
+                                        @endif
                                         <div>
-                                            Name: test3 test3
+                                             Name: {{ $investor->first_name .' '.$investor->last_name}} 
                                         </div>
                                         <div>
-                                            Date: 01/01/2018
+                                            Date: {{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}
                                         </div>
                                     </div>
                                 </div>
@@ -491,6 +503,10 @@
                                 High Net Worth Individual
                             </h4>
                             <form>
+                                @php
+                                $clientCategory = $clientCategories->firstWhere('slug','high_net_worth_individual'); 
+                                $isHighNetworth = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
+                                @endphp
                                 <div class="mb-5">
                                     <p>High Net Worth Individual (“HNWI”) are exempt under article 48 of the FSMA 2000 if they have signed a prescribed template with relevant risk warnings that they have over £100 000 p.a income and net assets excluding primary residence of over £250,000</p>
                                     <p>
@@ -505,7 +521,7 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch15">
+                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch15">
                                             <label class="custom-control-label normal" for="ch15">
                                                 He/she had, during the financial year immediately preceding the date below, an annual income to the value of £100,000 or more;
                                             </label>
@@ -513,7 +529,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch16" checked="">
+                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch16" checked="">
                                             <label class="custom-control-label normal" for="ch16">
                                                 He/she held, throughout the financial year immediately preceding the date below, net assets to the value of £250,000 or more. Net assets for these purposes do not include:
                                             </label>
@@ -549,32 +565,34 @@
                                     <div class="text-primary">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="acceptInvestments">
-                                                <label class="custom-control-label normal text-primary" for="acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_0" id="hi_acceptInvestments">
+                                                <label class="custom-control-label normal text-primary" for="hi_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="retailinvestor">
-                                                <label class="custom-control-label normal text-primary" for="retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_1" id="hi_retailinvestor">
+                                                <label class="custom-control-label normal text-primary" for="hi_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="riskwarning">
-                                                <label class="custom-control-label normal text-primary" for="riskwarning">I have read and understand the risk warning.</label>
+                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_2" id="hi_riskwarning">
+                                                <label class="custom-control-label normal text-primary" for="hi_riskwarning">I have read and understand the risk warning.</label>
                                             </div>
                                         </div>
+                                        @if(!$isHighNetworth)
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary" type="button">Submit</button>
+                                                <button class="btn btn-primary save-high-net-worth" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
                                             </div>
                                         </div>
+                                        @endif
                                         <div>
-                                            Name: test3 test3
+                                             Name: {{ $investor->first_name .' '.$investor->last_name}} 
                                         </div>
                                         <div>
-                                            Date: 01/01/2018
+                                            Date: {{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}
                                         </div>
                                     </div>
                                 </div>
