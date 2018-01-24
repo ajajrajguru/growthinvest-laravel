@@ -59,7 +59,7 @@ class LogSuccessfulLogin
     {
         $menus = [];
 
-        if (count(array_intersect($user_permissions, array('manage_options', 'edit_my_firm')) > 0)) {
+        if (count(array_intersect($user_permissions, array('manage_options', 'edit_my_firm'))) > 0) {
 
             if (count(array_intersect($user_permissions, array('manage_options', 'view_firms'))) > 0) {
 

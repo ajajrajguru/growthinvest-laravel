@@ -44,17 +44,32 @@ class Firm extends Model
 
     public function getAllParentFirms()
     {
-        $parent_firms = Firm::where(['type' => 10])->get();
+        $parent_firms = Firm::where(['type' => 10])->orderBy('name', 'asc')->get();
         return $parent_firms;
     }
 
-    public function getFirmAdditionalInfo(){
-        $addionalData = $this->firmData()->where('data_key','additional_details')->first();
+    public function getFirmAdditionalInfo()
+    {
+        $addionalData = $this->firmData()->where('data_key', 'additional_details')->first();
         return $addionalData;
     }
 
-    public function getFirmInviteContent(){
-        $addionalData = $this->firmData()->where('data_key','invite_content')->first();
+    public function getFirmInviteContent()
+    {
+        $addionalData = $this->firmData()->where('data_key', 'invite_content')->first();
         return $addionalData;
+    }
+
+    public function getInviteContent()
+    {
+        $invite_data = [];
+
+        $invite_contents = Defaults::where('type', 'invite_content')->where('status', 1)->get();
+
+        foreach ($invite_contents as $invite_content) {
+            $invite_data[$invite_content->slug] = $invite_content->meta_data;
+        }
+
+        return $invite_data;
     }
 }

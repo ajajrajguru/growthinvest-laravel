@@ -7,7 +7,6 @@ use App\FirmData;
 use Illuminate\Http\Request;
 use Session;
 
-
 class FirmController extends Controller
 {
     /**
@@ -61,18 +60,24 @@ class FirmController extends Controller
      */
     public function create()
     {
-        $firm                  = new Firm;
-        $data                  = [];
-        $breadcrumbs           = [];
-        $breadcrumbs[]         = ['url' => url('/'), 'name' => "Home"];
-        $breadcrumbs[]         = ['url' => '', 'name' => 'Add Firm'];
-        $data['breadcrumbs']   = $breadcrumbs;
-        $data['countyList']    = getCounty();
-        $data['countryList']   = getCountry();
-        $data['network_firms'] = $firm->getAllParentFirms();
-        $data['firm']          = $firm;
-        $data['firm_types']    = $firm->getFirmTypes();
-        $data['mode']          = 'edit';
+        $firm        = new Firm;
+        $data        = [];
+        $breadcrumbs = [];
+
+        $invite_content = $firm->getInviteContent();
+
+        $breadcrumbs[]          = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[]          = ['url' => '/backoffice/firm', 'name' => 'Firms'];
+        $breadcrumbs[]          = ['url' => '', 'name' => 'Add Firm'];
+        $data['breadcrumbs']    = $breadcrumbs;
+        $data['countyList']     = getCounty();
+        $data['countryList']    = getCountry();
+        $data['network_firms']  = $firm->getAllParentFirms();
+        $data['firm']           = $firm;
+        $data['firm_types']     = $firm->getFirmTypes();
+        $data['mode']           = 'edit';
+        $data['invite_content'] = $invite_content;
+
         return view('backoffice.firm.add-edit-firm')->with($data);
     }
 
@@ -101,9 +106,9 @@ class FirmController extends Controller
             'country'               => is_null($request->input('country')) ? '' : $request->input('country'),
             'logoid'                => is_null($request->input('logoid')) ? 0 : $request->input('logoid'),
             'backgroundid'          => is_null($request->input('backgroundid')) ? 0 : $request->input('backgroundid'),
-            'frontend_display'      => $request->input('frontend_display'),
-            'backend_display'       => $request->input('backend_display'),
-            'blog'                  => $request->input('blog'),
+            'frontend_display'      => is_null($request->input('frontend_display')) ? 'no' : $request->input('frontend_display'),
+            'backend_display'       => is_null($request->input('backend_display')) ? 'no' : $request->input('backend_display'),
+            'blog'                  => is_null($request->input('blog')) ? 1 : $request->input('blog'),
 
         );
 
@@ -117,7 +122,6 @@ class FirmController extends Controller
         } else {
             $firm = Firm::where('gi_code', $giCode)->first();
         }
-
 
         $firm->name                  = $firm_data['name'];
         $firm->description           = $firm_data['description'];
@@ -140,7 +144,6 @@ class FirmController extends Controller
         $firm->blog                  = $firm_data['blog'];
         $firm->gi_code               = $giCode;
 
-
         //print_r($firm);
 
         $firm->save();
@@ -149,11 +152,10 @@ class FirmController extends Controller
 
         if ($firm_id != false) {
 
-            if($firm->invite_key==""){
-               $firm->invite_key =  generate_firm_invite_key($firm,$firm->id);
+            if ($firm->invite_key == "") {
+                $firm->invite_key = generate_firm_invite_key($firm, $firm->id);
             }
             $firm->save();
-
 
             $invite_content = array('ent_invite_content' => $request->input('ent_invite_content'),
                 'inv_invite_content'                         => $request->input('inv_invite_content'),
@@ -174,7 +176,7 @@ class FirmController extends Controller
         //return $firm_id;
 
         Session::flash('success_message', 'Firm details saved successfully.');
-        return redirect(url('backoffice/firms/' . $giCode . '/edit'));
+        return redirect(url('backoffice/firms/' . $giCode ));
     }
 
     /**
@@ -191,26 +193,23 @@ class FirmController extends Controller
             abort(404);
         }
 
-
         $data                       = [];
-        $additional_info = $firm->getFirmAdditionalInfo();
-        $invite_content = $firm->getFirmInviteContent();        
-        $data['countyList']    = getCounty();
-        $data['countryList']   = getCountry();
-        $data['network_firms'] = $network_firm->getAllParentFirms();
-        $data['firm']          = $firm;
-        $data['firm_types']    = $firm->getFirmTypes();
-        $data['additional_details']          = (!empty($additional_info)) ? $additional_info->data_value : [];
-        $data['invite_content']          = (!empty($invite_content)) ? $invite_content->data_value : [];
-        $data['mode']          = 'view';
-        
+        $additional_info            = $firm->getFirmAdditionalInfo();
+        $invite_content             = $firm->getFirmInviteContent();
+        $data['countyList']         = getCounty();
+        $data['countryList']        = getCountry();
+        $data['network_firms']      = $network_firm->getAllParentFirms();
+        $data['firm']               = $firm;
+        $data['firm_types']         = $firm->getFirmTypes();
+        $data['additional_details'] = (!empty($additional_info)) ? $additional_info->data_value : [];
+        $data['invite_content']     = (!empty($invite_content)) ? $invite_content->data_value : [];
+        $data['mode']               = 'view';
 
-        $breadcrumbs          =[];
-        $breadcrumbs[]         = ['url' => url('/'), 'name' => "Home"];
-        $breadcrumbs[]         = ['url' => '/backoffice/firm', 'name' => 'View Firms'];
-        $breadcrumbs[]         = ['url' => '', 'name' => $firm->name];
-        $data['breadcrumbs']   = $breadcrumbs;
-
+        $breadcrumbs         = [];
+        $breadcrumbs[]       = ['url' => url('/'), 'name' => "Home"];
+        $breadcrumbs[]       = ['url' => '/backoffice/firm', 'name' => 'View Firms'];
+        $breadcrumbs[]       = ['url' => '', 'name' => $firm->name];
+        $data['breadcrumbs'] = $breadcrumbs;
 
         /*echo "<pre>";
         print_r($data['additional_details'] );

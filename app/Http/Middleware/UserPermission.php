@@ -26,6 +26,7 @@ class UserPermission
         $routePermission = [
             'backoffice'  =>
             [
+ 
                 'backoffice/user/{usertype}'                   => ['users'],
                 'backoffice/user/export-users'                 => ['users'],
                 'backoffice/user/add/step-one'                 => ['add_user'],
@@ -39,7 +40,7 @@ class UserPermission
                 'backoffice/firm/export-firm'                  => ['view_firms'],
                 'backoffice/firms/add'                         => ['add_firm'],
                 'backoffice/firms/save-firm'                   => ['add_firm', 'edit_firm', 'edit_my_firm'],
-                'backoffice/firms/{giCode}/edit'               => ['edit_firm', 'edit_my_firm'],
+                'backoffice/firms/{giCode}'    => ['edit_firm','edit_my_firm'],
 
                 'backoffice/investor'                          => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/get-investors'            => ['view_all_investors', 'investors', 'view_investors'],
@@ -50,6 +51,7 @@ class UserPermission
                 'backoffice/investor/{giCode}/client-categorisation'      => ['add_investor'],
                 'backoffice/investor/{giCode}/save-client-categorisation' => ['add_investor'],
 
+ 
             ],
 
             'frontoffice' =>

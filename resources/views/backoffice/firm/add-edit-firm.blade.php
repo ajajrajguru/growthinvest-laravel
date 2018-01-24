@@ -16,6 +16,8 @@
         echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
     @endphp
 
+    @include('includes.notification')
+
 	<div class="mt-4 bg-white border border-gray p-4">
 		<!-- <h1 class="section-title font-weight-medium text-primary mb-0">Add Firm</h1> -->
 		<div class="row">
@@ -168,7 +170,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Phone Number <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
-							<input type="tel" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder=""   name="pri_contactphoneno" value="{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Phone No">
+							<input type="tel" class="form-control editmode @if($mode=='view') d-none @endif"" name="pri_contactphoneno" value="{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}" data-parsley-required data-parsley-type="number" placeholder="Eg: 020 7071 3945" data-parsley-required-message="Please enter Primary Contact Phone No">
 							<span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}</span>
 						</div>
 					</div>
@@ -177,8 +179,8 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label>Firm Type </label>
-							<select class="form-control editmode @if($mode=='view') d-none @endif""  name="type" value="{{$firm->type}}">
+							<label>Firm Type <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
+							<select class="form-control editmode @if($mode=='view') d-none @endif""  name="type" value="{{$firm->type}}"  data-parsley-required data-parsley-required-message="Please select firm type" >
 								<option value="">Please Select</option>
 								@php
                                 $firmtypeName = '';
@@ -238,7 +240,7 @@
 				      				<div class="form-group">
 				      					<label>WM Commission %</label>
 				      					<div class="input-group">
-				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="wm_commission" value="{{$firm->wm_commission}}">
+				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="wm_commission" value="{{$firm->wm_commission}}" data-parsley-type="number" >
 				      						<div class="input-group-append percentlbl @if($mode=='view') d-none @endif">
 				      							<span class="input-group-text">%</span>
 				      						</div>
@@ -250,7 +252,7 @@
 				      				<div class="form-group">
 				      					<label>Introducer Commission %</label>
 				      					<div class="input-group">
-				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="introducer_commission" value="{{$firm->introducer_commission}}">
+				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="introducer_commission" value="{{$firm->introducer_commission}}" data-parsley-type="number" >
 				      						<div class="input-group-append  percentlbl @if($mode=='view') d-none @endif">
 				      							<span class="input-group-text">%</span>
 				      						</div>
@@ -275,13 +277,13 @@
 				    	@if($firm->id)
 				    	<div class="form-group">
 								<label>Investor Invite Link</label>
-								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="inv_invite_link" value="/register/investor/?{{$firm->invite_key}}" disabled>
-								<span class="viewmode @if($mode=='edit') d-none @endif">/register/investor/?{{$firm->invite_key}}</span>
+								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="inv_invite_link" value="http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor" disabled>
+								<span class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor</span>
 						</div>
 						<div class="form-group">
 								<label>Entrepreneur Invite Link</label>
-								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="ent_invite_link" value="/register/investor/?{{$firm->invite_key}}" disabled>
-								<span class="viewmode @if($mode=='edit') d-none @endif">/register/investor/?{{$firm->invite_key}}</span>
+								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="ent_invite_link" value="http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner" disabled>
+								<span class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner</span>
 						</div>
 						@endif
 						
@@ -354,7 +356,7 @@
 						<input type="hidden" name="backgroundid" value="{{$firm->backgroundid}}" />
 					</div>
 				</div>
-				<input type="hidden" name="" value="{{$firm->blog}}"/>
+				<input type="hidden" name="blog" value="{{$firm->blog}}"/>
 
 
 

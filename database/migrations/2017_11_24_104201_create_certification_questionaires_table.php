@@ -18,7 +18,9 @@ class CreateCertificationQuestionairesTable extends Migration
             $table->integer('certification_default_id')->unsigned();
             $table->longText('questions');
             $table->longText('options');
-            $table->longText('answer');
+            $table->longText('answer')->nullable();
+            $table->string('q_id');
+            $table->integer('order')->nullable();
             $table->integer('deleted')->default();
             $table->timestamps();
 

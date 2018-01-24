@@ -170,6 +170,10 @@
       $('.reqField').removeClass('d-none');
       $('.viewmode').addClass('d-none');
       $(this).addClass('d-none');
+      $('#cke_ent_invite_content').removeClass('d-none');
+      $('#cke_inv_invite_content').removeClass('d-none');
+      $('#cke_fundmanager_invite_content').removeClass('d-none');
+      $('.percentlbl').removeClass('d-none');
       return $('.cancelFirmUpdateBtn').removeClass('d-none');
     });
     $(document).on('click', '.cancelFirmUpdateBtn', function() {
@@ -177,6 +181,10 @@
       $('.reqField').addClass('d-none');
       $('.viewmode').removeClass('d-none');
       $(this).addClass('d-none');
+      $('#cke_ent_invite_content').addClass('d-none');
+      $('#cke_inv_invite_content').addClass('d-none');
+      $('#cke_fundmanager_invite_content').addClass('d-none');
+      $('.percentlbl').addClass('d-none');
       return $('.editFirmBtn').removeClass('d-none');
     });
     $(document).on('click', '#change_pwd', function() {
