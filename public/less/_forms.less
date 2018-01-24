@@ -75,3 +75,14 @@ fieldset{
 .custom-control-inline{
 	align-items: center;
 }
+
+// required
+label {
+	&.required {
+		&:after {
+			content: "*";
+			color: @danger;
+			margin-left: 5px;
+		}
+	}
+}
