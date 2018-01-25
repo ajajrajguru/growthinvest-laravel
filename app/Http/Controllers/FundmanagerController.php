@@ -172,6 +172,55 @@ class FundmanagerController extends Controller
 
     }
 
+
+    public function exportFundmanagers(Request $request)
+    {
+
+        $data    = [];
+        $filters = $request->all();
+
+        $columnName = 'users.first_name';
+        $orderBy    = 'asc';
+
+        $orderDataBy = [$columnName => $orderBy];
+
+        $filterFundmanagers = $this->getFilteredFundmanagers($filters, 0, 0, $orderDataBy);
+        $fundmanagers       = $filterFundmanagers['list'];
+
+        $fileName = 'all_fundmanagers_as_on_' . date('d-m-Y');
+        $header   = ['Platform GI Code', 'Name', 'Email ID', 'Firm','Funds', 'Introduced on', 'Source'];
+        $userData = [];
+
+         
+        /*echo"<pre>";
+        print_r($entrepreneurs);
+        die();*/
+        foreach ($fundmanagers as $fundmanager) {
+
+            
+            $source = "Self";
+            if ($fundmanager->registered_by !== $fundmanager->id) {
+                $source = "Intermediary";
+            }
+             
+
+            $userData[] = [$fundmanager->gi_code,
+                title_case($fundmanager->first_name . ' ' . $fundmanager->last_name),
+                $fundmanager->email,                
+                (!empty($fundmanager->firm)) ? $fundmanager->firm->name : '',
+                 $fundmanager->business,   
+                date('d/m/Y', strtotime($fundmanager->created_at)),
+                $source
+
+            ];
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

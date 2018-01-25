@@ -183,7 +183,10 @@ class EntrepreneurController extends Controller
         $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm','Business Proposals', 'Registered Date', 'Source'];
         $userData = [];
 
-        $certification = [];
+         
+        /*echo"<pre>";
+        print_r($entrepreneurs);
+        die();*/
         foreach ($entrepreneurs as $entrepreneur) {
 
             
@@ -196,7 +199,7 @@ class EntrepreneurController extends Controller
             $userData[] = [$entrepreneur->gi_code,
                 title_case($entrepreneur->first_name . ' ' . $entrepreneur->last_name),
                 $entrepreneur->email,                
-                (!empty($investor->firm)) ? $entrepreneur->firm->name : '',
+                (!empty($entrepreneur->firm)) ? $entrepreneur->firm->name : '',
                  $entrepreneur->business,   
                 date('d/m/Y', strtotime($entrepreneur->created_at)),
                 $source
