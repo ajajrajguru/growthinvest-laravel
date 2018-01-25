@@ -14,11 +14,24 @@ class BusinessListingController extends Controller
      */
     public function index()
     {
-        $business_listing = new BusinessListing;
+        $business_listing        = new BusinessListing;
         $list_args['backoffice'] = true;
-        $business_listing->getBusinessList($list_args);
-        echo "<pre>";
-        print_r($business_listing);
+        $business_listing_data   = $business_listing->getBusinessList($list_args);
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Businesses'];
+
+        $data['firms']            = $firms;
+        $data['business_listing'] = $business_listing_data;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Manage Clients : Growthinvest';
+
+        return view('backoffice.clients.business_listing')->with($data);
 
     }
 

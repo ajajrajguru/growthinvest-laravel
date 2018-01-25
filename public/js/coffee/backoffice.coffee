@@ -379,5 +379,41 @@ $(document).ready ->
           'terms': terms
         success: (data) ->
           # btnObj.addClass('d-none')
- 
 
+
+
+  entrepreneurTable = $('#datatable-entrepreneurs').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/entrepreneurs/get-entrepreneurs'
+      type: 'post'
+      data: (data) ->
+        filters = {}
+        filters.firm_name = $('select[name="firm_name"]').val()
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [        
+      { 'data': 'name' }
+      { 'data': 'firm'}
+      { 'data': 'business' }         
+      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'source', "orderable": false}
+      { 'data': 'action' , "orderable": false}
+    ])
+
+
+  $('.entrepreneurSearchinput').change ->
+    entrepreneurTable.ajax.reload()
+    return
+ 
