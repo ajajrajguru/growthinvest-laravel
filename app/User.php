@@ -67,6 +67,12 @@ class User extends Authenticatable
         return $addionalData;
     }
 
+    public function userInvestmentAccountNumber()
+    {
+        $addionalData = $this->userData()->where('data_key','p1code')->first();
+        return $addionalData;
+    }
+
     public function userIntermidaiteCompInfo()
     {
         $addionalData = $this->userData()->where('data_key','intermediary_company_info')->first();

@@ -325,11 +325,13 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
 
+        $investmentAccountNumber            = $user->userInvestmentAccountNumber();
         $data['countyList']  = getCounty();
         $data['countryList'] = getCountry();
         $data['investor']    = $investor;
         $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
+        $data['investmentAccountNumber']           = (!empty($investmentAccountNumber)) ? $investmentAccountNumber->data_value : '';
         $data['pageTitle']   = 'Add Investor : Registration';
         $data['mode']        = 'view';
 
@@ -405,7 +407,7 @@ class InvestorController extends Controller
 
         $investorId = $investor->id;
 
-        $investorData = $investor->userAdditionalInfo();
+        $investorData = $investor->userInvestmentAccountNumber();
         if (empty($investorData)) {
             $investorData           = new UserData;
             $investorData->user_id  = $investorId;
