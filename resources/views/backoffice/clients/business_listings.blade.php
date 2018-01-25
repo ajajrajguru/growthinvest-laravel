@@ -37,15 +37,32 @@
                 </div>
                 <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
                      <div class="mt-4 p-2">
+
+                        <div class="row ">
+                            <div class="col-md-12 mb-5">
+                                <label for="">Select Business Type</label>
+                                <select name="managebusiness_type" class="form-control " id="managebusiness_type">
+                                       <option value="managebusiness">Business Proposals/Funds</option>              
+                                       <option value="entrepreneurs">Entrepreneurs</option>                            
+                                       <option value="current-business-valuation">Current Business Valuation</option>                            
+                                       <option value="fundmanagers">Fund Managers</option>                              
+                                       <option value="view-invest-listings">Invest Companies</option> 
+                                </select>
+                            </div>
+                           
+                        </div>
+
+
+
                         <h1 class="section-title font-weight-medium text-primary mb-0">Business Proposals/Funds</h1>
                         <p class="text-muted">View All Business Proposals/Funds on your Site</p>
 
                         <h5 class="mt-2 mb-0">Selection Filters</h5>
                         <div class="p-3 bg-gray">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="investor_nominee">
+                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="firm_name">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
@@ -53,13 +70,12 @@
                                     </select>
                                     <small>Select the firm whose business proposals/funds you need to view</small>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label for="">Type</label>
-                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="investor_nominee">
-                                        <option value="">All Firms</option>
-                                        @foreach($firms as $firm)
-                                        <option value="{{ $firm->id }}">{{ $firm->name }}</option>
-                                        @endforeach
+                                    <select name="business_listings_type" class="form-control entrepreneurSearchinput" id="business_listings_type">
+                                         <option value="">All</option>                                    
+                                         <option value="proposal">Proposals</option>
+                                         <option value="fund">Funds</option>
                                     </select>
                                     <small>Select the type</small>
                                 </div>
@@ -91,6 +107,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
+
+                                    @foreach($business_listings as $business_listing) 
+                                        
+                                        <tr >
+                                            <td> </td>
+                                            <td><b>{{  title_case($business_listing->title) }} </b><br/>({{ $business_listing->type}})
+                                                <br/>
+                                                {{ (!empty($business_listing->owner_id)) ? $business_listing->owner->email:'' }}
+                                                
+                                            </td>
+                                            <td>  </td>
+                                            <td>{{ date('d/m/Y', strtotime($business_listing->created_at)) }}</td>
+                                            <td>{{ date('d/m/Y', strtotime($business_listing->updated_at)) }}</td>
+                                            <td>{{ $business_listing->owner_id  }}<br/>&pound{{ $business_listing->target_amount  }}</td>
+                                            <td></td>
+                                            <td></td>                                                                                 
+                                            <td>
+                                                <select data-id="" class="firm_actions" edit-url="#">
+                                                <option>--select--</option>
+                                                <option value="edit">Edit Profile</option>
+                                                </select>
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
 
  
 

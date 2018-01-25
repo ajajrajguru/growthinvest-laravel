@@ -8,19 +8,24 @@ class BusinessListing extends Model
 {
     protected $table = 'business_listings';
 
+    public function getBusinessList($args)
+    {
 
-    public function getBusinessList($args){
+        if ($args['backoffice'] == true) {
 
-    	if($args['backoffice']==true){
+             $business_list = BusinessListing::all();
 
-    		//$business_list = BusinessListing::all();
+            /*$business_list = \DB::table('business_listings')
+                ->get();*/
 
-    		$business_list = \DB::table('business_listings')                
-                ->get();
+            return $business_list;
+        }
 
-    		return $business_list;
-    	}
+    }
 
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'owner_id');
     }
 
 }
