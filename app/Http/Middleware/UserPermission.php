@@ -53,8 +53,10 @@ class UserPermission
 
                 'backoffice/entrepreneurs'                                => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'              => ['view_all_business_owners', 'view_firm_business_owners'],
-                'backoffice/entrepreneur/export-entrepreneurs'           => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/entrepreneur/export-entrepreneurs'            => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/fundmanagers'                                 => ['view_all_fund_managers', 'view_firm_fund_managers'],
+                'backoffice/fundmanagers/get-fundmanagers'                => ['view_all_fund_managers', 'view_firm_fund_managers'],
+                'backoffice/fundmanager/export-fundmanagers'              => ['view_all_fund_managers', 'view_firm_fund_managers'],
                 'backoffice/business-listings'                            => ['view_backoffice_proposals', 'view_firm_business_proposals'],
 
             ],

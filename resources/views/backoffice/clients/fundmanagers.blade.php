@@ -37,6 +37,23 @@
                 </div>
                 <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
                      <div class="mt-4 p-2">
+
+                        <div class="row ">
+                            <div class="col-md-12 mb-5">
+                                <label for="">Select Business Type</label>
+                                <select name="managebusiness_type" class="form-control " id="managebusiness_type">
+                                       <option value="managebusiness">Business Proposals/Funds</option>              
+                                       <option value="entrepreneurs">Entrepreneurs</option>                            
+                                       <option value="current-business-valuation">Current Business Valuation</option>                            
+                                       <option value="fundmanagers">Fund Managers</option>                              
+                                       <option value="view-invest-listings">Invest Companies</option> 
+                                </select>
+                            </div>
+                           
+                        </div>
+
+
+
                         <h1 class="section-title font-weight-medium text-primary mb-0">Fund Managers</h1>
                         <p class="text-muted">View All Fund Managers on your Site</p>
 
@@ -45,7 +62,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control investorSearchinput" id="investor_nominee">
+                                    <select name="firm_name" class="form-control investorSearchinput" id="firm_name">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
@@ -59,13 +76,13 @@
 
                         <div class="d-flex justify-content-end">
                             <div class="mt-3">
-                                <a href="{{ url('#')}}" class="btn btn-primary btn-sm">Add Business Owner</a>
-                                <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm download-entrepreneur-csv" >Download CSV</a>
+                                <a href="{{ url('#')}}" class="btn btn-primary btn-sm">Add Fundmanager</a>
+                                <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm download-fundmanager-csv" >Download CSV</a>
                             </div>
                         </div>
 
                         <div class="table-responsive mt-3">
-                            <table id="datatable-investors" class="table dataFilterTable table-hover table-striped-bg">
+                            <table id="datatable-fundmanagers" class="table dataFilterTable table-hover table-striped-bg">
                                 <thead>
                                     <tr>
                                          
@@ -127,7 +144,7 @@
 
 
     <style type="text/css">
-        #datatable-investors_filter{
+        #datatable-fundmanagers_filter{
             visibility: hidden;
         }
     </style>

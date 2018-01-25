@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::resource( 'fundmanagers', 'FundmanagerController' );
 	Route::post( 'entrepreneurs/get-entrepreneurs', 'EntrepreneurController@getEntrepreneurslist' );
 	Route::get('entrepreneur/export-entrepreneurs','EntrepreneurController@exportEntrepreneurs');
+	Route::post( 'fundmanagers/get-fundmanagers', 'FundmanagerController@getFundmanagerslist' );
+	Route::get('fundmanager/export-fundmanagers','FundmanagerController@exportFundmanagers');
 	
 	//investors
 	Route::get('investor/export-investors','InvestorController@exportInvestors');

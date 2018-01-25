@@ -112,7 +112,7 @@ class EntrepreneurController extends Controller
             $join->on('model_has_roles.role_id', '=', 'roles.id')
                 ->whereIn('roles.name', ['business_owner']);
         })
-            ->join('business_listings', function ($join) {
+            ->leftJoin('business_listings', function ($join) {
                 $join->on('users.id', '=', 'business_listings.owner_id')
                     ->whereIn('business_listings.type', ['proposal']);
             });
@@ -145,7 +145,7 @@ class EntrepreneurController extends Controller
         }*/
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
-        $entrepreneurQuery->groupBy('business_listings.owner_id');
+        $entrepreneurQuery->groupBy('users.id');
         $entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
 
         foreach ($orderDataBy as $columnName => $orderBy) {

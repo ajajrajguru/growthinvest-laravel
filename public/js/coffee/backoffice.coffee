@@ -420,8 +420,47 @@ $(document).ready ->
 
   $('.download-entrepreneur-csv').click ->
     firm_name = $('select[name="firm_name"]').val() 
+    window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name="+firm_name);
 
-     
 
-    window.open("/backoffice/entrepreneurs/export-entrepreneurs?firm_name="+firm_name);
+
+  fundmanagerTable = $('#datatable-fundmanagers').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/fundmanagers/get-fundmanagers'
+      type: 'post'
+      data: (data) ->
+        filters = {}
+        filters.firm_name = $('select[name="firm_name"]').val()
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [        
+      { 'data': 'name' }
+      { 'data': 'email' }
+      { 'data': 'firm'}
+      { 'data': 'business' }         
+      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'source', "orderable": false}
+      { 'data': 'action' , "orderable": false}
+    ])
+
+
+  $('.fundmanagerSearchinput').change ->
+    fundmanagerTable.ajax.reload()
+    return
+
+  $('.download-fundmanager-csv').click ->
+    firm_name = $('select[name="firm_name"]').val() 
+    window.open("/backoffice/fundmanager/export-fundmanagers?firm_name="+firm_name);
  

@@ -7,7 +7,7 @@
   });
 
   $(document).ready(function() {
-    var IntermediaryTable, api, entrepreneurTable, firmsTable, initSerachForTable, investorTable, usersTable, validateQuiz;
+    var IntermediaryTable, api, entrepreneurTable, firmsTable, fundmanagerTable, initSerachForTable, investorTable, usersTable, validateQuiz;
     $('.dataFilterTable thead th.w-search').each(function() {
       var title;
       title = $(this).text();
@@ -479,10 +479,57 @@
     $('.entrepreneurSearchinput').change(function() {
       entrepreneurTable.ajax.reload();
     });
-    return $('.download-entrepreneur-csv').click(function() {
+    $('.download-entrepreneur-csv').click(function() {
       var firm_name;
       firm_name = $('select[name="firm_name"]').val();
-      return window.open("/backoffice/entrepreneurs/export-entrepreneurs?firm_name=" + firm_name);
+      return window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name=" + firm_name);
+    });
+    fundmanagerTable = $('#datatable-fundmanagers').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/fundmanagers/get-fundmanagers',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_name = $('select[name="firm_name"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': 'name'
+        }, {
+          'data': 'email'
+        }, {
+          'data': 'firm'
+        }, {
+          'data': 'business'
+        }, {
+          'data': 'registered_date',
+          "orderable": false
+        }, {
+          'data': 'source',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ]
+    });
+    $('.fundmanagerSearchinput').change(function() {
+      fundmanagerTable.ajax.reload();
+    });
+    return $('.download-fundmanager-csv').click(function() {
+      var firm_name;
+      firm_name = $('select[name="firm_name"]').val();
+      return window.open("/backoffice/fundmanager/export-fundmanagers?firm_name=" + firm_name);
     });
   });
 

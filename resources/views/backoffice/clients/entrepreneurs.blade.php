@@ -41,7 +41,7 @@
                         <div class="row ">
                             <div class="col-md-12 mb-5">
                                 <label for="">Select Business Type</label>
-                                <select name="managebusiness_type" class="form-control entrepreneurSearchinput" id="investor_nominee">
+                                <select name="managebusiness_type" class="form-control " id="managebusiness_type">
                                        <option value="managebusiness">Business Proposals/Funds</option>              
                                        <option value="entrepreneurs">Entrepreneurs</option>                            
                                        <option value="current-business-valuation">Current Business Valuation</option>                            
@@ -61,7 +61,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="investor_nominee">
+                                    <select name="firm_name" class="form-control fundmanagerSearchinput" id="firm_name">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
