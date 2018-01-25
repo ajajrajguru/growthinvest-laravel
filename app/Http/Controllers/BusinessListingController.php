@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\BusinessListing;
 use Illuminate\Http\Request;
 
-class EntrepreneurController extends Controller
+class BusinessListingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,25 +14,32 @@ class EntrepreneurController extends Controller
      */
     public function index()
     {
-        $user          = new User;
-        $entrepreneurs = $user->getEntrepreneurs();
-        $firmsList     = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
-        $firms         = $firmsList['list'];
+        $business_listing        = new BusinessListing;
+        $list_args['backoffice'] = true;
+        $business_listing_data   = $business_listing->getBusinessList($list_args);
+/*echo "<pre>";
+        print_r($business_listing_data);
+        die();*/
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Entrepreneurs'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Businesses'];
 
-        $data['firms']         = $firms;
-        $data['entrepreneurs'] = $entrepreneurs;
-        $data['breadcrumbs']   = $breadcrumbs;
-        $data['pageTitle']     = 'Entrepreneurs';
+        $data['firms']            = $firms;
+        $data['business_listings'] = $business_listing_data;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Manage Clients : Growthinvest';
 
-        return view('backoffice.clients.entrepreneurs')->with($data);
+        return view('backoffice.clients.business_listings')->with($data);
+
     }
 
-    public function getEntrepreneurslist(Request $request)
+
+    public function getBusinessListings(Request $request)
     {
         $requestData = $request->all(); //dd($requestData);
         $data        = [];
@@ -42,13 +49,13 @@ class EntrepreneurController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
-            '1' => 'users.first_name',
+            '1' => 'business_listings.title',
             '2' => 'users.firm.name',
             '3' => 'users.business',
             '3' => 'users.created_at',
         );
 
-        $columnName = 'users.first_name';
+        $columnName = 'business_listings.title';
         $orderBy    = 'asc';
 
         if (isset($columnOrder[$orderValue['column']])) {
@@ -162,54 +169,6 @@ class EntrepreneurController extends Controller
         }
 
         return ['TotalEntrepreneurs' => $totalEntrepreneurs, 'list' => $entrepreneurs];
-
-    }
-
-    public function exportEntrepreneurs(Request $request)
-    {
-
-        $data    = [];
-        $filters = $request->all();
-
-        $columnName = 'users.first_name';
-        $orderBy    = 'asc';
-
-        $orderDataBy = [$columnName => $orderBy];
-
-        $filterEntrepreneurs = $this->getFilteredEntrepreneurs($filters, 0, 0, $orderDataBy);
-        $entrepreneurs       = $filterEntrepreneurs['list'];
-
-        $fileName = 'all_entrepreneurs_as_on_' . date('d-m-Y');
-        $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm','Business Proposals', 'Registered Date', 'Source'];
-        $userData = [];
-
-         
-        /*echo"<pre>";
-        print_r($entrepreneurs);
-        die();*/
-        foreach ($entrepreneurs as $entrepreneur) {
-
-            
-            $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id) {
-                $source = "Intermediary";
-            }
-             
-
-            $userData[] = [$entrepreneur->gi_code,
-                title_case($entrepreneur->first_name . ' ' . $entrepreneur->last_name),
-                $entrepreneur->email,                
-                (!empty($entrepreneur->firm)) ? $entrepreneur->firm->name : '',
-                 $entrepreneur->business,   
-                date('d/m/Y', strtotime($entrepreneur->created_at)),
-                $source
-
-            ];
-        }
-
-        generateCSV($header, $userData, $fileName);
-
-        return true;
 
     }
 

@@ -27,37 +27,39 @@ class UserPermission
             'backoffice'  =>
             [
 
- 
-                'backoffice/user/{usertype}'                   => ['users'],
-                'backoffice/user/export-users'                 => ['users'],
-                'backoffice/user/add/step-one'                 => ['add_user'],
-                'backoffice/user/{giCode}/step-one'            => ['add_user'],
-                'backoffice/user/{giCode}/step-two'            => ['add_user'],
-                'backoffice/user/save-step-one'                => ['add_user'],
-                'backoffice/user/save-step-two'                => ['add_user'],
-                'backoffice/user/delete-user'                  => ['remove_users', 'delete_users', 'delete_user'],
+                'backoffice/user/{usertype}'                              => ['users'],
+                'backoffice/user/export-users'                            => ['users'],
+                'backoffice/user/add/step-one'                            => ['add_user'],
+                'backoffice/user/{giCode}/step-one'                       => ['add_user'],
+                'backoffice/user/{giCode}/step-two'                       => ['add_user'],
+                'backoffice/user/save-step-one'                           => ['add_user'],
+                'backoffice/user/save-step-two'                           => ['add_user'],
+                'backoffice/user/delete-user'                             => ['remove_users', 'delete_users', 'delete_user'],
 
-                'backoffice/firm'                              => ['view_firms'],
-                'backoffice/firm/export-firm'                  => ['view_firms'],
-                'backoffice/firms/add'                         => ['add_firm'],
-                'backoffice/firms/save-firm'                   => ['add_firm', 'edit_firm', 'edit_my_firm'],
-                'backoffice/firms/{giCode}'    => ['edit_firm','edit_my_firm'],
+                'backoffice/firm'                                         => ['view_firms'],
+                'backoffice/firm/export-firm'                             => ['view_firms'],
+                'backoffice/firms/add'                                    => ['add_firm'],
+                'backoffice/firms/save-firm'                              => ['add_firm', 'edit_firm', 'edit_my_firm'],
+                'backoffice/firms/{giCode}'                               => ['edit_firm', 'edit_my_firm'],
 
-                'backoffice/investor'                          => ['view_all_investors', 'investors', 'view_investors'],
-                'backoffice/investor/get-investors'            => ['view_all_investors', 'investors', 'view_investors'],
-                'backoffice/investor/export-investors'         => ['view_all_investors', 'investors', 'view_investors'],
-                'backoffice/investor/registration'             => ['add_investor'],
-                'backoffice/investor/{giCode}/registration'    => ['add_investor'],
-                'backoffice/investor/save-registration'        => ['add_investor'],
+                'backoffice/investor'                                     => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/get-investors'                       => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/export-investors'                    => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/registration'                        => ['add_investor'],
+                'backoffice/investor/{giCode}/registration'               => ['add_investor'],
+                'backoffice/investor/save-registration'                   => ['add_investor'],
                 'backoffice/investor/{giCode}/client-categorisation'      => ['add_investor'],
                 'backoffice/investor/{giCode}/save-client-categorisation' => ['add_investor'],
                 'backoffice/investor/download-certification/{fileid}' => ['add_investor','view_all_investors', 'investors', 'view_investors'],
 
+                'backoffice/entrepreneurs'                                => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/entrepreneurs/get-entrepreneurs'              => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/entrepreneur/export-entrepreneurs'            => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/fundmanagers'                                 => ['view_all_fund_managers', 'view_firm_fund_managers'],
+                'backoffice/fundmanagers/get-fundmanagers'                => ['view_all_fund_managers', 'view_firm_fund_managers'],
+                'backoffice/fundmanager/export-fundmanagers'              => ['view_all_fund_managers', 'view_firm_fund_managers'],
+                'backoffice/business-listings'                            => ['view_backoffice_proposals', 'view_firm_business_proposals'],
 
-                'backoffice/enterpreneurs'          => ['view_all_business_owners', 'view_firm_business_owners'],
-                'backoffice/fundmanagers'          => ['view_all_fund_managers', 'view_firm_fund_managers'],
-
- 
             ],
 
             'frontoffice' =>

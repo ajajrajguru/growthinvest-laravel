@@ -33,8 +33,12 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('user/export-users','UserController@exportUsers');
 	Route::get('user/{usertype}','UserController@getUsers');
 	Route::post('user/delete-user','UserController@deleteUsers');
-	Route::resource( 'enterpreneurs', 'EntrepreneurController' );
+	Route::resource( 'entrepreneurs', 'EntrepreneurController' );
 	Route::resource( 'fundmanagers', 'FundmanagerController' );
+	Route::post( 'entrepreneurs/get-entrepreneurs', 'EntrepreneurController@getEntrepreneurslist' );
+	Route::get('entrepreneur/export-entrepreneurs','EntrepreneurController@exportEntrepreneurs');
+	Route::post( 'fundmanagers/get-fundmanagers', 'FundmanagerController@getFundmanagerslist' );
+	Route::get('fundmanager/export-fundmanagers','FundmanagerController@exportFundmanagers');
 	
 	//investors
 	Route::get('investor/export-investors','InvestorController@exportInvestors');
@@ -46,7 +50,9 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
 	Route::post( 'investor/save-registration', 'InvestorController@saveRegistration' );
  	Route::resource( 'investor', 'InvestorController' );
- 	
+
+ 	//business
+ 	Route::resource( 'business-listings', 'BusinessListingController' );
 
 });
 

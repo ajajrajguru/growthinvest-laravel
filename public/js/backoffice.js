@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var IntermediaryTable, api, firmsTable, initSerachForTable, investorTable, usersTable, validateQuiz;
+    var IntermediaryTable, api, entrepreneurTable, firmsTable, fundmanagerTable, initSerachForTable, investorTable, usersTable, validateQuiz;
     $('.dataFilterTable thead th.w-search').each(function() {
       var title;
       title = $(this).text();
@@ -197,6 +197,12 @@
       $('#change_pwd').removeClass('d-none');
       return $('.setpassword-cont').addClass('d-none');
     });
+    if ($('form').length) {
+      $('form').parsley().on('form:success', function() {
+        $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none');
+        return $(this)[0].$element.find('.save-btn').addClass('running');
+      });
+    }
     $('[data-toggle="popover"]').popover();
     $('#giMenu').mmenu({
       navbar: {
@@ -548,7 +554,7 @@
     $('.elective-prof-inv-btn').click(function() {
       return $(this).attr('data-agree', "yes");
     });
-    return $('.save-elective-prof-inv').click(function() {
+    $('.save-elective-prof-inv').click(function() {
       var btnObj, certification_type, clientCategoryId, err, giCode, quizAnswers;
       btnObj = $(this);
       err = validateQuiz($(".elective-prof-inv-quiz-btn"));
@@ -593,6 +599,100 @@
           }
         });
       }
+    });
+    entrepreneurTable = $('#datatable-entrepreneurs').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/entrepreneurs/get-entrepreneurs',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_name = $('select[name="firm_name"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': 'name'
+        }, {
+          'data': 'email'
+        }, {
+          'data': 'firm'
+        }, {
+          'data': 'business'
+        }, {
+          'data': 'registered_date',
+          "orderable": false
+        }, {
+          'data': 'source',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ]
+    });
+    $('.entrepreneurSearchinput').change(function() {
+      entrepreneurTable.ajax.reload();
+    });
+    $('.download-entrepreneur-csv').click(function() {
+      var firm_name;
+      firm_name = $('select[name="firm_name"]').val();
+      return window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name=" + firm_name);
+    });
+    fundmanagerTable = $('#datatable-fundmanagers').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/fundmanagers/get-fundmanagers',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_name = $('select[name="firm_name"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': 'name'
+        }, {
+          'data': 'email'
+        }, {
+          'data': 'firm'
+        }, {
+          'data': 'business'
+        }, {
+          'data': 'registered_date',
+          "orderable": false
+        }, {
+          'data': 'source',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ]
+    });
+    $('.fundmanagerSearchinput').change(function() {
+      fundmanagerTable.ajax.reload();
+    });
+    return $('.download-fundmanager-csv').click(function() {
+      var firm_name;
+      firm_name = $('select[name="firm_name"]').val();
+      return window.open("/backoffice/fundmanager/export-fundmanagers?firm_name=" + firm_name);
     });
   });
 
