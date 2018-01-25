@@ -34,11 +34,6 @@ class EntrepreneurController extends Controller
 
     public function getEntrepreneurslist(Request $request)
     {
-
-/*$r = $this->getFilteredEntrepreneurs();
-print_r($r);
-die();*/
-
         $requestData = $request->all(); //dd($requestData);
         $data        = [];
         $skip        = $requestData['start'];
@@ -63,42 +58,20 @@ die();*/
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterInvestors = $this->getFilteredEntrepreneurs($filters, $skip, $length, $orderDataBy);
-        $investors       = $filterInvestors['list'];
-        $totalInvestors  = $filterInvestors['TotalEntrepreneurs'];
+        $filterEntrepreneurs = $this->getFilteredEntrepreneurs($filters, $skip, $length, $orderDataBy);
+        $entrepreneurs       = $filterEntrepreneurs['list'];
+        $totalEntrepreneurs  = $filterEntrepreneurs['TotalEntrepreneurs'];
 
-        $investorsData = [];
-        $certification = [];
-        foreach ($investors as $key => $entrepreneur) {
+        $entrepreneursData = [];
 
-            $userCertification = $entrepreneur->userCertification()->orderBy('created_at', 'desc')->first();
-
-            $certificationName = 'Uncertified Investors';
-            $certificationDate = '-';
-
-            if (!empty($userCertification)) {
-
-                if (isset($certification[$userCertification->certification_default_id])) {
-                    $certificationName = $certification[$userCertification->certification_default_id];
-                } else {
-                    $certificationName                                           = Defaults::find($userCertification->certification_default_id)->name;
-                    $certification[$userCertification->certification_default_id] = $certificationName;
-                }
-
-                $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
-            }
+        foreach ($entrepreneurs as $key => $entrepreneur) {
 
             $nameHtml = '<b><a href=="#">' . $entrepreneur->first_name . ' ' . $entrepreneur->last_name . '</a>';
 
-            $actionHtml = '<select class="form-control form-control-sm">
-            <option id="select" value="">-Select-</option>
-            <option value="edit_profile">View Profile</option>
-            <option value="view_portfolio">View Portfolio</option>
-            <option value="manage_documents">View Investor Documents</option>
-            <option value="message_board">View Message Board</option>
-            <option value="nominee_application">Investment Account</option>
-            <option value="investoffers">Investment Offers</option>
-            </select>';
+            $actionHtml = '<select data-id="" class="firm_actions" edit-url="#">
+                                                <option>--select--</option>
+                                                <option value="edit">Edit Profile</option>
+                                                </select>';
 
             $source = "Self";
             if ($entrepreneur->registered_by !== $entrepreneur->id) {
@@ -120,8 +93,8 @@ die();*/
 
         $json_data = array(
             "draw"            => intval($requestData['draw']),
-            "recordsTotal"    => intval($totalInvestors),
-            "recordsFiltered" => intval($totalInvestors),
+            "recordsTotal"    => intval($totalEntrepreneurs),
+            "recordsFiltered" => intval($totalEntrepreneurs),
             "data"            => $entrepreneursData,
         );
 
@@ -160,7 +133,7 @@ die();*/
             $entrepreneurQuery->where('users.firm_id', $filters['firm_name']);
         }
 
-        /*if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
+        /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
         $userIds = explode(',', $filters['user_ids']);
         $userIds = array_filter($userIds);
 
@@ -169,43 +142,6 @@ die();*/
 
         if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
         $entrepreneurQuery->where('users.id', $filters['investor_name']);
-        }
-
-        if (isset($filters['client_category']) && $filters['client_category'] != "") {
-        $entrepreneurQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
-        }
-
-        if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
-        if ($filters['client_certification'] == 'uncertified') {
-        $entrepreneurQuery->whereNull('user_has_certifications.created_at');
-        }
-
-        }
-         */
-        /*$nomineeJoin = false;
-        if (isset($filters['investor_nominee']) && $filters['investor_nominee'] != "") {
-        $entrepreneurQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
-        $nomineeJoin = true;
-        if ($filters['investor_nominee'] == 'nominee') {
-        $entrepreneurQuery->whereNotNull('nominee_applications.user_id');
-        } else {
-        $entrepreneurQuery->whereNull('nominee_applications.user_id');
-        }
-
-        }
-
-        if (isset($filters['idverified']) && $filters['idverified'] != "") {
-        if (!$nomineeJoin) {
-        $entrepreneurQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
-        }
-
-        if ($filters['idverified'] == 'no') {
-        $verificationStatus = ['no', 'progress', 'requested', 'not_yet_requested'];
-        } else {
-        $verificationStatus = ['yes', 'completed'];
-        }
-
-        $entrepreneurQuery->whereIn('nominee_applications.id_verification_status', $verificationStatus);
         }*/
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');

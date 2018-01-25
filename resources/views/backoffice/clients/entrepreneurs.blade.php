@@ -37,6 +37,22 @@
                 </div>
                 <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
                      <div class="mt-4 p-2">
+
+                        <div class="row ">
+                            <div class="col-md-12 mb-5">
+                                <label for="">Select Business Type</label>
+                                <select name="managebusiness_type" class="form-control entrepreneurSearchinput" id="investor_nominee">
+                                       <option value="managebusiness">Business Proposals/Funds</option>              
+                                       <option value="entrepreneurs">Entrepreneurs</option>                            
+                                       <option value="current-business-valuation">Current Business Valuation</option>                            
+                                       <option value="fundmanagers">Fund Managers</option>                              
+                                       <option value="view-invest-listings">Invest Companies</option> 
+                                </select>
+                            </div>
+                           
+                        </div>
+
+
                         <h1 class="section-title font-weight-medium text-primary mb-0">Entrepreneurs</h1>
                         <p class="text-muted">View All Business Owners on your Site</p>
 
