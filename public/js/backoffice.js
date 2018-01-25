@@ -183,10 +183,12 @@
       $('#change_pwd').removeClass('d-none');
       return $('.setpassword-cont').addClass('d-none');
     });
-    $('form').parsley().on('form:success', function() {
-      $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none');
-      return $(this)[0].$element.find('.save-btn').addClass('running');
-    });
+    if ($('form').length) {
+      $('form').parsley().on('form:success', function() {
+        $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none');
+        return $(this)[0].$element.find('.save-btn').addClass('running');
+      });
+    }
     $('[data-toggle="popover"]').popover();
     $('#giMenu').mmenu({
       navbar: {
