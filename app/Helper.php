@@ -214,5 +214,250 @@ function getCertificationQuesionnaire(){
 
     return $questionnaires;
 }
+
+/** Function to geth the quiz questions/options, statements, declarations on elective professional investors
+*/
+function get_elective_prof_investor_quiz_statement_declaration($pdf=false){
+     
+    if ($pdf==true) {
+
+        /* markup for certification pdf */
+        $statement = '
+        <table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: 14px;">
+
+            <tr style="margin-bottom: 0; padding-bottom: 0;">
+                <td style="width: 100%; border:none;">
+
+
+
+
+
+            <h6>Elective Professional Investor Statement</h6><br/>
+              <div style="margin-bottom: 10px; margin-bottom: 10px;"><b>The statement below details the rights and protections afforded to Retail investors that are
+                lost when the client opts up to be designated as a Professional.</b></div>
+
+                <div style="margin-bottom: 10px; margin-bottom: 10px; font-size: 14px;"><b>Please confirm that you have read and understood the statement below:</b></div>
+
+                <div style="margin-bottom: 10px; margin-bottom: 10px; font-size: 14px;"><b>STATEMENT</b></div>
+
+                <div style="margin-bottom: 10px; margin-bottom: 10px; font-size: 14px;">Financial Conduct Authority (“FCA”) Classification</div>
+
+                <div style="margin-bottom: 10px; margin-bottom: 10px; font-size: 14px;">On the basis of information we have about you, or you have given us, and with reference to the rules
+                  of the FCA (see http://fshandbook.info/FS/html/FCA/COBS/3/5), we have categorised you as a Professional
+                  client by reason of your expertise, experience and knowledge in relation to investing in our financial
+                  products and other investment opportunities.</div>
+
+                  <div style="margin-bottom: 10px; margin-bottom: 10px; font-size: 14px;">Please note that your categorisation as an elective Professional client applies only for the
+                    purpose of enabling us or our affiliates to promote financial products and investment opportunities to
+                    you, and that you will not be treated as our client for any other purpose.</div>
+
+                    <p style="font-size: 14px;">As a consequence of this categorisation, we are informing you that you will lose the protections
+                      afforded exclusively to Retail clients under the FCA rules.  In particular:</p>
+
+                      <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Communications and financial promotions made to you will not be subject to the detailed form and content requirements of the FCA’s rules, including those regarding costs and associated charges, that apply in the case of Retail clients.</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">When communicating with you, we are required to ensure that such communications are fair,
+                            clear and not misleading. However, we may take into consideration your status as a Professional
+                            client when complying with such requirements and in assessing whether any communication to you
+                            is likely to be understood by you and contains appropriate information for you to make an
+                            informed assessment of its subject matter;</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">We will not be restricted from promoting financial products and investment opportunities
+                              which are not regulated in the UK and in doing so need not warn you further as regards the
+                              protections you will lose;</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Because participants in our financial products and investment opportunities are not
+                                (or will not on first participating be) Retail clients, we are able to agree with any fund
+                                investment that we do not owe a duty of best execution;</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Because participants in our financial products and investment opportunities are not
+                                  Retail clients, the detailed FCA rules on periodic statements are dis-applied.  You will
+                                  however still receive statements in accordance with the other constitutional documents;</p></td>
+                         </tr>
+                     </table>
+
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">In the event that we cease to provide investment advisory services, we are not required
+                                    to ensure that any business which is outstanding is properly completed but we will nevertheless
+                                    agree to do so; and</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                         <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">You will have no right of access to the UK’s Financial Ombudsman Service.</p></td>
+                         </tr>
+                     </table>
+
+
+
+                                  Please read and sign the declaration below to confirm you have read and understand this written
+                                  notice and wish to be treated as a Professional client.
+
+                                  <p font-size: 14px;>If you do not agree to the signing of this declaration, we are unable to categorise you as
+                                    an Elective Professional client in conducting business with you in regard to the financial
+                                    products and investment opportunities we wish to communicate and market to you.</p>
+
+                                    <p font-size: 14px;>Yours sincerely,</p>
+
+                                    <p font-size: 14px;>Daniel Rodwell,<br>Managing Director<br>';/*Seed EIS Platform*/
+          $statement.='GrowthInvest</p>
+
+                                  </td>
+            </tr>
+        </table>';
+
+
+
+          $declaration =' <table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: 14px;">
+
+            <tr style="margin-bottom: 0; padding-bottom: 0;">
+                <td style="width: 100%; border:none;">
+
+                <h6>Declaration</h6>
+                        <br/>
+                        <p style="font-size: 14px;">Declaration: Notice of Wish to be treated as a Professional client</p>
+
+                          <p style="font-size: 14px;">Under the EU’s Markets in Financial Instruments Directive (MiFID), I wish to be treated as an
+                          elective Professional client if, subject to your assessment of my expertise, experience, and
+                          knowledge of me you are reasonably assured, in light of the nature of the transactions or services
+                          envisaged, that I am capable of making my own investment decisions and understand the risks
+                          involved. In making your assessment I understand you may rely on information already in your
+                          possession and you may request further additional information from me if necessary.</p>
+
+                          <p style="font-size: 14px;">As a consequence of this assessment and classification as a Professional client I understand you
+                          will be able to promote various financial products and investment opportunities to me. I also
+                          understand you are required to obtain written acknowledgement from me that I have been provided
+                          with a written notice (as detailed in the above letter) in regards of me being treated as a
+                          Professional client.</p>
+
+                          <p style="font-size: 14px;">I warrant that I have the necessary expertise, experience and knowledge of making my own
+                          investment decisions and understand the risks involved in investing in the financial products and
+                          investment opportunities being marketed to me.</p>
+
+                          <p style="font-size: 14px;">I also confirm that I have read and understand the differences between the treatment of
+                          Professional and Retail clients and that I fully understand the protections and compensation
+                          rights that I may lose and the consequences of losing such protections.</p>
+
+                          <p style="font-size: 14px;">I am fully aware that it is up to me to keep the firm informed of any change that could
+                          affect my categorisation.</p>
+
+                          <p style="font-size: 14px;">On the basis of the above information I can confirm that the firm may treat me as a
+                          Professional client.</p></td>
+            </tr>
+        </table><br/>';
+                          /* end markup for certification pdf */
+
+    }
+    else{
+
+
+      $statement = '<div class="card">
+                                    <div class="card-header" role="tab" id="headingOne">
+                                        <a data-toggle="collapse" href="#epiStatement" role="button" class="collapsed">
+                                          Elective Professional Investor Statement
+                                          <i class="fa fa-lg fa-plus-square-o"></i>
+                                          <i class="fa fa-lg fa-minus-square-o"></i>
+                                        </a>
+                                    </div>
+
+                                    <div id="epiStatement" class="collapse " role="tabpanel" >
+                                        <div class="card-body">
+                                            <p><b>The statement below details the rights and protections afforded to Retail investors that are lost when the client opts up to be designated as a Professional.</b></p>
+                                            <p><b>Please confirm that you have read and understood the statement below:</b></p>
+                                            <p><b>STATEMENT</b></p>
+                                            <p>Financial Conduct Authority (“FCA”) Classification</p>
+                                            <p>On the basis of information we have about you, or you have given us, and with reference to the rules of the FCA (see http://fshandbook.info/FS/html/FCA/COBS/3/5), we have categorised you as a Professional client by reason of your expertise, experience and knowledge in relation to investing in our financial products and other investment opportunities.</p>
+                                            <p>Please note that your categorisation as an elective Professional client applies only for the purpose of enabling us or our affiliates to promote financial products and investment opportunities to you, and that you will not be treated as our client for any other purpose.</p>
+                                            <p>As a consequence of this categorisation, we are informing you that you will lose the protections afforded exclusively to Retail clients under the FCA rules. In particular:</p>
+                                            <ul class="disc">
+                                                <li>Communications and financial promotions made to you will not be subject to the detailed form and content requirements of the FCA’s rules, including those regarding costs and associated charges, that apply in the case of Retail clients.</li>
+                                                <li>When communicating with you, we are required to ensure that such communications are fair, clear and not misleading. However, we may take into consideration your status as a Professional client when complying with such requirements and in assessing whether any communication to you is likely to be understood by you and contains appropriate information for you to make an informed assessment of its subject matter;</li>
+                                                <li>We will not be restricted from promoting financial products and investment opportunities which are not regulated in the UK and in doing so need not warn you further as regards the protections you will lose;</li>
+                                                <li>Because participants in our financial products and investment opportunities are not (or will not on first participating be) Retail clients, we are able to agree with any fund investment that we do not owe a duty of best execution;</li>
+                                                <li>Because participants in our financial products and investment opportunities are not Retail clients, the detailed FCA rules on periodic statements are dis-applied. You will however still receive statements in accordance with the other constitutional documents;</li>
+                                                <li>In the event that we cease to provide investment advisory services, we are not required to ensure that any business which is outstanding is properly completed but we will nevertheless agree to do so; and</li>
+                                                <li>You will have no right of access to the UK’s Financial Ombudsman Service.</li>
+                                            </ul>Please read and sign the declaration below to confirm you have read and understand this written notice and wish to be treated as a Professional client.
+                                            <p>If you do not agree to the signing of this declaration, we are unable to categorise you as an Elective Professional client in conducting business with you in regard to the financial products and investment opportunities we wish to communicate and market to you.</p>
+                                            <p>Yours sincerely,</p>
+                                            <p>Daniel Rodwell,<br>
+                                            Managing Director<br>
+                                            GrowthInvest</p>
+
+                                            
+                                        </div>
+                                    </div>
+                                </div>';
+
+
+
+        $declaration ='<h4 class="my-3">
+                                Declaration
+                            </h4>
+                            <p>Declaration: Notice of Wish to be treated as a Professional client</p>
+                            <p>Under the EU’s Markets in Financial Instruments Directive (MiFID), I wish to be treated as an
+                                elective Professional client if, subject to your assessment of my expertise, experience, and
+                                knowledge of me you are reasonably assured, in light of the nature of the transactions or services
+                                envisaged, that I am capable of making my own investment decisions and understand the risks
+                                involved. In making your assessment I understand you may rely on information already in your
+                                possession and you may request further additional information from me if necessary.</p>
+                            <p>As a consequence of this assessment and classification as a Professional client I understand you
+                                will be able to promote various financial products and investment opportunities to me. I also
+                                understand you are required to obtain written acknowledgement from me that I have been provided
+                                with a written notice (as detailed in the above letter) in regards of me being treated as a
+                                Professional client.</p>
+                            <p>I warrant that I have the necessary expertise, experience and knowledge of making my own
+                                investment decisions and understand the risks involved in investing in the financial products and
+                                investment opportunities being marketed to me.</p>
+                            <p>I also confirm that I have read and understand the differences between the treatment of
+                                Professional and Retail clients and that I fully understand the protections and compensation
+                                rights that I may lose and the consequences of losing such protections.</p>
+                            <p>I am fully aware that it is up to me to keep the firm informed of any change that could
+                                affect my categorisation.</p>
+                            <p>On the basis of the above information I can confirm that the firm may treat me as a
+                                Professional client.</p>';
+        }
+
+
+                    /* <p>Name:</p>
+                    <p>Email Id:</p>
+                    <p>Date:</p>'; */
+
+        $elective_prof_quiz_statement_declaration = array(
+        'statement'                  => $statement,
+        'declaration'                => $declaration
+        );
+
+    return $elective_prof_quiz_statement_declaration;
+}
+
  
  

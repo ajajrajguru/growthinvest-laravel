@@ -496,6 +496,7 @@ class InvestorController extends Controller
         }
         elseif($requestData['save-type'] == 'elective_prof'){
             $details = $this->getElectiveProfData($requestData);
+            $addData = ['client_category_id'=>$requestData['client_category_id']];
         }
 
        $this->generateInvestorCertificationPdf($requestData['save-type'],$details,$investor,$addData);
@@ -631,13 +632,13 @@ class InvestorController extends Controller
             
         }
         elseif($type == 'professsional_investors'){
-             
+            $html .= $this->professionInvHtml($submissionData,$investor);
         }
         elseif($type == 'advice_investors'){
-             
+            $html .= $this->adviceInvestorsHtml($submissionData,$investor);
         }
         elseif($type == 'elective_prof'){
-            
+            $html .= $this->getElectiveProfHtml($submissionData,$investor,$addData);
         }
         
 
@@ -1382,6 +1383,500 @@ public function highNetWorthHtml($highNetData,$investor){
     return $html;
 
 }
+
+
+
+public function professionInvHtml($professionInvData,$investor){
+    
+    $html = '';
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+              
+      <tr style="margin-bottom: 0; padding-bottom: 0;">
+      <td class="text-center primary-col" style="font-size: 18px; width: 100%; text-align: center;"><p style="font-size: 18px; font-weight: bold; text-align: center;">Statement of Certified Professional Investor </p></td>
+      </tr>
+      </table>';
+
+      $html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; background: #e5f5ff;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                    <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
+                         
+                            <img class="bg-background" src="'.url("img/pdf/02-people.png").'"  style="max-width:100%; height:auto; width: 60px; "  /><br>
+                            
+                                PROFESSIONAL INVESTOR
+                            
+                        
+                     </td>
+                     <td style="width: 70%; border:none;">
+                        <h4>Professional Investor</h4>
+                        <p style="font-size: 15px; margin-bottom: 5px;">A Professional Investor is an investor whom is not designated as a Retail (Restricted) Investor as per the FCA Conduct of Business Handbook https://fshandbook.info/FS/print/FCA/COBS/3 .  If you fall into one of the below categories then you will qualify as a professional investor. As a professional investor GrowthInvest is able to communicate with you directly in relation to investment business.</p>
+                        
+
+                        
+
+                     </td>
+                  </tr></table>';
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+    <tr style="margin-bottom: 0; padding-bottom: 0;">
+
+     <td style="width: 100%; border:none;">
+        <p>Investment professionals are exempt under Article 14 of the of the Financial Services and Markets Act 2000 (Promotion of Collective Investment Scheme) (Exemptions) Order 2001:</p>
+        <ol  style="list-style-type: lower-alpha; font-size: 14px;">
+            <li style="line-height: 16px;">  an authorised person;</li>
+            <li style="line-height: 16px;">  an exempt person where the communication relates to a controlled activity which is a regulated activity in relation to which the person is exempt;</li>
+            <li style="line-height: 16px;">  any other person—
+                <ol   style="list-style-type: lower-roman; font-size: 14px;">
+                    <li style="line-height: 16px;"> whose ordinary activities involve him in carrying on the controlled activity to which the communication relates for the purpose of a business carried on by him; or </li>
+                    <li style="line-height: 16px;"> who it is reasonable to expect will carry on such activity for the purposes of a business carried on by him; </li>
+                </ol>
+            </li>
+            <li style="line-height: 16px;">  a government, local authority (whether in the United Kingdom or elsewhere) or an international organisation;</li>
+            <li style="line-height: 16px;">  a person ("A") who is a director, officer or employee of a person ("B") falling within any of subparagraphs (a) to (d) where the communication is made to A in that capacity and where A’s responsibilities when acting in that capacity involve him in the carrying on by B of controlled activities.</li>
+        </ol>
+        
+
+        
+
+     </td>
+    </tr></table>';
+
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                     <td style="width: 100%; border:none;">
+                        
+                        
+
+                        <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">';
+
+
+                                if(isset($professionInvData['conditions']) && in_array('pi_check_1', $professionInvData['conditions'])){   
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                                }
+                                else{
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                                }      
+    $html.='
+                            </td>
+                            <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">';
+
+     
+                                if(isset($professionInvData['conditions']) && in_array('pi_check_1', $professionInvData['conditions'])){   
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                                }
+                                else{
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                                }     
+
+    $html.='
+                             </td>
+                             <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I wish to be treated as an professional investor.</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">';
+
+     
+
+                                if(isset($professionInvData['conditions']) && in_array('pi_check_2', $professionInvData['conditions'])){   
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                                }
+                                else{
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                                }   
+
+    $html.='
+                             </td>
+                             <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I have read and understand the risk warning.</p></td>
+                             </tr>
+                         </table>
+
+                        
+
+                     </td>
+                  </tr></table><br><br>';
+
+
+
+        $html .=' <br><b>Name: </b>'.$investor->first_name.' '.$investor->last_name;
+
+        $html .=' <br><b>Date: </b>'.date('d/m/Y');
+
+        
+        return $html;
+
+    }
+
+public function adviceInvestorsHtml($adviceInvData,$investor){
+    
+    $html = '';
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+              
+      <tr style="margin-bottom: 0; padding-bottom: 0;">
+      <td class="text-center primary-col" style="font-size: 18px; width: 100%; text-align: center;"><p style="font-size: 18px; font-weight: bold; text-align: center;">Statement of Certified Advised Investor</p></td>
+      </tr>
+      </table>';
+
+        $html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; background: #e5f5ff;">
+                      
+                      <tr style="margin-bottom: 0; padding-bottom: 0;">
+                        <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
+                             
+                                <img class="bg-background " src="'.url("img/pdf/06-ppl-circle.png").'"  style="max-width:100%; height:auto; width: 60px; " /><br>
+                                
+                                    ADVISED INVESTOR
+                                
+                            
+                         </td>
+                         <td style="width: 70%; border:none;">
+                            <h4>Advised Investor</h4>
+                            <p style="font-size: 15px; margin-bottom: 5px;">An advised investor is one that has been assessed and categorised by an FCA regulated company 
+                    and deemed suitable under COBS9 to receive financial promotions. As an advised investor you are aware 
+                    that you can seek advice from an authorised person who specialises in advising on unlisted shares and 
+                    unlisted debt securities.</p>
+
+                         </td>
+                      </tr></table>';
+
+        $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+        <tr style="margin-bottom: 0; padding-bottom: 0;">
+
+         <td style="width: 100%; border:none;">
+            <p style="font-size: 14px; margin-bottom: 5px;">Please provide details of the FCA regulated company through which you have been assessed and categorised. GrowthInvest will treat you as a Retail (Restricted) Investor until such time as the company is registered as a client and has provided categorisation documentation on your behalf. Please complete the below statement and questionnaire.</p>
+
+            <p style="font-size: 14px; margin-bottom: 5px;">I am a client of a firm that has assessed me as suitable to receive financial promotions. I accept that the investments to which the promotions relate may expose me to a significant risk of losing all of the money or other property invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.</p>
+
+         </td>
+        </tr></table>';
+
+
+
+
+
+        $financial_advisor_details = $adviceInvData['financial_advisor_info'];
+
+
+        if(!empty($financial_advisor_details)){
+
+            $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+                <tr style="margin-bottom: 0; padding-bottom: 0;">
+
+                 <td style="width: 100%; border:none;">
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 100%; vertical-align: top;">
+                         <h4 style="border-bottom: 1px solid #000; margin-bottom:0; padding-bottom: 0;">Financial Advisor details</h4><hr style="margin-top: 5px; margin-bottom: 5px;"></td>
+                         </tr>
+                     </table>
+
+                    <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Do you have a Financial Advisor or Wealth Manager (Authorised Person)</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.ucfirst($financial_advisor_details['havefinancialadvisor']).'</td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Are you receiving advice from an Authorised Person in relation to unlisted shares and unlisted debt securities?</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.ucfirst($financial_advisor_details['advicefromauthorised']).'</td>
+                         </tr>
+                     </table>';
+
+            
+
+
+
+            if(isset($financial_advisor_details['havefinancialadvisor'])){
+
+                $address = !isset($financial_advisor_details['address']) || is_null($financial_advisor_details['address'])?"":"<table style='width: 100%; margin-bottom: 0; padding-bottom: 0;' class='no-spacing' ><tr><td style='width: 100%;'>".$financial_advisor_details['address']."</td></tr></table>";
+                $address2= !isset($financial_advisor_details['address2']) || is_null($financial_advisor_details['address2'])?"":"<table style='width: 100%; margin-bottom: 0; padding-bottom: 0;' class='no-spacing' ><tr><td style='width: 100%;'>".$financial_advisor_details['address2']."</td></tr></table>"; 
+                $city =!isset($financial_advisor_details['city']) || is_null($financial_advisor_details['city'])?"":$financial_advisor_details['city'].",";
+                $location= !isset($financial_advisor_details['county']) || is_null($financial_advisor_details['county'])?"":"&nbsp;".$financial_advisor_details['county'].",";
+                $postcode= !isset($financial_advisor_details['postcode']) || is_null($financial_advisor_details['postcode'])?"":"&nbsp;".$financial_advisor_details['postcode']."";
+
+                $addressall="<div>".$address.$address2.$city.$location.$postcode."</div><br>";
+
+                if($financial_advisor_details['havefinancialadvisor']=='yes'){
+                    $html .='
+                    <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Company Name</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.$financial_advisor_details['companyname'].'</td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Address</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.$addressall.'</td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Telephone Number</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.$financial_advisor_details['telephone'].'</td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Principle contact</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.$financial_advisor_details['principlecontact'].'</td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Email</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.$financial_advisor_details['email'].'</td>
+                         </tr>
+                     </table>
+
+                    
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 60%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">FCA Number</p></td>
+                         <td style="width: 10%;"></td>
+                         <td style="Width: 30%; vertical-align: top; font-size: 14px;">'.$financial_advisor_details['fcanumber'].'</td>
+                         </tr>
+                     </table>';
+
+            }
+        }
+
+        $html .='  </td>
+                </tr></table>'; 
+
+        }
+
+        $html.='<div style="page-break-after:always;border:none;"></div>';
+
+        $html .='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+                <tr style="margin-bottom: 0; padding-bottom: 0;">
+
+                 <td style="width: 100%; border:none;">
+                 <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;">';
+
+                 
+                               if(isset($adviceInvData['conditions']) && in_array('ai_check_0', $adviceInvData['conditions'])){   
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                                }
+                                else{
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                                }   
+        $html .='  
+                         </td>
+                         
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold; font-size: 14px;">I am a client of a firm that has assessed me as suitable to receive financial promotions.</td>
+                         </tr>
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;"> ';
+ 
+
+
+                               if(isset($adviceInvData['conditions']) && in_array('ai_check_1', $adviceInvData['conditions'])){   
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                                }
+                                else{
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                                } 
+        $html .='        </td>
+                         
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold; font-size: 14px;">I accept that the investments to which the promotions relate may expose me to a significant risk of losing all of the money or other property invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.</td>
+                         </tr>
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;"> ';
+ 
+
+                            if(isset($adviceInvData['conditions']) && in_array('ai_check_2', $adviceInvData['conditions'])){   
+                                $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                            }
+                            else{
+                                $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                            } 
+
+        $html.='
+                         </td>
+                         
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold; font-size: 14px;">I have read and understand the risk warning.</td>
+                         </tr>
+                     </table>
+                 </td>
+                 </tr>
+                 </table><br>';
+
+
+
+
+        $html .=' <br><b>Name: </b>'.$investor->first_name.' '.$investor->last_name;
+
+        $html .=' <br><b>Date: </b>'.date('d/m/Y');
+
+        
+        return $html;
+
+    }
+
+    public function getElectiveProfHtml($retailData,$investor,$addData){
+        
+        $clientCategory = Defaults::find($addData['client_category_id']); 
+        $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
+
+        $elective_prof_investor_quiz_statement_declaration =  get_elective_prof_investor_quiz_statement_declaration(true);
+ 
+        $elective_professional_statement = $elective_prof_investor_quiz_statement_declaration['statement'];
+        $elective_professional_declaration = $elective_prof_investor_quiz_statement_declaration['declaration'];
+     
+        $html = '';
+
+        $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+                      
+        <tr style="margin-bottom: 0; padding-bottom: 0;">
+        <td class="text-center primary-col" style="font-size: 18px; width: 100%; text-align: center;"><p style="font-size: 18px; font-weight: bold; text-align: center;">Statement of Certified Elective Professional Investor </p></td>
+        </tr>
+        </table>';
+
+        $html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; background: #e5f5ff;">
+          
+          <tr style="margin-bottom: 0; padding-bottom: 0;">
+            <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
+                 
+                    <img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"  style="max-width:100%; height:auto; width: 60px; " /><br>
+                    
+                        ELECTIVE PROFESSIONAL INVESTOR
+                    
+                
+             </td>
+             <td style="width: 70%; border:none;">
+                <h4>Elective Professional Investor</h4>
+                <p style="font-size: 15px; margin-bottom: 5px;">
+                    If categorised as a Retail (Restricted) Investor, Sophisticated Investor or High Net Worth Individual 
+                    we are unable to conduct business with you via telephone or in person in relation to our investments.  
+                    However, if you chose to become an Elective Professional client and we deem you suitable then 
+                    you can engage directly with us in respect of investment business.
+                </p>
+
+                <p>An Elective Professional (Opt Up) Client is someone ordinarily a “Retail” client who wishes to be treated as a "Professional" category client as per the FCA handbook COBs <a href="https://fshandbook.info/FS/print/FCA/COBS/3" target ="_blank">https://fshandbook.info/FS/print/FCA/COBS/3</a>
+                    </p>
+                
+
+                
+
+             </td>
+          </tr></table>';
+
+          $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+          
+          <tr style="margin-bottom: 0; padding-bottom: 0;">
+             <td style="width: 100%; border:none;">
+               
+
+                <p>To enable us to categorise you as an Elective Professional Opt Up you must complete the following questionnaire. After this has been completed you must follow the instructions in the statement below.
+                    </p>
+                
+
+                
+
+             </td>
+          </tr></table>';
+
+ 
+        $html.='<table cellpadding="0" cellspacing="5" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: 14px;">';
+        $quest_count = 1;
+
+        foreach ($getQuestionnaire as   $getQuestion) {
+
+            if($quest_count==5){
+                        $html.='<tr style="margin-bottom: 0; padding-bottom: 0;">
+                            <td colspan="4"> <br/><br><br><br><br><br> </td>    
+                             
+                        </tr> ';
+                    }
+
+            $html.='<tr style="margin-bottom: 0; padding-bottom: 0;">
+            <td width="3%">'.$quest_count.'</td>    
+            <td colspan="3">'.$getQuestion->questions.'
+            </td>
+        </tr>';
+
+
+        foreach ($getQuestion->options as  $option) {
+            $quiz_option_selected = '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+            if($option->correct){
+                $quiz_option_selected =  ' <img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+            }
+            $html.='<tr>
+            <td width="3%"></td>
+            <td width="3%" >
+                '.$quiz_option_selected.'
+            </td>
+            <td width="2%">
+            </td>
+            <td width="92%">'.$option->label.'                                                                    
+            </td>
+        </tr>';  
+
+
+        }
+
+        $html.='<tr>
+                    <td coslpan="4">&nbsp;</td>
+                </tr>';
+
+        $quest_count++;                                                 
+
+        }
+        $html.='</table>';
+ 
+
+        $html.=$elective_professional_statement;
+ 
+        $html.=$elective_professional_declaration;        
+ 
+
+        $html .=' <div style="margin-bottom: 5px;"><b>Name: </b>'.$investor->display_name.'</div>';
+
+        $html .=' <div style="margin-bottom: 5px;"><b>Email ID: </b>'.$investor->user_email.'</div>';
+
+        $html .=' <div style="margin-bottom: 5px;"><b>Date: </b>'.date('d/m/Y').'</div>';
+
+        
+        return $html;
+    }
     
 
     
