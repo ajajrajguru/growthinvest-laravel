@@ -328,18 +328,19 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Client Investment Account Number</label>
-                            <input type="text" name="investment_account_number" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($investor->id) ? $investor->city :old('investment_account_number')  }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $investor->city}}</span>
+
+                            <input type="text" name="investment_account_number" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($investor->id) ? $investmentAccountNumber :old('investment_account_number')  }}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $investmentAccountNumber }}</span>
                         </div>
                     </div>
                 </div>
 
-                @if($investor->id && $investor->firm_id)
+                @if($investor->id)
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Platform Account Number</label>
-                               {{ $firmGICode }}
+                               {{ $investor->gi_code }}
 
 
                         </div>

@@ -53,20 +53,31 @@
                         </div>
 
 
-                        <h1 class="section-title font-weight-medium text-primary mb-0">Entrepreneurs</h1>
-                        <p class="text-muted">View All Business Owners on your Site</p>
+
+                        <h1 class="section-title font-weight-medium text-primary mb-0">Business Proposals/Funds</h1>
+                        <p class="text-muted">View All Business Proposals/Funds on your Site</p>
 
                         <h5 class="mt-2 mb-0">Selection Filters</h5>
                         <div class="p-3 bg-gray">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control fundmanagerSearchinput" id="firm_name">
+                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="firm_name">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
                                     </select>
+                                    <small>Select the firm whose business proposals/funds you need to view</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Type</label>
+                                    <select name="business_listings_type" class="form-control entrepreneurSearchinput" id="business_listings_type">
+                                         <option value="">All</option>                                    
+                                         <option value="proposal">Proposals</option>
+                                         <option value="fund">Funds</option>
+                                    </select>
+                                    <small>Select the type</small>
                                 </div>
                                
                             </div>
@@ -75,44 +86,53 @@
 
                         <div class="d-flex justify-content-end">
                             <div class="mt-3">
-                                <a href="{{ url('#')}}" class="btn btn-primary btn-sm">Add Business Owner</a>
+                                
                                 <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm download-entrepreneur-csv" >Download CSV</a>
                             </div>
                         </div>
 
                         <div class="table-responsive mt-3">
-                            <table id="datatable-entrepreneurs" class="table dataFilterTable table-hover table-striped-bg">
+                            <table id="datatable-enterpreneurs" class="table dataFilterTable table-hover table-striped-bg">
                                 <thead>
                                     <tr>
-                                         
+                                        <th class="w-search" style="width: 250px;">Logo</th>    
                                         <th class="w-search" style="width: 250px;">Name</th>
-                                        <th class="w-search">Email</th>                                        
-                                        <th class="w-search" style="width: 100px;" width="100">Firm </th>
-                                        <th class="w-search">Business Proposals</th>
-                                        <th class="w-search"> Registered Date </th>
-                                        <th class="w-search"> Source </th>
-                                        <th style="min-width: 100px;">Action</th>
+                                        <th class="w-search">Due Diligence</th>   
+                                        <th class="w-search">Created Date</th>                                        
+                                        <th class="w-search">Last Modified Date</th>                                        
+                                        <th class="w-search" style="width: 100px;" width="100">Firm (To Raise)</th>
+                                        <th class="w-search">Proposal/Fund Activity (Site wide)</th>
+                                        <th class="w-search"> Proposal/Fund Activity (Firm) </th>
+                                        <th class="w-search"> Status </th>                                        
                                     </tr>
                                 </thead>
                                 <tbody>
 
 
-                                    @foreach($entrepreneurs as $entrepreneur) 
-                                        @php
-                                        $source = "Self";
-                                        if($entrepreneur->registered_by!==$entrepreneur->id) 
-                                           $source = "Intermediary";                                          
+                                    @foreach($business_listings as $business_listing) 
                                         
-                                        @endphp
                                         <tr >
-                                            
-                                            <td><b>{{  title_case($entrepreneur->first_name.' '.$entrepreneur->last_name) }}</b></td>
-                                            <td><a class="investor_email" href="mailto: {{  $entrepreneur->email }}">{{  $entrepreneur->email }}</a></td>
-                                            <td>{{   (!empty($entrepreneur->firm))?$entrepreneur->firm->name:'' }}</td>
-                                            <td>{{   $entrepreneur->business}}</td>                                            
-                                            <td>{{   date('d/m/Y', strtotime($entrepreneur->created_at)) }}</td>
-                                            <td>{{$source}}</td>                                            
+                                            <td> </td>
+                                            <td><b>{{  title_case($business_listing->title) }} </b><br/>({{ $business_listing->type}})
+                                                <br/>
+                                                {{ (!empty($business_listing->owner_id)) ? $business_listing->owner->email:'' }}
+                                                
+                                            </td>
+                                            <td>  </td>
+                                            <td>{{ date('d/m/Y', strtotime($business_listing->created_at)) }}</td>
+                                            <td>{{ date('d/m/Y', strtotime($business_listing->updated_at)) }}</td>
                                             <td>
+                                                
+                                                {{  $business_listing->owner->firm['name']  }}<br/>&pound{{ $business_listing->target_amount  }}</td>
+                                            <td></td>
+                                            <td></td>                                                                                 
+                                            <td>
+                                                @php
+                                                 $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));  
+
+ 
+                                                @endphp
+                                                {{ $biz_status_display }}<br/>
                                                 <select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
                                                 <option value="edit">Edit Profile</option>
@@ -121,6 +141,8 @@
 
                                         </tr>
                                     @endforeach
+
+ 
 
                                 </tbody>
                             </table>

@@ -85,7 +85,7 @@
 
                     <ul class="progress-indicator">
                         <li class="completed">
-                            <a href="javascript:void(0)">Registration</a>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}">Registration</a>
                             <span class="bubble"></span>
                         </li>
                         <li class="active">
@@ -134,7 +134,7 @@
                                 <ul class="nav nav-tabs " role="tablist">
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link active" href="#tab-1" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(empty($investorCertification) || $activeCertificationData->slug == 'retail_restricted_investor' ) active @endif" href="#tab-1" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{ url('img/hand132.png')}}">
                                             </div>
@@ -145,7 +145,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-2" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'sophisticated_investor') active @endif" href="#tab-2" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/office-worker1.png')}}">
                                             </div>
@@ -156,7 +156,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-3" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'high_net_worth_individual') active @endif" href="#tab-3" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/coin.png')}}">
                                             </div>
@@ -167,7 +167,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-4" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'professional_investor') active @endif" href="#tab-4" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/group47.png')}}">
                                             </div>
@@ -178,7 +178,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-5" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'advised_investor') active @endif" href="#tab-5" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/staff1.png')}}">
                                             </div>
@@ -189,7 +189,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-6" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'elective_professional_investor') active @endif" href="#tab-6" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/money-bag1.png')}}">
                                             </div>
@@ -206,7 +206,7 @@
 
                     </div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fadein active" id="tab-1">
+                        <div role="tabpanel" class="tab-pane @if(empty($investorCertification) || $activeCertificationData->slug == 'retail_restricted_investor' ) active fadein @else fade @endif" id="tab-1">
                             @php
                             $clientCategory = $clientCategories->firstWhere('slug','retail_restricted_investor'); 
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
@@ -356,22 +356,18 @@
                                 </div>
                            </div>
 
-                           <div class="alert bg-gray certification-success d-none">
-                                <div class="pull-left l-30">                                                                                
-                                    <i class="icon icon-ok text-success"></i> Certified on                                           
-                                 <span class="date-rem">{{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}                                          
-                                    <a href="">(Click to download)</a>
-                                </span>&nbsp;                                            
-                                <span class="text-danger">
-                                    and valid for: a year                                            
-                                </span>                                                        
-                                </div>                
-                            </div>
+
+                           <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+                           
 
 
                         </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="tab-2">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'sophisticated_investor') active fadein @else fade @endif" id="tab-2">
                             <h4 class="my-3 text-primary">
                                 Sophisticated Investor
                             </h4>
@@ -496,9 +492,15 @@
                                     </div>
                                 </div>
                             </form>
+
+                             <div class="investor-certification">
+                                @if(!empty($investorCertification))
+                                {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                                @endif
+                               </div>
                         </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="tab-3">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'high_net_worth_individual') active fadein @else fade @endif" id="tab-3">
                             <h4 class ="my-3 text-primary">
                                 High Net Worth Individual
                             </h4>
@@ -597,8 +599,15 @@
                                     </div>
                                 </div>
                             </form>
+
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-4">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'professional_investor') active fadein @else fade @endif" id="tab-4">
                             <h4 class="my-3 text-primary">
                                 Professional Investor
                             </h4>
@@ -658,8 +667,15 @@
                                     </div>
                                 </div>
                             </div>
+                             
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane " id="tab-5">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'advised_investor') active fadein @else fade @endif" id="tab-5">
                             <h4 class="my-3 text-primary">
                                 Advised Investor
                             </h4>
@@ -826,8 +842,15 @@
                                 </div>
                             </div>
 
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
+
                         </div>
-                        <div role="tabpanel" class="tab-pane fadein " id="tab-6">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'elective_professional_investor') active fadein @else fade @endif" id="tab-6">
                             <h4 class="my-3 text-primary">
                                 Elective Professional Investor
                             </h4>
@@ -835,6 +858,11 @@
                             $clientCategory = $clientCategories->firstWhere('slug','elective_professional_investor'); 
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
                             $isElectiveProfInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
+
+                            $electiveProfInvestorQuizStatementDeclaration = getElectiveProfInvestorQuizStatementDeclaration(false);
+
+                            $electiveProfessionalStatement   = $electiveProfInvestorQuizStatementDeclaration['statement'];
+                            $electiveProfessionalDeclaration = $electiveProfInvestorQuizStatementDeclaration['declaration'];
                             @endphp
 
                             <p>An Elective Professional Investor (Opt Up) Client is someone ordinarily a “Retail” client who wishes to be treated as a “Professional” category client.</p>
@@ -898,72 +926,23 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingOne">
-                                        <a data-toggle="collapse" href="#epiStatement" role="button" class="collapsed">
-                                          Elective Professional Investor Statement
-                                          <i class="fa fa-lg fa-plus-square-o"></i>
-                                          <i class="fa fa-lg fa-minus-square-o"></i>
-                                        </a>
-                                    </div>
-
-                                    <div id="epiStatement" class="collapse " role="tabpanel" >
-                                        <div class="card-body">
-                                            <p><b>The statement below details the rights and protections afforded to Retail investors that are lost when the client opts up to be designated as a Professional.</b></p>
-                                            <p><b>Please confirm that you have read and understood the statement below:</b></p>
-                                            <p><b>STATEMENT</b></p>
-                                            <p>Financial Conduct Authority (“FCA”) Classification</p>
-                                            <p>On the basis of information we have about you, or you have given us, and with reference to the rules of the FCA (see http://fshandbook.info/FS/html/FCA/COBS/3/5), we have categorised you as a Professional client by reason of your expertise, experience and knowledge in relation to investing in our financial products and other investment opportunities.</p>
-                                            <p>Please note that your categorisation as an elective Professional client applies only for the purpose of enabling us or our affiliates to promote financial products and investment opportunities to you, and that you will not be treated as our client for any other purpose.</p>
-                                            <p>As a consequence of this categorisation, we are informing you that you will lose the protections afforded exclusively to Retail clients under the FCA rules. In particular:</p>
-                                            <ul class="disc">
-                                                <li>Communications and financial promotions made to you will not be subject to the detailed form and content requirements of the FCA’s rules, including those regarding costs and associated charges, that apply in the case of Retail clients.</li>
-                                                <li>When communicating with you, we are required to ensure that such communications are fair, clear and not misleading. However, we may take into consideration your status as a Professional client when complying with such requirements and in assessing whether any communication to you is likely to be understood by you and contains appropriate information for you to make an informed assessment of its subject matter;</li>
-                                                <li>We will not be restricted from promoting financial products and investment opportunities which are not regulated in the UK and in doing so need not warn you further as regards the protections you will lose;</li>
-                                                <li>Because participants in our financial products and investment opportunities are not (or will not on first participating be) Retail clients, we are able to agree with any fund investment that we do not owe a duty of best execution;</li>
-                                                <li>Because participants in our financial products and investment opportunities are not Retail clients, the detailed FCA rules on periodic statements are dis-applied. You will however still receive statements in accordance with the other constitutional documents;</li>
-                                                <li>In the event that we cease to provide investment advisory services, we are not required to ensure that any business which is outstanding is properly completed but we will nevertheless agree to do so; and</li>
-                                                <li>You will have no right of access to the UK’s Financial Ombudsman Service.</li>
-                                            </ul>Please read and sign the declaration below to confirm you have read and understand this written notice and wish to be treated as a Professional client.
-                                            <p>If you do not agree to the signing of this declaration, we are unable to categorise you as an Elective Professional client in conducting business with you in regard to the financial products and investment opportunities we wish to communicate and market to you.</p>
-                                            <p>Yours sincerely,</p>
-                                            <p>Daniel Rodwell,<br>
-                                            Managing Director<br>
-                                            GrowthInvest</p>
-
-                                            <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                {!!$electiveProfessionalStatement!!}
+                               
+                                <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
                             </div>
 
-                            <h4 class="my-3">
-                                Declaration
-                            </h4>
-                            <p>Declaration: Notice of Wish to be treated as a Professional client</p>
-                            <p>Under the EU’s Markets in Financial Instruments Directive (MiFID), I wish to be treated as an
-                                elective Professional client if, subject to your assessment of my expertise, experience, and
-                                knowledge of me you are reasonably assured, in light of the nature of the transactions or services
-                                envisaged, that I am capable of making my own investment decisions and understand the risks
-                                involved. In making your assessment I understand you may rely on information already in your
-                                possession and you may request further additional information from me if necessary.</p>
-                            <p>As a consequence of this assessment and classification as a Professional client I understand you
-                                will be able to promote various financial products and investment opportunities to me. I also
-                                understand you are required to obtain written acknowledgement from me that I have been provided
-                                with a written notice (as detailed in the above letter) in regards of me being treated as a
-                                Professional client.</p>
-                            <p>I warrant that I have the necessary expertise, experience and knowledge of making my own
-                                investment decisions and understand the risks involved in investing in the financial products and
-                                investment opportunities being marketed to me.</p>
-                            <p>I also confirm that I have read and understand the differences between the treatment of
-                                Professional and Retail clients and that I fully understand the protections and compensation
-                                rights that I may lose and the consequences of losing such protections.</p>
-                            <p>I am fully aware that it is up to me to keep the firm informed of any change that could
-                                affect my categorisation.</p>
-                            <p>On the basis of the above information I can confirm that the firm may treat me as a
-                                Professional client.</p>
+                            {!! $electiveProfessionalDeclaration !!}
                            <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+
+                            <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
+ 
 
                     </div>
 

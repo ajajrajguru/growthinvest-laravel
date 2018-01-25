@@ -67,6 +67,12 @@ class User extends Authenticatable
         return $addionalData;
     }
 
+    public function userInvestmentAccountNumber()
+    {
+        $addionalData = $this->userData()->where('data_key','p1code')->first();
+        return $addionalData;
+    }
+
     public function userIntermidaiteCompInfo()
     {
         $addionalData = $this->userData()->where('data_key','intermediary_company_info')->first();
@@ -145,7 +151,7 @@ class User extends Authenticatable
                             $join->on('model_has_roles.role_id', '=', 'roles.id')
                                 ->whereIn('roles.name', ['business_owner']);
                         })
-                        ->join('business_listings', function ($join) {
+                        ->leftJoin('business_listings', function ($join) {
                                                     $join->on('users.id', '=', 'business_listings.owner_id')
                                                     ->whereIn('business_listings.type', ['proposal'])    ;                                                      
                                                 })
@@ -193,6 +199,10 @@ class User extends Authenticatable
 
 
         return $users; 
+    }
+
+    public function document(){
+        return $this->morphMany( 'App\DocumentFile', 'object');
     }
 
 

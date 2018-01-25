@@ -170,11 +170,12 @@ $(document).ready ->
     $('#change_pwd').removeClass('d-none');
     $('.setpassword-cont').addClass('d-none');
 
-
-  if $('form').length
-    $('form').parsley().on 'form:success', ->
-      $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
-      $(this)[0].$element.find('.save-btn').addClass 'running'
+ 
+  # if $('form').length
+  #   $('form').parsley().on 'form:success', ->
+  #     $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
+  #     $(this)[0].$element.find('.save-btn').addClass 'running'
+ 
 
 
   $('[data-toggle="popover"]').popover()
@@ -327,6 +328,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
           
 
   $('.save-sophisticated-Investor').click ->
@@ -366,6 +368,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
 
   $('.save-high-net-worth').click ->
     btnObj = $(this)
@@ -404,6 +407,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
 
 
   $('.save-professsional-inv').click ->
@@ -432,6 +436,7 @@ $(document).ready ->
         $(".save-certification").removeClass('d-none')
         btnObj.addClass('d-none')
         $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+        $('.investor-certification').html(data.html)
 
   $('.save-advised-investor').click ->
     btnObj = $(this)
@@ -477,6 +482,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
 
           
   $('.elective-prof-inv-btn').click ->
@@ -520,5 +526,90 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
  
 
+
+
+  entrepreneurTable = $('#datatable-entrepreneurs').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/entrepreneurs/get-entrepreneurs'
+      type: 'post'
+      data: (data) ->
+        filters = {}
+        filters.firm_name = $('select[name="firm_name"]').val()
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [        
+      { 'data': 'name' }
+      { 'data': 'email' }
+      { 'data': 'firm'}
+      { 'data': 'business' }         
+      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'source', "orderable": false}
+      { 'data': 'action' , "orderable": false}
+    ])
+
+
+  $('.entrepreneurSearchinput').change ->
+    entrepreneurTable.ajax.reload()
+    return
+
+  $('.download-entrepreneur-csv').click ->
+    firm_name = $('select[name="firm_name"]').val() 
+    window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name="+firm_name);
+
+
+
+  fundmanagerTable = $('#datatable-fundmanagers').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/fundmanagers/get-fundmanagers'
+      type: 'post'
+      data: (data) ->
+        filters = {}
+        filters.firm_name = $('select[name="firm_name"]').val()
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [        
+      { 'data': 'name' }
+      { 'data': 'email' }
+      { 'data': 'firm'}
+      { 'data': 'business' }         
+      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'source', "orderable": false}
+      { 'data': 'action' , "orderable": false}
+    ])
+
+
+  $('.fundmanagerSearchinput').change ->
+    fundmanagerTable.ajax.reload()
+    return
+
+  $('.download-fundmanager-csv').click ->
+    firm_name = $('select[name="firm_name"]').val() 
+    window.open("/backoffice/fundmanager/export-fundmanagers?firm_name="+firm_name);
+ 
