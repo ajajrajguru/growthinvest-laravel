@@ -12,3 +12,5 @@ yarn-error.log
 .env
 /log
 public/bower_components/
+public/export-csv
+public/userdocs

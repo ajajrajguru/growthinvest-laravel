@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Session;
 
+use Spipu\Html2Pdf\Html2Pdf;
+
 //Enables us to output flash messaging
 
 class InvestorController extends Controller
@@ -426,6 +428,7 @@ class InvestorController extends Controller
 
     public function clientCategorisation($giCode)
     {
+      
         $investor = User::where('gi_code', $giCode)->first();
 
         if (empty($investor)) {
@@ -442,9 +445,11 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
         
         $data['investor']    = $investor;
+        $data['countyList']  = getCounty();
+        $data['countryList'] = getCountry();
         $data['clientCategories']    = $clientCategories;
         $data['certificationTypes']    = certificationTypes();
-        $data['investorCertification']    = $investor->getActiveCertification(); 
+        $data['investorCertification']    = $investor->getActiveCertification();  
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Add Investor : Client Categorisation';
         $data['mode']        = 'view';
@@ -471,12 +476,29 @@ class InvestorController extends Controller
         
 
         $details = [];
+        $addData = [];
         if($requestData['save-type'] == 'retail'){
             $details = $this->getRetailData($requestData);
+            $addData = ['client_category_id'=>$requestData['client_category_id']];
         }
         elseif($requestData['save-type'] == 'sophisticated'){
             $details = $this->getSophisticatedData($requestData);
+            
         }
+        elseif($requestData['save-type'] == 'high_net_worth'){
+            $details = $this->getHighNetWorthData($requestData);
+        }
+        elseif($requestData['save-type'] == 'professsional_investors'){
+            $details = $this->getProfessionalInvData($requestData);
+        }
+        elseif($requestData['save-type'] == 'advice_investors'){
+            $details = $this->getAdviceInvestorsData($requestData);
+        }
+        elseif($requestData['save-type'] == 'elective_prof'){
+            $details = $this->getElectiveProfData($requestData);
+        }
+
+       $this->generateInvestorCertificationPdf($requestData['save-type'],$details,$investor,$addData);
 
         $hasCertification = $investor->userCertification()->where('certification_default_id',$requestData['client_category_id'])->first();
         if(empty($hasCertification)){
@@ -489,7 +511,9 @@ class InvestorController extends Controller
         $hasCertification->certification = $requestData['certification_type'];;
         $hasCertification->active = 1;
         $hasCertification->details = $details;
-        $hasCertification->save(); 
+        $hasCertification->save();
+
+         
 
         if(!$investor->hasRole('investor')){
             $investor->removeRole('yet_to_be_approved_investor');
@@ -501,11 +525,13 @@ class InvestorController extends Controller
     }
 
     public function getRetailData($requestData){
-        $retailCkStr = $requestData['input_name'];
+        $data = [];
+        $retailCkStr = $requestData['conditions'];
         $retailCkExp = explode(',', $retailCkStr);
-        $retailCk['conditions'] = array_filter($retailCkExp);
+        $data['conditions'] = array_filter($retailCkExp);
+        $data['quiz_answers'] = $requestData['quiz_answers'];
 
-        return $retailCk;
+        return $data;
     }
 
     public function getSophisticatedData($requestData){ 
@@ -521,71 +547,842 @@ class InvestorController extends Controller
         return $data;
     }
 
+    public function getHighNetWorthData($requestData){ 
+        $data = [];
+        $termsStr = $requestData['terms'];
+        $termsExp = explode(',', $termsStr);
+        $data['terms'] = array_filter($termsExp);
+
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+
+        return $data;
+    }
+
+    public function getProfessionalInvData($requestData){ 
+        $data = [];
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+
+        return $data;
+    }
+
+    public function getAdviceInvestorsData($requestData){ 
+        $data = [];
+        $conditionStr = $requestData['conditions'];
+        $conditionExp = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
+        $data['financial_advisor_info'] = $requestData['financial_advisor_info'];
+
+        return $data;
+    }
+
+    public function getElectiveProfData($requestData){
+        $data = [];
+        $data['quiz_answers'] = $requestData['quiz_answers'];
+        $data['investor_statement'] = $requestData['investor_statement'];
+
+        return $data;
+    }
+
+    public function generateInvestorCertificationPdf($type,$submissionData,$investor,$addData=[]){
+
+        $args= array();
+        $header_footer_start_html = $this->getHeaderPageMarkup($args);
+        
+        $html='<style type="text/css"></style>'.$header_footer_start_html;
+        $html.='<style>
+                .w100per {
+                  width:100%;
+                }
+
+                .img-sec {
+                    background-color: #1C719C;
+                    color: #fff;
+                    text-align: center;
+                }
+
+                .text-center {
+                    text-align: center;
+                }
+
+                .primary-col {
+                    color: #1C719C;
+                }
+
+                p {
+                    font-size: 15px;
+                }
+                </style>';
+
+
+         
+        if($type == 'retail'){
+            $html .= $this->retailInvestorsHtml($submissionData,$investor,$addData);
+        }
+        elseif($type == 'sophisticated'){
+            $html .= $this->sophisticatedCertificationHtml($submissionData,$investor);
+            
+        }
+        elseif($type == 'high_net_worth'){
+            $html .= $this->highNetWorthHtml($submissionData,$investor);
+            
+        }
+        elseif($type == 'professsional_investors'){
+             
+        }
+        elseif($type == 'advice_investors'){
+             
+        }
+        elseif($type == 'elective_prof'){
+            
+        }
+        
+
+        $html= str_replace('background-color:transparent', '', $html);
+
+        $html= str_replace('transparent', '#ffffff', $html);
+
+        $html= str_replace('background-color:#a9d0f5', '', $html);
+
+        $html .="</page>";
+
+        $filename=uniqid("ab1234cde_folder1_a932_");
+
+        $destination_dir = public_path().'/userdocs/';
+
+        if (!file_exists($destination_dir)){
+            mkdir($destination_dir);
+        }
+
+        $output_link=$destination_dir.'/'.$filename.'.pdf';
+
+        $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
+        $html2pdf->pdf->SetDisplayMode('fullpage');
+
+        $html2pdf->writeHTML($html);
+        // $html2pdf->output();
+        $html2pdf->output($output_link,'F');
+
+    }
+
+    public function getHeaderPageMarkup($args){
+
+     
+    $backtop = isset($args['backtop'])?$args['backtop']:"28mm";    
+    $backbottom = isset($args['backbottom'])?$args['backbottom']:"14mm";
+    $backleft = isset($args['backleft'])?$args['backleft']:"14mm";
+    $backright = isset($args['backright'])?$args['backright']:"14mm";
+
+    $header_footer_start_html ='<page  ';
+    if(isset($args['hideheader'])){
+        $header_footer_start_html.='  hideheader="'.$args['hideheader'].'" ';
+    }
+
+
+    if(isset($args['hidefooter'])){
+        $header_footer_start_html.='  hidefooter="'.$args['hidefooter'].'" ';
+    }
+
+    $header_footer_start_html.=' backtop="'.$backtop.'" backbottom="'.$backbottom.'" backleft="'.$backleft.'"  backright="'.$backleft.'" style="font-size: 12pt">
+    <page_header>
+        <table style="border: none; background-color:#FFF; margin:0;"  class="w100per"  >
+            <tr>
+                <td style="text-align: left;"  class="w100per">
+                  <img src="'.url("img/pdf/header-edge-main-cert.png").'" class="w100per"   />
+                </td>                 
+            </tr>
+        </table>
+    </page_header>
+    <page_footer>
+        <table style="border: none; background-color:#FFF; width: 100%;  "  >
+            <tr>
+                <td style="text-align:center;"  class="w100per" >
+                  <img src="'.url("img/pdf/footer_ta_pdf-min.png").'" class="w70per"  style="width: 90%;"/>
+                </td>                
+            </tr>
+            <tr>
+                <td style="text-align: center;    width: 100%">page [[page_cu]]/[[page_nb]]</td> 
+            </tr>
+        </table>
+    </page_footer>';
+
+    return $header_footer_start_html;
+
+}
+
+public function sophisticatedCertificationHtml($sophisticatedData,$investor){
+
+ 
+    $html = '';
+
+    $sophisticated_option0_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_0', $sophisticatedData['terms']))? '<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>' : '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>'; 
+    $sophisticated_option1_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_1', $sophisticatedData['terms']))? '<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>' : '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>'; 
+    $sophisticated_option2_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_2', $sophisticatedData['terms']))? '<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>' : '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>'; 
+    $sophisticated_option3_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_3', $sophisticatedData['terms']))? '<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>' : '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>'; 
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+              <td class="text-center primary-col" style="font-size: 18px; width: 100%; text-align: center;"><p style="font-size: 18px; font-weight: bold; text-align: center;">Statement of Certified Sophisticated Investor </p></td>
+              </tr>
+              </table>';
+    $html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; background: #e5f5ff;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                    <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
+                         
+                            <img class="bg-background" src="'.url("img/pdf/05-kaka.png").'"  style="max-width:100%; height:auto; width: 60px;" /><br>
+                            
+                                SOPHISTICATED INVESTOR
+                            
+                        
+                     </td>
+                     <td style="width: 70%; border:none;">
+                        <h4>Sophisticated Investor</h4>
+                        <p style="font-size: 15px; margin-bottom: 5px;">You can be considered a Sophisticated Investor if any of the following applies;</p>
+                        
+
+                        <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">You have been a member of a network or syndicate of business angel for at least six months</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">You have made more than one investment in an unlisted company in the last two years</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">You have worked in the private equity SME finance sector in the last two years</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">You have been a director of a company with annual turnover in excess of £1m in the last two years</p></td>
+                             </tr>
+                         </table>
+
+                     </td>
+                  </tr></table>';
+
+                  $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                    <td style="width: 100%;">
+                         
+                            &nbsp;
+                            
+                        
+                     </td>
+                     
+                  </tr></table>';
+
+    $html.='<table cellpadding="0" cellspacing="0" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                  <td style="width: 100%;">
+                  
+
+                  <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+
+                        <tr>
+                             <td colspan="2" style="width: 100%; font-size: 15px;">
+                             I qualify as a Sophisticated investor and thus exempt under article 50(A) of the Financial Services and Markets Act 2000 after signing this prescribed template with relevant risk warnings and I meet at least one of the following criteria.
+                             </td>
+                         </tr>
+                        
+                        
+
+
+                         <tr>
+                         <td style="Width: 5%;">'.$sophisticated_option0_checked.'</td>
+                         <td style="Width: 95%; font-size: 14px; margin-bottom: 20px;">I have been a member of a network or syndicate of business angels for at least the six months preceding the date of the certificate</td>
+                         </tr>
+
+                         
+
+                        <tr>
+                         <td style="Width: 5%;">'.$sophisticated_option1_checked.'</td>
+                         <td style="Width: 95%; font-size: 14px;">I have made more than one investment in an unlisted company in the two years preceding that date</td>
+                         </tr>
+
+                         
+
+                         <tr>
+                         <td style="Width: 5%;">'.$sophisticated_option2_checked.'</td>
+                         <td style="Width: 95%; font-size: 14px;">I have worked, in the two years preceding that date, in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises</td>
+                         </tr>
+
+                         
+
+                         <tr>
+                         <td style="Width: 5%;">'.$sophisticated_option3_checked.'</td>
+                         <td style="Width: 95%; font-size: 14px;">I have been, in the two years preceding that date, a director of a company with an annual turnover of at least £1 million</td>
+                         </tr>
+
+                         </table>
+            
+
+                  </td>
+                  </tr></table>';
+
+    $html.='<table cellpadding="0" cellspacing="0" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                  <td style="width: 100%;">
+                  
+
+                  <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+
+                        <tr>
+                             <td style="width: 100%;">
+                             <p style="font-size: 15px; margin-bottom: 5px;">The financial products that are covered in the exemptions (articles 48 and 50A) only apply to certain types of investment:</p>
+                            
+                            <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                                 <tr>
+                                 <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                                 <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Shares or stock in unlisted companies</p></td>
+                                 </tr>
+                             </table>
+
+                            <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                                 <tr>
+                                 <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                                 <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px; margin-top: 0; padding-top:0;">Collective investment schemes, where the underlying investment is in unlisted company shares or stock</p></td>
+                                 </tr>
+                             </table>
+
+                             <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                                 <tr>
+                                 <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10px; padding-top:0;">.</p></td>
+                                 <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px; margin-top: 0; padding-top:0;">Options, futures and contracts for differences that relate to unlisted shares or stock.</p></td>
+                                 </tr>
+                             </table>
+
+                             </td>
+                         </tr>
+                        
+                    </table>
+            
+
+                  </td>
+                  </tr></table><br>';
+
+    $html.='<table cellpadding="0" cellspacing="1" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+
+
+        <tr>
+             <td style="width: 100%;">
+             <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                 <tr>
+                 <td style="Width: 5%; vertical-align: top;">';
+ 
+                                if(isset($sophisticatedData['conditions']) && in_array('si_check_0', $sophisticatedData['conditions'])){   
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                                }
+                                else{
+                                    $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                                }    
+
+    $html.='     </td>
+                 <td style="Width: 95%; vertical-align: top;"><p style="font-size: 14px; font-weight: bold; margin-top: 0; padding-top:0;">I accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</p></td>
+                 </tr>
+             </table>
+
+             <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                 <tr>
+                 <td style="Width: 5%; vertical-align: top;">';
+
+                            if(isset($sophisticatedData['conditions']) && in_array('si_check_1', $sophisticatedData['conditions'])){   
+                                $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                            }
+                            else{
+                                $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                            }    
+
+    $html.='    </td>
+                 <td style="Width: 95%;  vertical-align: top;"><p style="font-size: 14px; font-weight: bold; margin-top: 0; padding-top:0;">I wish to be treated as a sophisticated investor and have a certificate that can be made available for presentation by my accountant or Financial Adviser or lawyer (on request).</p></td>
+                 </tr>
+             </table>
+
+             <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                 <tr>
+                 <td style="Width: 5%; vertical-align: top;">';
+
+                            if(isset($sophisticatedData['conditions']) && in_array('si_check_2', $sophisticatedData['conditions'])){   
+                                $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                            }
+                            else{
+                                $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                            }  
+    $html.='     </td>
+                 <td style="Width: 95%;  vertical-align: top;"><p style="font-size: 14px; margin-top: 0; padding-top:0; font-weight: bold;">I have read and understand the risk warning.</p></td>
+                 </tr>
+             </table>
+             
+            
+             </td>
+         </tr>
+        
+    </table>';
+
+
+
+    $html .=' <br><b>Name: </b>'.$investor->first_name.' '.$investor->last_name;
+
+    $html .=' <br><b>Date: </b>'.date('d/m/Y');
+
+    
+    return $html;
+
+}
+
+
+public function retailInvestorsHtml($retailData,$investor,$addData){
+    $clientCategory = Defaults::find($addData['client_category_id']); 
+    $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
+ 
+    $html = '';
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+              <td class="text-center primary-col" style="font-size: 18px; width: 100%; text-align: center;"><p style="font-size: 18px; font-weight: bold; text-align: center;">Statement of Certified Retail (Restricted) Investor </p></td>
+              </tr>
+              </table>';
+
+
+$html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; background: #e5f5ff;">
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+                <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
+                     
+                        <img class="bg-background" src="'.url("img/pdf/03-money-hand.png").'" style="max-width:100%; height:auto; width: 60px;"><br>
+                        
+                            RETAIL (RESTRICTED) INVESTOR
+                        
+                    
+                 </td>
+                 <td style="width: 70%; border:none;">
+                    <h4>Retail (Restricted) Investor Statement</h4>
+                    <p style="font-size: 15px; margin-bottom: 5px;">Retail (restricted) investors must declare that they are not investing more than 10% of their net assets (including savings, stocks, ISAs, bonds and property; excluding your primary residence) into unquoted companies as a result of using GrowthInvest.</p>
+                    
+
+                    
+
+                 </td>
+              </tr></table>';
+
+              
+
+$html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; ">
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+               <td style="width: 100%; border:none;">
+
+               <p style="font-size: 15px; margin-bottom: 5px;">I make this statement so that I can receive promotional communications relating to non-readily realisable securities as a retail (restricted) investor. I declare that I qualify as a retail (restricted) investor because:</p>
+               <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                     <tr>
+                     <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                     <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">In the preceding twelve months, I have not invested more than 10% of my net assets in non-readily realisable securities; and </p></td>
+                     </tr>
+                 </table>
+
+                <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                     <tr>
+                     <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                     <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I undertake that in the next twelve months I will not invest more than 10% of my net assets in non-readily realisable securities.</p></td>
+                     </tr>
+                 </table>
+
+                
+
+                 <p style="font-size: 15px; margin-bottom: 5px;">Net assets for these purposes do not include:</p>
+                
+
+                 
+
+                 <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                     <tr>
+                     <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                     <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">The property which is my primary residence or any money raised through a loan secured on that property;&nbsp;</p></td>
+                     </tr>
+                 </table>
+
+                <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                     <tr>
+                     <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                     <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Any rights of mine under a qualifying contract of insurance; OR </p></td>
+                     </tr>
+                 </table>
+
+                 <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                     <tr>
+                     <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                     <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Any benefits (in the form of pensions or otherwise) which are payable on the termination of my service or on my death or retirement and to which I am (or my dependants are), or may be entitled.</p></td>
+                     </tr>
+                 </table>
+
+               </td>
+              </tr>
+              </table>';
+
+$html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; ">
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+               <td style="width: 100%; border:none;">
+                    
+
+
+               </td>
+               </tr>
+               </table>';
+
+ 
+
+
+$html.='<table cellpadding="0" cellspacing="5" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: 14px;">';
+        $quest_count = 1;
+
+        foreach ($getQuestionnaire as $getQuestion) {
+
+            if($quest_count==4){
+                $html.='<tr style="margin-bottom: 0; padding-bottom: 0;">
+                    <td colspan="4"> <br/><br><br><br> </td>    
+                     
+                </tr> ';
+            }
+
+
+            $html.='<tr style="margin-bottom: 0; padding-bottom: 0;">
+            <td width="3%">'.$quest_count.'</td>    
+            <td colspan="3">'.$getQuestion->questions.'
+            </td>
+        </tr>';
+
+
+        foreach ($getQuestion->options as  $option) {
+
+            $quiz_option_selected = '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+            if($option->correct){
+                $quiz_option_selected =  ' <img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+            }
+            $html.='<tr style="margin-bottom: 0; padding-bottom: 0;">
+            <td width="3%"></td>
+            <td width="3%">
+                '.$quiz_option_selected.'
+            </td>
+            <td width="2%">
+            </td>
+            <td width="92%">'.$option->label.'</td>
+
+
+        </tr> ';  
+
+
+    }  
+     $html.='<tr>
+                <td>&nbsp;</td>
+            </tr>';
+
+
+
+    $quest_count++;                                                 
+
+}
+$html.='</table>';
+
+$html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+                 <td style="width: 100%; border:none;">
+                    
+                    
+
+                    <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;">';
+
+                        if(isset($retailData['conditions']) && in_array('ri_check_1', $retailData['conditions'])){   
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                        }
+                        else{
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                        }      
+$html.='
+                         </td>
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I  accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;">';
+
+                        if(isset($retailData['conditions']) && in_array('ri_check_2', $retailData['conditions'])){   
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                        }
+                        else{
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                        }   
+
+$html.='
+                         </td>
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I wish to be treated as a Retail (Restricted) Investor.</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;">';
+
+
+                        if(isset($retailData['conditions']) && in_array('ri_check_3', $retailData['conditions'])){   
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                        }
+                        else{
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                        }   
+$html.='
+                         </td>
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I have read and understand the risk warning.</p></td>
+                         </tr>
+                     </table>
+
+                    
+
+                 </td>
+              </tr></table><br><br>';
+
+
+
+    $html .=' <br><b>Name: </b>'.$investor->first_name.' '.$investor->last_name;
+
+    $html .=' <br><b>Date: </b>'.date('d/m/Y');
+
+    
+    return $html;
+
+}
+
+
+public function highNetWorthHtml($highNetData,$investor){
+    
+    $highnetworth_option0_checked = (isset($highNetData['terms']) && in_array('sic_option_0', $highNetData['terms']))? '<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>' : '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>'; 
+    $highnetworth_option1_checked = (isset($highNetData['terms']) && in_array('sic_option_1', $highNetData['terms']))? '<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>' : '<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>'; 
     
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    $html = '';
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+              
+              <tr style="margin-bottom: 0; padding-bottom: 0;">
+              <td class="text-center primary-col" style="font-size: 18px; width: 100%; text-align: center;"><p style="font-size: 18px; font-weight: bold; text-align: center;">Statement of Certified High Net Worth Individual</p></td>
+              </tr>
+              </table>';
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    $html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; background: #e5f5ff;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                    <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
+                         
+                            <img class="bg-background" src="'.url("img/pdf/01-piggybank.png").'"  style="max-width:100%; height:auto; width: 60px;" /><br>
+                            
+                                HIGH NET WORTH INDIVIDUALS
+                            
+                        
+                     </td>
+                     <td style="width: 70%; border:none;">
+                        <h4>High Net Worth Individuals</h4>
+                        <p style="font-size: 15px; margin-bottom: 5px;">High Net-Worth Individuals ("HNWI") are exempt under article 48 of the FSMA 2000 if they have signed a prescribed template with relevant risk warnings that they have over £100 000 p.a income and net assets excluding primary residence of over £250,000</p>
+                        
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+                        
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+                     </td>
+                  </tr></table>';
+
+                  $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                    <td style="width: 100%;">
+                            &nbsp;
+                     </td>
+                  </tr></table>';
+
+    $html.='<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; ">
+
+                <tr style="margin-bottom: 0; padding-bottom: 0;">
+
+                     <td style="width: 100%; border:none;">
+                     <p style="margin-bottom: 5px; font-size: 15px;">
+                        I am a certified high net worth individual because at least one of the following applies:
+                        </p>
+                     </td>
+                  </tr>
+
+                <tr style="margin-bottom: 0; padding-bottom: 0;">
+
+                     <td style="width: 100%; border:none;">
+                        <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                                <td style="Width: 5%;">'.$highnetworth_option0_checked.'</td>
+                                <td style="Width: 95%; font-size: 14px; margin-bottom: 20px;"> I had, during the financial year immediately preceding the date below, an annual income to the value of £100,000 or more;</td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%;">'.$highnetworth_option1_checked.'</td>
+                            <td style="Width: 95%; font-size: 14px;">I held, throughout the financial year immediately preceding the date below, net assets to the value of £250,000 or more. Net assets for these purposes do not include:</td>
+                             </tr>
+                         </table>
+
+                         
+                     </td>
+                  </tr>
+
+
+
+                <tr style="margin-bottom: 0; padding-bottom: 0;">
+                     <td style="width: 100%; border:none;">
+                        <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">(i)</td>
+                             <td style="Width: 95%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">The property which is my client\'s primary residence or any loan secured on that residence;</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">(ii)</td>
+                             <td style="Width: 95%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Any rights of my client\'s are under a qualifying contract of insurance within the meaning of the Financial Services and Markets Act 2000 (Regulated Activities) Order 2001; or</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">(iii)</td>
+                             <td style="Width: 95%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Any benefits (in the form of pensions or otherwise) which are payable on the termination of my client service or on his/her death or retirement and to which he/she (or dependants are), or may be entitled.</p></td>
+                             </tr>
+                         </table>
+                     </td>
+                  </tr>
+                  
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                    
+                     <td style="width: 100%; border:none;">
+                        
+                        <p style="font-size: 15px; margin-bottom: 5px;">By agreeing to be categorised as a HNWI, you agree to be communicated financial promotions of certain types of investments, principally;</p>
+                        
+
+                        <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Shares or stock in unlisted companies</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Collective investment schemes, where the underlying investment is in unlisted company shares or stock</p></td>
+                             </tr>
+                         </table>
+
+                         <table style="width: 100%; margin-bottom: 0; padding-bottom: 0; margin-left: 15px;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 3%; vertical-align: top; font-weight: bold;"><p style="font-size: 20px; margin-top: -10; padding-top:0;">.</p></td>
+                             <td style="Width: 97%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">Options, futures and contracts for differences that relate to unlisted shares or stock</p></td>
+                             </tr>
+                         </table>
+                     </td>
+                  </tr>
+
+                  <tr style="margin-bottom: 0; padding-bottom: 0;">
+                     <td style="width: 100%; border:none;">
+                        <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                             <tr>
+                             <td style="Width: 5%; vertical-align: top;">';
+
+                        if(isset($highNetData['conditions']) && in_array('hi_check_0', $highNetData['conditions'])){   
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                        }
+                        else{
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                        }             
+
+            $html.='    
+                        </td>
+                        <td style="Width: 95%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0; font-weight: bold;">I accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;">';
+
+
+                        if(isset($highNetData['conditions']) && in_array('hi_check_1', $highNetData['conditions'])){   
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                        }
+                        else{
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                        }   
+
+                $html.='</td>
+                         <td style="Width: 95%; vertical-align: top;"><p style="font-size: 14px;margin-top: 0; padding-top:0; font-weight: bold;">I wish to be treated as a HNWI and have a certificate that can be made available for presentation by my accountant or lawyer (on request).</p></td>
+                         </tr>
+                     </table>
+
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
+                         <tr>
+                         <td style="Width: 5%; vertical-align: top;">';
+
+     
+                        if(isset($highNetData['conditions']) && in_array('hi_check_2', $highNetData['conditions'])){   
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-tick.jpg").'"/>';
+                        }
+                        else{
+                            $html.='<img class="bg-background" src="'.url("img/pdf/cert-untick.jpg").'"/>';
+                        }   
+
+
+
+                $html.=' </td>
+                         <td style="Width: 95%; vertical-align: top; font-weight: bold;"><p style="font-size: 14px;margin-top: 0; padding-top:0;">I have read and understand the risk warning.</p></td>
+                         </tr>
+                     </table>
+                 </td>
+              </tr>
+              </table><br><br>';
+
+
+
+    $html .=' <br><b>Name: </b>'.$investor->first_name.' '.$investor->last_name;
+
+    $html .=' <br><b>Date: </b>'.date('d/m/Y');
+
+    
+    return $html;
+
+}
+    
+
+    
 }
