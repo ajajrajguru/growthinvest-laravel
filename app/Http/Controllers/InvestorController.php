@@ -300,6 +300,7 @@ class InvestorController extends Controller
         $data['countryList'] = getCountry();
         $data['investor']    = $investor;
         $data['firms']       = $firms;
+        $data['investmentAccountNumber'] = '';
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Add Investor';
         $data['mode']        = 'edit';
