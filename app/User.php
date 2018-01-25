@@ -201,5 +201,9 @@ class User extends Authenticatable
         return $users; 
     }
 
+    public function document(){
+        return $this->morphMany( 'App\DocumentFile', 'object');
+    }
+
 
 }

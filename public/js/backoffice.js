@@ -197,10 +197,6 @@
       $('#change_pwd').removeClass('d-none');
       return $('.setpassword-cont').addClass('d-none');
     });
-    $('form').parsley().on('form:success', function() {
-      $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none');
-      return $(this)[0].$element.find('.save-btn').addClass('running');
-    });
     $('[data-toggle="popover"]').popover();
     $('#giMenu').mmenu({
       navbar: {
@@ -366,7 +362,8 @@
             $(".retail-quiz-btn").addClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            return $('.investor-certification').html(data.html);
           }
         });
       }
@@ -412,7 +409,8 @@
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            return $('.investor-certification').html(data.html);
           }
         });
       }
@@ -457,7 +455,8 @@
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            return $('.investor-certification').html(data.html);
           }
         });
       }
@@ -490,7 +489,8 @@
           $('.elective-prof-inv-btn').removeClass('d-none');
           $(".save-certification").removeClass('d-none');
           btnObj.addClass('d-none');
-          return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          return $('.investor-certification').html(data.html);
         }
       });
     });
@@ -539,7 +539,8 @@
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            return $('.investor-certification').html(data.html);
           }
         });
       }
@@ -587,7 +588,8 @@
             $(".elective-prof-inv-quiz-btn").addClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            return $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            return $('.investor-certification').html(data.html);
           }
         });
       }

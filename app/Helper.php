@@ -217,7 +217,7 @@ function getCertificationQuesionnaire(){
 
 /** Function to geth the quiz questions/options, statements, declarations on elective professional investors
 */
-function get_elective_prof_investor_quiz_statement_declaration($pdf=false){
+function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
      
     if ($pdf==true) {
 
@@ -451,12 +451,63 @@ function get_elective_prof_investor_quiz_statement_declaration($pdf=false){
                     <p>Email Id:</p>
                     <p>Date:</p>'; */
 
-        $elective_prof_quiz_statement_declaration = array(
+        $electiveProfInvestorQuizStatementDeclaration = array(
         'statement'                  => $statement,
         'declaration'                => $declaration
         );
 
-    return $elective_prof_quiz_statement_declaration;
+    return $electiveProfInvestorQuizStatementDeclaration;
+}
+
+
+function genActiveCertificationValidityHtml($investorCertification,$fileId){
+    $certificationDate = $investorCertification->created_at;
+    $certificationName = $investorCertification->certification()->name;
+    $certificationDate = date('d-m-Y', strtotime($certificationDate));
+    $expiryDate = date('Y-m-d', strtotime($certificationDate .'+1 year'));
+
+    $d1 = new \DateTime();
+    $d2 = new \DateTime($expiryDate);
+    $interval = $d2->diff($d1);
+
+    $validity = '';
+    if($interval->y == 1)
+    {
+        $validity = 'a Year';
+    }
+    elseif($interval->m > 1)
+    {
+        $validity = $interval->m.' months';
+    }
+    elseif($interval->m == 1)
+    {
+        $validity = $interval->m.' months';
+    }
+    elseif($interval->d > 1)
+    {
+        $validity = $interval->d.' days';
+    }
+    elseif($interval->d == 1)
+    {
+        $validity = $interval->d.' day';
+    }
+
+    $html ='<div class="alert bg-gray certification-success">
+        <div class="l-30">    
+        <h5 class="">'.$certificationName.' Certification</h5>
+
+            <i class="icon icon-ok text-success"></i> Certified on                                           
+         <span class="date-rem">'.date('d/m/Y', strtotime($certificationDate)).'                                        
+            <a href="'.url('backoffice/investor/download-certification/'.$fileId).'" target="_blank">(Click to download)</a>
+        </span>&nbsp;                                            
+        <span class="text-danger">
+            and valid for:'.$validity.'                                        
+        </span>                                                        
+        </div>                
+    </div>';
+            
+    return $html;
+     
 }
 
  

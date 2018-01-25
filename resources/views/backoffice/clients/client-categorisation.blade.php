@@ -85,7 +85,7 @@
 
                     <ul class="progress-indicator">
                         <li class="completed">
-                            <a href="javascript:void(0)">Registration</a>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}">Registration</a>
                             <span class="bubble"></span>
                         </li>
                         <li class="active">
@@ -134,7 +134,7 @@
                                 <ul class="nav nav-tabs " role="tablist">
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link active" href="#tab-1" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(empty($investorCertification) || $activeCertificationData->slug == 'retail_restricted_investor' ) active @endif" href="#tab-1" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{ url('img/hand132.png')}}">
                                             </div>
@@ -145,7 +145,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-2" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'sophisticated_investor') active @endif" href="#tab-2" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/office-worker1.png')}}">
                                             </div>
@@ -156,7 +156,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-3" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'high_net_worth_individual') active @endif" href="#tab-3" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/coin.png')}}">
                                             </div>
@@ -167,7 +167,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-4" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'professional_investor') active @endif" href="#tab-4" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/group47.png')}}">
                                             </div>
@@ -178,7 +178,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-5" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'advised_investor') active @endif" href="#tab-5" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/staff1.png')}}">
                                             </div>
@@ -189,7 +189,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-6" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'elective_professional_investor') active @endif" href="#tab-6" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/money-bag1.png')}}">
                                             </div>
@@ -206,7 +206,7 @@
 
                     </div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fadein active" id="tab-1">
+                        <div role="tabpanel" class="tab-pane @if(empty($investorCertification) || $activeCertificationData->slug == 'retail_restricted_investor' ) active fadein @else fade @endif" id="tab-1">
                             @php
                             $clientCategory = $clientCategories->firstWhere('slug','retail_restricted_investor'); 
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
@@ -356,22 +356,18 @@
                                 </div>
                            </div>
 
-                           <div class="alert bg-gray certification-success d-none">
-                                <div class="pull-left l-30">                                                                                
-                                    <i class="icon icon-ok text-success"></i> Certified on                                           
-                                 <span class="date-rem">{{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}                                          
-                                    <a href="">(Click to download)</a>
-                                </span>&nbsp;                                            
-                                <span class="text-danger">
-                                    and valid for: a year                                            
-                                </span>                                                        
-                                </div>                
-                            </div>
+
+                           <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+                           
 
 
                         </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="tab-2">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'sophisticated_investor') active fadein @else fade @endif" id="tab-2">
                             <h4 class="my-3 text-primary">
                                 Sophisticated Investor
                             </h4>
@@ -496,9 +492,15 @@
                                     </div>
                                 </div>
                             </form>
+
+                             <div class="investor-certification">
+                                @if(!empty($investorCertification))
+                                {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                                @endif
+                               </div>
                         </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="tab-3">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'high_net_worth_individual') active fadein @else fade @endif" id="tab-3">
                             <h4 class ="my-3 text-primary">
                                 High Net Worth Individual
                             </h4>
@@ -597,8 +599,15 @@
                                     </div>
                                 </div>
                             </form>
+
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-4">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'professional_investor') active fadein @else fade @endif" id="tab-4">
                             <h4 class="my-3 text-primary">
                                 Professional Investor
                             </h4>
@@ -658,8 +667,15 @@
                                     </div>
                                 </div>
                             </div>
+                             
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane " id="tab-5">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'advised_investor') active fadein @else fade @endif" id="tab-5">
                             <h4 class="my-3 text-primary">
                                 Advised Investor
                             </h4>
@@ -826,8 +842,15 @@
                                 </div>
                             </div>
 
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
+
                         </div>
-                        <div role="tabpanel" class="tab-pane fadein " id="tab-6">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'elective_professional_investor') active fadein @else fade @endif" id="tab-6">
                             <h4 class="my-3 text-primary">
                                 Elective Professional Investor
                             </h4>
@@ -836,10 +859,10 @@
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
                             $isElectiveProfInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
 
-                            $elective_prof_investor_quiz_statement_declaration =  get_elective_prof_investor_quiz_statement_declaration(false);
- 
-                            $elective_professional_statement = $elective_prof_investor_quiz_statement_declaration['statement'];
-                            $elective_professional_declaration = $elective_prof_investor_quiz_statement_declaration['declaration'];
+                            $electiveProfInvestorQuizStatementDeclaration = getElectiveProfInvestorQuizStatementDeclaration(false);
+
+                            $electiveProfessionalStatement   = $electiveProfInvestorQuizStatementDeclaration['statement'];
+                            $electiveProfessionalDeclaration = $electiveProfInvestorQuizStatementDeclaration['declaration'];
                             @endphp
 
                             <p>An Elective Professional Investor (Opt Up) Client is someone ordinarily a “Retail” client who wishes to be treated as a “Professional” category client.</p>
@@ -904,14 +927,22 @@
                                     </div>
                                 </div>
                                 
-                                {!!$elective_professional_statement!!}
+                                {!!$electiveProfessionalStatement!!}
                                
                                 <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
                             </div>
 
-                            {!! $elective_professional_declaration !!}
+                            {!! $electiveProfessionalDeclaration !!}
                            <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+
+                            <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
+ 
 
                     </div>
 

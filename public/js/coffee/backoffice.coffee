@@ -171,9 +171,9 @@ $(document).ready ->
     $('.setpassword-cont').addClass('d-none');
 
 
-  $('form').parsley().on 'form:success', ->
-    $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
-    $(this)[0].$element.find('.save-btn').addClass 'running'
+  # $('form').parsley().on 'form:success', ->
+  #   $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
+  #   $(this)[0].$element.find('.save-btn').addClass 'running'
 
 
   $('[data-toggle="popover"]').popover()
@@ -326,6 +326,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
           
 
   $('.save-sophisticated-Investor').click ->
@@ -365,6 +366,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
 
   $('.save-high-net-worth').click ->
     btnObj = $(this)
@@ -403,6 +405,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
 
 
   $('.save-professsional-inv').click ->
@@ -431,6 +434,7 @@ $(document).ready ->
         $(".save-certification").removeClass('d-none')
         btnObj.addClass('d-none')
         $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+        $('.investor-certification').html(data.html)
 
   $('.save-advised-investor').click ->
     btnObj = $(this)
@@ -476,6 +480,7 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
 
           
   $('.elective-prof-inv-btn').click ->
@@ -519,5 +524,6 @@ $(document).ready ->
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          $('.investor-certification').html(data.html)
  
 
