@@ -121,10 +121,18 @@
                                             <td>  </td>
                                             <td>{{ date('d/m/Y', strtotime($business_listing->created_at)) }}</td>
                                             <td>{{ date('d/m/Y', strtotime($business_listing->updated_at)) }}</td>
-                                            <td>{{ $business_listing->owner_id  }}<br/>&pound{{ $business_listing->target_amount  }}</td>
+                                            <td>
+                                                
+                                                {{  $business_listing->owner->firm['name']  }}<br/>&pound{{ $business_listing->target_amount  }}</td>
                                             <td></td>
                                             <td></td>                                                                                 
                                             <td>
+                                                @php
+                                                 $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));  
+
+ 
+                                                @endphp
+                                                {{ $biz_status_display }}<br/>
                                                 <select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
                                                 <option value="edit">Edit Profile</option>

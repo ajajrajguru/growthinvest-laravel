@@ -20,6 +20,7 @@ class CreateBusinessListings extends Migration
             $table->longText('content');
             $table->longText('short_content');
             $table->string('status',50);
+            $table->string('business_status',50);
             $table->integer('parent');
             $table->string('type',50);
             $table->integer('round');
