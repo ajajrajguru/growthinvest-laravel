@@ -150,14 +150,12 @@ a:hover {
   color: #e40000;
   font-size: 0.8rem;
 }
-<<<<<<< HEAD
 .text-small {
   font-size: 85%;
-=======
+}
 .text-large {
   font-size: 1.3rem;
   line-height: 22px;
->>>>>>> listings-permissions
 }
 .nav-tabs--vertical {
   border-bottom: none;
