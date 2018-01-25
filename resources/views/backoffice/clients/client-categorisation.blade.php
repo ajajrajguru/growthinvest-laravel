@@ -249,7 +249,7 @@
                                                           
                                                           @foreach($questionnaire->options as $key2=> $option)
                                                            <li class="custom-control custom-radio">
-                                                              <input type="radio" id="option_{{ $key.'_'.$key2 }}" name="radiobtn_{{ $key }}" class="custom-control-input question-option" data-correct="{{ $option->correct }}" @if($isRetail && $option->correct) checked @endif>
+                                                              <input type="radio" id="option_{{ $key.'_'.$key2 }}" name="radiobtn_{{ $key }}" class="custom-control-input question-option" data-correct="{{ $option->correct }}"  data-qid="{{ $questionnaire->q_id }}" data-label="{{ $option->label }}" @if($isRetail && $option->correct) checked @endif>
                                                               <label class="custom-control-label normal" for ="option_{{ $key.'_'.$key2 }}">
                                                               {{ $option->label }}
                                                               </label>
@@ -266,11 +266,11 @@
  
                                            
                                        </ol>
-                                       @if(!$isRetail)
-                                       <button type="button" class="btn btn-primary pull-right retail-quiz-btn submit-quiz" >
+                                       
+                                       <button type="button" class="btn btn-primary pull-right retail-quiz-btn submit-quiz @if($isRetail) d-none @endif" >
                                        Submit Quiz
                                        </button>
-                                       @endif
+                                       
                                        <br><br>
                                        <div class="alert alert-success quiz-success d-none" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -304,27 +304,27 @@
                               <div class="text-primary">
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
+                                       <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="ri_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
+                                       <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="ri_retailinvestor" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="ri_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
+                                       <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="ri_riskwarning" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_riskwarning">I have read and understand the risk warning.</label>
                                     </div>
                                  </div>
                                  <div class="mb-3">
                                     <div>
-                                       @if(!$isRetail) 
-                                       <button class="btn btn-primary save-retial-certification" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
-                                       @endif
+                                       
+                                       <button class="btn btn-primary save-retial-certification save-certification @if($isRetail) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
+                                       
                                     </div>
                                  </div>
                                  <div>
@@ -341,7 +341,7 @@
                                     <div class="col-sm-6">
                                         <label class="font-weight-medium">Certification : </label>
                                         <select name="certification_type" class="form-control editmode @if($mode=='view') d-none @endif" >
-                                            <option>Select Certification</option>
+                                            <option value="">Select Certification</option>
                                             @foreach($certificationTypes as $key=> $certificationType)
                                             <option value="{{ $key }}" {{ (!empty($investorCertification) && $investorCertification->certification == $key) ? 'selected' : '' }} >{{ $certificationType }}</option>
                                             @endforeach
@@ -413,7 +413,7 @@
                                 <div class="alert bg-gray mb-5">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_0" id="ch7" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_0" id="ch7" @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch7">
                                                 He/She has been a member of a network or syndicate of business angels for at least the six months preceding the date of the certificate.
                                             </label>
@@ -421,7 +421,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_1" id="ch8" @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_1" id="ch8" @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch8">
                                                 He/She has made more than one investment in an unlisted company in the two years preceding that date.
                                             </label>
@@ -429,7 +429,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_2" id="ch9"  @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_2',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_2" id="ch9"  @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_2',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch9">
                                                 He/She has worked, in the two years preceding that date, in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises.
                                             </label>
@@ -437,7 +437,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_3" id="ch10"  @if(!empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_3',$investorCertification->details['terms'])) checked @endif>
+                                            <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_3" id="ch10"  @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_3',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch10">
                                                 He/She has been, in the two years preceding that date, a director of a company with an annual turnover of at least £1 million.
                                             </label>
@@ -480,13 +480,13 @@
                                                 <label class="custom-control-label normal text-primary" for="si_riskwarning">I have read and understand the risk warning.</label>
                                             </div>
                                         </div>
-                                        @if(!$isSophisticatedInv)
+                                        
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary save-sophisticated-Investor" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
+                                                <button class="btn btn-primary save-sophisticated-Investor save-certification @if($isSophisticatedInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
                                             </div>
                                         </div>
-                                        @endif
+                                        
                                         <div>
                                              Name: {{ $investor->first_name .' '.$investor->last_name}} 
                                         </div>
@@ -505,7 +505,7 @@
                             <form>
                                 @php
                                 $clientCategory = $clientCategories->firstWhere('slug','high_net_worth_individual'); 
-                                $isHighNetworth = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
+                                $isHighNetworth = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false; 
                                 @endphp
                                 <div class="mb-5">
                                     <p>High Net Worth Individual (“HNWI”) are exempt under article 48 of the FSMA 2000 if they have signed a prescribed template with relevant risk warnings that they have over £100 000 p.a income and net assets excluding primary residence of over £250,000</p>
@@ -521,7 +521,7 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch15">
+                                            <input type="checkbox" class="custom-control-input hi-terms-input" name="sic_option_0" id="ch15" @if($isHighNetworth && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label normal" for="ch15">
                                                 He/she had, during the financial year immediately preceding the date below, an annual income to the value of £100,000 or more;
                                             </label>
@@ -529,7 +529,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch16" checked="">
+                                            <input type="checkbox" class="custom-control-input hi-terms-input" id="ch16" name="sic_option_1" @if($isHighNetworth && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label normal" for="ch16">
                                                 He/she held, throughout the financial year immediately preceding the date below, net assets to the value of £250,000 or more. Net assets for these purposes do not include:
                                             </label>
@@ -565,29 +565,29 @@
                                     <div class="text-primary">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_0" id="hi_acceptInvestments">
+                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_0" id="hi_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('hi_check_0',$investorCertification->details['conditions'])) checked @endif>
                                                 <label class="custom-control-label normal text-primary" for="hi_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_1" id="hi_retailinvestor">
+                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_1" id="hi_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('hi_check_1',$investorCertification->details['conditions'])) checked @endif>
                                                 <label class="custom-control-label normal text-primary" for="hi_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_2" id="hi_riskwarning">
+                                                <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_2" id="hi_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('hi_check_2',$investorCertification->details['conditions'])) checked @endif>
                                                 <label class="custom-control-label normal text-primary" for="hi_riskwarning">I have read and understand the risk warning.</label>
                                             </div>
                                         </div>
-                                        @if(!$isHighNetworth)
+                                        
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary save-high-net-worth" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                                <button class="btn btn-primary save-high-net-worth save-certification @if($isHighNetworth) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
                                             </div>
                                         </div>
-                                        @endif
+                                         
                                         <div>
                                              Name: {{ $investor->first_name .' '.$investor->last_name}} 
                                         </div>
@@ -602,6 +602,11 @@
                             <h4 class="my-3 text-primary">
                                 Professional Investor
                             </h4>
+                            @php
+                                $clientCategory = $clientCategories->firstWhere('slug','professional_investor'); 
+                                $isProfessionalInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false; 
+                            @endphp
+
                             <p>A Professional Investor is an investor whom is not designated as a Retail (Restricted) Investor as per the FCA Conduct of Business Handbook <a href="https://fshandbook.info/FS/print/FCA/COBS/3" target="_blank">https://fshandbook.info/FS/print/FCA/COBS/3</a> . If your client falls into one of the below categories then He/She will qualify as a professional investor. As a professional investor GrowthInvest<!-- Seed EIS Platform --> is able to communicate with your client directly in relation to investment business.</p>
                             <p>If you wish to classify your client as a Professional Investor on the GrowthInvest<!-- Seed EIS Platform -->, please indicate the reason(s) that he/she qualifies and then complete the statement below.</p><br>
                             <b>Investment professionals are exempt under Article 14 of the of the Financial Services and Markets Act 2000 (Promotion of Collective Investment Scheme) (Exemptions) Order 2001:</b>
@@ -622,32 +627,34 @@
                                 <div class="text-primary">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="acceptInvestments">
-                                            <label class="custom-control-label normal text-primary" for="acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                            <input type="checkbox" class="custom-control-input pi-conditions-input" name="pi_check_0" id="pi_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('pi_check_0',$investorCertification->details['conditions'])) checked @endif>
+                                            <label class="custom-control-label normal text-primary" for="pi_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="retailinvestor">
-                                            <label class="custom-control-label normal text-primary" for="retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                            <input type="checkbox" class="custom-control-input pi-conditions-input" name="pi_check_1" id="pi_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('pi_check_1',$investorCertification->details['conditions'])) checked @endif>
+                                            <label class="custom-control-label normal text-primary" for="pi_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="riskwarning">
-                                            <label class="custom-control-label normal text-primary" for="riskwarning">I have read and understand the risk warning.</label>
+                                            <input type="checkbox" class="custom-control-input pi-conditions-input" name="pi_check_2" id="pi_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('pi_check_2',$investorCertification->details['conditions'])) checked @endif>
+                                            <label class="custom-control-label normal text-primary" for="pi_riskwarning">I have read and understand the risk warning.</label>
                                         </div>
                                     </div>
+                                   
                                     <div class="mb-3">
                                         <div>
-                                            <button class="btn btn-primary" type="button">Submit</button>
+                                            <button class="btn btn-primary save-professsional-inv save-certification @if($isProfessionalInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
                                         </div>
                                     </div>
+                                     
                                     <div>
-                                        Name: test3 test3
-                                    </div>
-                                    <div>
-                                        Date: 01/01/2018
+                                        Name: {{ $investor->first_name .' '.$investor->last_name}} 
+                                        </div>
+                                        <div>
+                                            Date: {{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}
                                     </div>
                                 </div>
                             </div>
@@ -656,6 +663,11 @@
                             <h4 class="my-3 text-primary">
                                 Advised Investor
                             </h4>
+                             @php
+                                $clientCategory = $clientCategories->firstWhere('slug','advised_investor'); 
+                                $isAdvisedInvestor = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false; 
+                            @endphp
+
                             <p>An advised investor is one that has been assessed and categorised by an FCA regulated company and deemed suitable under COBS9 to receive financial promotions. As an advised investor your client is aware that he/she can seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.</p>
                             <p>Please provide details of the FCA regulated company through which your client has been assessed and categorised. GrowthInvest<!-- Seed EIS Platform --> will treat your client as a Retail (Restricted) Investor until such time as the company is registered as a client and has provided categorisation documentation on your client behalf. </p>
                             <p>If you wish to classify your client as an Advised  Investor on the GrowthInvest<!-- Seed EIS Platform -->, please fill out the short <span class="brand-text">Advised Investor Questionnaire</span> and then complete the statement below</p>
@@ -664,24 +676,24 @@
                             <div class="form-group">
                                 <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="yes" name="radiobtn" class="custom-control-input">
-                                  <label class="custom-control-label medium" for="yes">Yes</label>
+                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['havefinancialadvisor']) && $investorCertification->details['financial_advisor_info']['havefinancialadvisor'] == 'yes') checked @endif>
+                                  <label class="custom-control-label medium" for="havefinancialadvisor_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="no" name="radiobtn" class="custom-control-input">
-                                  <label class="custom-control-label medium" for="no">No</label>
+                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['havefinancialadvisor']) && $investorCertification->details['financial_advisor_info']['havefinancialadvisor'] == 'no') checked @endif>
+                                  <label class="custom-control-label medium" for="havefinancialadvisor_no">No</label>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label>Is your client receiving advice from an Authorised Person in relation to unlisted shares and unlisted debt securities?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="yes2" name="radiobtn2" class="custom-control-input">
-                                  <label class="custom-control-label medium" for="yes2">Yes</label>
+                                  <input type="radio" id="advicefromauthorised_yes" name="advicefromauthorised" class="custom-control-input" value="yes" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['advicefromauthorised']) && $investorCertification->details['financial_advisor_info']['advicefromauthorised'] == 'yes') checked @endif>
+                                  <label class="custom-control-label medium" for="advicefromauthorised_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="no2" name="radiobtn2" class="custom-control-input">
-                                  <label class="custom-control-label medium" for="no2">No</label>
+                                  <input type="radio" id="advicefromauthorised_no" name="advicefromauthorised" class="custom-control-input" value="no" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['advicefromauthorised']) && $investorCertification->details['financial_advisor_info']['advicefromauthorised'] == 'no') checked @endif>
+                                  <label class="custom-control-label medium" for="advicefromauthorised_no">No</label>
                                 </div>
                             </div>
 
@@ -696,6 +708,7 @@
                                     </div>
 
                                     <div id="collapse1" class="collapse show" role="tabpanel" >
+                                        <form name="advised_investor">
                                         <div class="card-body">
                                             <p><em>To be completed by your adviser/investment institution/intermediary</em></p>
 
@@ -703,27 +716,27 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Firm Name</label>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="companyname" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['companyname'])) ? $investorCertification->details['financial_advisor_info']['companyname']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>FCA Firm Reference Number</label>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="fcanumber" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['fcanumber'])) ? $investorCertification->details['financial_advisor_info']['fcanumber']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Name</label>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="principlecontact" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['principlecontact'])) ? $investorCertification->details['financial_advisor_info']['principlecontact']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact's FCA Number</label>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="primarycontactfca" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['primarycontactfca'])) ? $investorCertification->details['financial_advisor_info']['primarycontactfca']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Email Address</label>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="email" class="form-control" name="email"  data-parsley-type="email" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['email'])) ? $investorCertification->details['financial_advisor_info']['email']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Phone Number</label>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['telephone'])) ? $investorCertification->details['financial_advisor_info']['telephone']:'' }}">
                                                     </div>
                                                 </div>
 
@@ -732,37 +745,41 @@
                                                         <legend>Firm Address</legend>
                                                         <div class="form-group">
                                                             <label>Address 1</label>
-                                                            <textarea class="form-control"></textarea>
+                                                            <textarea class="form-control" name="address">{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['address'])) ? $investorCertification->details['financial_advisor_info']['address']:'' }}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Address 2</label>
-                                                            <textarea class="form-control"></textarea>
+                                                            <textarea class="form-control" name="address2">{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['address2'])) ? $investorCertification->details['financial_advisor_info']['address2']:'' }}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Town</label>
-                                                            <input type="text" class="form-control" name="">
+                                                            <input type="text" class="form-control" name="city" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['city'])) ? $investorCertification->details['financial_advisor_info']['city']:'' }}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>County</label>
-                                                            <select class="form-control">
-                                                                <option>Select</option>
-                                                                <option>Option1</option>
-                                                                <option>Option2</option>
+                                                            <select class="form-control" name="county">
+                                                                <option value="">Please Select</option>
+                                                   
+                                                                @foreach($countyList as $county) 
+                                                                    <option value="{{ $county }}" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['county']) && $investorCertification->details['financial_advisor_info']['county'] == $county) selected @endif >{{ $county }}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label>Postcode</label>
-                                                                    <input type="text" class="form-control" name="">
+                                                                    <input type="text" class="form-control" name="postcode" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['postcode'])) ? $investorCertification->details['financial_advisor_info']['postcode']:'' }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label>Country</label>
-                                                                <select class="form-control">
-                                                                    <option>Select</option>
-                                                                    <option>Option1</option>
-                                                                    <option>Option2</option>
+                                                                <select class="form-control" name="country">
+                                                                    <option value="">Please Select</option>
+                                                                     
+                                                                    @foreach($countryList as $code=>$country)
+                                                                        <option value="{{ $code }}" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['country']) && $investorCertification->details['financial_advisor_info']['country'] == $code) selected @endif>{{ $country }}</option>
+                                                                    @endforeach
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -770,6 +787,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </form>
                                     </div>
                                 </div>
                             </div>
@@ -778,32 +796,32 @@
                                 <div class="text-primary">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="acceptInvestments">
-                                            <label class="custom-control-label normal text-primary" for="acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                            <input type="checkbox" class="custom-control-input ai-conditions-input" name="ai_check_0" id="ai_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ai_check_0',$investorCertification->details['conditions'])) checked @endif>
+                                            <label class="custom-control-label normal text-primary" for="ai_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="retailinvestor">
-                                            <label class="custom-control-label normal text-primary" for="retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                            <input type="checkbox" class="custom-control-input ai-conditions-input" name="ai_check_1" id="ai_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ai_check_1',$investorCertification->details['conditions'])) checked @endif>
+                                            <label class="custom-control-label normal text-primary" for="ai_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="riskwarning">
-                                            <label class="custom-control-label normal text-primary" for="riskwarning">I have read and understand the risk warning.</label>
+                                            <input type="checkbox" class="custom-control-input ai-conditions-input" name="ai_check_2" id="ai_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ai_check_2',$investorCertification->details['conditions'])) checked @endif>
+                                            <label class="custom-control-label normal text-primary" for="ai_riskwarning">I have read and understand the risk warning.</label>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div>
-                                            <button class="btn btn-primary" type="button">Submit</button>
+                                            <button class="btn btn-primary save-advised-investor save-certification @if($isAdvisedInvestor) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
                                         </div>
                                     </div>
                                     <div>
-                                        Name: test3 test3
-                                    </div>
-                                    <div>
-                                        Date: 01/01/2018
+                                        Name: {{ $investor->first_name .' '.$investor->last_name}} 
+                                        </div>
+                                        <div>
+                                        Date: {{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}
                                     </div>
                                 </div>
                             </div>
@@ -813,6 +831,12 @@
                             <h4 class="my-3 text-primary">
                                 Elective Professional Investor
                             </h4>
+                            @php
+                            $clientCategory = $clientCategories->firstWhere('slug','elective_professional_investor'); 
+                            $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
+                            $isElectiveProfInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
+                            @endphp
+
                             <p>An Elective Professional Investor (Opt Up) Client is someone ordinarily a “Retail” client who wishes to be treated as a “Professional” category client.</p>
                             <p>If categorised as a Retail (Restricted) Investor, Sophisticated Investor or High Net Worth Individual we are unable to conduct business with you via telephone or in person in relation to our investments. However, if you chose to classify your client to become an Elective Professional client and we deem your client suitable then he/she can engage directly with us in respect of investment business.</p>
                             <p>If you wish to classify your client as an  Elective Professional Investor on the GrowthInvest<!-- Seed EIS Platform -->, please complete  the short <span class="brand-text">Elective Professional Investor Questionnaire</span>, and then complete the statement below.</p>
@@ -828,159 +852,49 @@
                                     </div>
 
                                     <div id="epiQuestion" class="collapse show" role="tabpanel" >
-                                        <div class="card-body">
+                                        <div class="card-body quiz-container"> 
                                             <ol>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>Most Start­up businesses:</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="succeed" name="startupbiz" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="succeed">Succeed</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="breakeven" name="startupbiz" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="breakeven">Break even</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="fail" name="startupbiz" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="fail">Fail</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>What happens if the start­up I invest in fails?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="yesmoneyback" name="startupfail" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="yesmoneyback">I will get my money back from either the broker who arranged the transaction or the entrepreneurs who founded the business.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="nomoneyback" name="startupfail" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="nomoneyback"> I will unlikely get my money back and no one is liable to pay me back.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>Can I get my money back whenever I want?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="noback" name="moneyback" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="noback">No, not unless the company is bought by another company or floats on a stock exchange.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="yesshares" name="moneyback" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="yesshares"> Yes, I can surrender my shares back to the company and they will give me my money back.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="yessellshares" name="moneyback" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="yessellshares"> Yes, I can sell my shares on a stock exchange and get my money back.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>If the company that I invest in becomes successful, can I sell my shares?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="sharesback" name="successful" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="sharesback"> I will be entitled to sell my shares back the company.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="nosell" name="successful" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="nosell"> I may not be able to sell my shares unless the company is bought by another company, or floats on a stock exchange.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>What happens to your level of shareholding if a company was to issue more shares in the future after you invest?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="shareholdingincrease" name="shareholding" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="shareholdingincrease"> My shareholding will increase.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="shareholdingsame" name="shareholding" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="shareholdingsame"> My shareholding will stay the same.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="shareholdingdecrease" name="shareholding" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="shareholdingdecrease"> My shareholding will decrease.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>The best way to invest in start­ups is to:</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="singleco" name="bestway" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="singleco"> Invest all of my money into a single company.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="startupco" name="bestway" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="startupco"> Invest most of my available capital in a start­up company and invest a very little amount to safer investments.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="multiplecos" name="bestway" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="multiplecos"> Invest a small proportion of my available capital into a start­up business and spread my risk by investing in multiple companies.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>Do start­ups pay dividends?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="nodividends" name="dividends" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="nodividends"> No, generally start­ups do not pay dividends.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="yesyear" name="dividends" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="yesyear"> Yes, I will start to receive dividends within a year after the investment is made.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="yesimmediate" name="dividends" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="yesimmediate"> Yes, I will receive dividends immediately after my investment is made.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>Are you aware that you will have no access to the Financial Services Compensation Scheme (FSCS) in the event of a start-up business failing?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="accessyes" name="noaccess" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="accessyes"> Yes.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="accessno" name="noaccess" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="accessno"> No.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>Are you aware that you may lose all of your invested monies in this investment?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="loseyes" name="losemonies" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="loseyes"> Yes.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="loseno" name="losemonies" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="loseno"> No.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="form-group">
-                                                        <label>Is the investment being made on your own volition?</label>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="volitionyes" name="volition" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="volitionyes"> Yes.</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio">
-                                                          <input type="radio" id="volitionno" name="volition" class="custom-control-input">
-                                                          <label class="custom-control-label normal" for="volitionno"> No.</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                                @if(!empty($getQuestionnaire))
+                                                
+                                                @foreach($getQuestionnaire as $key=>$questionnaire)
+                                                    <li class="mb-2 questions">
+                                                     <div class="form-group">
+                                                        <label class="quiz-question">
+                                                            {{ $questionnaire->questions}}
+                                                        </label>
+                                                        <ul>
+                                                          
+                                                          @foreach($questionnaire->options as $key2=> $option)
+                                                           <li class="custom-control custom-radio">
+                                                              <input type="radio" id="elec_option_{{ $key.'_'.$key2 }}" name="radiobtn_{{ $key }}" class="custom-control-input question-option" data-correct="{{ $option->correct }}"  data-qid="{{ $questionnaire->q_id }}" data-label="{{ $option->label }}" @if($isElectiveProfInv && $option->correct) checked @endif>
+                                                              <label class="custom-control-label normal" for ="elec_option_{{ $key.'_'.$key2 }}">
+                                                              {{ $option->label }}
+                                                              </label>
+                                                           </li>
+                                                       
+                                                           @endforeach  
+                                                            
+                                                        </ul>
+                                                     </div>
+                                                  </li>
+
+                                                @endforeach
+                                            @endif
                                             </ol>
+
+                                             <button type="button" class="btn btn-primary pull-right elective-prof-inv-quiz-btn submit-quiz @if($isElectiveProfInv) d-none @endif" > Submit </button>
+
+                                       <br><br>
+                                       <div class="alert alert-success quiz-success d-none" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                           <span id="message"></span>
+                                        </div>
+                                         
+                                        <div class="alert alert-danger quiz-danger d-none" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                           <span id="message"></span>
+                                        </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1017,7 +931,7 @@
                                             Managing Director<br>
                                             GrowthInvest</p>
 
-                                            <button class="btn btn-primary btn-sm">I Agree</button>
+                                            <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1048,7 +962,7 @@
                                 affect my categorisation.</p>
                             <p>On the basis of the above information I can confirm that the firm may treat me as a
                                 Professional client.</p>
-                            <button class="btn btn-primary">Submit</button>
+                           <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
                         </div>
 
                     </div>
