@@ -165,6 +165,51 @@ class EntrepreneurController extends Controller
 
     }
 
+    public function exportEntrepreneurs(Request $request)
+    {
+
+        $data    = [];
+        $filters = $request->all();
+
+        $columnName = 'users.first_name';
+        $orderBy    = 'asc';
+
+        $orderDataBy = [$columnName => $orderBy];
+
+        $filterEntrepreneurs = $this->getFilteredEntrepreneurs($filters, 0, 0, $orderDataBy);
+        $entrepreneurs       = $filterEntrepreneurs['list'];
+
+        $fileName = 'all_entrepreneurs_as_on_' . date('d-m-Y');
+        $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm','Business Proposals', 'Registered Date', 'Source'];
+        $userData = [];
+
+        $certification = [];
+        foreach ($entrepreneurs as $entrepreneur) {
+
+            
+            $source = "Self";
+            if ($entrepreneur->registered_by !== $entrepreneur->id) {
+                $source = "Intermediary";
+            }
+             
+
+            $userData[] = [$entrepreneur->gi_code,
+                title_case($entrepreneur->first_name . ' ' . $entrepreneur->last_name),
+                $entrepreneur->email,                
+                (!empty($investor->firm)) ? $entrepreneur->firm->name : '',
+                 $entrepreneur->business,   
+                date('d/m/Y', strtotime($entrepreneur->created_at)),
+                $source
+
+            ];
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

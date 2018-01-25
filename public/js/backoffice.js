@@ -476,8 +476,13 @@
         }
       ]
     });
-    return $('.entrepreneurSearchinput').change(function() {
+    $('.entrepreneurSearchinput').change(function() {
       entrepreneurTable.ajax.reload();
+    });
+    return $('.download-entrepreneur-csv').click(function() {
+      var firm_name;
+      firm_name = $('select[name="firm_name"]').val();
+      return window.open("/backoffice/entrepreneurs/export-entrepreneurs?firm_name=" + firm_name);
     });
   });
 

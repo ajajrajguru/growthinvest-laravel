@@ -417,4 +417,11 @@ $(document).ready ->
   $('.entrepreneurSearchinput').change ->
     entrepreneurTable.ajax.reload()
     return
+
+  $('.download-entrepreneur-csv').click ->
+    firm_name = $('select[name="firm_name"]').val() 
+
+     
+
+    window.open("/backoffice/entrepreneurs/export-entrepreneurs?firm_name="+firm_name);
  
