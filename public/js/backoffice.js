@@ -459,6 +459,8 @@
         {
           'data': 'name'
         }, {
+          'data': 'email'
+        }, {
           'data': 'firm'
         }, {
           'data': 'business'

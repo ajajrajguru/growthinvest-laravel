@@ -51,7 +51,7 @@ class UserPermission
                 'backoffice/investor/{giCode}/client-categorisation'      => ['add_investor'],
                 'backoffice/investor/{giCode}/save-client-categorisation' => ['add_investor'],
 
-                'backoffice/enterpreneurs'                                => ['view_all_business_owners', 'view_firm_business_owners'],
+                'backoffice/entrepreneurs'                                => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'               => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/fundmanagers'                                 => ['view_all_fund_managers', 'view_firm_fund_managers'],
                 'backoffice/business-listings'                            => ['view_backoffice_proposals', 'view_firm_business_proposals'],

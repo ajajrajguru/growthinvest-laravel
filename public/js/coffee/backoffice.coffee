@@ -405,6 +405,7 @@ $(document).ready ->
 
     'columns': [        
       { 'data': 'name' }
+      { 'data': 'email' }
       { 'data': 'firm'}
       { 'data': 'business' }         
       { 'data': 'registered_date', "orderable": false}
