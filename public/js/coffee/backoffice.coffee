@@ -170,6 +170,13 @@ $(document).ready ->
     $('#change_pwd').removeClass('d-none');
     $('.setpassword-cont').addClass('d-none');
 
+
+  if $('form').length
+    $('form').parsley().on 'form:success', ->
+      $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
+      $(this)[0].$element.find('.save-btn').addClass 'running'
+
+
   $('[data-toggle="popover"]').popover()
 
   # Menu JS
@@ -267,8 +274,6 @@ $(document).ready ->
 
   $('.submit-quiz').click ->
     err = validateQuiz($(this))
-    console.log err
-
     if err > 0
       $(this).closest('.quiz-container').find('.quiz-success').addClass('d-none')
       $(this).closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
@@ -292,10 +297,17 @@ $(document).ready ->
       clientCategoryId = $(this).attr('client-category')
       giCode = $(this).attr('inv-gi-code')
       certification_type = $('select[name="certification_type"]').val()
-      inputData = '';
+      conditions = '';
       $('.retail-input').each ->
         if $(this).is(':checked')
-          inputData += $(this).attr('name')+','
+          conditions += $(this).attr('name')+','
+
+      quizAnswers = {};
+      $(".retail-quiz-btn").closest('.quiz-container').find('.questions').each ->
+        if($(this).find('input[data-correct="1"]:checked').length > 0)
+          qid = $(this).find('input[data-correct="1"]:checked').attr('data-qid')
+          optionLabel = $(this).find('input[data-correct="1"]:checked').attr('data-label')
+          quizAnswers[qid]=optionLabel
 
       $.ajax
         type: 'post'
@@ -306,9 +318,16 @@ $(document).ready ->
           'save-type': 'retail'
           'certification_type': certification_type
           'client_category_id': clientCategoryId
-          'input_name': inputData
+          'conditions': conditions
+          'quiz_answers': quizAnswers
         success: (data) ->
+          $('.elective-prof-inv-btn').removeClass('d-none')
+          $(".submit-quiz").removeClass('d-none')
+          $(".retail-quiz-btn").addClass('d-none')
+          $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          
 
   $('.save-sophisticated-Investor').click ->
     btnObj = $(this)
@@ -343,7 +362,10 @@ $(document).ready ->
           'conditions': conditions
           'terms': terms
         success: (data) ->
+          $('.elective-prof-inv-btn').removeClass('d-none')
+          $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
 
   $('.save-high-net-worth').click ->
     btnObj = $(this)
@@ -378,6 +400,125 @@ $(document).ready ->
           'conditions': conditions
           'terms': terms
         success: (data) ->
-          # btnObj.addClass('d-none')
+          $('.elective-prof-inv-btn').removeClass('d-none')
+          $(".save-certification").removeClass('d-none')
+          btnObj.addClass('d-none')
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+
+
+  $('.save-professsional-inv').click ->
+    btnObj = $(this)
+    clientCategoryId = $(this).attr('client-category')
+    giCode = $(this).attr('inv-gi-code')
+    certification_type = $('select[name="certification_type"]').val()
+
+    conditions = '';
+    $('.pi-conditions-input').each ->
+      if $(this).is(':checked')
+        conditions += $(this).attr('name')+','
+
+    $.ajax
+      type: 'post'
+      url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
+      headers:
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      data:
+        'save-type': 'professsional_investors'
+        'certification_type': certification_type
+        'client_category_id': clientCategoryId
+        'conditions': conditions
+      success: (data) ->
+        $('.elective-prof-inv-btn').removeClass('d-none')
+        $(".save-certification").removeClass('d-none')
+        btnObj.addClass('d-none')
+        $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+
+  $('.save-advised-investor').click ->
+    btnObj = $(this)
+    clientCategoryId = $(this).attr('client-category')
+    giCode = $(this).attr('inv-gi-code')
+    certification_type = $('select[name="certification_type"]').val()
+    
+    if($('form[name="advised_investor"]').parsley().validate())
+      conditions = '';
+      $('.ai-conditions-input').each ->
+        if $(this).is(':checked')
+          conditions += $(this).attr('name')+','
+
+      financialAdvisorInfo = {};
+      financialAdvisorInfo['havefinancialadvisor']=$('input[name="havefinancialadvisor"]:checked').val()
+      financialAdvisorInfo['advicefromauthorised']=$('input[name="advicefromauthorised"]:checked').val()
+      financialAdvisorInfo['companyname']=$('input[name="companyname"]').val()
+      financialAdvisorInfo['fcanumber']=$('input[name="fcanumber"]').val()
+      financialAdvisorInfo['principlecontact']=$('input[name="principlecontact"]').val()
+      financialAdvisorInfo['primarycontactfca']=$('input[name="primarycontactfca"]').val()
+      financialAdvisorInfo['email']=$('input[name="email"]').val()
+      financialAdvisorInfo['telephone']=$('input[name="telephone"]').val()
+      financialAdvisorInfo['address']=$('textarea[name="address"]').val()
+      financialAdvisorInfo['address2']=$('textarea[name="address2"]').val()
+      financialAdvisorInfo['city']=$('input[name="city"]').val()
+      financialAdvisorInfo['county']=$('select[name="county"]').val()
+      financialAdvisorInfo['postcode']=$('input[name="postcode"]').val()
+      financialAdvisorInfo['country']=$('select[name="country"]').val()
+
+      $.ajax
+        type: 'post'
+        url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
+        headers:
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        data:
+          'save-type': 'advice_investors'
+          'certification_type': certification_type
+          'client_category_id': clientCategoryId
+          'conditions': conditions
+          'financial_advisor_info': financialAdvisorInfo
+        success: (data) ->
+          $('.elective-prof-inv-btn').removeClass('d-none')
+          $(".save-certification").removeClass('d-none')
+          btnObj.addClass('d-none')
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+
+          
+  $('.elective-prof-inv-btn').click ->
+    $(this).attr('data-agree',"yes")
+  
+  $('.save-elective-prof-inv').click ->
+    btnObj = $(this)
+    err = validateQuiz($(".elective-prof-inv-quiz-btn"))
+    
+    if err > 0
+      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
+      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
+    else
+      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none')
+      clientCategoryId = $(this).attr('client-category')
+      giCode = $(this).attr('inv-gi-code')
+      certification_type = $('select[name="certification_type"]').val()
+ 
+      quizAnswers = {};
+      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.questions').each ->
+        if($(this).find('input[data-correct="1"]:checked').length > 0)
+          qid = $(this).find('input[data-correct="1"]:checked').attr('data-qid')
+          optionLabel = $(this).find('input[data-correct="1"]:checked').attr('data-label')
+          quizAnswers[qid]=optionLabel
+
+      $.ajax
+        type: 'post'
+        url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
+        headers:
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        data:
+          'save-type': 'elective_prof'
+          'certification_type': certification_type
+          'client_category_id': clientCategoryId
+          'quiz_answers': quizAnswers
+          'investor_statement': $('.elective-prof-inv-btn').attr('data-agree')
+        success: (data) ->
+          $('.elective-prof-inv-btn').addClass('d-none')
+          $(".submit-quiz").removeClass('d-none')
+          $(".elective-prof-inv-quiz-btn").addClass('d-none')
+          $(".save-certification").removeClass('d-none')
+          btnObj.addClass('d-none')
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
  
 
