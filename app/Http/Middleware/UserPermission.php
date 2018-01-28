@@ -58,6 +58,7 @@ class UserPermission
                 'backoffice/fundmanagers/get-fundmanagers'                => ['view_all_fund_managers', 'view_firm_fund_managers'],
                 'backoffice/fundmanager/export-fundmanagers'              => ['view_all_fund_managers', 'view_firm_fund_managers'],
                 'backoffice/business-listings'                            => ['view_backoffice_proposals', 'view_firm_business_proposals'],
+                'backoffice/business-listings/get-businesslistings'       => ['view_backoffice_proposals', 'view_firm_business_proposals'],
 
             ],
 

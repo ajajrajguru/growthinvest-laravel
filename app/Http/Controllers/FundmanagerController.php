@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\User;
-use App\UserData;
+use Illuminate\Http\Request;
 
 class FundmanagerController extends Controller
 {
@@ -15,29 +14,23 @@ class FundmanagerController extends Controller
      */
     public function index()
     {
-        $user      = new User;
+        $user         = new User;
         $fundmanagers = $user->getFundmanagers();
-        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
-        $firms     = $firmsList['list']; 
-        
+        $firmsList    = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms        = $firmsList['list'];
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Fund Managers'];
 
-        
-      
-        $data['firms']              = $firms;
-        $data['fundmanagers']       = $fundmanagers;
-        $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'Fund Managers';
+        $data['firms']        = $firms;
+        $data['fundmanagers'] = $fundmanagers;
+        $data['breadcrumbs']  = $breadcrumbs;
+        $data['pageTitle']    = 'Fund Managers';
 
         return view('backoffice.clients.fundmanagers')->with($data);
     }
-
-
-
 
     public function getFundmanagerslist(Request $request)
     {
@@ -65,15 +58,15 @@ class FundmanagerController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterEntrepreneurs = $this->getFilteredFundmanagers($filters, $skip, $length, $orderDataBy);
-        $entrepreneurs       = $filterEntrepreneurs['list'];
-        $totalEntrepreneurs  = $filterEntrepreneurs['TotalEntrepreneurs'];
+        $filter_fundamangers = $this->getFilteredFundmanagers($filters, $skip, $length, $orderDataBy);
+        $fundmanagers        = $filter_fundamangers['list'];
+        $total_fundmanagers  = $filter_fundamangers['total_fundmanagers'];
 
-        $entrepreneursData = [];
+        $fundmanagers_data = [];
 
-        foreach ($entrepreneurs as $key => $entrepreneur) {
+        foreach ($fundmanagers as $key => $fundmanager) {
 
-            $nameHtml = '<b><a href=="#">' . $entrepreneur->first_name . ' ' . $entrepreneur->last_name . '</a>';
+            $nameHtml = '<b><a href=="#">' . $fundmanager->first_name . ' ' . $fundmanager->last_name . '</a>';
 
             $actionHtml = '<select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
@@ -81,16 +74,16 @@ class FundmanagerController extends Controller
                                                 </select>';
 
             $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id) {
+            if ($fundmanager->registered_by !== $fundmanager->id) {
                 $source = "Intermediary";
             }
 
-            $entrepreneursData[] = [
+            $fundmanagers_data[] = [
                 'name'            => $nameHtml,
-                'email'           => $entrepreneur->email,
-                'firm'            => (!empty($entrepreneur->firm)) ? $entrepreneur->firm->name : '',
-                'business'        => $entrepreneur->business,
-                'registered_date' => date('d/m/Y', strtotime($entrepreneur->created_at)),
+                'email'           => $fundmanager->email,
+                'firm'            => (!empty($fundmanager->firm)) ? $fundmanager->firm->name : '',
+                'business'        => $fundmanager->business,
+                'registered_date' => date('d/m/Y', strtotime($fundmanager->created_at)),
                 'source'          => $source,
                 'action'          => $actionHtml,
 
@@ -100,9 +93,9 @@ class FundmanagerController extends Controller
 
         $json_data = array(
             "draw"            => intval($requestData['draw']),
-            "recordsTotal"    => intval($totalEntrepreneurs),
-            "recordsFiltered" => intval($totalEntrepreneurs),
-            "data"            => $entrepreneursData,
+            "recordsTotal"    => intval($total_fundmanagers),
+            "recordsFiltered" => intval($total_fundmanagers),
+            "data"            => $fundmanagers_data,
         );
 
         return response()->json($json_data);
@@ -112,7 +105,7 @@ class FundmanagerController extends Controller
     public function getFilteredFundmanagers($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
     {
 
-        $entrepreneurQuery = User::join('model_has_roles', function ($join) {
+        $fundmanager_query = User::join('model_has_roles', function ($join) {
             $join->on('users.id', '=', 'model_has_roles.model_id')
                 ->where('model_has_roles.model_type', 'App\User');
         })->join('roles', function ($join) {
@@ -137,7 +130,7 @@ class FundmanagerController extends Controller
         });*/
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
-            $entrepreneurQuery->where('users.firm_id', $filters['firm_name']);
+            $fundmanager_query->where('users.firm_id', $filters['firm_name']);
         }
 
         /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
@@ -152,26 +145,25 @@ class FundmanagerController extends Controller
         }*/
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
-        $entrepreneurQuery->groupBy('users.id');
-        $entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
+        $fundmanager_query->groupBy('users.id');
+        $fundmanager_query->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
 
         foreach ($orderDataBy as $columnName => $orderBy) {
-            $entrepreneurQuery->orderBy($columnName, $orderBy);
+            $fundmanager_query->orderBy($columnName, $orderBy);
         }
 
         if ($length > 1) {
 
-            $totalEntrepreneurs = $entrepreneurQuery->get()->count();
-            $entrepreneurs      = $entrepreneurQuery->skip($skip)->take($length)->get();
+            $total_fundmanagers = $fundmanager_query->get()->count();
+            $fundmanagers       = $fundmanager_query->skip($skip)->take($length)->get();
         } else {
-            $entrepreneurs      = $entrepreneurQuery->get();
-            $totalEntrepreneurs = $entrepreneurQuery->count();
+            $fundmanagers       = $fundmanager_query->get();
+            $total_fundmanagers = $fundmanager_query->count();
         }
 
-        return ['TotalEntrepreneurs' => $totalEntrepreneurs, 'list' => $entrepreneurs];
+        return ['total_fundmanagers' => $total_fundmanagers, 'list' => $fundmanagers];
 
     }
-
 
     public function exportFundmanagers(Request $request)
     {
@@ -188,29 +180,26 @@ class FundmanagerController extends Controller
         $fundmanagers       = $filterFundmanagers['list'];
 
         $fileName = 'all_fundmanagers_as_on_' . date('d-m-Y');
-        $header   = ['Platform GI Code', 'Name', 'Email ID', 'Firm','Funds', 'Introduced on', 'Source'];
+        $header   = ['Platform GI Code', 'Name', 'Email ID', 'Firm', 'Funds', 'Introduced on', 'Source'];
         $userData = [];
 
-         
         /*echo"<pre>";
         print_r($entrepreneurs);
         die();*/
         foreach ($fundmanagers as $fundmanager) {
 
-            
             $source = "Self";
             if ($fundmanager->registered_by !== $fundmanager->id) {
                 $source = "Intermediary";
             }
-             
 
             $userData[] = [$fundmanager->gi_code,
                 title_case($fundmanager->first_name . ' ' . $fundmanager->last_name),
-                $fundmanager->email,                
+                $fundmanager->email,
                 (!empty($fundmanager->firm)) ? $fundmanager->firm->name : '',
-                 $fundmanager->business,   
+                $fundmanager->business,
                 date('d/m/Y', strtotime($fundmanager->created_at)),
-                $source
+                $source,
 
             ];
         }

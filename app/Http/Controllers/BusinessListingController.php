@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\BusinessListing;
 use Illuminate\Http\Request;
 
+/* use App\Firm; */
+
 class BusinessListingController extends Controller
 {
     /**
@@ -14,12 +16,18 @@ class BusinessListingController extends Controller
      */
     public function index()
     {
+        /* $firms = new Firm;
+        $result = $firms->getAllChildFirmsByFirmID(28);
+        echo"<pre>";
+        print_r($result);
+        die();*/
+
         $business_listing        = new BusinessListing;
         $list_args['backoffice'] = true;
         $business_listing_data   = $business_listing->getBusinessList($list_args);
 /*echo "<pre>";
-        print_r($business_listing_data);
-        die();*/
+print_r($business_listing_data);
+die();*/
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
@@ -29,15 +37,14 @@ class BusinessListingController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Businesses'];
 
-        $data['firms']            = $firms;
+        $data['firms']             = $firms;
         $data['business_listings'] = $business_listing_data;
-        $data['breadcrumbs']      = $breadcrumbs;
-        $data['pageTitle']        = 'Manage Clients : Growthinvest';
+        $data['breadcrumbs']       = $breadcrumbs;
+        $data['pageTitle']         = 'Manage Clients : Growthinvest';
 
         return view('backoffice.clients.business_listings')->with($data);
 
     }
-
 
     public function getBusinessListings(Request $request)
     {
@@ -65,34 +72,35 @@ class BusinessListingController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterEntrepreneurs = $this->getFilteredEntrepreneurs($filters, $skip, $length, $orderDataBy);
+        $filterEntrepreneurs = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy);
         $entrepreneurs       = $filterEntrepreneurs['list'];
         $totalEntrepreneurs  = $filterEntrepreneurs['TotalEntrepreneurs'];
 
         $entrepreneursData = [];
 
-        foreach ($entrepreneurs as $key => $entrepreneur) {
+        foreach ($entrepreneurs as $key => $business_listing) {
 
-            $nameHtml = '<b><a href=="#">' . $entrepreneur->first_name . ' ' . $entrepreneur->last_name . '</a>';
-
-            $actionHtml = '<select data-id="" class="firm_actions" edit-url="#">
+            $name_html ="<b>".title_case($business_listing->title)."</b><br/>(".$business_listing->type.")
+                                                <br/>
+                                                ".(!empty($business_listing->owner) ? $business_listing->owner->email:'') ;
+            $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));  
+            $actionHtml = $biz_status_display.'<br/><select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
-                                                <option value="edit">Edit Profile</option>
+                                                <option value="edit">View</option>
                                                 </select>';
 
-            $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id) {
-                $source = "Intermediary";
-            }
-
+            
+            
             $entrepreneursData[] = [
-                'name'            => $nameHtml,
-                'email'           => $entrepreneur->email,
-                'firm'            => (!empty($entrepreneur->firm)) ? $entrepreneur->firm->name : '',
-                'business'        => $entrepreneur->business,
-                'registered_date' => date('d/m/Y', strtotime($entrepreneur->created_at)),
-                'source'          => $source,
-                'action'          => $actionHtml,
+                'logo'              => '',
+                'name'              => $name_html ,
+                'duediligence'      => '',
+                'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
+                'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
+                'firmtoraise'       => (!empty($business_listing->owner)?$business_listing->owner->firm['name']:'').'<br/>&pound'.$business_listing->target_amount,
+                'activity_sitewide' => '',
+                'activity_firmwide' => '',
+                'action'            => $actionHtml,
 
             ];
 
@@ -109,20 +117,10 @@ class BusinessListingController extends Controller
 
     }
 
-    public function getFilteredEntrepreneurs($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
+    public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
     {
 
-        $entrepreneurQuery = User::join('model_has_roles', function ($join) {
-            $join->on('users.id', '=', 'model_has_roles.model_id')
-                ->where('model_has_roles.model_type', 'App\User');
-        })->join('roles', function ($join) {
-            $join->on('model_has_roles.role_id', '=', 'roles.id')
-                ->whereIn('roles.name', ['business_owner']);
-        })
-            ->leftJoin('business_listings', function ($join) {
-                $join->on('users.id', '=', 'business_listings.owner_id')
-                    ->whereIn('business_listings.type', ['proposal']);
-            });
+        $business_listings_query = BusinessListing::where(['status' => 'publish']);
 
         /*->where($cond)->select("users.*")*/
 
@@ -137,7 +135,7 @@ class BusinessListingController extends Controller
         });*/
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
-            $entrepreneurQuery->where('users.firm_id', $filters['firm_name']);
+            $business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
         }
 
         /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
@@ -152,23 +150,27 @@ class BusinessListingController extends Controller
         }*/
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
-        $entrepreneurQuery->groupBy('users.id');
-        $entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
+        $business_listings_query->groupBy('business_listings.id')->select('business_listings.*');
+        //$entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
 
         foreach ($orderDataBy as $columnName => $orderBy) {
-            $entrepreneurQuery->orderBy($columnName, $orderBy);
+            $business_listings_query->orderBy($columnName, $orderBy);
         }
 
         if ($length > 1) {
 
-            $totalEntrepreneurs = $entrepreneurQuery->get()->count();
-            $entrepreneurs      = $entrepreneurQuery->skip($skip)->take($length)->get();
+            $total_etrepreneurs = $business_listings_query->get()->count();
+            $entrepreneurs      = $business_listings_query->skip($skip)->take($length)->get();
         } else {
-            $entrepreneurs      = $entrepreneurQuery->get();
-            $totalEntrepreneurs = $entrepreneurQuery->count();
+            $entrepreneurs      = $business_listings_query->get();
+            $total_etrepreneurs = $business_listings_query->count();
         }
 
-        return ['TotalEntrepreneurs' => $totalEntrepreneurs, 'list' => $entrepreneurs];
+        /*  echo "<pre>";
+        print_r($entrepreneurs);
+        die();*/
+
+        return ['TotalEntrepreneurs' => $total_etrepreneurs, 'list' => $entrepreneurs];
 
     }
 
