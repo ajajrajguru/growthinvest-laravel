@@ -7,6 +7,7 @@ use App\Firm;
 use Auth;
 use Illuminate\Http\Request;
 use App\User;
+use DB;
 
 class BusinessListingController extends Controller
 {
@@ -143,13 +144,9 @@ die();*/
          $firm_investors_str =  implode(',',$firm_investors);
         //print_r($firm_investors_str);
 
-        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish'])->leftJoin('business_has_defaults', function ($join) {
-            $join->on('business_listings.id', '=', 'business_has_defaults.business_id');
-        })->leftJoin('defaults', function ($join) {
-            $join->on('business_has_defaults.default_id', '=', 'defaults.id');
-        });
+        
 
-        $wm_associated_firms_query="SELECT bp.business_status as proposal_status, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
+        $wm_associated_firms_query_select_data="SELECT bp.business_status as proposal_status, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
 
         bp.id AS id,bo_info.id as bo ,bo_info.email as bo_email,  firm.name as firm_name, firm.id as firm_id,bp.title AS business_name,bp.slug AS business_slug, bp.created_at as business_date,bp.updated_at as business_modified,  bp.business_status as proposal_status ,bp.status as post_status,
         SUM(CASE bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS watch_list,
@@ -161,8 +158,10 @@ die();*/
         SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN 1 ELSE 0 END) AS my_pledged,
         SUM(CASE my_bpi.status WHEN 'funded' THEN 1 ELSE 0 END) AS my_funded,
         SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN bpi.amount ELSE 0 END) AS my_pledged_amount,
-        SUM(CASE my_bpi.status WHEN 'funded' THEN bpi.amount ELSE 0 END) AS my_funded_amount
-        FROM business_listings bp";
+        SUM(CASE my_bpi.status WHEN 'funded' THEN bpi.amount ELSE 0 END) AS my_funded_amount";
+
+        $wm_associated_firms_query_select_count =" select count(*) ";
+        $wm_associated_firms_query=" FROM business_listings bp";
 
         
 
@@ -184,30 +183,32 @@ die();*/
 
         LEFT OUTER
         JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))
-        GROUP BY bp.ID ORDER BY business_name ASC ";
+        GROUP BY bp.ID  ";
 
+        $sql_limit =" ORDER BY business_name ASC LIMIT ".$skip.",".$length;
 
+        echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
+        die();
+        $business = DB::select($wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit);
 
-        echo $wm_associated_firms_query;
+        $business_count = DB::select($wm_associated_firms_query_select_count.$wm_associated_firms_query);
+        echo $wm_associated_firms_query_select_count.$wm_associated_firms_query;
+        die();
+        print_r (['total_business_listings' => $business_count, 'list' => $business]);
         die();
 
+       /* echo $wm_associated_firms_query;
+        die();*/
 
+       /* $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish'])->leftJoin('business_has_defaults', function ($join) {
+            $join->on('business_listings.id', '=', 'business_has_defaults.business_id');
+        })->leftJoin('defaults', function ($join) {
+            $join->on('business_has_defaults.default_id', '=', 'defaults.id');
+        });
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
         $business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
         }
-
-        /*->where($cond)->select("users.*")*/
-
-        /* $entrepreneurQuery = User::join('model_has_roles', function ($join) {
-        $join->on('users.id', '=', 'model_has_roles.model_id')
-        ->where('model_has_roles.model_type', 'App\User');
-        })->join('roles', function ($join) {
-        $join->on('model_has_roles.role_id', '=', 'roles.id')
-        ->whereIn('roles.name', ['business_owner']);
-        })->leftjoin('user_has_certifications', function ($join) {
-        $join->on('users.id', 'user_has_certifications.user_id');
-        });*/
-
+        
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             //$business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
             $this->args['firm_name'] = $filters['firm_name'];
@@ -221,20 +222,14 @@ die();*/
             $business_listings_query->where('business_listings.type', $filters['business_listings_type']);
         }
 
-        /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
-        $userIds = explode(',', $filters['user_ids']);
-        $userIds = array_filter($userIds);
-
-        $entrepreneurQuery->whereIn('users.id', $userIds);
-        }
-
-        if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
-        $entrepreneurQuery->where('users.id', $filters['investor_name']);
-        }*/
-
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
         $business_listings_query->groupBy('business_listings.id')->select('business_listings.*');
         //$entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
+
+        */
+ 
+
+        
 
         foreach ($orderDataBy as $columnName => $orderBy) {
             $business_listings_query->orderBy($columnName, $orderBy);
