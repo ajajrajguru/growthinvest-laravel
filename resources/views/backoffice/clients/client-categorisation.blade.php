@@ -85,7 +85,7 @@
 
                     <ul class="progress-indicator">
                         <li class="completed">
-                            <a href="javascript:void(0)">Registration</a>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}">Registration</a>
                             <span class="bubble"></span>
                         </li>
                         <li class="active">
@@ -107,10 +107,12 @@
                 <div class="profile-content p-4">
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                             
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i>Prev </a> 
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a> 
+                            
                         </div>
                     </div>
 
@@ -134,7 +136,7 @@
                                 <ul class="nav nav-tabs " role="tablist">
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link active" href="#tab-1" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(empty($investorCertification) || $activeCertificationData->slug == 'retail_restricted_investor' ) active @endif" href="#tab-1" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{ url('img/hand132.png')}}">
                                             </div>
@@ -145,7 +147,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-2" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'sophisticated_investor') active @endif" href="#tab-2" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/office-worker1.png')}}">
                                             </div>
@@ -156,7 +158,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-3" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'high_net_worth_individual') active @endif" href="#tab-3" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/coin.png')}}">
                                             </div>
@@ -167,7 +169,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-4" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'professional_investor') active @endif" href="#tab-4" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/group47.png')}}">
                                             </div>
@@ -178,7 +180,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-5" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'advised_investor') active @endif" href="#tab-5" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/staff1.png')}}">
                                             </div>
@@ -189,7 +191,7 @@
                                     </li>
 
                                     <li class="nav-item col-md-2 d-flex">
-                                        <a class="nav-link" href="#tab-6" role="tab" data-toggle="tab">
+                                        <a class="nav-link @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'elective_professional_investor') active @endif" href="#tab-6" role="tab" data-toggle="tab">
                                             <div class="image">
                                                 <img class="mx-auto d-block img-responsive" width="35" src="{{url('img/money-bag1.png')}}">
                                             </div>
@@ -206,7 +208,7 @@
 
                     </div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fadein active" id="tab-1">
+                        <div role="tabpanel" class="tab-pane @if(empty($investorCertification) || $activeCertificationData->slug == 'retail_restricted_investor' ) active fadein @else fade @endif" id="tab-1">
                             @php
                             $clientCategory = $clientCategories->firstWhere('slug','retail_restricted_investor'); 
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
@@ -323,7 +325,7 @@
                                  <div class="mb-3">
                                     <div>
                                        
-                                       <button class="btn btn-primary save-retial-certification save-certification @if($isRetail) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
+                                       <button class="btn btn-primary save-retial-certification save-certification @if($isRetail) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit <div class="ld ld-ring ld-spin"></div></button>
                                        
                                     </div>
                                  </div>
@@ -356,22 +358,18 @@
                                 </div>
                            </div>
 
-                           <div class="alert bg-gray certification-success d-none">
-                                <div class="pull-left l-30">                                                                                
-                                    <i class="icon icon-ok text-success"></i> Certified on                                           
-                                 <span class="date-rem">{{ (!empty($investorCertification)) ? date('d/m/Y', strtotime($investorCertification->created_at)) : date('d/m/Y') }}                                          
-                                    <a href="">(Click to download)</a>
-                                </span>&nbsp;                                            
-                                <span class="text-danger">
-                                    and valid for: a year                                            
-                                </span>                                                        
-                                </div>                
-                            </div>
+
+                           <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+                           
 
 
                         </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="tab-2">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'sophisticated_investor') active fadein @else fade @endif" id="tab-2">
                             <h4 class="my-3 text-primary">
                                 Sophisticated Investor
                             </h4>
@@ -483,7 +481,7 @@
                                         
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary save-sophisticated-Investor save-certification @if($isSophisticatedInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
+                                                <button class="btn btn-primary save-sophisticated-Investor save-certification @if($isSophisticatedInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit<div class="ld ld-ring ld-spin"></div></button>
                                             </div>
                                         </div>
                                         
@@ -496,12 +494,22 @@
                                     </div>
                                 </div>
                             </form>
+
+                             <div class="investor-certification">
+                                @if(!empty($investorCertification))
+                                {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                                @endif
+                               </div>
                         </div>
 
-                        <div role="tabpanel" class="tab-pane fade" id="tab-3">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'high_net_worth_individual') active fadein @else fade @endif" id="tab-3">
                             <h4 class ="my-3 text-primary">
                                 High Net Worth Individual
                             </h4>
+                             <div class="alert alert-danger d-none" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                               <span id="message"></span>
+                            </div>
                             <form>
                                 @php
                                 $clientCategory = $clientCategories->firstWhere('slug','high_net_worth_individual'); 
@@ -584,7 +592,7 @@
                                         
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary save-high-net-worth save-certification @if($isHighNetworth) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                                <button class="btn btn-primary save-high-net-worth save-certification @if($isHighNetworth) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
                                             </div>
                                         </div>
                                          
@@ -597,8 +605,15 @@
                                     </div>
                                 </div>
                             </form>
+
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-4">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'professional_investor') active fadein @else fade @endif" id="tab-4">
                             <h4 class="my-3 text-primary">
                                 Professional Investor
                             </h4>
@@ -646,7 +661,7 @@
                                    
                                     <div class="mb-3">
                                         <div>
-                                            <button class="btn btn-primary save-professsional-inv save-certification @if($isProfessionalInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                            <button class="btn btn-primary save-professsional-inv save-certification @if($isProfessionalInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
                                         </div>
                                     </div>
                                      
@@ -658,8 +673,15 @@
                                     </div>
                                 </div>
                             </div>
+                             
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
-                        <div role="tabpanel" class="tab-pane " id="tab-5">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'advised_investor') active fadein @else fade @endif" id="tab-5">
                             <h4 class="my-3 text-primary">
                                 Advised Investor
                             </h4>
@@ -676,11 +698,11 @@
                             <div class="form-group">
                                 <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['havefinancialadvisor']) && $investorCertification->details['financial_advisor_info']['havefinancialadvisor'] == 'yes') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['havefinancialadvisor']) && $investorCertification->details['financial_advisor_info']['havefinancialadvisor'] == 'no') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_no">No</label>
                                 </div>
                             </div>
@@ -688,11 +710,11 @@
                             <div class="form-group">
                                 <label>Is your client receiving advice from an Authorised Person in relation to unlisted shares and unlisted debt securities?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="advicefromauthorised_yes" name="advicefromauthorised" class="custom-control-input" value="yes" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['advicefromauthorised']) && $investorCertification->details['financial_advisor_info']['advicefromauthorised'] == 'yes') checked @endif>
+                                  <input type="radio" id="advicefromauthorised_yes" name="advicefromauthorised" class="custom-control-input" value="yes" @if(!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] == 'yes') checked @endif>
                                   <label class="custom-control-label medium" for="advicefromauthorised_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="advicefromauthorised_no" name="advicefromauthorised" class="custom-control-input" value="no" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['advicefromauthorised']) && $investorCertification->details['financial_advisor_info']['advicefromauthorised'] == 'no') checked @endif>
+                                  <input type="radio" id="advicefromauthorised_no" name="advicefromauthorised" class="custom-control-input" value="no" @if(!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] == 'no') checked @endif>
                                   <label class="custom-control-label medium" for="advicefromauthorised_no">No</label>
                                 </div>
                             </div>
@@ -716,27 +738,27 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Firm Name</label>
-                                                        <input type="text" class="form-control" name="companyname" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['companyname'])) ? $investorCertification->details['financial_advisor_info']['companyname']:'' }}">
+                                                        <input type="text" class="form-control" name="companyname" value="{{ (!empty($investorFai) && isset($investorFai['companyname'])) ? $investorFai['companyname']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>FCA Firm Reference Number</label>
-                                                        <input type="text" class="form-control" name="fcanumber" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['fcanumber'])) ? $investorCertification->details['financial_advisor_info']['fcanumber']:'' }}">
+                                                        <input type="text" class="form-control" name="fcanumber" value="{{ (!empty($investorFai) && isset($investorFai['fcanumber'])) ? $investorFai['fcanumber']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Name</label>
-                                                        <input type="text" class="form-control" name="principlecontact" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['principlecontact'])) ? $investorCertification->details['financial_advisor_info']['principlecontact']:'' }}">
+                                                        <input type="text" class="form-control" name="principlecontact" value="{{ (!empty($investorFai) && isset($investorFai['principlecontact'])) ? $investorFai['principlecontact']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact's FCA Number</label>
-                                                        <input type="text" class="form-control" name="primarycontactfca" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['primarycontactfca'])) ? $investorCertification->details['financial_advisor_info']['primarycontactfca']:'' }}">
+                                                        <input type="text" class="form-control" name="primarycontactfca" value="{{ (!empty($investorFai) && isset($investorFai['primarycontactfca'])) ? $investorFai['primarycontactfca']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Email Address</label>
-                                                        <input type="email" class="form-control" name="email"  data-parsley-type="email" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['email'])) ? $investorCertification->details['financial_advisor_info']['email']:'' }}">
+                                                        <input type="email" class="form-control" name="email"  data-parsley-type="email" value="{{ (!empty($investorFai) && isset($investorFai['email'])) ? $investorFai['email']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Phone Number</label>
-                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['telephone'])) ? $investorCertification->details['financial_advisor_info']['telephone']:'' }}">
+                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" value="{{ (!empty($investorFai) && isset($investorFai['telephone'])) ? $investorFai['telephone']:'' }}">
                                                     </div>
                                                 </div>
 
@@ -745,15 +767,15 @@
                                                         <legend>Firm Address</legend>
                                                         <div class="form-group">
                                                             <label>Address 1</label>
-                                                            <textarea class="form-control" name="address">{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['address'])) ? $investorCertification->details['financial_advisor_info']['address']:'' }}</textarea>
+                                                            <textarea class="form-control" name="address">{{ (!empty($investorFai) && isset($investorFai['address'])) ? $investorFai['address']:'' }}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Address 2</label>
-                                                            <textarea class="form-control" name="address2">{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['address2'])) ? $investorCertification->details['financial_advisor_info']['address2']:'' }}</textarea>
+                                                            <textarea class="form-control" name="address2">{{ (!empty($investorFai) && isset($investorFai['address2'])) ? $investorFai['address2']:'' }}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Town</label>
-                                                            <input type="text" class="form-control" name="city" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['city'])) ? $investorCertification->details['financial_advisor_info']['city']:'' }}">
+                                                            <input type="text" class="form-control" name="city" value="{{ (!empty($investorFai) && isset($investorFai['city'])) ? $investorFai['city']:'' }}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>County</label>
@@ -761,7 +783,7 @@
                                                                 <option value="">Please Select</option>
                                                    
                                                                 @foreach($countyList as $county) 
-                                                                    <option value="{{ $county }}" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['county']) && $investorCertification->details['financial_advisor_info']['county'] == $county) selected @endif >{{ $county }}</option>
+                                                                    <option value="{{ $county }}" @if(!empty($investorFai) && isset($investorFai['county']) && $investorFai['county'] == $county) selected @endif >{{ $county }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -769,7 +791,7 @@
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label>Postcode</label>
-                                                                    <input type="text" class="form-control" name="postcode" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['postcode'])) ? $investorCertification->details['financial_advisor_info']['postcode']:'' }}">
+                                                                    <input type="text" class="form-control" name="postcode" value="{{ (!empty($investorFai) && isset($investorFai['postcode'])) ? $investorFai['postcode']:'' }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -778,7 +800,7 @@
                                                                     <option value="">Please Select</option>
                                                                      
                                                                     @foreach($countryList as $code=>$country)
-                                                                        <option value="{{ $code }}" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['country']) && $investorCertification->details['financial_advisor_info']['country'] == $code) selected @endif>{{ $country }}</option>
+                                                                        <option value="{{ $code }}" @if(!empty($investorFai) && isset($investorFai['country']) && $investorFai['country'] == $code) selected @endif>{{ $country }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -814,7 +836,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <div>
-                                            <button class="btn btn-primary save-advised-investor save-certification @if($isAdvisedInvestor) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                            <button class="btn btn-primary save-advised-investor save-certification @if($isAdvisedInvestor) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
                                         </div>
                                     </div>
                                     <div>
@@ -826,8 +848,15 @@
                                 </div>
                             </div>
 
+                             <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
+
                         </div>
-                        <div role="tabpanel" class="tab-pane fadein " id="tab-6">
+                        <div role="tabpanel" class="tab-pane @if(!empty($activeCertificationData) && $activeCertificationData->slug == 'elective_professional_investor') active fadein @else fade @endif" id="tab-6">
                             <h4 class="my-3 text-primary">
                                 Elective Professional Investor
                             </h4>
@@ -835,6 +864,11 @@
                             $clientCategory = $clientCategories->firstWhere('slug','elective_professional_investor'); 
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
                             $isElectiveProfInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
+
+                            $electiveProfInvestorQuizStatementDeclaration = getElectiveProfInvestorQuizStatementDeclaration(false);
+
+                            $electiveProfessionalStatement   = $electiveProfInvestorQuizStatementDeclaration['statement'];
+                            $electiveProfessionalDeclaration = $electiveProfInvestorQuizStatementDeclaration['declaration'];
                             @endphp
 
                             <p>An Elective Professional Investor (Opt Up) Client is someone ordinarily a “Retail” client who wishes to be treated as a “Professional” category client.</p>
@@ -898,81 +932,32 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingOne">
-                                        <a data-toggle="collapse" href="#epiStatement" role="button" class="collapsed">
-                                          Elective Professional Investor Statement
-                                          <i class="fa fa-lg fa-plus-square-o"></i>
-                                          <i class="fa fa-lg fa-minus-square-o"></i>
-                                        </a>
-                                    </div>
-
-                                    <div id="epiStatement" class="collapse " role="tabpanel" >
-                                        <div class="card-body">
-                                            <p><b>The statement below details the rights and protections afforded to Retail investors that are lost when the client opts up to be designated as a Professional.</b></p>
-                                            <p><b>Please confirm that you have read and understood the statement below:</b></p>
-                                            <p><b>STATEMENT</b></p>
-                                            <p>Financial Conduct Authority (“FCA”) Classification</p>
-                                            <p>On the basis of information we have about you, or you have given us, and with reference to the rules of the FCA (see http://fshandbook.info/FS/html/FCA/COBS/3/5), we have categorised you as a Professional client by reason of your expertise, experience and knowledge in relation to investing in our financial products and other investment opportunities.</p>
-                                            <p>Please note that your categorisation as an elective Professional client applies only for the purpose of enabling us or our affiliates to promote financial products and investment opportunities to you, and that you will not be treated as our client for any other purpose.</p>
-                                            <p>As a consequence of this categorisation, we are informing you that you will lose the protections afforded exclusively to Retail clients under the FCA rules. In particular:</p>
-                                            <ul class="disc">
-                                                <li>Communications and financial promotions made to you will not be subject to the detailed form and content requirements of the FCA’s rules, including those regarding costs and associated charges, that apply in the case of Retail clients.</li>
-                                                <li>When communicating with you, we are required to ensure that such communications are fair, clear and not misleading. However, we may take into consideration your status as a Professional client when complying with such requirements and in assessing whether any communication to you is likely to be understood by you and contains appropriate information for you to make an informed assessment of its subject matter;</li>
-                                                <li>We will not be restricted from promoting financial products and investment opportunities which are not regulated in the UK and in doing so need not warn you further as regards the protections you will lose;</li>
-                                                <li>Because participants in our financial products and investment opportunities are not (or will not on first participating be) Retail clients, we are able to agree with any fund investment that we do not owe a duty of best execution;</li>
-                                                <li>Because participants in our financial products and investment opportunities are not Retail clients, the detailed FCA rules on periodic statements are dis-applied. You will however still receive statements in accordance with the other constitutional documents;</li>
-                                                <li>In the event that we cease to provide investment advisory services, we are not required to ensure that any business which is outstanding is properly completed but we will nevertheless agree to do so; and</li>
-                                                <li>You will have no right of access to the UK’s Financial Ombudsman Service.</li>
-                                            </ul>Please read and sign the declaration below to confirm you have read and understand this written notice and wish to be treated as a Professional client.
-                                            <p>If you do not agree to the signing of this declaration, we are unable to categorise you as an Elective Professional client in conducting business with you in regard to the financial products and investment opportunities we wish to communicate and market to you.</p>
-                                            <p>Yours sincerely,</p>
-                                            <p>Daniel Rodwell,<br>
-                                            Managing Director<br>
-                                            GrowthInvest</p>
-
-                                            <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                {!!$electiveProfessionalStatement!!}
+                               
+                                <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
                             </div>
 
-                            <h4 class="my-3">
-                                Declaration
-                            </h4>
-                            <p>Declaration: Notice of Wish to be treated as a Professional client</p>
-                            <p>Under the EU’s Markets in Financial Instruments Directive (MiFID), I wish to be treated as an
-                                elective Professional client if, subject to your assessment of my expertise, experience, and
-                                knowledge of me you are reasonably assured, in light of the nature of the transactions or services
-                                envisaged, that I am capable of making my own investment decisions and understand the risks
-                                involved. In making your assessment I understand you may rely on information already in your
-                                possession and you may request further additional information from me if necessary.</p>
-                            <p>As a consequence of this assessment and classification as a Professional client I understand you
-                                will be able to promote various financial products and investment opportunities to me. I also
-                                understand you are required to obtain written acknowledgement from me that I have been provided
-                                with a written notice (as detailed in the above letter) in regards of me being treated as a
-                                Professional client.</p>
-                            <p>I warrant that I have the necessary expertise, experience and knowledge of making my own
-                                investment decisions and understand the risks involved in investing in the financial products and
-                                investment opportunities being marketed to me.</p>
-                            <p>I also confirm that I have read and understand the differences between the treatment of
-                                Professional and Retail clients and that I fully understand the protections and compensation
-                                rights that I may lose and the consequences of losing such protections.</p>
-                            <p>I am fully aware that it is up to me to keep the firm informed of any change that could
-                                affect my categorisation.</p>
-                            <p>On the basis of the above information I can confirm that the firm may treat me as a
-                                Professional client.</p>
-                           <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                            {!! $electiveProfessionalDeclaration !!}
+                           <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
+
+                            <div class="investor-certification">
+                            @if(!empty($investorCertification))
+                            {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
+                            @endif
+                           </div>
+
                         </div>
+ 
 
                     </div>
 
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i>Prev </a> 
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a> 
                         </div>
                     </div>
   

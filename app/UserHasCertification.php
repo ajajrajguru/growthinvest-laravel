@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\Defaults;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,8 @@ class UserHasCertification extends Model
     }
 
     public function certification()
-    {
-        return $this->hasOne('App\Defaults', 'certification_default_id');
+    { 
+        return Defaults::find($this->certification_default_id);   
     }
 
     public function getDetailsAttribute( $value ) { 
