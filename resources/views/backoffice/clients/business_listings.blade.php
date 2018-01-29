@@ -42,7 +42,7 @@
                             <div class="col-md-12 mb-5">
                                 <label for="">Select Business Type</label>
                                 <select name="managebusiness_type" class="form-control " id="managebusiness_type">
-                                       <option value="managebusiness">Business Proposals/Funds</option>              
+                                       <option value="business-listings" selected>Business Proposals/Funds</option>              
                                        <option value="entrepreneurs">Entrepreneurs</option>                            
                                        <option value="current-business-valuation">Current Business Valuation</option>                            
                                        <option value="fundmanagers">Fund Managers</option>                              
