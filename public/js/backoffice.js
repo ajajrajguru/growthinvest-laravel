@@ -736,6 +736,7 @@
           var filters;
           filters = {};
           filters.firm_name = $('select[name="firm_name"]').val();
+          filters.business_listings_type = $('select[name="business_listings_type"]').val();
           data.filters = filters;
           return data;
         },

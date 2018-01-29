@@ -216,3 +216,15 @@ function getCertificationQuesionnaire(){
 }
  
  
+
+function get_ordinal_number($number){
+
+    $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+    if (($number %100) >= 11 && ($number%100) <= 13)
+        $abbreviation = $number. 'th';
+    else
+        $abbreviation = $number. $ends[$number % 10];
+
+    return $abbreviation;
+
+}
