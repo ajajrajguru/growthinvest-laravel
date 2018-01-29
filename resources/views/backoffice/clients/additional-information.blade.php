@@ -98,7 +98,7 @@
 
                     <ul class="progress-indicator">
                         <li class="completed">
-                            <a href="javascript:void(0)">Registration</a>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration')}}">Registration</a>
                             <span class="bubble"></span>
                         </li>
                         <li class="completed">
@@ -120,10 +120,10 @@
 
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="#" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a>
                         </div>
                     </div>
 
@@ -703,13 +703,13 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <div class="">
-                                <button type="button" class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                                <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                             </div>
                             <button class="btn btn-primary mt-4" type="submit">Save</button>
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
                             <div class="">
-                                <button type="submit" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></button>
+                                <a href="#" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></a>
                             </div>
                         </div>
                     </form>
