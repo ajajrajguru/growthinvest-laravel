@@ -107,10 +107,12 @@
                 <div class="profile-content p-4">
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                             
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i>Prev </a> 
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a> 
+                            
                         </div>
                     </div>
 
@@ -948,10 +950,10 @@
 
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i>Prev </a> 
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a> 
                         </div>
                     </div>
   

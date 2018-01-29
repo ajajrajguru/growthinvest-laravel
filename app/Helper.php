@@ -510,5 +510,9 @@ function genActiveCertificationValidityHtml($investorCertification,$fileId){
      
 }
 
+
+function getSectors(){
+    return  ['Transport','Technology ( Social )','Technology ( Platform )','Technology ( App )','Bloodstock','Research','Publishing','Music','Film','Exports','Nutrition','Estate Agency','Marketing','Financial','Home Improvement','Dentistry','Advertising','Security','Environmental','Fashion'];
+}
  
  
