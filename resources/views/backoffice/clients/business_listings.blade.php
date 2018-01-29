@@ -59,10 +59,19 @@
 
                         <h5 class="mt-2 mb-0">Selection Filters</h5>
                         <div class="p-3 bg-gray">
+                            <div class="m-b-15">            
+                                <ul class="list-inline">
+                                    <li><span class="label bg-primary">FA</span> Funded Amount</li>
+                                    <li><span class="label bg-warning">AW</span> Added To Watch List</li>
+                                    <li><span class="label bg-success">PA</span> Pledged Amount</li>
+                                </ul>
+                            </div>
+
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="firm_name">
+                                    <select name="firm_name" class="form-control businesslistingsSearchinput" id="firm_name">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
@@ -72,7 +81,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Type</label>
-                                    <select name="business_listings_type" class="form-control entrepreneurSearchinput" id="business_listings_type">
+                                    <select name="business_listings_type" class="form-control businesslistingsSearchinput" id="business_listings_type">
                                          <option value="">All</option>                                    
                                          <option value="proposal">Proposals</option>
                                          <option value="fund">Funds</option>
@@ -92,7 +101,7 @@
                         </div>
 
                         <div class="table-responsive mt-3">
-                            <table id="datatable-enterpreneurs" class="table dataFilterTable table-hover table-striped-bg">
+                            <table id="datatable-businesslistings" class="table dataFilterTable table-hover table-striped-bg">
                                 <thead>
                                     <tr>
                                         <th class="w-search" style="width: 250px;">Logo</th>    
@@ -115,7 +124,7 @@
                                             <td> </td>
                                             <td><b>{{  title_case($business_listing->title) }} </b><br/>({{ $business_listing->type}})
                                                 <br/>
-                                                {{ (!empty($business_listing->owner_id)) ? $business_listing->owner->email:'' }}
+                                                {{ (!empty($business_listing->owner)) ? $business_listing->owner->email:'' }}
                                                 
                                             </td>
                                             <td>  </td>
@@ -123,7 +132,7 @@
                                             <td>{{ date('d/m/Y', strtotime($business_listing->updated_at)) }}</td>
                                             <td>
                                                 
-                                                {{  $business_listing->owner->firm['name']  }}<br/>&pound{{ $business_listing->target_amount  }}</td>
+                                                {{  (!empty($business_listing->owner)) ?$business_listing->owner->firm['name']:''  }}<br/>&pound{{ $business_listing->target_amount  }}</td>
                                             <td></td>
                                             <td></td>                                                                                 
                                             <td>

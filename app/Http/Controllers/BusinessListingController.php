@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\BusinessListing;
 use Illuminate\Http\Request;
 
+/* use App\Firm; */
+
 class BusinessListingController extends Controller
 {
+    public $args = [];
     /**
      * Display a listing of the resource.
      *
@@ -14,12 +17,18 @@ class BusinessListingController extends Controller
      */
     public function index()
     {
+        /* $firms = new Firm;
+        $result = $firms->getAllChildFirmsByFirmID(28);
+        echo"<pre>";
+        print_r($result);
+        die();*/
+
         $business_listing        = new BusinessListing;
         $list_args['backoffice'] = true;
         $business_listing_data   = $business_listing->getBusinessList($list_args);
 /*echo "<pre>";
-        print_r($business_listing_data);
-        die();*/
+print_r($business_listing_data);
+die();*/
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
@@ -29,15 +38,14 @@ class BusinessListingController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Businesses'];
 
-        $data['firms']            = $firms;
+        $data['firms']             = $firms;
         $data['business_listings'] = $business_listing_data;
-        $data['breadcrumbs']      = $breadcrumbs;
-        $data['pageTitle']        = 'Manage Clients : Growthinvest';
+        $data['breadcrumbs']       = $breadcrumbs;
+        $data['pageTitle']         = 'Manage Clients : Growthinvest';
 
         return view('backoffice.clients.business_listings')->with($data);
 
     }
-
 
     public function getBusinessListings(Request $request)
     {
@@ -65,34 +73,38 @@ class BusinessListingController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterEntrepreneurs = $this->getFilteredEntrepreneurs($filters, $skip, $length, $orderDataBy);
+        $filterEntrepreneurs = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy);
         $entrepreneurs       = $filterEntrepreneurs['list'];
         $totalEntrepreneurs  = $filterEntrepreneurs['TotalEntrepreneurs'];
 
         $entrepreneursData = [];
 
-        foreach ($entrepreneurs as $key => $entrepreneur) {
+        foreach ($entrepreneurs as $key => $business_listing) {
 
-            $nameHtml = '<b><a href=="#">' . $entrepreneur->first_name . ' ' . $entrepreneur->last_name . '</a>';
-
-            $actionHtml = '<select data-id="" class="firm_actions" edit-url="#">
+            $business_link =url("/investment-opportunities/fund/".$business_listing->slug);
+            if($business_listing->type=="proposal"){
+                $business_link =url("investment-opportunities/single-company/".$business_listing->slug);
+            }
+            
+            $name_html = "<b><a href='".$business_link."' target='_blank' > " . title_case($business_listing->title) . "</a></b><br/>".get_ordinal_number($business_listing->round)." Round<br/>(" . $business_listing->type . ")
+                                                <br/>
+                                                " . (!empty($business_listing->owner) ? $business_listing->owner->email : '');
+            $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));
+            $actionHtml         = $biz_status_display . '<br/><select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
-                                                <option value="edit">Edit Profile</option>
+                                                <option value="edit">View</option>
                                                 </select>';
 
-            $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id) {
-                $source = "Intermediary";
-            }
-
             $entrepreneursData[] = [
-                'name'            => $nameHtml,
-                'email'           => $entrepreneur->email,
-                'firm'            => (!empty($entrepreneur->firm)) ? $entrepreneur->firm->name : '',
-                'business'        => $entrepreneur->business,
-                'registered_date' => date('d/m/Y', strtotime($entrepreneur->created_at)),
-                'source'          => $source,
-                'action'          => $actionHtml,
+                'logo'              => '',
+                'name'              => $name_html,
+                'duediligence'      => $business_listing->approver,
+                'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
+                'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
+                'firmtoraise'       => (!empty($business_listing->owner) ? $business_listing->owner->firm['name'] : '') . '<br/>&pound' . $business_listing->target_amount,
+                'activity_sitewide' => '',
+                'activity_firmwide' => '',
+                'action'            => $actionHtml,
 
             ];
 
@@ -109,20 +121,50 @@ class BusinessListingController extends Controller
 
     }
 
-    public function getFilteredEntrepreneurs($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
+    public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
     {
 
-        $entrepreneurQuery = User::join('model_has_roles', function ($join) {
-            $join->on('users.id', '=', 'model_has_roles.model_id')
-                ->where('model_has_roles.model_type', 'App\User');
-        })->join('roles', function ($join) {
-            $join->on('model_has_roles.role_id', '=', 'roles.id')
-                ->whereIn('roles.name', ['business_owner']);
-        })
-            ->leftJoin('business_listings', function ($join) {
-                $join->on('users.id', '=', 'business_listings.owner_id')
-                    ->whereIn('business_listings.type', ['proposal']);
-            });
+        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish'])->leftJoin('business_has_defaults', function ($join) {
+            $join->on('business_listings.id', '=', 'business_has_defaults.business_id');
+        })->leftJoin('defaults', function ($join) {
+            $join->on('business_has_defaults.default_id', '=', 'defaults.id');
+        });
+
+        /*SELECT bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
+
+        bp.id AS id,bo.user_id as bo ,bo_info.user_email as bo_email, bp.guid as url ,firm.name as firm_name, firm.id as firm_id,bp.title AS business_name,bp.slug AS business_slug, bp.created_date as business_date,bp.updated_at as business_modified, bpd.meta_value as proposal_details, bpds.meta_value as proposal_status ,bp.status as post_status,
+        SUM(CASE bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS watch_list,
+        SUM(CASE  WHEN bpi.status='pledged' and bpi.details like '%ready-to-invest%' THEN 1 ELSE 0 END) AS pledged,
+        SUM(CASE bpi.status WHEN 'funded' THEN 1 ELSE 0 END) AS funded,
+        SUM(CASE WHEN bpi.status='pledged' and bpi.details like '%ready-to-invest%' THEN bpi.amount_invested ELSE 0 END) AS pledged_amount,
+        SUM(CASE bpi.status WHEN 'funded' THEN bpi.amount_invested ELSE 0 END) AS funded_amount,
+        SUM(CASE my_bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS my_watch_list,
+        SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN 1 ELSE 0 END) AS my_pledged,
+        SUM(CASE my_bpi.status WHEN 'funded' THEN 1 ELSE 0 END) AS my_funded,
+        SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN bpi.amount_invested ELSE 0 END) AS my_pledged_amount,
+        SUM(CASE my_bpi.status WHEN 'funded' THEN bpi.amount_invested ELSE 0 END) AS my_funded_amount
+        FROM business_listings bp
+
+        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
+        $business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
+        }
+
+        $listed_query = "JOIN {$wpdb->prefix}postmeta bpds ON  bpds.post_id = bpd.post_id and bpds.meta_key = 'proposal_status'  ";
+        if (!current_user_can('view_all_proposals')) {
+        $listed_query = "JOIN {$wpdb->prefix}postmeta bpds ON  bpds.post_id = bpd.post_id and bpds.meta_key = 'proposal_status' and bpds.meta_value = 'listed'";
+        }
+
+        $listed_query.= "JOIN {$wpdb->prefix}postmeta m_propfund_type ON  m_propfund_type.post_id = bpd.post_id and m_propfund_type.meta_key = 'proposal-fund-type' and m_propfund_type.meta_value!='list_proposal'  ";
+
+        $wm_associated_firms_query.=" LEFT OUTER JOIN firms firm on firm.id = bo.meta_value
+        LEFT OUTER
+        " . $listed_query . "
+        LEFT OUTER
+        JOIN busines_investments bpi ON bpd.post_id = bpi.biz_proposal_id
+        LEFT OUTER
+        JOIN busines_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors . "))
+        GROUP BY bp.ID ORDER BY business_name ASC ";
+         */
 
         /*->where($cond)->select("users.*")*/
 
@@ -137,7 +179,16 @@ class BusinessListingController extends Controller
         });*/
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
-            $entrepreneurQuery->where('users.firm_id', $filters['firm_name']);
+            //$business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
+            $this->args['firm_name'] = $filters['firm_name'];
+            $business_listings_query->join('users', function ($join) {
+                $join->on('business_listings.owner_id', '=', 'users.id')->where('users.firm_id', $this->args['firm_name']);
+            });
+
+        }
+
+        if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
+            $business_listings_query->where('business_listings.type', $filters['business_listings_type']);
         }
 
         /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
@@ -152,23 +203,27 @@ class BusinessListingController extends Controller
         }*/
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
-        $entrepreneurQuery->groupBy('users.id');
-        $entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
+        $business_listings_query->groupBy('business_listings.id')->select('business_listings.*');
+        //$entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
 
         foreach ($orderDataBy as $columnName => $orderBy) {
-            $entrepreneurQuery->orderBy($columnName, $orderBy);
+            $business_listings_query->orderBy($columnName, $orderBy);
         }
 
         if ($length > 1) {
 
-            $totalEntrepreneurs = $entrepreneurQuery->get()->count();
-            $entrepreneurs      = $entrepreneurQuery->skip($skip)->take($length)->get();
+            $total_etrepreneurs = $business_listings_query->get()->count();
+            $entrepreneurs      = $business_listings_query->skip($skip)->take($length)->get();
         } else {
-            $entrepreneurs      = $entrepreneurQuery->get();
-            $totalEntrepreneurs = $entrepreneurQuery->count();
+            $entrepreneurs      = $business_listings_query->get();
+            $total_etrepreneurs = $business_listings_query->count();
         }
 
-        return ['TotalEntrepreneurs' => $totalEntrepreneurs, 'list' => $entrepreneurs];
+        echo "<pre>";
+        print_r($entrepreneurs);
+        die();  
+
+        return ['TotalEntrepreneurs' => $total_etrepreneurs, 'list' => $entrepreneurs];
 
     }
 

@@ -61,7 +61,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control fundmanagerSearchinput" id="firm_name">
+                                    <select name="firm_name" class="form-control entrepreneurSearchinput" id="firm_name">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>

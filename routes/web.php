@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 
  	//business
  	Route::resource( 'business-listings', 'BusinessListingController' );
+ 	Route::post( 'business-listings/get-businesslistings', 'BusinessListingController@getBusinessListings' );
 
 });
 
