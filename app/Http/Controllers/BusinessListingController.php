@@ -42,6 +42,7 @@ die();*/
         $data['business_listings'] = $business_listing_data;
         $data['breadcrumbs']       = $breadcrumbs;
         $data['pageTitle']         = 'Manage Clients : Growthinvest';
+        $data['activeMenu']          = 'manage_clients';
 
         return view('backoffice.clients.business_listings')->with($data);
 
