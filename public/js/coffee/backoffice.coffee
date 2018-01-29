@@ -670,3 +670,7 @@ $(document).ready ->
     businesslistingsTable.ajax.reload()
     return
  
+
+  $(document).on 'change', '#managebusiness_type', -> 
+    window.open("/backoffice/"+$(this).val(),"_self");
+  
