@@ -73,20 +73,20 @@ die();*/
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterEntrepreneurs = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy);
-        $entrepreneurs       = $filterEntrepreneurs['list'];
-        $totalEntrepreneurs  = $filterEntrepreneurs['TotalEntrepreneurs'];
+        $filter_business_listings = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy);
+        $business_listings       = $filter_business_listings['list'];
+        $total_business_listings  = $filter_business_listings['total_business_listings'];
 
-        $entrepreneursData = [];
+        $business_listings_data = [];
 
-        foreach ($entrepreneurs as $key => $business_listing) {
+        foreach ($business_listings as $key => $business_listing) {
 
-            $business_link =url("/investment-opportunities/fund/".$business_listing->slug);
-            if($business_listing->type=="proposal"){
-                $business_link =url("investment-opportunities/single-company/".$business_listing->slug);
+            $business_link = url("/investment-opportunities/fund/" . $business_listing->slug);
+            if ($business_listing->type == "proposal") {
+                $business_link = url("investment-opportunities/single-company/" . $business_listing->slug);
             }
-            
-            $name_html = "<b><a href='".$business_link."' target='_blank' > " . title_case($business_listing->title) . "</a></b><br/>".get_ordinal_number($business_listing->round)." Round<br/>(" . $business_listing->type . ")
+
+            $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->title) . "</a></b><br/>" . get_ordinal_number($business_listing->round) . " Round<br/>(" . $business_listing->type . ")
                                                 <br/>
                                                 " . (!empty($business_listing->owner) ? $business_listing->owner->email : '');
             $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));
@@ -95,7 +95,7 @@ die();*/
                                                 <option value="edit">View</option>
                                                 </select>';
 
-            $entrepreneursData[] = [
+            $business_listings_data[] = [
                 'logo'              => '',
                 'name'              => $name_html,
                 'duediligence'      => $business_listing->approver,
@@ -112,9 +112,9 @@ die();*/
 
         $json_data = array(
             "draw"            => intval($requestData['draw']),
-            "recordsTotal"    => intval($totalEntrepreneurs),
-            "recordsFiltered" => intval($totalEntrepreneurs),
-            "data"            => $entrepreneursData,
+            "recordsTotal"    => intval($total_business_listings),
+            "recordsFiltered" => intval($total_business_listings),
+            "data"            => $business_listings_data,
         );
 
         return response()->json($json_data);
@@ -212,18 +212,18 @@ die();*/
 
         if ($length > 1) {
 
-            $total_etrepreneurs = $business_listings_query->get()->count();
-            $entrepreneurs      = $business_listings_query->skip($skip)->take($length)->get();
+            $total_business_listings = $business_listings_query->get()->count();
+            $business_listings       = $business_listings_query->skip($skip)->take($length)->get();
         } else {
-            $entrepreneurs      = $business_listings_query->get();
-            $total_etrepreneurs = $business_listings_query->count();
+            $business_listings       = $business_listings_query->get();
+            $total_business_listings = $business_listings_query->count();
         }
 
-        echo "<pre>";
+        /* echo "<pre>";
         print_r($entrepreneurs);
-        die();  
+        die();  */
 
-        return ['TotalEntrepreneurs' => $total_etrepreneurs, 'list' => $entrepreneurs];
+        return ['total_business_listings' => $total_business_listings, 'list' => $business_listings];
 
     }
 
