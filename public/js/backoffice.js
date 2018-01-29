@@ -198,6 +198,12 @@
       $('#change_pwd').removeClass('d-none');
       return $('.setpassword-cont').addClass('d-none');
     });
+    if ($('form').length && $('form').attr('data-parsley-validate') === true) {
+      $('form').parsley().on('form:success', function() {
+        $(this)[0].$element.find('.save-btn .fa-check').addClass('d-none');
+        return $(this)[0].$element.find('.save-btn').addClass('running');
+      });
+    }
     $('[data-toggle="popover"]').popover();
     $('#giMenu').mmenu({
       navbar: {
@@ -344,6 +350,7 @@
             return quizAnswers[qid] = optionLabel;
           }
         });
+        btnObj.addClass('running');
         return $.ajax({
           type: 'post',
           url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
@@ -358,6 +365,7 @@
             'quiz_answers': quizAnswers
           },
           success: function(data) {
+            btnObj.removeClass('running');
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".submit-quiz").removeClass('d-none');
             $(".retail-quiz-btn").addClass('d-none');
@@ -393,6 +401,7 @@
         return $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the Sophisticated Investor criteria.");
       } else {
         $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none');
+        btnObj.addClass('running');
         return $.ajax({
           type: 'post',
           url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
@@ -407,6 +416,7 @@
             'terms': terms
           },
           success: function(data) {
+            btnObj.removeClass('running');
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
@@ -439,6 +449,7 @@
         return $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the High Net Worth Individual criteria.");
       } else {
         $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none');
+        btnObj.addClass('running');
         return $.ajax({
           type: 'post',
           url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
@@ -453,6 +464,7 @@
             'terms': terms
           },
           success: function(data) {
+            btnObj.removeClass('running');
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
@@ -474,6 +486,7 @@
           return conditions += $(this).attr('name') + ',';
         }
       });
+      btnObj.addClass('running');
       return $.ajax({
         type: 'post',
         url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
@@ -487,6 +500,7 @@
           'conditions': conditions
         },
         success: function(data) {
+          btnObj.removeClass('running');
           $('.elective-prof-inv-btn').removeClass('d-none');
           $(".save-certification").removeClass('d-none');
           btnObj.addClass('d-none');
@@ -523,6 +537,7 @@
         financialAdvisorInfo['county'] = $('select[name="county"]').val();
         financialAdvisorInfo['postcode'] = $('input[name="postcode"]').val();
         financialAdvisorInfo['country'] = $('select[name="country"]').val();
+        btnObj.addClass('running');
         return $.ajax({
           type: 'post',
           url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
@@ -537,6 +552,7 @@
             'financial_advisor_info': financialAdvisorInfo
           },
           success: function(data) {
+            btnObj.removeClass('running');
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
@@ -570,6 +586,7 @@
             return quizAnswers[qid] = optionLabel;
           }
         });
+        btnObj.addClass('running');
         return $.ajax({
           type: 'post',
           url: '/backoffice/investor/' + giCode + '/save-client-categorisation',
@@ -584,6 +601,7 @@
             'investor_statement': $('.elective-prof-inv-btn').attr('data-agree')
           },
           success: function(data) {
+            btnObj.removeClass('running');
             $('.elective-prof-inv-btn').addClass('d-none');
             $(".submit-quiz").removeClass('d-none');
             $(".elective-prof-inv-quiz-btn").addClass('d-none');
@@ -736,8 +754,11 @@
         }
       ]
     });
-    return $('.businesslistingsSearchinput').change(function() {
+    $('.businesslistingsSearchinput').change(function() {
       businesslistingsTable.ajax.reload();
+    });
+    return $(document).on('change', '#managebusiness_type', function() {
+      return window.open("/backoffice/" + $(this).val(), "_self");
     });
   });
 

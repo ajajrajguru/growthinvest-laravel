@@ -372,7 +372,7 @@
 
           
 
-                <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
+                <button type="submit" class="btn btn-primary save-btn mt-3 editmode @if($mode=='view') d-none @endif ld-ext-right">Save <div class="ld ld-ring ld-spin"></div></button>
                 @if($investor->id)
                 <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}" class="btn btn-primary mt-3 ">Next</a> 
                 @endif

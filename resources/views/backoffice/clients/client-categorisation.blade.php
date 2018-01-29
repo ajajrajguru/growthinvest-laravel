@@ -107,10 +107,12 @@
                 <div class="profile-content p-4">
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                             
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i>Prev </a> 
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a> 
+                            
                         </div>
                     </div>
 
@@ -323,7 +325,7 @@
                                  <div class="mb-3">
                                     <div>
                                        
-                                       <button class="btn btn-primary save-retial-certification save-certification @if($isRetail) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
+                                       <button class="btn btn-primary save-retial-certification save-certification @if($isRetail) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit <div class="ld ld-ring ld-spin"></div></button>
                                        
                                     </div>
                                  </div>
@@ -479,7 +481,7 @@
                                         
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary save-sophisticated-Investor save-certification @if($isSophisticatedInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit</button>
+                                                <button class="btn btn-primary save-sophisticated-Investor save-certification @if($isSophisticatedInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" get-input-class="retail-input">Submit<div class="ld ld-ring ld-spin"></div></button>
                                             </div>
                                         </div>
                                         
@@ -504,6 +506,10 @@
                             <h4 class ="my-3 text-primary">
                                 High Net Worth Individual
                             </h4>
+                             <div class="alert alert-danger d-none" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                               <span id="message"></span>
+                            </div>
                             <form>
                                 @php
                                 $clientCategory = $clientCategories->firstWhere('slug','high_net_worth_individual'); 
@@ -586,7 +592,7 @@
                                         
                                         <div class="mb-3">
                                             <div>
-                                                <button class="btn btn-primary save-high-net-worth save-certification @if($isHighNetworth) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                                <button class="btn btn-primary save-high-net-worth save-certification @if($isHighNetworth) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
                                             </div>
                                         </div>
                                          
@@ -655,7 +661,7 @@
                                    
                                     <div class="mb-3">
                                         <div>
-                                            <button class="btn btn-primary save-professsional-inv save-certification @if($isProfessionalInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                            <button class="btn btn-primary save-professsional-inv save-certification @if($isProfessionalInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
                                         </div>
                                     </div>
                                      
@@ -692,11 +698,11 @@
                             <div class="form-group">
                                 <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['havefinancialadvisor']) && $investorCertification->details['financial_advisor_info']['havefinancialadvisor'] == 'yes') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['havefinancialadvisor']) && $investorCertification->details['financial_advisor_info']['havefinancialadvisor'] == 'no') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_no">No</label>
                                 </div>
                             </div>
@@ -704,11 +710,11 @@
                             <div class="form-group">
                                 <label>Is your client receiving advice from an Authorised Person in relation to unlisted shares and unlisted debt securities?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="advicefromauthorised_yes" name="advicefromauthorised" class="custom-control-input" value="yes" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['advicefromauthorised']) && $investorCertification->details['financial_advisor_info']['advicefromauthorised'] == 'yes') checked @endif>
+                                  <input type="radio" id="advicefromauthorised_yes" name="advicefromauthorised" class="custom-control-input" value="yes" @if(!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] == 'yes') checked @endif>
                                   <label class="custom-control-label medium" for="advicefromauthorised_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="advicefromauthorised_no" name="advicefromauthorised" class="custom-control-input" value="no" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['advicefromauthorised']) && $investorCertification->details['financial_advisor_info']['advicefromauthorised'] == 'no') checked @endif>
+                                  <input type="radio" id="advicefromauthorised_no" name="advicefromauthorised" class="custom-control-input" value="no" @if(!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] == 'no') checked @endif>
                                   <label class="custom-control-label medium" for="advicefromauthorised_no">No</label>
                                 </div>
                             </div>
@@ -732,27 +738,27 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Firm Name</label>
-                                                        <input type="text" class="form-control" name="companyname" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['companyname'])) ? $investorCertification->details['financial_advisor_info']['companyname']:'' }}">
+                                                        <input type="text" class="form-control" name="companyname" value="{{ (!empty($investorFai) && isset($investorFai['companyname'])) ? $investorFai['companyname']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>FCA Firm Reference Number</label>
-                                                        <input type="text" class="form-control" name="fcanumber" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['fcanumber'])) ? $investorCertification->details['financial_advisor_info']['fcanumber']:'' }}">
+                                                        <input type="text" class="form-control" name="fcanumber" value="{{ (!empty($investorFai) && isset($investorFai['fcanumber'])) ? $investorFai['fcanumber']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Name</label>
-                                                        <input type="text" class="form-control" name="principlecontact" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['principlecontact'])) ? $investorCertification->details['financial_advisor_info']['principlecontact']:'' }}">
+                                                        <input type="text" class="form-control" name="principlecontact" value="{{ (!empty($investorFai) && isset($investorFai['principlecontact'])) ? $investorFai['principlecontact']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact's FCA Number</label>
-                                                        <input type="text" class="form-control" name="primarycontactfca" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['primarycontactfca'])) ? $investorCertification->details['financial_advisor_info']['primarycontactfca']:'' }}">
+                                                        <input type="text" class="form-control" name="primarycontactfca" value="{{ (!empty($investorFai) && isset($investorFai['primarycontactfca'])) ? $investorFai['primarycontactfca']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Email Address</label>
-                                                        <input type="email" class="form-control" name="email"  data-parsley-type="email" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['email'])) ? $investorCertification->details['financial_advisor_info']['email']:'' }}">
+                                                        <input type="email" class="form-control" name="email"  data-parsley-type="email" value="{{ (!empty($investorFai) && isset($investorFai['email'])) ? $investorFai['email']:'' }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Phone Number</label>
-                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['telephone'])) ? $investorCertification->details['financial_advisor_info']['telephone']:'' }}">
+                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" value="{{ (!empty($investorFai) && isset($investorFai['telephone'])) ? $investorFai['telephone']:'' }}">
                                                     </div>
                                                 </div>
 
@@ -761,15 +767,15 @@
                                                         <legend>Firm Address</legend>
                                                         <div class="form-group">
                                                             <label>Address 1</label>
-                                                            <textarea class="form-control" name="address">{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['address'])) ? $investorCertification->details['financial_advisor_info']['address']:'' }}</textarea>
+                                                            <textarea class="form-control" name="address">{{ (!empty($investorFai) && isset($investorFai['address'])) ? $investorFai['address']:'' }}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Address 2</label>
-                                                            <textarea class="form-control" name="address2">{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['address2'])) ? $investorCertification->details['financial_advisor_info']['address2']:'' }}</textarea>
+                                                            <textarea class="form-control" name="address2">{{ (!empty($investorFai) && isset($investorFai['address2'])) ? $investorFai['address2']:'' }}</textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Town</label>
-                                                            <input type="text" class="form-control" name="city" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['city'])) ? $investorCertification->details['financial_advisor_info']['city']:'' }}">
+                                                            <input type="text" class="form-control" name="city" value="{{ (!empty($investorFai) && isset($investorFai['city'])) ? $investorFai['city']:'' }}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>County</label>
@@ -777,7 +783,7 @@
                                                                 <option value="">Please Select</option>
                                                    
                                                                 @foreach($countyList as $county) 
-                                                                    <option value="{{ $county }}" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['county']) && $investorCertification->details['financial_advisor_info']['county'] == $county) selected @endif >{{ $county }}</option>
+                                                                    <option value="{{ $county }}" @if(!empty($investorFai) && isset($investorFai['county']) && $investorFai['county'] == $county) selected @endif >{{ $county }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -785,7 +791,7 @@
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label>Postcode</label>
-                                                                    <input type="text" class="form-control" name="postcode" value="{{ (!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['postcode'])) ? $investorCertification->details['financial_advisor_info']['postcode']:'' }}">
+                                                                    <input type="text" class="form-control" name="postcode" value="{{ (!empty($investorFai) && isset($investorFai['postcode'])) ? $investorFai['postcode']:'' }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -794,7 +800,7 @@
                                                                     <option value="">Please Select</option>
                                                                      
                                                                     @foreach($countryList as $code=>$country)
-                                                                        <option value="{{ $code }}" @if(!empty($investorCertification) && isset($investorCertification->details['financial_advisor_info']['country']) && $investorCertification->details['financial_advisor_info']['country'] == $code) selected @endif>{{ $country }}</option>
+                                                                        <option value="{{ $code }}" @if(!empty($investorFai) && isset($investorFai['country']) && $investorFai['country'] == $code) selected @endif>{{ $country }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -830,7 +836,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <div>
-                                            <button class="btn btn-primary save-advised-investor save-certification @if($isAdvisedInvestor) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                                            <button class="btn btn-primary save-advised-investor save-certification @if($isAdvisedInvestor) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
                                         </div>
                                     </div>
                                     <div>
@@ -933,7 +939,7 @@
                             </div>
 
                             {!! $electiveProfessionalDeclaration !!}
-                           <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit</button>
+                           <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
 
                             <div class="investor-certification">
                             @if(!empty($investorCertification))
@@ -948,10 +954,10 @@
 
                     <div class="d-flex justify-content-between">
                         <div class="">
-                            <button type="button" class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration') }}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i>Prev </a> 
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a> 
                         </div>
                     </div>
   

@@ -50,6 +50,8 @@ class UserPermission
                 'backoffice/investor/save-registration'                   => ['add_investor'],
                 'backoffice/investor/{giCode}/client-categorisation'      => ['add_investor'],
                 'backoffice/investor/{giCode}/save-client-categorisation' => ['add_investor'],
+                'backoffice/investor/{giCode}/additional-information'      => ['add_investor'],
+                'backoffice/investor/{giCode}/save-additional-information' => ['add_investor'],
                 'backoffice/investor/download-certification/{fileid}' => ['add_investor','view_all_investors', 'investors', 'view_investors'],
 
                 'backoffice/entrepreneurs'                                => ['view_all_business_owners', 'view_firm_business_owners'],
