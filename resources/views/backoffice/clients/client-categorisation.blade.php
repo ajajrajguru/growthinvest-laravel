@@ -506,6 +506,10 @@
                             <h4 class ="my-3 text-primary">
                                 High Net Worth Individual
                             </h4>
+                             <div class="alert alert-danger d-none" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                               <span id="message"></span>
+                            </div>
                             <form>
                                 @php
                                 $clientCategory = $clientCategories->firstWhere('slug','high_net_worth_individual'); 

@@ -288,6 +288,7 @@ $(document).ready ->
 
   $('.save-retial-certification').click ->
     btnObj = $(this)
+    
     err = validateQuiz($(".retail-quiz-btn"))
     
     if err > 0
@@ -310,6 +311,7 @@ $(document).ready ->
           optionLabel = $(this).find('input[data-correct="1"]:checked').attr('data-label')
           quizAnswers[qid]=optionLabel
 
+      btnObj.addClass('running')
       $.ajax
         type: 'post'
         url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
@@ -322,6 +324,7 @@ $(document).ready ->
           'conditions': conditions
           'quiz_answers': quizAnswers
         success: (data) ->
+          btnObj.removeClass('running')
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".submit-quiz").removeClass('d-none')
           $(".retail-quiz-btn").addClass('d-none')
@@ -333,6 +336,7 @@ $(document).ready ->
 
   $('.save-sophisticated-Investor').click ->
     btnObj = $(this)
+    
     clientCategoryId = $(this).attr('client-category')
     giCode = $(this).attr('inv-gi-code')
     certification_type = $('select[name="certification_type"]').val()
@@ -352,6 +356,7 @@ $(document).ready ->
       $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the Sophisticated Investor criteria.")
     else
       $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none')
+      btnObj.addClass('running')
       $.ajax
         type: 'post'
         url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
@@ -364,6 +369,7 @@ $(document).ready ->
           'conditions': conditions
           'terms': terms
         success: (data) ->
+          btnObj.removeClass('running')
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
@@ -372,6 +378,7 @@ $(document).ready ->
 
   $('.save-high-net-worth').click ->
     btnObj = $(this)
+    
     clientCategoryId = $(this).attr('client-category')
     giCode = $(this).attr('inv-gi-code')
     certification_type = $('select[name="certification_type"]').val()
@@ -391,6 +398,7 @@ $(document).ready ->
       $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the High Net Worth Individual criteria.")
     else
       $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none')
+      btnObj.addClass('running')
       $.ajax
         type: 'post'
         url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
@@ -403,6 +411,7 @@ $(document).ready ->
           'conditions': conditions
           'terms': terms
         success: (data) ->
+          btnObj.removeClass('running')
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
@@ -421,6 +430,7 @@ $(document).ready ->
       if $(this).is(':checked')
         conditions += $(this).attr('name')+','
 
+    btnObj.addClass('running')
     $.ajax
       type: 'post'
       url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
@@ -432,6 +442,7 @@ $(document).ready ->
         'client_category_id': clientCategoryId
         'conditions': conditions
       success: (data) ->
+        btnObj.removeClass('running')
         $('.elective-prof-inv-btn').removeClass('d-none')
         $(".save-certification").removeClass('d-none')
         btnObj.addClass('d-none')
@@ -440,6 +451,7 @@ $(document).ready ->
 
   $('.save-advised-investor').click ->
     btnObj = $(this)
+    
     clientCategoryId = $(this).attr('client-category')
     giCode = $(this).attr('inv-gi-code')
     certification_type = $('select[name="certification_type"]').val()
@@ -466,6 +478,7 @@ $(document).ready ->
       financialAdvisorInfo['postcode']=$('input[name="postcode"]').val()
       financialAdvisorInfo['country']=$('select[name="country"]').val()
 
+      btnObj.addClass('running')
       $.ajax
         type: 'post'
         url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
@@ -478,6 +491,7 @@ $(document).ready ->
           'conditions': conditions
           'financial_advisor_info': financialAdvisorInfo
         success: (data) ->
+          btnObj.removeClass('running')
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
@@ -490,12 +504,14 @@ $(document).ready ->
   
   $('.save-elective-prof-inv').click ->
     btnObj = $(this)
+    
     err = validateQuiz($(".elective-prof-inv-quiz-btn"))
     
     if err > 0
       $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
       $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
     else
+      
       $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none')
       clientCategoryId = $(this).attr('client-category')
       giCode = $(this).attr('inv-gi-code')
@@ -507,7 +523,7 @@ $(document).ready ->
           qid = $(this).find('input[data-correct="1"]:checked').attr('data-qid')
           optionLabel = $(this).find('input[data-correct="1"]:checked').attr('data-label')
           quizAnswers[qid]=optionLabel
-
+      btnObj.addClass('running')
       $.ajax
         type: 'post'
         url: '/backoffice/investor/'+giCode+'/save-client-categorisation'
@@ -520,6 +536,7 @@ $(document).ready ->
           'quiz_answers': quizAnswers
           'investor_statement': $('.elective-prof-inv-btn').attr('data-agree')
         success: (data) ->
+          btnObj.removeClass('running')
           $('.elective-prof-inv-btn').addClass('d-none')
           $(".submit-quiz").removeClass('d-none')
           $(".elective-prof-inv-quiz-btn").addClass('d-none')
