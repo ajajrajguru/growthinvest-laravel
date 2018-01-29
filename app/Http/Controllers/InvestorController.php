@@ -449,12 +449,15 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
 
         $investorCertification           = $investor->getActiveCertification();
+        $investorFai = $investor->userFinancialAdvisorInfo();
+
         $data['investor']                = $investor;
         $data['countyList']              = getCounty();
         $data['countryList']             = getCountry();
         $data['clientCategories']        = $clientCategories;
         $data['certificationTypes']      = certificationTypes();
-        $data['investorCertification']   = $investorCertification;
+        $data['investorCertification']   = $investorCertification;  
+        $data['investorFai'] = (!empty($investorFai)) ? $investorFai->data_value : []; 
         $data['activeCertificationData'] = (!empty($investorCertification)) ? $investorCertification->certification() : null;
         $data['breadcrumbs']             = $breadcrumbs;
         $data['pageTitle']               = 'Add Investor : Client Categorisation';
@@ -494,19 +497,20 @@ class InvestorController extends Controller
         } elseif ($requestData['save-type'] == 'professsional_investors') {
             $details = $this->getProfessionalInvData($requestData);
         } elseif ($requestData['save-type'] == 'advice_investors') {
-            $details = $this->getAdviceInvestorsData($requestData);
+            $reqDetails = $this->getAdviceInvestorsData($requestData);
 
-            $details          = $data['conditions'];
-            $financialAdvInfo = $data['financial_advisor_info'];
+            $details['conditions']          = $reqDetails['conditions'];
+            $financialAdvInfoData = $reqDetails['financial_advisor_info'];
 
             $financialAdvInfo = $investor->userFinancialAdvisorInfo();
             if (empty($financialAdvInfo)) {
                 $financialAdvInfo           = new UserData;
-                $financialAdvInfo->user_id  = $investorId;
+                $financialAdvInfo->user_id  = $investor->id;
                 $financialAdvInfo->data_key = 'financial_advisor_info';
             }
-            $financialAdvInfo->data_value = $financialAdvInfo;
+            $financialAdvInfo->data_value = $financialAdvInfoData;
             $financialAdvInfo->save();
+             
 
         } elseif ($requestData['save-type'] == 'elective_prof') {
             $details = $this->getElectiveProfData($requestData);
@@ -658,6 +662,8 @@ class InvestorController extends Controller
             $fileDiaplayName = "Statement for Professional Investor Certification";
 
         } elseif ($type == 'advice_investors') {
+            $investorFai = $investor->userFinancialAdvisorInfo();
+            $submissionData['financial_advisor_info'] = (!empty($investorFai)) ? $investorFai->data_value : [];
             $html .= $this->adviceInvestorsHtml($submissionData, $investor);
             $fileDiaplayName = "Statement for Advised Investor Certification";
 
@@ -1925,14 +1931,14 @@ class InvestorController extends Controller
         $investorFai['county']            = $requestData['county'];
         $investorFai['postcode']          = $requestData['postcode'];
         $investorFai['country']           = $requestData['country'];
+        $investorFai["havefinancialadvisor"]              = (isset($requestData["havefinancialadvisor"])) ? $requestData["havefinancialadvisor"] : '' ;
+        $investorFai["requireadviceseedeisoreis"]         = (isset($requestData["requireadviceseedeisoreis"])) ? $requestData["requireadviceseedeisoreis"]: '' ;
+        $investorFai["advicefromauthorised"]              = (isset($requestData["advicefromauthorised"])) ? $requestData["advicefromauthorised"]: '' ;
 
         $userMeta["skypeid"]                           = $requestData["skypeid"];
         $userMeta["linkedin"]                          = $requestData["linkedin"];
         $userMeta["facebook"]                          = $requestData["facebook"];
         $userMeta["twitter"]                           = $requestData["facebook"];
-        $userMeta["havefinancialadvisor"]              = (isset($requestData["havefinancialadvisor"])) ? $requestData["havefinancialadvisor"] : '' ;
-        $userMeta["requireadviceseedeisoreis"]         = (isset($requestData["requireadviceseedeisoreis"])) ? $requestData["requireadviceseedeisoreis"]: '' ;
-        $userMeta["advicefromauthorised"]              = (isset($requestData["advicefromauthorised"])) ? $requestData["advicefromauthorised"]: '' ;
         $userMeta["employmenttype"]                    = (isset($requestData["employmenttype"])) ? $requestData["employmenttype"]: '' ;
         $userMeta["totalannualincome"]                 = $requestData["totalannualincome"];
         $userMeta["possibleannualinvestment"]          = $requestData["possibleannualinvestment"];

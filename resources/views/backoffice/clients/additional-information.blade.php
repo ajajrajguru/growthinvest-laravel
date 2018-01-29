@@ -183,11 +183,11 @@
                             <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                             <div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="yesrodio1" name="havefinancialadvisor" value="yes" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['havefinancialadvisor']) && $additionalInfo['havefinancialadvisor'] =='yes') ? 'checked':'' }}>
+                                  <input type="radio" id="yesrodio1" name="havefinancialadvisor" value="yes" class="custom-control-input"  {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='yes') ? 'checked':'' }}>
                                   <label class="custom-control-label normal" for="yesrodio1" >Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="norodio1" name="havefinancialadvisor" value="no" class="custom-control-input" {{ (!empty($additionalInfo) && isset($additionalInfo['havefinancialadvisor']) && $additionalInfo['havefinancialadvisor'] =='no') ? 'checked':'' }}>
+                                  <input type="radio" id="norodio1" name="havefinancialadvisor" value="no" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='no') ? 'checked':'' }}>
                                   <label class="custom-control-label normal" for="norodio1" >No</label>
                                 </div>
                             </div>
@@ -196,11 +196,11 @@
                             <label>Does your client require advice on seed EIS/SEIS?</label>
                             <div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="yesrodio2" name="requireadviceseedeisoreis" value="yes" class="custom-control-input" {{ (!empty($additionalInfo) && isset($additionalInfo['requireadviceseedeisoreis']) && $additionalInfo['requireadviceseedeisoreis'] =='yes') ? 'checked':'' }} >
+                                  <input type="radio" id="yesrodio2" name="requireadviceseedeisoreis" value="yes" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['requireadviceseedeisoreis']) && $investorFai['requireadviceseedeisoreis'] =='yes') ? 'checked':'' }} >
                                   <label class="custom-control-label normal" for="yesrodio2" >Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="norodio2" name="requireadviceseedeisoreis" value="no" class="custom-control-input" {{ (!empty($additionalInfo) && isset($additionalInfo['requireadviceseedeisoreis']) && $additionalInfo['requireadviceseedeisoreis'] =='no') ? 'checked':'' }} >
+                                  <input type="radio" id="norodio2" name="requireadviceseedeisoreis" value="no" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['requireadviceseedeisoreis']) && $investorFai['requireadviceseedeisoreis'] =='no') ? 'checked':'' }} >
                                   <label class="custom-control-label normal" for="norodio2" >No</label>
                                 </div>
                             </div>
@@ -209,11 +209,11 @@
                             <label>Is your client receiving advice from an Authorised Person in relation to unlisted shares and unlisted debt securities?</label>
                             <div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="yesrodio3" name="advicefromauthorised" value="yes" class="custom-control-input" {{ (!empty($additionalInfo) && isset($additionalInfo['advicefromauthorised']) && $additionalInfo['advicefromauthorised'] =='yes') ? 'checked':'' }} >
+                                  <input type="radio" id="yesrodio3" name="advicefromauthorised" value="yes" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] =='yes') ? 'checked':'' }} >
                                   <label class="custom-control-label normal" for="yesrodio3" >Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="norodio3" name="advicefromauthorised" value="no" class="custom-control-input"   {{ (!empty($additionalInfo) && isset($additionalInfo['advicefromauthorised']) && $additionalInfo['advicefromauthorised'] =='no') ? 'checked':'' }}>
+                                  <input type="radio" id="norodio3" name="advicefromauthorised" value="no" class="custom-control-input"   {{ (!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] =='no') ? 'checked':'' }}>
                                   <label class="custom-control-label normal" for="norodio3">No</label>
                                 </div>
                             </div>
