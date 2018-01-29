@@ -81,16 +81,19 @@ die();*/
 
         $business_listings_data = [];
 
+        /*print_r($business_listings);
+        die();*/
+
         foreach ($business_listings as $key => $business_listing) {
 
-            $business_link = url("/investment-opportunities/fund/" . $business_listing->slug);
+            $business_link = url("/investment-opportunities/fund/" . $business_listing->business_slug);
             if ($business_listing->type == "proposal") {
-                $business_link = url("investment-opportunities/single-company/" . $business_listing->slug);
+                $business_link = url("investment-opportunities/single-company/" . $business_listing->business_slug);
             }
 
-            $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->title) . "</a></b><br/>" . get_ordinal_number($business_listing->round) . " Round<br/>(" . $business_listing->type . ")
+            $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->business_title) . "</a></b><br/>" . get_ordinal_number($business_listing->round) . " Round<br/>(" . $business_listing->type . ")
                                                 <br/>
-                                                " . (!empty($business_listing->owner) ? $business_listing->owner->email : '');
+                                                " .   $business_listing->bo_email ;
             $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));
             $actionHtml         = $biz_status_display . '<br/><select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
@@ -100,10 +103,10 @@ die();*/
             $business_listings_data[] = [
                 'logo'              => '',
                 'name'              => $name_html,
-                'duediligence'      => $business_listing->approver,
+                'duediligence'      => '',//$business_listing->approver,
                 'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
                 'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
-                'firmtoraise'       => (!empty($business_listing->owner) ? $business_listing->owner->firm['name'] : '') . '<br/>&pound' . $business_listing->target_amount,
+                'firmtoraise'       =>  $business_listing->firm_name. '<br/>&pound' . $business_listing->target_amount,
                 'activity_sitewide' => '',
                 'activity_firmwide' => '',
                 'action'            => $actionHtml,
@@ -146,9 +149,9 @@ die();*/
 
         
 
-        $wm_associated_firms_query_select_data="SELECT bp.business_status as proposal_status, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
+        $wm_associated_firms_query_select_data="SELECT firm.name as firm_name, bp.round as round, bp.target_amount as target_amount,bp.created_at as created_at, bp.updated_at as updated_at, bp.business_status as business_status, bp.type as type, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
 
-        bp.id AS id,bo_info.id as bo ,bo_info.email as bo_email,  firm.name as firm_name, firm.id as firm_id,bp.title AS business_name,bp.slug AS business_slug, bp.created_at as business_date,bp.updated_at as business_modified,  bp.business_status as proposal_status ,bp.status as post_status,
+        bp.id AS id,bo_info.id as bo ,bo_info.email as bo_email,  firm.name as firm_name, firm.id as firm_id,bp.title AS business_title,bp.slug AS business_slug, bp.created_at as business_date,bp.updated_at as business_modified,  bp.business_status as proposal_status ,bp.status as post_status,
         SUM(CASE bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS watch_list,
         SUM(CASE  WHEN bpi.status='pledged' and bpi.details like '%ready-to-invest%' THEN 1 ELSE 0 END) AS pledged,
         SUM(CASE bpi.status WHEN 'funded' THEN 1 ELSE 0 END) AS funded,
@@ -164,8 +167,8 @@ die();*/
         $wm_associated_firms_query=" FROM business_listings bp";
 
         
-
-         $wm_associated_firms_query.=" JOIN users as bo_info on bo_info.id =   bp.owner_id AND bp.status = 'publish' ";
+         $wm_associated_firms_query.=" JOIN users as bo_info on bo_info.id =   bp.owner_id  ";
+         //$wm_associated_firms_query.=" JOIN users as bo_info on bo_info.id =   bp.owner_id AND bp.status = 'publish' ";
        /* $wm_associated_firms_query.=" JOIN users as bo_info on bo_info.id =   bp.owner_id
         JOIN {$wpdb->prefix}postmeta bpd ON bp.ID = bpd.post_id AND bp.post_type = 'business-proposal' AND bp.post_status = 'publish' AND bpd.meta_key = 'proposal_details'";*/
 
@@ -183,19 +186,36 @@ die();*/
 
         LEFT OUTER
         JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))
-        GROUP BY bp.ID  ";
+        GROUP BY bp.id  ";
 
-        $sql_limit =" ORDER BY business_name ASC LIMIT ".$skip.",".$length;
+        $sql_limit =" ORDER BY business_title ASC LIMIT ".$skip.",".$length;
 
-        echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
-        die();
-        $business = DB::select($wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit);
+       /* echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
+        die();*/
+        $business_listings = DB::select($wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit);
 
-        $business_count = DB::select($wm_associated_firms_query_select_count.$wm_associated_firms_query);
-        echo $wm_associated_firms_query_select_count.$wm_associated_firms_query;
-        die();
-        print_r (['total_business_listings' => $business_count, 'list' => $business]);
-        die();
+        
+
+        
+        $sql_business_listings_count ="SELECT count(*) as count FROM business_listings biz  ";
+        /* Get business listings count */
+        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
+            $sql_business_listings_count.= "
+            LEFT JOIN users on biz.owner_id = users.id 
+            LEFT JOIN firms on users.firm_id = firms.id  AND users.firm_id = ".$filters['firm_name']; 
+        }
+
+        $sql_business_listings_count_where ="";
+
+        if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
+            $sql_business_listings_count.="biz.type ='".$filters['business_listings_type']."'";
+        }
+
+        $res_business_count = DB::select($sql_business_listings_count);
+        $business_count = $res_business_count[0]->count;
+
+        
+       
 
        /* echo $wm_associated_firms_query;
         die();*/
@@ -231,7 +251,7 @@ die();*/
 
         
 
-        foreach ($orderDataBy as $columnName => $orderBy) {
+        /*foreach ($orderDataBy as $columnName => $orderBy) {
             $business_listings_query->orderBy($columnName, $orderBy);
         }
 
@@ -242,13 +262,13 @@ die();*/
         } else {
             $business_listings       = $business_listings_query->get();
             $total_business_listings = $business_listings_query->count();
-        }
+        }*/
 
         /* echo "<pre>";
         print_r($entrepreneurs);
         die();  */
 
-        return ['total_business_listings' => $total_business_listings, 'list' => $business_listings];
+        return ['total_business_listings' => $business_count, 'list' => $business_listings];
 
     }
 
