@@ -278,6 +278,54 @@ label.required:after {
   overflow-y: auto;
   overflow-x: hidden;
 }
+.select2-single + .select2-container {
+  width: 100% !important;
+  display: block;
+  font-size: 0.85rem;
+  border-radius: 0;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  padding-left: 0;
+  background-color: transparent;
+}
+.select2-single + .select2-container .select2-selection--single {
+  background-color: transparent;
+  border-radius: 0;
+  outline: 0;
+  border: none;
+  height: 33px;
+  border-bottom: 1px solid #cecada;
+}
+.select2-single + .select2-container .select2-selection--single:focus {
+  outline: 0;
+}
+.select2-single + .select2-container .select2-selection--single .select2-selection__rendered {
+  line-height: 33px;
+}
+.select2-container .select2-search__field {
+  position: relative;
+}
+.select2-container .select2-search__field:before {
+  content: "Q";
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.select2-container .select2-search {
+  position: relative;
+}
+.select2-container .select2-search:before {
+  content: "\f002";
+  font-family: 'FontAwesome';
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  z-index: 1;
+}
+.select2-container .select2-search .select2-search__field {
+  padding-left: 24px;
+}
 .btn {
   font-size: 0.8rem;
   border-radius: 2px;
@@ -688,9 +736,9 @@ label.required:after {
   font-size: 0.85rem;
 }
 .mm-wrapper_opened header {
-  -webkit-transform: translateY(-99.99999999px);
-      -ms-transform: translateY(-99.99999999px);
-          transform: translateY(-99.99999999px);
+  -webkit-transform: translateY(-100px);
+      -ms-transform: translateY(-100px);
+          transform: translateY(-100px);
 }
 @-webkit-keyframes fadeInUp {
   0% {

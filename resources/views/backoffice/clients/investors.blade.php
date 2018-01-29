@@ -5,6 +5,10 @@
 
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
 
+<script type="text/javascript" src="{{ asset('/bower_components/select2/dist/js/select2.min.js') }}" ></script>
+<link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
+
+
 
 
 @endsection
@@ -54,7 +58,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="">Investor Name</label>
-                                    <select name="investor_name" class="form-control investorSearchinput" id="investor_nominee">
+                                    <select name="investor_name" class="form-control investorSearchinput select2-single" id="investor_nominee">
                                         <option value="">--</option>
                                         @foreach($investors as $investor)
                                         <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
