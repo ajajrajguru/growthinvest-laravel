@@ -345,6 +345,10 @@
                                         <select name="certification_type" class="form-control editmode @if($mode=='view') d-none @endif" >
                                             <option value="">Select Certification</option>
                                             @foreach($certificationTypes as $key=> $certificationType)
+                                                @php
+                                                if($key == 'uncertified')
+                                                    continue;
+                                                @endphp
                                             <option value="{{ $key }}" {{ (!empty($investorCertification) && $investorCertification->certification == $key) ? 'selected' : '' }} >{{ $certificationType }}</option>
                                             @endforeach
                                         </select>
