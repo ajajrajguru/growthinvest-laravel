@@ -272,6 +272,12 @@ label.required:after {
   color: #e40000;
   margin-left: 5px;
 }
+#invitations .scrollable {
+  display: block;
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 .btn {
   font-size: 0.8rem;
   border-radius: 2px;
@@ -682,9 +688,9 @@ label.required:after {
   font-size: 0.85rem;
 }
 .mm-wrapper_opened header {
-  -webkit-transform: translateY(-100px);
-      -ms-transform: translateY(-100px);
-          transform: translateY(-100px);
+  -webkit-transform: translateY(-99.99999999px);
+      -ms-transform: translateY(-99.99999999px);
+          transform: translateY(-99.99999999px);
 }
 @-webkit-keyframes fadeInUp {
   0% {

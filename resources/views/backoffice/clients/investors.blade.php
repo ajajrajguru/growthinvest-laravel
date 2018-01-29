@@ -103,7 +103,7 @@
                         <div class="d-flex justify-content-end">
                             <div class="mt-3">
                                 <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary btn-sm">Add Investors</a>
-                                <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm download-investor-csv" >Download CSV</a>
+                                <a href="javascript:void(0)" class="btn btn-link btn-sm download-investor-csv" >Download CSV</a>
                             </div>
                         </div>
 
