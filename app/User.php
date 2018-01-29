@@ -63,14 +63,27 @@ class User extends Authenticatable
 
     public function userAdditionalInfo()
     {
-        $addionalData = $this->userData()->where('data_key','additional_info')->first();
-        return $addionalData;
+        $userData = $this->userData()->where('data_key','additional_info')->first();
+        return $userData;
+    }
+
+    public function userInvestmentAccountNumber()
+    {
+        $userData = $this->userData()->where('data_key','p1code')->first();
+        return $userData;
     }
 
     public function userIntermidaiteCompInfo()
     {
-        $addionalData = $this->userData()->where('data_key','intermediary_company_info')->first();
-        return $addionalData;
+        $userData = $this->userData()->where('data_key','intermediary_company_info')->first();
+        return $userData;
+    }
+
+
+    public function userFinancialAdvisorInfo()
+    {
+        $userData = $this->userData()->where('data_key','financial_advisor_info')->first();
+        return $userData;
     }
 
     public function isCompanyWealthManager(){
@@ -83,8 +96,8 @@ class User extends Authenticatable
 
     public function taxstructureInfo()
     {
-        $addionalData = $this->userData()->where('data_key','taxstructure_info')->first();
-        return $addionalData;
+        $userData = $this->userData()->where('data_key','taxstructure_info')->first();
+        return $userData;
     }
 
     public function getActiveCertification(){
@@ -193,6 +206,10 @@ class User extends Authenticatable
 
 
         return $users; 
+    }
+
+    public function document(){
+        return $this->morphMany( 'App\DocumentFile', 'object');
     }
 
 

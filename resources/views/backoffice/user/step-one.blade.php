@@ -341,13 +341,13 @@
                     </div>
                 </div>
 
-                @if($user->id && $user->firm_id)
+                @if($user->id )
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Platform Account Number</label>
-                               <div class="editmode @if($mode=='view') d-none @endif">{{ $firmGICode }}</div>
-                               <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $firmGICode }}</div>
+                               <div class="editmode @if($mode=='view') d-none @endif">{{ $user->gi_code }}</div>
+                               <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ $user->gi_code}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
