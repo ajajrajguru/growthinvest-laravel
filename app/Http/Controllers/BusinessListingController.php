@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\BusinessListing;
+use App\Firm;
+use Auth;
 use Illuminate\Http\Request;
-
-/* use App\Firm; */
+use App\User;
 
 class BusinessListingController extends Controller
 {
@@ -74,7 +75,7 @@ die();*/
         $orderDataBy = [$columnName => $orderBy];
 
         $filter_business_listings = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy);
-        $business_listings       = $filter_business_listings['list'];
+        $business_listings        = $filter_business_listings['list'];
         $total_business_listings  = $filter_business_listings['total_business_listings'];
 
         $business_listings_data = [];
@@ -124,47 +125,76 @@ die();*/
     public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
     {
 
+        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
+            $firms       = new Firm;
+            $firm_ids    = $firms->getAllChildFirmsByFirmID($filters['firm_name']);
+            $firm_ids[]  = $filters['firm_name'];
+            
+        } else {
+            $user         = Auth::user();
+            $user_firm_id = $user->firm_id;
+            $firms        = new Firm;
+            $firm_ids     = $firms->getAllChildFirmsByFirmID($user_firm_id);
+            $firm_ids[]   = $user_firm_id;
+             
+        }
+
+        $firm_investors = User::whereIn('firm_id',$firm_ids)->pluck('id')->toArray();
+         $firm_investors_str =  implode(',',$firm_investors);
+        //print_r($firm_investors_str);
+
         $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish'])->leftJoin('business_has_defaults', function ($join) {
             $join->on('business_listings.id', '=', 'business_has_defaults.business_id');
         })->leftJoin('defaults', function ($join) {
             $join->on('business_has_defaults.default_id', '=', 'defaults.id');
         });
 
-        /*SELECT bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
+        $wm_associated_firms_query="SELECT bp.business_status as proposal_status, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
 
-        bp.id AS id,bo.user_id as bo ,bo_info.user_email as bo_email, bp.guid as url ,firm.name as firm_name, firm.id as firm_id,bp.title AS business_name,bp.slug AS business_slug, bp.created_date as business_date,bp.updated_at as business_modified, bpd.meta_value as proposal_details, bpds.meta_value as proposal_status ,bp.status as post_status,
+        bp.id AS id,bo_info.id as bo ,bo_info.email as bo_email,  firm.name as firm_name, firm.id as firm_id,bp.title AS business_name,bp.slug AS business_slug, bp.created_at as business_date,bp.updated_at as business_modified,  bp.business_status as proposal_status ,bp.status as post_status,
         SUM(CASE bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS watch_list,
         SUM(CASE  WHEN bpi.status='pledged' and bpi.details like '%ready-to-invest%' THEN 1 ELSE 0 END) AS pledged,
         SUM(CASE bpi.status WHEN 'funded' THEN 1 ELSE 0 END) AS funded,
-        SUM(CASE WHEN bpi.status='pledged' and bpi.details like '%ready-to-invest%' THEN bpi.amount_invested ELSE 0 END) AS pledged_amount,
-        SUM(CASE bpi.status WHEN 'funded' THEN bpi.amount_invested ELSE 0 END) AS funded_amount,
+        SUM(CASE WHEN bpi.status='pledged' and bpi.details like '%ready-to-invest%' THEN bpi.amount ELSE 0 END) AS pledged_amount,
+        SUM(CASE bpi.status WHEN 'funded' THEN bpi.amount ELSE 0 END) AS funded_amount,
         SUM(CASE my_bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS my_watch_list,
         SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN 1 ELSE 0 END) AS my_pledged,
         SUM(CASE my_bpi.status WHEN 'funded' THEN 1 ELSE 0 END) AS my_funded,
-        SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN bpi.amount_invested ELSE 0 END) AS my_pledged_amount,
-        SUM(CASE my_bpi.status WHEN 'funded' THEN bpi.amount_invested ELSE 0 END) AS my_funded_amount
-        FROM business_listings bp
+        SUM(CASE WHEN my_bpi.status='pledged' and my_bpi.details like '%ready-to-invest%' THEN bpi.amount ELSE 0 END) AS my_pledged_amount,
+        SUM(CASE my_bpi.status WHEN 'funded' THEN bpi.amount ELSE 0 END) AS my_funded_amount
+        FROM business_listings bp";
 
-        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
-        $business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
-        }
+        
 
-        $listed_query = "JOIN {$wpdb->prefix}postmeta bpds ON  bpds.post_id = bpd.post_id and bpds.meta_key = 'proposal_status'  ";
+         $wm_associated_firms_query.=" JOIN users as bo_info on bo_info.id =   bp.owner_id AND bp.status = 'publish' ";
+       /* $wm_associated_firms_query.=" JOIN users as bo_info on bo_info.id =   bp.owner_id
+        JOIN {$wpdb->prefix}postmeta bpd ON bp.ID = bpd.post_id AND bp.post_type = 'business-proposal' AND bp.post_status = 'publish' AND bpd.meta_key = 'proposal_details'";*/
+
+        /*$listed_query = "JOIN {$wpdb->prefix}postmeta bpds ON  bpds.post_id = bpd.post_id and bpds.meta_key = 'proposal_status'  ";
         if (!current_user_can('view_all_proposals')) {
         $listed_query = "JOIN {$wpdb->prefix}postmeta bpds ON  bpds.post_id = bpd.post_id and bpds.meta_key = 'proposal_status' and bpds.meta_value = 'listed'";
         }
 
-        $listed_query.= "JOIN {$wpdb->prefix}postmeta m_propfund_type ON  m_propfund_type.post_id = bpd.post_id and m_propfund_type.meta_key = 'proposal-fund-type' and m_propfund_type.meta_value!='list_proposal'  ";
+        $listed_query.= "JOIN {$wpdb->prefix}postmeta m_propfund_type ON  m_propfund_type.post_id = bpd.post_id and m_propfund_type.meta_key = 'proposal-fund-type' and m_propfund_type.meta_value!='list_proposal'  ";*/
+        $listed_query="";
+        $wm_associated_firms_query.=" LEFT OUTER JOIN firms firm on firm.id = bo_info.firm_id
+      
+         LEFT OUTER
+                JOIN business_investments bpi ON bp.id = bpi.business_id
 
-        $wm_associated_firms_query.=" LEFT OUTER JOIN firms firm on firm.id = bo.meta_value
         LEFT OUTER
-        " . $listed_query . "
-        LEFT OUTER
-        JOIN busines_investments bpi ON bpd.post_id = bpi.biz_proposal_id
-        LEFT OUTER
-        JOIN busines_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors . "))
+        JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))
         GROUP BY bp.ID ORDER BY business_name ASC ";
-         */
+
+
+
+        echo $wm_associated_firms_query;
+        die();
+
+
+        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
+        $business_listings_query->where('business_listings.owner.firm.id', $filters['firm_name']);
+        }
 
         /*->where($cond)->select("users.*")*/
 
