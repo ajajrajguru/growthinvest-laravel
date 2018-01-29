@@ -28,6 +28,7 @@ class FundmanagerController extends Controller
         $data['fundmanagers'] = $fundmanagers;
         $data['breadcrumbs']  = $breadcrumbs;
         $data['pageTitle']    = 'Fund Managers';
+        $data['activeMenu']          = 'manage_clients';
 
         return view('backoffice.clients.fundmanagers')->with($data);
     }
