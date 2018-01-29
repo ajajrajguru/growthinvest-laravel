@@ -121,7 +121,7 @@ class InvestorController extends Controller
             $investorsData[] = [
                 '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investor->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $investor->id . '"><label class="custom-control-label" for="ch' . $investor->id . '"></label></div> ',
                 'name'                  => $nameHtml,
-                'certification_date'    => $investor->id,
+                'certification_date'    => $certificationDate,
                 'client_categorisation' => $active,
                 'parent_firm'           => (!empty($investor->firm)) ? $investor->firm->name : '',
                 'registered_date'       => date('d/m/Y', strtotime($investor->created_at)),
