@@ -40,7 +40,7 @@ class InvestorController extends Controller
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
 
         $data['certificationTypes'] = $certificationTypes;
         $data['clientCategories']   = $clientCategories;
@@ -48,6 +48,7 @@ class InvestorController extends Controller
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Investors';
+        $data['activeMenu']          = 'manage_clients';
 
         return view('backoffice.clients.investors')->with($data);
     }
@@ -86,7 +87,7 @@ class InvestorController extends Controller
         $certification = [];
         foreach ($investors as $key => $investor) {
 
-            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->first();
+            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->orderBy('active', 'desc')->first();
 
             $certificationName = 'Uncertified Investors';
             $certificationDate = '-';
@@ -170,12 +171,27 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
-            $investorQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
+            // $investorQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
+
+            $investorQuery->whereIn('users.id', function($query)use($filters){
+                                $query->select('user_id')
+                                ->from(with(new UserHasCertification)->getTable())
+                                ->where('certification_default_id', $filters['client_category'])
+                                ->orderBy('created_at', 'desc')
+                                ->groupBy('user_id');
+                            });
+            
+
         }
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
-                $investorQuery->whereNull('user_has_certifications.created_at');
+                // $investorQuery->whereNull('user_has_certifications.created_at');
+                $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification','');
+            }
+            else
+            {
+                $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
 
         }
@@ -207,10 +223,11 @@ class InvestorController extends Controller
         }
 
         $investorQuery->groupBy('users.id')->select('users.*');
-
         foreach ($orderDataBy as $columnName => $orderBy) {
             $investorQuery->orderBy($columnName, $orderBy);
         }
+        $investorQuery->orderBy('user_has_certifications.created_at', 'desc');
+        
 
         if ($length > 1) {
 
@@ -304,6 +321,7 @@ class InvestorController extends Controller
         $data['breadcrumbs']             = $breadcrumbs;
         $data['pageTitle']               = 'Add Investor';
         $data['mode']                    = 'edit';
+        $data['activeMenu']          = 'add_clients';
 
         return view('backoffice.clients.registration')->with($data);
 
@@ -462,6 +480,7 @@ class InvestorController extends Controller
         $data['breadcrumbs']             = $breadcrumbs;
         $data['pageTitle']               = 'Add Investor : Client Categorisation';
         $data['mode']                    = 'view';
+        $data['activeMenu']          = 'add_clients';
 
         return view('backoffice.clients.client-categorisation')->with($data);
 
@@ -1899,6 +1918,7 @@ class InvestorController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Add Investor : Additional Information';
         $data['mode']        = 'view';
+        $data['activeMenu']          = 'add_clients';
 
         return view('backoffice.clients.additional-information')->with($data);
 

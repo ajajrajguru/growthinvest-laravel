@@ -28,6 +28,7 @@ class EntrepreneurController extends Controller
         $data['entrepreneurs'] = $entrepreneurs;
         $data['breadcrumbs']   = $breadcrumbs;
         $data['pageTitle']     = 'Entrepreneurs';
+        $data['activeMenu']    = 'manage_clients';
 
         return view('backoffice.clients.entrepreneurs')->with($data);
     }
@@ -180,29 +181,26 @@ class EntrepreneurController extends Controller
         $entrepreneurs       = $filterEntrepreneurs['list'];
 
         $fileName = 'all_entrepreneurs_as_on_' . date('d-m-Y');
-        $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm','Business Proposals', 'Registered Date', 'Source'];
+        $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm', 'Business Proposals', 'Registered Date', 'Source'];
         $userData = [];
 
-         
         /*echo"<pre>";
         print_r($entrepreneurs);
         die();*/
         foreach ($entrepreneurs as $entrepreneur) {
 
-            
             $source = "Self";
             if ($entrepreneur->registered_by !== $entrepreneur->id) {
                 $source = "Intermediary";
             }
-             
 
             $userData[] = [$entrepreneur->gi_code,
                 title_case($entrepreneur->first_name . ' ' . $entrepreneur->last_name),
-                $entrepreneur->email,                
+                $entrepreneur->email,
                 (!empty($entrepreneur->firm)) ? $entrepreneur->firm->name : '',
-                 $entrepreneur->business,   
+                $entrepreneur->business,
                 date('d/m/Y', strtotime($entrepreneur->created_at)),
-                $source
+                $source,
 
             ];
         }

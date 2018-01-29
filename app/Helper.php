@@ -126,7 +126,7 @@ function getSource()
 
 function certificationTypes()
 {
-    return ['internet' => 'Self Certified', 'approved' => 'Approved', 'uncertified' => 'Uncertified'];
+    return ['self_certified' => 'Self Certified', 'approved' => 'Approved', 'uncertified' => 'Uncertified'];
 }
 
 

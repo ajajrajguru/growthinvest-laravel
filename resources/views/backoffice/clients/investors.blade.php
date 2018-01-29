@@ -55,6 +55,8 @@
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
                                     </select>
+                                    <em class="small">Select the firm whose investors you need to view</em>
+                                    
                                 </div>
                                 <div class="col-md-4">
                                     <label for="">Investor Name</label>
