@@ -68,6 +68,7 @@
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
                                     </select>
+                                    <small>Select the firm whose fund managers you need to view</small>
                                 </div>
                                
                             </div>

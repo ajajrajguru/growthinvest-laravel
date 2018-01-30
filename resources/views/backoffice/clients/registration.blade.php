@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <h5 class="mt-3 mb-2">
-                        2: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
+                        1: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
                     </h5>
                     <hr class="my-3">
                     
@@ -132,12 +132,13 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Title  </label>
-                            <select name="title" id="user-title" class="form-control editmode @if($mode=='view') d-none @endif">                                
+                            <select name="title" id="user-title" class="form-control editmode @if($mode=='view') d-none @endif">    
+
                                 <option value="">Select</option>                                                                                                    
-                                <option value="mr">Mr</option>                                                                                            
-                                <option value="mrs">Mrs</option>                                                                                           
-                                <option value="miss">Miss</option>                                                                                           
-                                 <option value="ms">Ms</option>                                                                
+                                <option value="mr" @if(!$investor->id && old('title') == "mr") selected @endif @if($investor->id && $investor->title == "mr") selected @endif >Mr</option>                                                                                            
+                                <option value="mrs" @if(!$investor->id && old('title') == "mrs") selected @endif @if($investor->id && $investor->title == "mrs") selected @endif>Mrs</option>                                                                                           
+                                <option value="miss" @if(!$investor->id && old('title') == "miss") selected @endif @if($investor->id && $investor->title == "miss") selected @endif>Miss</option>                                                                                           
+                                 <option value="ms" @if(!$investor->id && old('title') == "ms") selected @endif @if($investor->id && $investor->title == "ms") selected @endif>Ms</option>                                                                
                              </select>
                              
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $investor->first_name}}</span>
@@ -300,7 +301,7 @@
                         <div class="form-group">
                             <label>Firm </label>
                             <select class="form-control editmode @if($mode=='view') d-none @endif" name="firm" >
-                                <option value="">Please Select</option>
+                                <!-- <option value="">Please Select</option> -->
                                 @php
                                 $firmName = '';
                                 $firmGICode = '';

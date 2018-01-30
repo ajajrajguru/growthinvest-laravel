@@ -67,6 +67,7 @@
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
                                     </select>
+                                    <small>Select the firm whose business owners you need to view</small>
                                 </div>
                                
                             </div>
