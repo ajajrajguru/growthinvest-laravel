@@ -463,34 +463,62 @@ function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
 function genActiveCertificationValidityHtml($investorCertification,$fileId){
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
-    $certificationDate = date('d-m-Y', strtotime($certificationDate));
     $expiryDate = date('Y-m-d', strtotime($certificationDate .'+1 year'));
 
-    $d1 = new \DateTime();
-    $d2 = new \DateTime($expiryDate);
+    $d1 = new \DateTime($expiryDate);
+    $d2 = new \DateTime();
     $interval = $d2->diff($d1);
 
     $validity = '';
+    // if($interval->y == 1)
+    // {
+    //     $validity = 'a Year';
+    // }
+    // elseif($interval->m > 1)
+    // {
+    //     $validity = $interval->m.' months';
+    // }
+    // elseif($interval->m == 1)
+    // {
+    //     $validity = $interval->m.' months';
+    // }
+    // elseif($interval->d > 1)
+    // {
+    //     $validity = $interval->d.' days';
+    // }
+    // elseif($interval->d == 1)
+    // {
+    //     $validity = $interval->d.' day';
+    // }
+
     if($interval->y == 1)
     {
-        $validity = 'a Year';
+        $validity .= 'a Year ';
     }
-    elseif($interval->m > 1)
+
+    
+    if($interval->m > 1)
     {
-        $validity = $interval->m.' months';
+        $validity .= $interval->m.' months';
     }
     elseif($interval->m == 1)
     {
-        $validity = $interval->m.' months';
+        $validity .= $interval->m.' month';
     }
-    elseif($interval->d > 1)
+
+    if($interval->m >= 1)
+        $validity .= ' and ';
+
+    if($interval->d > 1)
     {
-        $validity = $interval->d.' days';
+        $validity .= $interval->d.' days';
     }
     elseif($interval->d == 1)
     {
-        $validity = $interval->d.' day';
+        $validity .= $interval->d.' day';
     }
+ 
+    // $validity = $interval->format('%y years %m months and %d days');
 
     $html ='<div class="alert bg-gray certification-success">
         <div class="l-30">    

@@ -4,10 +4,22 @@
   @parent
 
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
 
 <script type="text/javascript" src="{{ asset('/bower_components/select2/dist/js/select2.min.js') }}" ></script>
 <link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+        // select2
+        $('.select2-single').select2({
+            // placeholder: "Search here"
+        });
+    });
+  
+
+</script>
 
 
 
@@ -45,11 +57,12 @@
                         <p class="text-muted">View the profile and the portfolio of the investors registered with us.</p>
 
                         <h5 class="mt-2 mb-0">Selection Filters</h5>
+                        
                         <div class="p-3 bg-gray">
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="">Firm Name</label>
-                                    <select name="firm_name" class="form-control investorSearchinput" id="investor_nominee">
+                                    <select name="firm_name" class="form-control investorSearchinput select2-single" id="investor_nominee">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
@@ -110,6 +123,7 @@
                             <div class="mt-3">
                                 <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary btn-sm">Add Investors</a>
                                 <a href="javascript:void(0)" class="btn btn-link btn-sm download-investor-csv" >Download CSV</a>
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-filters">Reset filter</a>
                             </div>
                         </div>
 
@@ -145,9 +159,7 @@
     </div>
 
 </div>
-
-
-
+ 
     <style type="text/css">
         #datatable-investors_filter{
             visibility: hidden;

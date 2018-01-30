@@ -4,7 +4,7 @@
   @parent
 
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
-
+<script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
 
 
 @endsection
