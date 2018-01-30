@@ -87,11 +87,11 @@
                             <span class="bubble"></span>
                         </li>
                         <li >
-                            <a href="javascript:void(0)">Client Categorisation</a>
+                            <a href="{{ ($investor->id) ? url('backoffice/investor/'.$investor->gi_code.'/client-categorisation'): 'javascript:void(0)'}}">Client Categorisation</a>
                             <span class="bubble"></span>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">Additional Information</a>
+                            <a href="{{ ($investor->id) ? url('backoffice/investor/'.$investor->gi_code.'/additional-information'): 'javascript:void(0)'}}">Additional Information</a>
                             <span class="bubble"></span>
                         </li>
                         <li>
@@ -170,7 +170,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone Number <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" placeholder="Eg: 020 7071 3945" value="{{ ($investor->id) ? $investor->telephone_no :old('telephone') }}">
+                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" placeholder="Eg: 020 7071 3945" value="{{ ($investor->id) ? $investor->telephone_no :old('telephone') }}">
                             <span class="viewmode @if($mode=='edit') d-none @endif">{{ $investor->telephone_no}}</span>
                         </div>
                     </div>
