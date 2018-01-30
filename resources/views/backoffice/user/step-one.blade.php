@@ -90,7 +90,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Choose Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-pattern="/^(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9!@#$%^&*]{6,99}$/" data-parsley-pattern-message="The password does not meet the minimum requirements!" id="userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter password." @endif placeholder="" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" data-content="<ul class='pwd-rules clearfix'> <li>PASSWORD RULES</li> <li>At least 6 characters</li> <li>At least 1 x letter</li> <li>At least 1 x number</li> </ul>"  data-original-title="" >
+                            <input type="password" name="password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-pattern="/^(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9!@#$%^&*]{6,99}$/" data-parsley-pattern-message="The password does not meet the minimum requirements." id="userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter password." @endif placeholder="" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" data-content="<ul class='pwd-rules clearfix'> <li>PASSWORD RULES</li> <li>At least 6 characters</li> <li>At least 1 x letter</li> <li>At least 1 x number</li> </ul>"  data-original-title="" >
 
                             <div class="viewmode @if($mode=='edit') d-none @endif"> </div>
                         </div>
@@ -98,7 +98,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Confirm Password <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="password" name="confirm_password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-equalto="#userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please enter confirm password." @endif placeholder="">
+                            <input type="password" name="confirm_password" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-equalto="#userpassword" @if(!$user->id) data-parsley-required data-parsley-required-message="Please re-enter password." @endif placeholder="">
                             <div class="viewmode @if($mode=='edit') d-none @endif"> </div>
                         </div>
                     </div>
@@ -371,7 +371,7 @@
                     </div>
                     <div class="col-md-12">
                         @if(!$user->id)
-                        <div class="g-recaptcha" data-sitekey="{{ env('captcha_site_key') }}"></div>
+                        <div class="g-recaptcha mt-3" data-sitekey="{{ env('captcha_site_key') }}"></div>
                         @endif
                     </div>
                 </div>
