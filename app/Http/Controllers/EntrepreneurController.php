@@ -20,8 +20,9 @@ class EntrepreneurController extends Controller
         $firms         = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Businesses'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Entrepreneurs'];
 
         $data['firms']         = $firms;
