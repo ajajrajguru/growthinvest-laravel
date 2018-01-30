@@ -363,7 +363,7 @@
                     </div>
                     @endif
 
-                    <div class="col-md-12" c="{{ env('captcha_site_key') }}" c="{{ env('APP_ENV') }}">
+                    <div class="col-md-12">
                         @if(!$investor->id)
                         <div class="g-recaptcha" data-sitekey="{{ env('captcha_site_key') }}"></div>
                         @endif
