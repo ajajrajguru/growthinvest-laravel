@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <h5 class="mt-3 mb-2">
-                        2: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
+                        1: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
                     </h5>
                     <hr class="my-3">
                     
