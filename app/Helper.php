@@ -547,6 +547,8 @@ function getSectors(){
 
 function get_ordinal_number($number){
 
+    if($number==0 || $number=="")
+        return "";
     $ends = array('th','st','nd','rd','th','th','th','th','th','th');
     if (($number %100) >= 11 && ($number%100) <= 13)
         $abbreviation = $number. 'th';
@@ -554,5 +556,15 @@ function get_ordinal_number($number){
         $abbreviation = $number. $ends[$number % 10];
 
     return $abbreviation;
+
+}
+
+
+function check_null($num){
+
+    if(is_null($num))
+        return 0;
+    else
+        return $num ;
 
 }
