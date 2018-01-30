@@ -76,7 +76,7 @@ class EntrepreneurController extends Controller
                                                 </select>';
 
             $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id) {
+            if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by!=0) {
                 $source = "Intermediary";
             }
 
@@ -191,7 +191,7 @@ class EntrepreneurController extends Controller
         foreach ($entrepreneurs as $entrepreneur) {
 
             $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id) {
+            if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by!=0) {
                 $source = "Intermediary";
             }
 

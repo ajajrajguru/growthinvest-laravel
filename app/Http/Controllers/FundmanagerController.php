@@ -76,7 +76,7 @@ class FundmanagerController extends Controller
                                                 </select>';
 
             $source = "Self";
-            if ($fundmanager->registered_by !== $fundmanager->id) {
+            if ($fundmanager->registered_by !== $fundmanager->id && $fundmanager->registered_by!=0) {
                 $source = "Intermediary";
             }
 
@@ -195,7 +195,7 @@ class FundmanagerController extends Controller
         foreach ($fundmanagers as $fundmanager) {
 
             $source = "Self";
-            if ($fundmanager->registered_by !== $fundmanager->id) {
+            if ($fundmanager->registered_by !== $fundmanager->id && $fundmanager->registered_by!=0) {
                 $source = "Intermediary";
             }
 

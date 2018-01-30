@@ -86,8 +86,6 @@ function getCompanyDescription()
     return ["Wealth Manager", "Accountant", "Solicitor", "Business Advisor", "Investment Network", "Financial Advisor"];
 }
 
-
-
 /***
 generates unique GI code for the modal
  ***/
@@ -123,29 +121,28 @@ function getSource()
     return ['internet' => 'Internet', 'personal' => 'Referral', 'recommendation' => 'Recommendation', 'email' => 'Email', 'event' => 'Event', 'LGBR Capital' => 'LGBR Capital'];
 }
 
-
 function certificationTypes()
 {
     return ['self_certified' => 'Self Certified', 'approved' => 'Approved', 'uncertified' => 'Uncertified'];
 }
 
-
-function recaptcha_validate($recaptcha){
-    $captcha = $recaptcha;
+function recaptcha_validate($recaptcha)
+{
+    $captcha    = $recaptcha;
     $privatekey = env('captcha_private_key');
-    $url = 'https://www.google.com/recaptcha/api/siteverify';
-    $data = array(
-        'secret' => $privatekey,
+    $url        = 'https://www.google.com/recaptcha/api/siteverify';
+    $data       = array(
+        'secret'   => $privatekey,
         'response' => $captcha,
-        'remoteip' => $_SERVER['REMOTE_ADDR']
-        );
+        'remoteip' => $_SERVER['REMOTE_ADDR'],
+    );
 
     $curlConfig = array(
-        CURLOPT_URL => $url,
-        CURLOPT_POST => true,
+        CURLOPT_URL            => $url,
+        CURLOPT_POST           => true,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POSTFIELDS => $data
-        );
+        CURLOPT_POSTFIELDS     => $data,
+    );
 
     $ch = curl_init();
     curl_setopt_array($ch, $curlConfig);
@@ -155,50 +152,49 @@ function recaptcha_validate($recaptcha){
     $jsonResponse = json_decode($response);
     return $jsonResponse;
 }
- 
- 
+
 /** Generate Firm Invite Key
-***/
-function generate_firm_invite_key(\Illuminate\Database\Eloquent\Model $model,$firm_id){
+ ***/
+function generate_firm_invite_key(\Illuminate\Database\Eloquent\Model $model, $firm_id)
+{
 
     //  if($firm_id=="")
     //    return '';
-    $firn_invite_key = uniqid().$firm_id;
+    $firn_invite_key = uniqid() . $firm_id;
     // $firn_invite_key = time()+rand();
 
-    $record = $model->where(['invite_key'=> $firn_invite_key])->first();
+    $record = $model->where(['invite_key' => $firn_invite_key])->first();
 
-   if(empty($record)){
-      $result = $firn_invite_key;
-   }else{
-      $result = generate_firm_invite_key($model, $firm_id);
-   }
+    if (empty($record)) {
+        $result = $firn_invite_key;
+    } else {
+        $result = generate_firm_invite_key($model, $firm_id);
+    }
 
-   return $result;
+    return $result;
 
-    
 }
 /**
 $fileName = 'approved_intermediary';
 $header = ['Platform GI Code Name','Email','Role','Firm','Telephone No'];
-$userData = [ 
-                [FIRMCR272, 272 User, user272@mail.com, Wealth Manager, '01010100'  ]
-                [FIRMCR272, 272 User, user272@mail.com, Wealth Manager, '01010100'  ]
-            ];
+$userData = [
+[FIRMCR272, 272 User, user272@mail.com, Wealth Manager, '01010100'  ]
+[FIRMCR272, 272 User, user272@mail.com, Wealth Manager, '01010100'  ]
+];
  */
-function generateCSV($header,$data,$filename){
-    $filePath = public_path("export-csv/".$filename.".csv");
-    $handle = fopen($filePath, 'w');
+function generateCSV($header, $data, $filename)
+{
+    $filePath = public_path("export-csv/" . $filename . ".csv");
+    $handle   = fopen($filePath, 'w');
     fputcsv($handle, $header);
 
-    foreach($data as $row) {
+    foreach ($data as $row) {
         fputcsv($handle, $row);
     }
- 
 
     header('Content-type: text/csv');
     header('Content-Length: ' . filesize($filePath));
-    header('Content-Disposition: attachment; filename='.$filename.'.csv');
+    header('Content-Disposition: attachment; filename=' . $filename . '.csv');
     while (ob_get_level()) {
         ob_end_clean();
     }
@@ -209,17 +205,19 @@ function generateCSV($header,$data,$filename){
     exit();
 }
 
-function getCertificationQuesionnaire(){
-    $questionnaires = \App\CertificationQuestionaire::select('*')->orderBy('certification_default_id','asc')->orderBy('order','asc')->get()->toArray();
+function getCertificationQuesionnaire()
+{
+    $questionnaires = \App\CertificationQuestionaire::select('*')->orderBy('certification_default_id', 'asc')->orderBy('order', 'asc')->get()->toArray();
 
     return $questionnaires;
 }
 
 /** Function to geth the quiz questions/options, statements, declarations on elective professional investors
-*/
-function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
-     
-    if ($pdf==true) {
+ */
+function getElectiveProfInvestorQuizStatementDeclaration($pdf = false)
+{
+
+    if ($pdf == true) {
 
         /* markup for certification pdf */
         $statement = '
@@ -327,16 +325,14 @@ function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
 
                                     <p font-size: 14px;>Yours sincerely,</p>
 
-                                    <p font-size: 14px;>Daniel Rodwell,<br>Managing Director<br>';/*Seed EIS Platform*/
-          $statement.='GrowthInvest</p>
+                                    <p font-size: 14px;>Daniel Rodwell,<br>Managing Director<br>'; /*Seed EIS Platform*/
+        $statement .= 'GrowthInvest</p>
 
                                   </td>
             </tr>
         </table>';
 
-
-
-          $declaration =' <table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: 14px;">
+        $declaration = ' <table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; font-size: 14px;">
 
             <tr style="margin-bottom: 0; padding-bottom: 0;">
                 <td style="width: 100%; border:none;">
@@ -373,13 +369,11 @@ function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
                           Professional client.</p></td>
             </tr>
         </table><br/>';
-                          /* end markup for certification pdf */
+        /* end markup for certification pdf */
 
-    }
-    else{
+    } else {
 
-
-      $statement = '<div class="card">
+        $statement = '<div class="card">
                                     <div class="card-header" role="tab" id="headingOne">
                                         <a data-toggle="collapse" href="#epiStatement" role="button" class="collapsed">
                                           Elective Professional Investor Statement
@@ -412,14 +406,12 @@ function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
                                             Managing Director<br>
                                             GrowthInvest</p>
 
-                                            
+
                                         </div>
                                     </div>
                                 </div>';
 
-
-
-        $declaration ='<h4 class="my-3">
+        $declaration = '<h4 class="my-3">
                                 Declaration
                             </h4>
                             <p>Declaration: Notice of Wish to be treated as a Professional client</p>
@@ -444,29 +436,28 @@ function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
                                 affect my categorisation.</p>
                             <p>On the basis of the above information I can confirm that the firm may treat me as a
                                 Professional client.</p>';
-        }
+    }
 
+    /* <p>Name:</p>
+    <p>Email Id:</p>
+    <p>Date:</p>'; */
 
-                    /* <p>Name:</p>
-                    <p>Email Id:</p>
-                    <p>Date:</p>'; */
-
-        $electiveProfInvestorQuizStatementDeclaration = array(
-        'statement'                  => $statement,
-        'declaration'                => $declaration
-        );
+    $electiveProfInvestorQuizStatementDeclaration = array(
+        'statement'   => $statement,
+        'declaration' => $declaration,
+    );
 
     return $electiveProfInvestorQuizStatementDeclaration;
 }
 
-
-function genActiveCertificationValidityHtml($investorCertification,$fileId){
+function genActiveCertificationValidityHtml($investorCertification, $fileId)
+{
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
-    $expiryDate = date('Y-m-d', strtotime($certificationDate .'+1 year'));
+    $expiryDate        = date('Y-m-d', strtotime($certificationDate . '+1 year'));
 
-    $d1 = new \DateTime($expiryDate);
-    $d2 = new \DateTime();
+    $d1       = new \DateTime($expiryDate);
+    $d2       = new \DateTime();
     $interval = $d2->diff($d1);
 
     $validity = '';
@@ -491,80 +482,106 @@ function genActiveCertificationValidityHtml($investorCertification,$fileId){
     //     $validity = $interval->d.' day';
     // }
 
-    if($interval->y == 1)
-    {
+    if ($interval->y == 1) {
         $validity .= 'a Year ';
     }
 
-    
-    if($interval->m > 1)
-    {
-        $validity .= $interval->m.' months';
-    }
-    elseif($interval->m == 1)
-    {
-        $validity .= $interval->m.' month';
+    if ($interval->m > 1) {
+        $validity .= $interval->m . ' months';
+    } elseif ($interval->m == 1) {
+        $validity .= $interval->m . ' month';
     }
 
-    if($interval->m >= 1)
+    if ($interval->m >= 1) {
         $validity .= ' and ';
+    }
 
-    if($interval->d > 1)
-    {
-        $validity .= $interval->d.' days';
+    if ($interval->d > 1) {
+        $validity .= $interval->d . ' days';
+    } elseif ($interval->d == 1) {
+        $validity .= $interval->d . ' day';
     }
-    elseif($interval->d == 1)
-    {
-        $validity .= $interval->d.' day';
-    }
- 
+
     // $validity = $interval->format('%y years %m months and %d days');
 
-    $html ='<div class="alert bg-gray certification-success">
-        <div class="l-30">    
-        <h5 class="">'.$certificationName.' Certification</h5>
+    $html = '<div class="alert bg-gray certification-success">
+        <div class="l-30">
+        <h5 class="">' . $certificationName . ' Certification</h5>
 
-            <i class="icon icon-ok text-success"></i> Certified on                                           
-         <span class="date-rem">'.date('d/m/Y', strtotime($certificationDate)).'                                        
-            <a href="'.url('backoffice/investor/download-certification/'.$fileId).'" target="_blank">(Click to download)</a>
-        </span>&nbsp;                                            
+            <i class="icon icon-ok text-success"></i> Certified on
+         <span class="date-rem">' . date('d/m/Y', strtotime($certificationDate)) . '
+            <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
+        </span>&nbsp;
         <span class="text-danger">
-            and valid for:'.$validity.'                                        
-        </span>                                                        
-        </div>                
+            and valid for:' . $validity . '
+        </span>
+        </div>
     </div>';
-            
+
     return $html;
-     
+
 }
 
-
-function getSectors(){
-    return  ['Transport','Technology ( Social )','Technology ( Platform )','Technology ( App )','Bloodstock','Research','Publishing','Music','Film','Exports','Nutrition','Estate Agency','Marketing','Financial','Home Improvement','Dentistry','Advertising','Security','Environmental','Fashion'];
+function getSectors()
+{
+    return ['Transport', 'Technology ( Social )', 'Technology ( Platform )', 'Technology ( App )', 'Bloodstock', 'Research', 'Publishing', 'Music', 'Film', 'Exports', 'Nutrition', 'Estate Agency', 'Marketing', 'Financial', 'Home Improvement', 'Dentistry', 'Advertising', 'Security', 'Environmental', 'Fashion'];
 }
- 
- 
 
-function get_ordinal_number($number){
+/**
+ * Gets the ordinal number. used for business round display
+ *
+ * @param      array|integer|string  $number  The number
+ *
+ * @return     array|integer|string  The ordinal number.
+ */
+function get_ordinal_number($number)
+{
 
-    if($number==0 || $number=="")
+    if ($number == 0 || $number == "") {
         return "";
-    $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-    if (($number %100) >= 11 && ($number%100) <= 13)
-        $abbreviation = $number. 'th';
-    else
-        $abbreviation = $number. $ends[$number % 10];
+    }
+
+    $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+    if (($number % 100) >= 11 && ($number % 100) <= 13) {
+        $abbreviation = $number . 'th';
+    } else {
+        $abbreviation = $number . $ends[$number % 10];
+    }
 
     return $abbreviation;
 
 }
 
+function check_null($num)
+{
 
-function check_null($num){
-
-    if(is_null($num))
+    if (is_null($num)) {
         return 0;
-    else
-        return $num ;
+    } else {
+        return $num;
+    }
 
+}
+
+function format_amount($amount, $decimal = 0, $prefix = false, $commafy = true)
+{
+
+    if (($amount === '') || (is_null($amount))) {
+        return '';
+    } 
+
+    $commafy_char = "";
+    if ($commafy) {
+        $commafy_char = ",";
+    }
+
+    $amount = number_format($amount, $decimal, '.', $commafy_char);
+
+    if ($prefix) {
+
+        $amount = " &pound; " . $amount;
+
+    }
+
+    return $amount;
 }
