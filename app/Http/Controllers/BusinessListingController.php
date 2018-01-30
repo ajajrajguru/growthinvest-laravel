@@ -199,14 +199,19 @@ die();*/
                 JOIN business_investments bpi ON bp.id = bpi.business_id
 
         LEFT OUTER
-        JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))
-        GROUP BY bp.id  ";
+        JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))";
+        $wm_associated_where ="";
+        if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
+            $wm_associated_where .= " WHERE bp.type ='" . $filters['business_listings_type'] . "'";
+        }
+
+        $wm_associated_group_by = " GROUP BY bp.id ";
 
         $sql_limit = " ORDER BY business_title ASC LIMIT " . $skip . "," . $length;
 
         /* echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
         die();*/
-        $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $sql_limit);
+        $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where. $wm_associated_group_by.$sql_limit);
 
         $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
         /* Get business listings count */
@@ -219,7 +224,7 @@ die();*/
         $sql_business_listings_count_where = "";
 
         if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
-            $sql_business_listings_count .= "biz.type ='" . $filters['business_listings_type'] . "'";
+            $sql_business_listings_count .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
         }
 
         $res_business_count = DB::select($sql_business_listings_count);
