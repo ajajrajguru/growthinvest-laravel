@@ -277,6 +277,11 @@ label.required:after {
   max-height: 150px;
   overflow-y: auto;
   overflow-x: hidden;
+  border: 1px solid #dddddd;
+  padding: 15px 15px 0;
+}
+#invitations .scrollable:empty {
+  display: none;
 }
 .select2-single + .select2-container {
   width: 100% !important;
