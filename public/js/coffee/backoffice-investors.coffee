@@ -322,6 +322,7 @@ $(document).ready ->
           
   $('.elective-prof-inv-btn').click ->
     $(this).attr('data-agree',"yes")
+    $(this).addClass('d-none')
   
   $('.save-elective-prof-inv').click ->
     btnObj = $(this)

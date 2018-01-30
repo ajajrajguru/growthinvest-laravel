@@ -869,7 +869,7 @@
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 
                             $isElectiveProfInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
 
-                            $electiveProfInvestorQuizStatementDeclaration = getElectiveProfInvestorQuizStatementDeclaration(false);
+                            $electiveProfInvestorQuizStatementDeclaration = getElectiveProfInvestorQuizStatementDeclaration(false,$isElectiveProfInv);
 
                             $electiveProfessionalStatement   = $electiveProfInvestorQuizStatementDeclaration['statement'];
                             $electiveProfessionalDeclaration = $electiveProfInvestorQuizStatementDeclaration['declaration'];
@@ -939,7 +939,7 @@
                                 
                                 {!!$electiveProfessionalStatement!!}
                                
-                                <button class="btn btn-primary btn-sm elective-prof-inv-btn @if($isElectiveProfInv) d-none @endif" data-agree="no">I Agree</button>
+                                
                             </div>
 
                             {!! $electiveProfessionalDeclaration !!}
