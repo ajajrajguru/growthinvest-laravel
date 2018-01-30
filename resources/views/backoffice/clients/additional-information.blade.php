@@ -177,7 +177,7 @@
                             Investor Profile Questionnaire
                         </h4>
                         <hr class="my-3">
-                        <div class="mb-3">
+                        <div class="mb-3 h5">
                             Section 1 - Financial Adviser
                         </div>
                         <div class="form-group">
@@ -312,7 +312,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 h5">
                             Section 2 - Investor Details
                         </div>
                         <hr class="my-3">
