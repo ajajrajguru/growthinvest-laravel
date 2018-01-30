@@ -4,6 +4,7 @@
   @parent
 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
   <script src='https://www.google.com/recaptcha/api.js'></script>
 @endsection
 @section('backoffice-content')
