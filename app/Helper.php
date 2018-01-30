@@ -217,8 +217,8 @@ function getCertificationQuesionnaire(){
 
 /** Function to geth the quiz questions/options, statements, declarations on elective professional investors
 */
-function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
-     
+function getElectiveProfInvestorQuizStatementDeclaration($pdf=false,$isElectiveProfInv=false){
+    $hideIagree = ($isElectiveProfInv)? 'd-none' : '';
     if ($pdf==true) {
 
         /* markup for certification pdf */
@@ -412,7 +412,7 @@ function getElectiveProfInvestorQuizStatementDeclaration($pdf=false){
                                             Managing Director<br>
                                             GrowthInvest</p>
 
-                                            
+                                          <button class="btn btn-primary btn-sm elective-prof-inv-btn  '. $hideIagree.'" data-agree="no">I Agree</button>  
                                         </div>
                                     </div>
                                 </div>';
