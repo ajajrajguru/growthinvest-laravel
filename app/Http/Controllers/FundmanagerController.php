@@ -44,10 +44,12 @@ class FundmanagerController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
-            '1' => 'users.first_name',
-            '2' => 'users.firm.name',
-            '3' => 'users.business',
-            '3' => 'users.created_at',
+            '0' => 'users.first_name',
+            '1' => 'users.email',
+            '2' => 'firm_name',
+            '3' => 'business',
+            '4' => 'users.created_at',
+
         );
 
         $columnName = 'users.first_name';
@@ -121,6 +123,9 @@ class FundmanagerController extends Controller
             ->leftJoin('business_listing_datas', function ($join) {
                 $join->on('business_listings.id', '=', 'business_listing_datas.business_id')
                     ->where('business_listing_datas.data_key', 'fund_managername');
+            })
+            ->leftJoin('firms', function ($join) {
+                $join->on('users.firm_id', '=', 'firms.id');
             });
 
         /*->where($cond)->select("users.*")*/
@@ -152,7 +157,7 @@ class FundmanagerController extends Controller
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
         $fundmanager_query->groupBy('users.id');
-        $fundmanager_query->select(\DB::raw("GROUP_CONCAT(business_listing_datas.data_value ) as business, users.*"));
+        $fundmanager_query->select(\DB::raw("firms.name as firm_name, GROUP_CONCAT(business_listing_datas.data_value ) as business, users.*"));
 
         foreach ($orderDataBy as $columnName => $orderBy) {
             $fundmanager_query->orderBy($columnName, $orderBy);

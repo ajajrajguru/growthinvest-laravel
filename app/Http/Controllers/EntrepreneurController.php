@@ -44,10 +44,11 @@ class EntrepreneurController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
-            '1' => 'users.first_name',
-            '2' => 'users.firm.name',
-            '3' => 'users.business',
-            '3' => 'users.created_at',
+            '0' => 'users.first_name',
+            '1' => 'users.email',
+            '2' => 'firm_name',
+            '3' => 'business',
+            '4' => 'users.created_at',
         );
 
         $columnName = 'users.first_name';
@@ -117,6 +118,9 @@ class EntrepreneurController extends Controller
             ->leftJoin('business_listings', function ($join) {
                 $join->on('users.id', '=', 'business_listings.owner_id')
                     ->whereIn('business_listings.type', ['proposal']);
+            })
+            ->leftJoin('firms', function ($join) {
+                $join->on('users.firm_id', '=', 'firms.id');
             });
 
         /*->where($cond)->select("users.*")*/
@@ -148,7 +152,7 @@ class EntrepreneurController extends Controller
 
         /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
         $entrepreneurQuery->groupBy('users.id');
-        $entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));
+        $entrepreneurQuery->select(\DB::raw("firms.name as firm_name, GROUP_CONCAT(business_listings.title ) as business, users.*"));
 
         foreach ($orderDataBy as $columnName => $orderBy) {
             $entrepreneurQuery->orderBy($columnName, $orderBy);

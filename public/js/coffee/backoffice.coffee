@@ -229,7 +229,7 @@ $(document).ready ->
       { 'data': 'email' }
       { 'data': 'firm'}
       { 'data': 'business' }         
-      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'registered_date'}
       { 'data': 'source', "orderable": false}
       { 'data': 'action' , "orderable": false}
     ])
@@ -271,7 +271,7 @@ $(document).ready ->
       { 'data': 'email' }
       { 'data': 'firm'}
       { 'data': 'business' }         
-      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'registered_date'}
       { 'data': 'source', "orderable": false}
       { 'data': 'action' , "orderable": false}
     ])
