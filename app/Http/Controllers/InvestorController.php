@@ -614,11 +614,21 @@ class InvestorController extends Controller
     }
 
     public function getAdviceInvestorsData($requestData)
-    {
+    {  
         $data                           = [];
         $conditionStr                   = $requestData['conditions'];
         $conditionExp                   = explode(',', $conditionStr);
         $data['conditions']             = array_filter($conditionExp);
+
+        if(!isset($requestData['financial_advisor_info']['havefinancialadvisor']))
+            $requestData['financial_advisor_info']['havefinancialadvisor'] = '';
+        
+        if(!isset($requestData['financial_advisor_info']['requireadviceseedeisoreis']))
+            $requestData['financial_advisor_info']['requireadviceseedeisoreis'] = '';
+
+        if(!isset($requestData['financial_advisor_info']['advicefromauthorised']))
+            $requestData['financial_advisor_info']['advicefromauthorised'] = '';
+
         $data['financial_advisor_info'] = $requestData['financial_advisor_info'];
 
         return $data;
