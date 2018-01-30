@@ -130,7 +130,7 @@
                         <p> We may need to contact the investor to confirm some details and ensure we are happy that your categorisation is appropriate. If your investor's circumstances change, he will be able to re-certify at any stage. If you or your client have any questions at all please contact a member of the GrowthInvest team on 020 7071 3945 or via .<a href="mailto:suppport@growthinvest.com">suppport@growthinvest.com</a></p>
                     </div>
 
-                    <div class="register-tab">
+                    <div class="register-tab" id="client-category-tabs">
                         <div class="row">
                             <div id="tabs-container">
                                 <ul class="nav nav-tabs " role="tablist">

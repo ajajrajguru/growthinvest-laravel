@@ -1,6 +1,7 @@
 $.ajaxSetup headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 
 $(document).ready ->
+  
   $('.dataFilterTable thead th.w-search').each ->
     title = $(this).text()
     $(this).closest('table').find('tr.filters td').eq($(this).index()).html '<input type="text" class="form-control" placeholder="Search ' + title + '" />'
@@ -328,3 +329,7 @@ $(document).ready ->
   $(document).on 'change', '#managebusiness_type', -> 
     window.open("/backoffice/"+$(this).val(),"_self");
   
+  $('.download-business-listings-csv').click ->
+    firm_name = $('select[name="firm_name"]').val() 
+    business_listings_type = $('select[name="business_listings_type"]').val() 
+    window.open("/backoffice/fundmanager/export-business-listings?firm_name="+firm_name"&business_listings_type="+business_listings_type);
