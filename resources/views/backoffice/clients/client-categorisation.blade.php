@@ -221,6 +221,11 @@
                            <h4 class="my-3 text-primary">
                               Retail (Restricted) Investor
                            </h4>
+                            <div class="alert retail-investor-danger alert-danger d-none" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                               <span id="message"></span>
+                            </div>
+
                            <p>
                               Retail (restricted) investors must declare that they are not investing more than 10% of their net assets (including savings, stocks, ISAs, bonds and property; excluding your primary residence) into unquoted companies as a result of using GrowthInvest.
                            </p>
@@ -1078,6 +1083,10 @@
                             <h4 class="my-3 text-primary">
                                 Elective Professional Investor
                             </h4>
+                             <div class="alert alert-danger elective-professional-investor-danger  d-none" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                               <span id="message"></span>
+                            </div>
                             @php
                             $clientCategory = $clientCategories->firstWhere('slug','elective_professional_investor'); 
                             $getQuestionnaire = $clientCategory->getCertificationQuesionnaire(); 

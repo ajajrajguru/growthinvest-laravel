@@ -64,7 +64,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="alert bg-primary text-white alert-dismissible fade show" role="alert">
+                    <div class="alert bg-primary text-white alert-dismissible fade show d-none" role="alert">
                         Your client registration details added successfully and being redirected to certification stage
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -429,6 +429,31 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="row ml-2 mr-2 mb-2 investortype-angel {{ (!empty($additionalInfo) && isset($additionalInfo['investortype']) && $additionalInfo['investortype'] =='Angel') ? '':'d-none' }}">
+                                        <div class="form-group">
+                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
+                                           <label>What skills does your client's bring? </label>
+                                         @else
+                                          <label>What skills do you bring? </label>
+                                         @endif
+                                            <textarea class="form-control" name="angelskills" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</textarea>
+                                        </div>
+
+ 
+                                        </div>
+                                        <div class="row ml-2 mr-2 mb-2 investortype-angel {{ (!empty($additionalInfo) && isset($additionalInfo['investortype']) && $additionalInfo['investortype'] =='Angel') ? '':'d-none' }}">
+                                        
+                                            <div class="form-group">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                                            <label>What is your client's area of expertise?  </label>
+                                             @else
+                                              <label>What is your area of expertise? </label>
+                                             @endif
+                                                <textarea class="form-control" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
+                                            </div>
+                                        </div>
+
                                         <div class="row ml-2 mr-2 mb-2">
                                             <div class="col-sm-12">
                                                 <div class="form-group">
@@ -507,7 +532,7 @@
                                                 <div class="form-group">
                                                     @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Does your client have any companies looking for funding?</label>
-                                                    @sle
+                                                    @else
                                                     <label style="">Do you have any companies looking for funding?</label>
                                                     @endif
                                                     <div>
@@ -668,13 +693,13 @@
                             @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="yeshappy" name="marketingmail" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }}  value="yes" >
+                                        <input type="checkbox" class="custom-control-input" id="yeshappy" name="marketingmail" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }}  value="yes" {{ (empty($additionalInfo)) ? 'checked':'' }} >
                                         <label class="custom-control-label normal" for="yeshappy">Yes, my Client is happy to receive marketing emails from the platform.</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="yeshappy2" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail_party']) && $additionalInfo['marketingmail_party'] =='yes') ? 'checked':'' }} name="marketingmail_party" value="yes"  >
+                                        <input type="checkbox" class="custom-control-input" id="yeshappy2" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail_party']) && $additionalInfo['marketingmail_party'] =='yes') ? 'checked':'' }} name="marketingmail_party" value="yes" {{ (empty($additionalInfo)) ? 'checked':'' }} >
                                         <label class="custom-control-label normal" for="yeshappy2">Yes, my Client happy to receive marketing emails from strategic 3rd parties of the Platform.</label>
                                     </div>
                                 </div>
