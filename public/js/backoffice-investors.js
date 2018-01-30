@@ -359,6 +359,13 @@
       $(this).attr('data-agree', "yes");
       return $(this).addClass('d-none');
     });
+    $(document).on('change', '.has-financial-advisor', function() {
+      if ($(this).val() === 'yes') {
+        return $('.advised-investor-questionnaire').removeClass('d-none');
+      } else {
+        return $('.advised-investor-questionnaire').addClass('d-none');
+      }
+    });
     return $('.save-elective-prof-inv').click(function() {
       var btnObj, certification_type, clientCategoryId, err, giCode, quizAnswers;
       btnObj = $(this);

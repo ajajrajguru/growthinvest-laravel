@@ -184,11 +184,11 @@
                             <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                             <div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="yesrodio1" name="havefinancialadvisor" value="yes" class="custom-control-input"  {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='yes') ? 'checked':'' }}>
+                                  <input type="radio" id="yesrodio1" name="havefinancialadvisor" value="yes" class="custom-control-input has-financial-advisor"  {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='yes') ? 'checked':'' }}>
                                   <label class="custom-control-label normal" for="yesrodio1" >Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="norodio1" name="havefinancialadvisor" value="no" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='no') ? 'checked':'' }}>
+                                  <input type="radio" id="norodio1" name="havefinancialadvisor" value="no" class="custom-control-input has-financial-advisor" {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='no') ? 'checked':'' }}>
                                   <label class="custom-control-label normal" for="norodio1" >No</label>
                                 </div>
                             </div>
@@ -219,7 +219,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="" role="tablist" class="gi-collapse mb-3">
+
+                        <div id="" role="tablist" class="gi-collapse advised-investor-questionnaire mb-3 {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='yes') ? '':'d-none' }} ">
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingOne">
                                     <a data-toggle="collapse" href="#collapse1" role="button">
@@ -567,8 +568,11 @@
                                         <div class="row mr-2 ml-2 mb-2">
                                             <div class="col-sm-12">
                                                 <div class="form-group">
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Has your client used EIS?</label>
+                                                    @else
                                                      <label>Have you used EIS?</label>
+                                                    @endif
                                                     <div>
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yesused2" name="usedeis" value="yes" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['usedeis']) && $additionalInfo['usedeis'] =='yes') ? 'checked':'' }}>
@@ -608,8 +612,11 @@
                                         <div class="row mr-2 ml-2 mb-3">
                                             <div class="col-sm-12">
                                                 <div class="form-group">
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Has your client used VCT?</label>
+                                                    @else
                                                      <label>Have you used VCT?</label>
+                                                     @endif
                                                     <div>
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yesused3" name="usedvct" value="yes" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['usedvct']) && $additionalInfo['usedvct'] =='yes') ? 'checked':'' }}>

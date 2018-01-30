@@ -323,6 +323,13 @@ $(document).ready ->
   $('.elective-prof-inv-btn').click ->
     $(this).attr('data-agree',"yes")
     $(this).addClass('d-none')
+
+  $(document).on 'change', '.has-financial-advisor', ->
+    if($(this).val()=='yes')
+      $('.advised-investor-questionnaire').removeClass('d-none');
+    else
+      $('.advised-investor-questionnaire').addClass('d-none');
+    
   
   $('.save-elective-prof-inv').click ->
     btnObj = $(this)
