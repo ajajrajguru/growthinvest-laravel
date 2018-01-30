@@ -332,6 +332,7 @@ class InvestorController extends Controller
 
         $investor = User::where('gi_code', $giCode)->first();
 
+
         if (empty($investor)) {
             abort(404);
         }
@@ -453,7 +454,7 @@ class InvestorController extends Controller
     {
 
         $investor = User::where('gi_code', $giCode)->first();
-
+ 
         if (empty($investor)) {
             abort(404);
         }

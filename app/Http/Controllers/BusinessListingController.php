@@ -108,13 +108,13 @@ class BusinessListingController extends Controller
                                                 <option>--select--</option>
                                                 <option value="edit">View</option>
                                                 </select>';
-            $activity_site_wide_html = "&pound" . $business_listing->bi_invested . " <span class='text-info'>FA</span>";
-            $activity_site_wide_html .= "<br/>&pound" . $business_listing->watch_list . " <span class='text-warning'>AW</span>";
-            $activity_site_wide_html .= "<br/>&pound" . $business_listing->bi_pledged . " <span class='text-success'>PA</span>";
+            $activity_site_wide_html = format_amount($business_listing->bi_invested, 0, true, true) . " <span class='text-info'>FA</span>";
+            $activity_site_wide_html .= "<br/> " . $business_listing->watch_list . " <span class='text-warning'>AW</span>";
+            $activity_site_wide_html .= "<br/>" . format_amount($business_listing->bi_pledged, 0, true, true) . " <span class='text-success'>PA</span>";
 
-            $activity_firmwide_html = "&pound" . $business_listing->bi_invested_in_firm . " <span class='text-info'>FA</span>";
-            $activity_firmwide_html .= "<br/>&pound" . $business_listing->my_watch_list . " <span class='text-warning'>AW</span>";
-            $activity_firmwide_html .= "<br/>&pound" . $business_listing->bi_pledged_in_firm . " <span class='text-success'>PA</span>";
+            $activity_firmwide_html =  format_amount($business_listing->bi_invested_in_firm, 0, true, true) . " <span class='text-info'>FA</span>";
+            $activity_firmwide_html .= "<br/> " . $business_listing->my_watch_list . " <span class='text-warning'>AW</span>";
+            $activity_firmwide_html .= "<br/>" . format_amount($business_listing->bi_pledged_in_firm, 0, true, true) . " <span class='text-success'>PA</span>";
 
             $business_listings_data[] = [
                 'logo'              => '',
@@ -122,7 +122,7 @@ class BusinessListingController extends Controller
                 'duediligence'      => $business_listing->approver,
                 'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
                 'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
-                'firmtoraise'       => $business_listing->firm_name . '<br/>&pound' . $business_listing->target_amount . "<br/> <u>To Raise</u>",
+                'firmtoraise'       => $business_listing->firm_name . '<br/>' . format_amount($business_listing->target_amount, 0, true, true) . "<br/> <u>To Raise</u>",
                 'activity_sitewide' => $activity_site_wide_html,
                 'activity_firmwide' => $activity_firmwide_html,
                 'action'            => $actionHtml,

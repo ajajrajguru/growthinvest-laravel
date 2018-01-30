@@ -122,12 +122,16 @@
                     <hr class="my-3">
 
                     <div class="mb-5">
-                        <p>
-                        In order to access our platform we need to categorise your client as one of 6 different types of Investor. These are all listed below, so please click on each box below, read the descriptions and select the one you feel is most appropriate.</p>
+                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
+                        <p>In order to access our platform we need to categorise your client as one of 6 different types of Investor. These are all listed below, so  please click on each box below, read the descriptions and select the one you feel is most appropriate.</p>
+                        <p>Once you have selected a category, please then complete the certification process as instructed.  A copy of the certification document will be held in your investor’s document library,  and investor will be prompted to revisit and renew the categorisation periodically.</p>
+                        <p style="font-weight: initial;">We may need to contact the investor to confirm some details and ensure we are happy that your categorisation is appropriate. If your investor's circumstances change, he will be able to  re-certify at any stage. If you or your client have any questions at all please contact a member of the GrowthInvest<!-- Seed EIS Platform --> team on 020 7071 3945 or via <a href="mailto:suppport@growthinvest.com">suppport@growthinvest.com</a>.</p>
+                    @else
+                        <p >In order to access our platform we need to categorise you as one of 6 different types of Investor. These are all listed below, so  please click on each box below, read the descriptions and select the one you feel is most appropriate.</p>
+                        <p>Once you have selected a category, please then complete the certification process as instructed.  A copy of the certification document will be held in your document library,  and you will be prompted to revisit and renew the categorisation periodically.</p>
 
-                        <p> Once you have selected a category, please then complete the certification process as instructed. A copy of the certification document will be held in your investor’s document library, and investor will be prompted to revisit and renew the categorisation periodically.</p>
-
-                        <p> We may need to contact the investor to confirm some details and ensure we are happy that your categorisation is appropriate. If your investor's circumstances change, he will be able to re-certify at any stage. If you or your client have any questions at all please contact a member of the GrowthInvest team on 020 7071 3945 or via .<a href="mailto:suppport@growthinvest.com">suppport@growthinvest.com</a></p>
+                        <p style="font-weight: initial;"> We may contact you to confirm some details and ensure we are happy that your categorisation is appropriate. If your circumstances change, you are able to  re-certify at any stage. If you have any questions at all please contact a member of the GrowthInvest<!-- Seed EIS Platform --> team on 020 7071 3945 or via <a href="mailto:suppport@growthinvest.com">suppport@growthinvest.com</a>.</p>
+                    @endif
                     </div>
 
                     <div class="register-tab" id="client-category-tabs">
@@ -221,7 +225,11 @@
                               Retail (restricted) investors must declare that they are not investing more than 10% of their net assets (including savings, stocks, ISAs, bonds and property; excluding your primary residence) into unquoted companies as a result of using GrowthInvest.
                            </p>
                            <p>
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                               If you wish to classify your client as a Retail Restricted Investor on the GrowthInvest, please complete the short <span class="text-primary">Investor Questionnaire </span>below and then complete the statement below
+                            @else
+                            If you wish to be classified as a Retail Restricted Investor on the GrowthInvest<!-- Seed EIS Platform -->, please complete the short <span class="text-primary">Investor Questionnaire</span> below and then complete the statement below.
+                            @endif
                            </p>
                            <div id="" role="tablist" class="gi-collapse">
                               <div class="card mb-3">
@@ -287,6 +295,26 @@
                                  </div>
                               </div>
                            </div>
+                           @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
+
+                           <b class="mb-5">
+                           I make this statement on behalf of my client so that he/she can receive promotional communications relating to non-readily realisable securities as a retail (restricted) investor. I declare that he/she qualify as a retail (restricted) investor because:
+                           </b>
+                           <ul class=" mb-5">
+                              <li>In the preceding twelve months, my client has not invested more than 10% of his/her net assets in non-readily realisable securities; and</li>
+                                <li>I undertake that in the next twelve months my client will not invest more than 10% of his/her net assets in non-readily realisable securities.</li>
+                           </ul>
+                           <b class="mb-5">
+                          Net assets for these purposes do not include:
+                           </b>
+                           <ul class="mb-5">
+                              <li> The property which is my client's primary residence or any money raised through a loan secured on that property;</li>
+                                <li>  Any rights of my client under a qualifying contract of insurance; OR</li>
+                                <li>Any benefits (in the form of pensions or otherwise) which are payable on the termination of my client service or on his/her death or retirement and to which he/she (or dependants are), or may be entitled.</li>
+                           </ul>
+
+                           @else
+
                            <b class="mb-5">
                            I make this statement so that I can receive promotional communications relating to non-readily realisable securities as a retail (restricted) investor. I declare that I qualify as a retail (restricted) investor because:
                            </b>
@@ -302,24 +330,44 @@
                               <li>Any rights of mine under a qualifying contract of insurance; OR </li>
                               <li>Any benefits (in the form of pensions or otherwise) which are payable on the termination of my service or on my death or retirement and to which I am (or my dependants are), or may be entitled. </li>
                            </ul>
+
+                           @endif
                            <div class="alert alert-primary" id="">
                               <div class="text-primary">
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
                                        <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
-                                       <label class="custom-control-label normal text-primary" for="ri_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                       <label class="custom-control-label normal text-primary" for="ri_acceptInvestments">
+                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
+                                       I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                    @else
+                                        I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                    @endif
+                                   </label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
                                        <input type="checkbox" name="ri_check_1" class="custom-control-input retail-input" id="ri_retailinvestor" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_1',$investorCertification->details['conditions'])) checked @endif>
-                                       <label class="custom-control-label normal text-primary" for="ri_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                       <label class="custom-control-label normal text-primary" for="ri_retailinvestor">
+                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))        
+                                       I wish my client to be treated as a Retail (restricted) Investor.
+                                    @else
+                                        I wish to be treated as a Retail (Restricted) Investor.
+                                    @endif
+                                   </label>
                                     </div>
                                  </div>
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
                                        <input type="checkbox" name="ri_check_2" class="custom-control-input retail-input" id="ri_riskwarning" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_2',$investorCertification->details['conditions'])) checked @endif>
-                                       <label class="custom-control-label normal text-primary" for="ri_riskwarning">I have read and understand the risk warning.</label>
+                                       <label class="custom-control-label normal text-primary" for="ri_riskwarning">
+                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))      
+                                       I on behalf of my client have read and understand the risk warning.
+                                    @else
+                                       I have read and understand the risk warning.
+                                    @endif
+                                   </label>
                                     </div>
                                  </div>
                                  <div class="mb-3">
@@ -388,6 +436,8 @@
                                 $clientCategory = $clientCategories->firstWhere('slug','sophisticated_investor'); 
                                 $isSophisticatedInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false;
                                 @endphp
+
+                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))     
                                 <span class="mb-5">
                                     <p>
                                         <b>Your client can be considered a Sophisticated Investor if any of the following applies:
@@ -412,12 +462,36 @@
                                         My client qualify as a Sophisticated investor and thus exempt under article 50(A) of the Financial Services and Markets Act 2000 after signing this prescribed template with relevant risk warnings and he/she meets at least one of the following criteria:
                                     </p>
                                 </div>
+                                @else
+                                    <span class="mb-5">
+                                        <p>
+                                            <b>You are considered a Sophisticated Investor if any of the following applies:
+                                            </b>
+                                        </p>
+                                        <ul class="list_ok">
+                                            <li>You have made more than one investment in an unlisted company in the last 2 years </li>
+                                            <li>You have been a member of a network or syndicate of business angel for at least six months</li>
+                                            <li>You have worked in the private equity SME finance sector in the last two years</li>
+                                            <li>You have been a director of a company with annual turnover in excess of £1m in the last 2 years</li>
+                                        </ul>
+                                    </span>
+                                    <div class="mb-5">
+                                        <p>If you wish to be classified as a Sophisticated Investor on the GrowthInvest<!-- Seed EIS Platform -->, please indicate the reason(s) that you qualify and then complete the statement below.</p>     
+
+                                        <p>I qualify as a Sophisticated investor and thus exempt under article 50(A) of the Financial Services and Markets Act 2000 after signing this prescribed template with relevant risk warnings and I meet at least one of the following criteria.</p>
+                                    </div>
+                                @endif
                                 <div class="alert bg-gray mb-5">
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox mb-1">
                                             <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_0" id="ch7" @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch7">
+
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
                                                 He/She has been a member of a network or syndicate of business angels for at least the six months preceding the date of the certificate.
+                                            @else
+                                                I have been a member of a network or syndicate of business angels for at least the six months preceding the date of the certificate
+                                            @endif
                                             </label>
                                         </div>
                                     </div>
@@ -425,7 +499,11 @@
                                         <div class="custom-control custom-checkbox mb-1">
                                             <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_1" id="ch8" @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch8">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
                                                 He/She has made more than one investment in an unlisted company in the two years preceding that date.
+                                            @else
+                                                I have made more than one investment in an unlisted company in the two years preceding that date
+                                            @endif
                                             </label>
                                         </div>
                                     </div>
@@ -433,7 +511,11 @@
                                         <div class="custom-control custom-checkbox mb-1">
                                             <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_2" id="ch9"  @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_2',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch9">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
                                                 He/She has worked, in the two years preceding that date, in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises.
+                                            @else
+                                                I have worked, in the two years preceding that date, in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises
+                                            @endif
                                             </label>
                                         </div>
                                     </div>
@@ -441,7 +523,11 @@
                                         <div class="custom-control custom-checkbox mb-1">
                                             <input type="checkbox" class="custom-control-input sop-terms-input" name="sic_option_3" id="ch10"  @if($isSophisticatedInv && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_3',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label medium" for="ch10">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
                                                 He/She has been, in the two years preceding that date, a director of a company with an annual turnover of at least £1 million.
+                                            @else
+                                                I have been, in the two years preceding that date, a director of a company with an annual turnover of at least £1 million
+                                            @endif
                                             </label>
                                         </div>
                                     </div>
@@ -467,19 +553,37 @@
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input sop-conditions-input"  name="si_check_0" id="si_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('si_check_0',$investorCertification->details['conditions'])) checked @endif>
-                                                <label class="custom-control-label normal text-primary" for="si_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                                <label class="custom-control-label normal text-primary" for="si_acceptInvestments">
+                                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
+                                                 I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                                @else
+                                                I accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                                @endif
+                                             </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input sop-conditions-input" name="si_check_1"  id="si_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('si_check_1',$investorCertification->details['conditions'])) checked @endif>
-                                                <label class="custom-control-label normal text-primary" for="si_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                                <label class="custom-control-label normal text-primary" for="si_retailinvestor">
+                                             @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
+                                                I wish to be treat my client as a sophisticated investor and have a certificate that can be made available for presentation by my client's accountant or lawyer (on request).
+                                            @else
+                                                 I wish to be treated as a sophisticated investor and have a certificate that can be made available for presentation by my accountant or lawyer (on request).
+                                            @endif
+                                            </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input sop-conditions-input" name="si_check_2"  id="si_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('si_check_2',$investorCertification->details['conditions'])) checked @endif>
-                                                <label class="custom-control-label normal text-primary" for="si_riskwarning">I have read and understand the risk warning.</label>
+                                                <label class="custom-control-label normal text-primary" for="si_riskwarning">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
+                                                I have read and understand on behalf of my client the risk warning.
+                                            @else
+                                                I have read and understand the risk warning.
+                                            @endif
+                                            </label>
                                             </div>
                                         </div>
                                         
@@ -522,12 +626,20 @@
                                 <div class="mb-5">
                                     <p>High Net Worth Individual (“HNWI”) are exempt under article 48 of the FSMA 2000 if they have signed a prescribed template with relevant risk warnings that they have over £100 000 p.a income and net assets excluding primary residence of over £250,000</p>
                                     <p>
-                                        If you wish to be classify your client as a High Net Worth Investor on the GrowthInvest, please indicate the reason(s) that your client qualifies and then complete the statement below.
+                                     @if(Auth::user()->hasPermissionTo('is_wealth_manager'))   
+                                        If you wish to be classify your client as a High Net Worth Investor  on the GrowthInvest<!-- Seed EIS Platform -->, please indicate the reason(s) that your client qualifies and then complete the statement below.
+                                    @else
+                                        If you wish to be classified as a High Net Worth Investor on the GrowthInvest<!-- Seed EIS Platform -->, please indicate the reason(s) that you qualify and then complete the statement below.
+                                    @endif
                                     </p>
                                 </div>
                                 <p>
                                     <b>
+                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))       
                                         My client is a certified high net worth individual because at least one of the following applies:
+                                    @else
+                                        I am a certified high net worth individual because at least one of the following applies: 
+                                    @endif
                                     </b>
                                 </p>
                                 <div class="mb-3">
@@ -535,7 +647,11 @@
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input hi-terms-input" name="sic_option_0" id="ch15" @if($isHighNetworth && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_0',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label normal" for="ch15">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))           
                                                 He/she had, during the financial year immediately preceding the date below, an annual income to the value of £100,000 or more;
+                                            @else
+                                                I had, during the financial year immediately preceding the date below, an annual income to the value of £100,000 or more;
+                                            @endif
                                             </label>
                                         </div>
                                     </div>
@@ -543,12 +659,17 @@
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input hi-terms-input" id="ch16" name="sic_option_1" @if($isHighNetworth && !empty($investorCertification) && isset($investorCertification->details['terms']) && in_array('sic_option_1',$investorCertification->details['terms'])) checked @endif>
                                             <label class="custom-control-label normal" for="ch16">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))        
                                                 He/she held, throughout the financial year immediately preceding the date below, net assets to the value of £250,000 or more. Net assets for these purposes do not include:
+                                            @else
+                                                I held, throughout the financial year immediately preceding the date below, net assets to the value of £250,000 or more. Net assets for these purposes do not include:
+                                            @endif
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <ol>
+                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))     
                                     <li>
                                         The property which is my client's primary residence or any loan secured on that residence;
                                     </li>
@@ -558,6 +679,11 @@
                                     <li>
                                         Any benefits (in the form of pensions or otherwise) which are payable on the termination of my client service or on his/her death or retirement and to which he/she (or dependants are), or may be entitled.
                                     </li>
+                                    @else
+                                        <li> The property which is my primary residence or any loan secured on that residence;</li>
+                                        <li> Any rights of mine are under a qualifying contract of insurance within the meaning of the Financial Services and Markets Act 2000 (Regulated Activities) Order 2001; or</li>
+                                        <li> Any benefits (in the form of pensions or otherwise) which are payable on the termination of my service or on my death or retirement and to which I am (or my dependants are), or may be, entitled. </li>
+                                    @endif
                                 </ol>
                                 <b>
                                     By agreeing to be categorised as a HNWI, you agree to be communicated financial promotions of certain types of investments, principally;
@@ -578,19 +704,37 @@
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_0" id="hi_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('hi_check_0',$investorCertification->details['conditions'])) checked @endif>
-                                                <label class="custom-control-label normal text-primary" for="hi_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                                <label class="custom-control-label normal text-primary" for="hi_acceptInvestments">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
+                                                I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                            @else
+                                                I accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                            @endif
+                                            </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_1" id="hi_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('hi_check_1',$investorCertification->details['conditions'])) checked @endif>
-                                                <label class="custom-control-label normal text-primary" for="hi_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                                <label class="custom-control-label normal text-primary" for="hi_retailinvestor">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
+                                                I wish to treat my client as a HNWI and have a certificate that can be made available for presentation by my client's accountant or lawyer (on request).
+                                            @else
+                                                I wish to be treated as a HNWI and have a certificate that can be made available for presentation by my accountant or lawyer (on request).
+                                            @endif
+                                            </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input hi-conditions-input" name="hi_check_2" id="hi_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('hi_check_2',$investorCertification->details['conditions'])) checked @endif>
-                                                <label class="custom-control-label normal text-primary" for="hi_riskwarning">I have read and understand the risk warning.</label>
+                                                <label class="custom-control-label normal text-primary" for="hi_riskwarning">
+                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
+                                                I have read and understand on behalf of my client, the risk warning.
+                                            @else
+                                                I have read and understand the risk warning.
+                                            @endif
+                                            </label>
                                             </div>
                                         </div>
                                         
@@ -626,8 +770,18 @@
                                 $isProfessionalInv = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false; 
                             @endphp
 
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))  
                             <p>A Professional Investor is an investor whom is not designated as a Retail (Restricted) Investor as per the FCA Conduct of Business Handbook <a href="https://fshandbook.info/FS/print/FCA/COBS/3" target="_blank">https://fshandbook.info/FS/print/FCA/COBS/3</a> . If your client falls into one of the below categories then He/She will qualify as a professional investor. As a professional investor GrowthInvest<!-- Seed EIS Platform --> is able to communicate with your client directly in relation to investment business.</p>
+                            @else
+                            <p>A Professional Investor is an investor whom is not designated as a Retail (Restricted) Investor as per the FCA Conduct of Business Handbook <a href="https://fshandbook.info/FS/print/FCA/COBS/3" target="_blank">https://fshandbook.info/FS/print/FCA/COBS/3</a>. If you fall into one of the below categories then you will qualify as a professional investor. As a professional investor GrowthInvest<!-- Seed EIS Platform --> is able to communicate with you directly in relation to investment business.</p>
+                            @endif
+
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))  
                             <p>If you wish to classify your client as a Professional Investor on the GrowthInvest<!-- Seed EIS Platform -->, please indicate the reason(s) that he/she qualifies and then complete the statement below.</p><br>
+                            @else
+                            <p>If you wish to be classified as a Professional Investor on the GrowthInvest<!-- Seed EIS Platform -->, please read the categories below carefully, and if you are confident that you qualify, please complete and submit the statement.</p>
+                            @endif
+
                             <b>Investment professionals are exempt under Article 14 of the of the Financial Services and Markets Act 2000 (Promotion of Collective Investment Scheme) (Exemptions) Order 2001:</b>
                             <ol class="low-alpha-double-brackets">
                                 <li>an authorised person;</li>
@@ -647,19 +801,37 @@
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input pi-conditions-input" name="pi_check_0" id="pi_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('pi_check_0',$investorCertification->details['conditions'])) checked @endif>
-                                            <label class="custom-control-label normal text-primary" for="pi_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                            <label class="custom-control-label normal text-primary" for="pi_acceptInvestments">
+                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager'))  
+                                            I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                        @else
+                                            I accept that the investments to which the promotions will relate may expose me to a significant risk of losing all of the money or other assets invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                        @endif
+                                        </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input pi-conditions-input" name="pi_check_1" id="pi_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('pi_check_1',$investorCertification->details['conditions'])) checked @endif>
-                                            <label class="custom-control-label normal text-primary" for="pi_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                            <label class="custom-control-label normal text-primary" for="pi_retailinvestor">
+                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager'))  
+                                            I wish to treat my client as a Professional investor.
+                                        @else
+                                            I wish to be treated as an professional investor.
+                                        @endif
+                                        </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input pi-conditions-input" name="pi_check_2" id="pi_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('pi_check_2',$investorCertification->details['conditions'])) checked @endif>
-                                            <label class="custom-control-label normal text-primary" for="pi_riskwarning">I have read and understand the risk warning.</label>
+                                            <label class="custom-control-label normal text-primary" for="pi_riskwarning">
+                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                                             I have read and understand on behalf of my client, the risk warning.
+                                        @else
+                                            I have read and understand the risk warning.
+                                        @endif
+                                        </label>
                                         </div>
                                     </div>
                                    
@@ -694,9 +866,33 @@
                                 $isAdvisedInvestor = (!empty($investorCertification) && $investorCertification->certification_default_id == $clientCategory->id) ? true : false; 
                             @endphp
 
-                            <p>An advised investor is one that has been assessed and categorised by an FCA regulated company and deemed suitable under COBS9 to receive financial promotions. As an advised investor your client is aware that he/she can seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.</p>
-                            <p>Please provide details of the FCA regulated company through which your client has been assessed and categorised. GrowthInvest<!-- Seed EIS Platform --> will treat your client as a Retail (Restricted) Investor until such time as the company is registered as a client and has provided categorisation documentation on your client behalf. </p>
-                            <p>If you wish to classify your client as an Advised  Investor on the GrowthInvest<!-- Seed EIS Platform -->, please fill out the short <span class="brand-text">Advised Investor Questionnaire</span> and then complete the statement below</p>
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                            <p>
+                                An advised investor is one that has been assessed and categorised by an FCA regulated company and deemed suitable under COBS9 to receive financial promotions. As an advised investor your client is aware that he/she can seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.
+
+                            </p>
+
+                            <p>
+                                Please provide details of the FCA regulated company through which your client has been assessed and categorised. GrowthInvest<!-- Seed EIS Platform --> will treat your client as a Retail (Restricted) Investor until such time as the company is registered as a client and has provided categorisation documentation on your client behalf.
+                            </p>
+
+                            <p>
+                                If you wish to classify your client as an Advised  Investor on the GrowthInvest<!-- Seed EIS Platform -->, please fill out the short <span class="brand-text">Advised Investor Questionnaire</span> and then complete the statement below
+                            </p>
+                            @else
+                            <p>
+                                An advised investor is one that has been assessed and categorised by an FCA regulated company and deemed suitable under COBS9 to receive financial promotions. As an advised investor you are aware that you can seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.
+
+                            </p>
+
+                            <p>
+                                Please provide details of the FCA regulated company through which you have been assessed and categorised. GrowthInvest<!-- Seed EIS Platform --> will treat you as a Retail (Restricted) Investor until such time as the company is registered as a client and has provided categorisation documentation on your behalf.
+                            </p>
+
+                            <p>
+                                If you wish to classify as an Advised  Investor on the GrowthInvest<!-- Seed EIS Platform -->, please fill out the short <span class="brand-text">Advised Investor Questionnaire</span> and then complete the statement below
+                            </p>
+                            @endif
 
                             <h5>Section 1 - Financial Adviser</h5>
                             <div class="form-group">
@@ -823,19 +1019,37 @@
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input ai-conditions-input" name="ai_check_0" id="ai_acceptInvestments" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ai_check_0',$investorCertification->details['conditions'])) checked @endif>
-                                            <label class="custom-control-label normal text-primary" for="ai_acceptInvestments">I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.</label>
+                                            <label class="custom-control-label normal text-primary" for="ai_acceptInvestments">
+                                         @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                                            My client belongs to a firm that has assessed him/her as suitable to receive financial promotions.
+                                        @else
+                                            I am a client of a firm that has assessed me as suitable to receive financial promotions.
+                                        @endif
+                                        </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input ai-conditions-input" name="ai_check_1" id="ai_retailinvestor" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ai_check_1',$investorCertification->details['conditions'])) checked @endif>
-                                            <label class="custom-control-label normal text-primary" for="ai_retailinvestor">I wish to be treated as a Retail (Restricted) Investor.</label>
+                                            <label class="custom-control-label normal text-primary" for="ai_retailinvestor">
+                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                                            I accept that the investments to which the promotions relate may expose him/her to a significant risk of losing all of the money or other property invested. My client is  aware that it is open to him/her to seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.
+                                        @else
+                                            I accept that the investments to which the promotions relate may expose me to a significant risk of losing all of the money or other property invested. I am aware that it is open to me to seek advice from an authorised person who specialises in advising on unlisted shares and unlisted debt securities.
+                                        @endif
+                                        </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input ai-conditions-input" name="ai_check_2" id="ai_riskwarning" @if(!empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ai_check_2',$investorCertification->details['conditions'])) checked @endif>
-                                            <label class="custom-control-label normal text-primary" for="ai_riskwarning">I have read and understand the risk warning.</label>
+                                            <label class="custom-control-label normal text-primary" for="ai_riskwarning">
+                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                                            I have read and understand, the risk warnings on behalf of my client.
+                                        @else
+                                            I have read and understand the risk warning.
+                                        @endif
+                                        </label>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -875,9 +1089,21 @@
                             $electiveProfessionalDeclaration = $electiveProfInvestorQuizStatementDeclaration['declaration'];
                             @endphp
 
+
+                        @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
                             <p>An Elective Professional Investor (Opt Up) Client is someone ordinarily a “Retail” client who wishes to be treated as a “Professional” category client.</p>
+
                             <p>If categorised as a Retail (Restricted) Investor, Sophisticated Investor or High Net Worth Individual we are unable to conduct business with you via telephone or in person in relation to our investments. However, if you chose to classify your client to become an Elective Professional client and we deem your client suitable then he/she can engage directly with us in respect of investment business.</p>
+
                             <p>If you wish to classify your client as an  Elective Professional Investor on the GrowthInvest<!-- Seed EIS Platform -->, please complete  the short <span class="brand-text">Elective Professional Investor Questionnaire</span>, and then complete the statement below.</p>
+
+                        @else
+                            <p>An Elective Professional Investor (Opt Up) is someone ordinarily a “Retail” client who wishes to be treated as a “Professional” category client.</p>
+
+                            <p>If categorised as a Retail (Restricted) Investor, Sophisticated Investor or High Net Worth Individual we are unable to conduct business with you via telephone or in person in relation to our investments. However, if you chose to become an Elective Professional and we deem you suitable then you can engage directly with us in respect of investment business</p>
+
+                            <p>If you wish to be classified as an Elective Professional Investor on the GrowthInvest<!-- Seed EIS Platform -->, please complete the short <span class="brand-text">Elective Professional Investor Questionnaire</span>, and then complete the statement below.</p>
+                        @endif
 
                             <div id="" role="tablist" class="gi-collapse">
                                 <div class="card">
