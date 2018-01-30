@@ -722,7 +722,7 @@ class InvestorController extends Controller
         $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
         $html2pdf->pdf->SetDisplayMode('fullpage');
 
-        $html2pdf->writeHTML('');
+        $html2pdf->writeHTML($html);
         // $html2pdf->output();
         $html2pdf->output($outputLink, 'F');
 
