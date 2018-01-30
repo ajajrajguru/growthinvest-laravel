@@ -354,6 +354,7 @@ class InvestorController extends Controller
         $data['investmentAccountNumber'] = (!empty($investmentAccountNumber)) ? $investmentAccountNumber->data_value : '';
         $data['pageTitle']               = 'Add Investor : Registration';
         $data['mode']                    = 'view';
+        $data['activeMenu']          = 'add_clients';
 
         return view('backoffice.clients.registration')->with($data);
 
