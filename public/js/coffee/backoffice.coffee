@@ -1,6 +1,7 @@
 $.ajaxSetup headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 
 $(document).ready ->
+  
   $('.dataFilterTable thead th.w-search').each ->
     title = $(this).text()
     $(this).closest('table').find('tr.filters td').eq($(this).index()).html '<input type="text" class="form-control" placeholder="Search ' + title + '" />'

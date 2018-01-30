@@ -80,6 +80,10 @@ $(document).ready ->
 
     return err
 
+  scrollTopContainer = (containerId) ->
+    $('html, body').animate { scrollTop: $(containerId).offset().top }, 500
+    false
+
 
   $('.submit-quiz').click ->
     err = validateQuiz($(this))
@@ -100,6 +104,7 @@ $(document).ready ->
     err = validateQuiz($(".retail-quiz-btn"))
     
     if err > 0
+      scrollTopContainer("#client-category-tabs")
       $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
       $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
     else
@@ -140,6 +145,7 @@ $(document).ready ->
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
+          scrollTopContainer("#add_clients")
           
 
   $('.save-sophisticated-Investor').click ->
@@ -162,6 +168,7 @@ $(document).ready ->
     if(terms == '')
       $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none')
       $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the Sophisticated Investor criteria.")
+      scrollTopContainer("#client-category-tabs")
     else
       $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none')
       btnObj.addClass('running')
@@ -183,6 +190,8 @@ $(document).ready ->
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
+          scrollTopContainer("#add_clients")
+
 
   $('.save-high-net-worth').click ->
     btnObj = $(this)
@@ -204,6 +213,7 @@ $(document).ready ->
     if(terms == '')
       $(this).closest('.tab-pane').find('.alert-danger').removeClass('d-none')
       $(this).closest('.tab-pane').find('.alert-danger').find('#message').html("Please select atleast one of the High Net Worth Individual criteria.")
+      scrollTopContainer("#client-category-tabs")
     else
       $(this).closest('.tab-pane').find('.alert-danger').addClass('d-none')
       btnObj.addClass('running')
@@ -225,6 +235,7 @@ $(document).ready ->
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
+          scrollTopContainer("#add_clients")
 
 
   $('.save-professsional-inv').click ->
@@ -256,6 +267,7 @@ $(document).ready ->
         btnObj.addClass('d-none')
         $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
         $('.investor-certification').html(data.html)
+        scrollTopContainer("#add_clients")
 
   $('.save-advised-investor').click ->
     btnObj = $(this)
@@ -305,6 +317,7 @@ $(document).ready ->
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
+          scrollTopContainer("#add_clients")
 
           
   $('.elective-prof-inv-btn').click ->
@@ -318,6 +331,7 @@ $(document).ready ->
     if err > 0
       $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
       $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
+      scrollTopContainer("#client-category-tabs")
     else
       
       $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none')
@@ -352,5 +366,6 @@ $(document).ready ->
           btnObj.addClass('d-none')
           $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
+          scrollTopContainer("#add_clients")
  
   
