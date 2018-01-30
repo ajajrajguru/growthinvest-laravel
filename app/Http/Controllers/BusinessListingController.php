@@ -163,7 +163,7 @@ class BusinessListingController extends Controller
         $firm_investors_str = implode(',', $firm_investors);
         //print_r($firm_investors_str);
 
-        $wm_associated_firms_query_select_data = "SELECT firm.name as firm_name, bp.round as round, bp.target_amount as target_amount,bp.created_at as created_at, bp.updated_at as updated_at, bp.business_status as business_status, bp.type as type, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
+        $wm_associated_firms_query_select_data = "SELECT bp.gi_code as gi_code, firm.name as firm_name, bp.round as round, bp.target_amount as target_amount,bp.created_at as created_at, bp.updated_at as updated_at, bp.business_status as business_status, bp.type as type, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
 
         bp.id AS id,bo_info.id as bo ,bo_info.email as bo_email,  firm.name as firm_name, firm.id as firm_id,bp.title AS business_title,bp.slug AS business_slug, bp.created_at as business_date,bp.updated_at as business_modified,  bp.business_status as proposal_status ,bp.status as post_status,
         SUM(CASE bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS watch_list,
@@ -206,11 +206,16 @@ class BusinessListingController extends Controller
 
         $wm_associated_group_by = " GROUP BY bp.id ";
 
-        $sql_limit = " ORDER BY business_title ASC LIMIT " . $skip . "," . $length;
+        $sql_limit ="";
+        if($length > 1){
+            $sql_limit = " ORDER BY business_title ASC LIMIT " . $skip . "," . $length;
+        }
 
         /* echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
         die();*/
         $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit);
+
+        //echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
 
         $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
         /* Get business listings count */
@@ -273,9 +278,9 @@ class BusinessListingController extends Controller
         $total_business_listings = $business_listings_query->count();
         }*/
 
-        /* echo "<pre>";
-        print_r($entrepreneurs);
-        die();  */
+        /*echo "<pre>";
+        print_r($business_listings);
+        die();  */ 
 
         foreach ($business_listings as $biz) {
 
@@ -301,7 +306,6 @@ class BusinessListingController extends Controller
 
         }
 
-        
         return ['total_business_listings' => $business_count, 'list' => $business_listings_update];
 
     }
@@ -422,67 +426,120 @@ class BusinessListingController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function exportBusinessListings(Request $request)
+    {
+
+        $data    = [];
+        $filters = $request->all();
+
+        $columnName = 'business_listings.title';
+        $orderBy    = 'asc';
+
+        $orderDataBy = [$columnName => $orderBy];
+
+        $filter_business_listings = $this->getFilteredBusinessListings($filters, 0, 0, $orderDataBy);
+        $business_listings        = $filter_business_listings['list'];
+
+        $fileName = 'all_business_listings_as_on_' . date('d-m-Y');
+        //  $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm', 'Business Proposals', 'Registered Date', 'Source'];
+        $header = ['Platform GI Code', 'Proposal/Fund Name', 'Due Diligence', 'Round', 'Type', 'Entrepreneur Email ID',
+            'Firm Name', 'To Raise', 'Site Wide Funded Amount', 'Site Wide Added to Watchlist', 'Site Wide Pledged Amount',
+            'Firm Wide Funded Amount', 'Firm Wide Added to Watchlist', 'Firm Wide Pledged Amount', 'Status'];
+        $userData = [];
+
+        foreach ($business_listings as $business_listing) {
+
+            $round_ordinal      = get_ordinal_number($business_listing->round);
+            $display_round      = ($round_ordinal != '') ? $round_ordinal . " Round" : "";
+            $biz_status_display = $this->getDisplayBusinessStatus($business_listing->business_status);
+
+            $userData[] = [$business_listing->gi_code,
+                title_case($business_listing->business_title),
+                $business_listing->approver,
+                $display_round,
+                $business_listing->type,
+                $business_listing->bo_email,
+                $business_listing->firm_name,
+                $business_listing->target_amount,
+                $business_listing->bi_invested,
+                $business_listing->watch_list,
+                $business_listing->bi_pledged,
+                $business_listing->bi_invested_in_firm,
+                $business_listing->my_watch_list,
+                $business_listing->bi_pledged_in_firm,
+                $biz_status_display,
+
+            ];
+
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
+
+    }
+
+/**
+ * Show the form for creating a new resource.
+ *
+ * @return \Illuminate\Http\Response
+ */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+/**
+ * Store a newly created resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+/**
+ * Display the specified resource.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+/**
+ * Show the form for editing the specified resource.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+/**
+ * Update the specified resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+/**
+ * Remove the specified resource from storage.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
     public function destroy($id)
     {
         //

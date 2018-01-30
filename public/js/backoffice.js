@@ -382,7 +382,7 @@
       var business_listings_type, firm_name;
       firm_name = $('select[name="firm_name"]').val();
       business_listings_type = $('select[name="business_listings_type"]').val();
-      return window.open("/backoffice/fundmanager/export-business-listings?firm_name=" + firm_name`&business_listings_type=` + business_listings_type);
+      return window.open("/backoffice/business-listing/export-business-listings?firm_name=" + firm_name + "&business_listings_type=" + business_listings_type);
     });
   });
 
