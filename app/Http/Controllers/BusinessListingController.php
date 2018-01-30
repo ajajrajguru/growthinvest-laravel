@@ -82,7 +82,7 @@ die();*/
 
         $business_listings_data = [];
 
-        /*print_r($business_listings);
+        /*   print_r($business_listings);
         die();*/
 
         foreach ($business_listings as $key => $business_listing) {
@@ -94,12 +94,28 @@ die();*/
 
             $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->business_title) . "</a></b><br/>" . get_ordinal_number($business_listing->round) . " Round<br/>(" . $business_listing->type . ")
                                                 <br/>
-                                                " . $business_listing->bo_email;
-            $biz_status_display = implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)));
-            $actionHtml         = $biz_status_display . '<br/><select data-id="" class="firm_actions" edit-url="#">
+                                                <i>" . $business_listing->bo_email."</i>";
+
+            $analyst_feedback = 'Pending';
+            if (isset($business_listing->analyst_feedback)) {
+                if (!is_null($business_listing->analyst_feedback) && $business_listing->analyst_feedback !== '' && $business_listing->analyst_feedback != false) {
+                    $analyst_feedback = 'Pending';
+                }
+            }
+            $analyst_feedback_html ="<span class='text-warning'> (Analyst Feedback:".$analyst_feedback.")</span>";
+
+            $biz_status_display = "<small>".implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)))."</small>";
+            $actionHtml         = $biz_status_display .$analyst_feedback_html. '<br/><select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
                                                 <option value="edit">View</option>
                                                 </select>';
+            $activity_site_wide_html = "&pound" . $business_listing->bi_invested . " <span class='text-info'>FA</span>";
+            $activity_site_wide_html .= "<br/>&pound" . $business_listing->watch_list . " <span class='text-warning'>AW</span>";
+            $activity_site_wide_html .= "<br/>&pound" . $business_listing->bi_pledged . " <span class='text-success'>PA</span>";
+
+            $activity_firmwide_html = "&pound" . $business_listing->bi_invested_in_firm . " <span class='text-info'>FA</span>";
+            $activity_firmwide_html .= "<br/>&pound" . $business_listing->my_watch_list . " <span class='text-warning'>AW</span>";
+            $activity_firmwide_html .= "<br/>&pound" . $business_listing->bi_pledged_in_firm . " <span class='text-success'>PA</span>";
 
             $business_listings_data[] = [
                 'logo'              => '',
@@ -107,9 +123,9 @@ die();*/
                 'duediligence'      => '', //$business_listing->approver,
                 'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
                 'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
-                'firmtoraise'       => $business_listing->firm_name . '<br/>&pound' . $business_listing->target_amount,
-                'activity_sitewide' => '',
-                'activity_firmwide' => '',
+                'firmtoraise'       => $business_listing->firm_name . '<br/>&pound' . $business_listing->target_amount . "<br/> <u>To Raise</u>",
+                'activity_sitewide' => $activity_site_wide_html,
+                'activity_firmwide' => $activity_firmwide_html,
                 'action'            => $actionHtml,
 
             ];
@@ -257,33 +273,28 @@ die();*/
         print_r($entrepreneurs);
         die();  */
 
-
         foreach ($business_listings as $biz) {
-            
 
             $firms = new Firm;
-            if($biz->firm_id!=""){
-                $biz_firms = $firms->getAllChildFirmsByFirmID($biz->firm_id);
-                $biz_firms[] = $biz->firm_id;
-                $args['firm_id'] =$biz_firms;
-                  
+            if ($biz->firm_id != "") {
+                $biz_firms       = $firms->getAllChildFirmsByFirmID($biz->firm_id);
+                $biz_firms[]     = $biz->firm_id;
+                $args['firm_id'] = $biz_firms;
+
+            } else {
+                $args['firm_id'] = $biz->firm_id;
             }
-            else
-                $args['firm_id'] =$biz->firm_id;
-            
-            
-             $business_listings_update[] = $this->business_investment_details($biz->id,0,$args,$biz);
+
+            $business_listings_update[] = $this->business_investment_details($biz->id, 0, $args, $biz);
 
         }
- 
+
         return ['total_business_listings' => $business_count, 'list' => $business_listings_update];
 
     }
 
-    public function business_investment_details($business_id, $investor_id = 0, $args = array(),$biz)
+    public function business_investment_details($business_id, $investor_id = 0, $args = array(), $biz)
     {
-
-        
 
         $data = array();
 
@@ -291,7 +302,7 @@ die();*/
             'firm_id' => '',
         );
 
-     /*   $extract_arg = wp_parse_args($args, $defaults);
+        /*   $extract_arg = wp_parse_args($args, $defaults);
         extract($extract_arg, EXTR_SKIP);*/
 
         $firm_id = $args['firm_id'];
@@ -301,15 +312,14 @@ die();*/
                             FROM business_investments as biz right outer JOIN business_listing_datas bp_details on bp_details.business_id = biz.business_id
                     WHERE bp_details.business_id = " . $business_id . " and bp_details.data_key = 'proposal_details'";
 
-       /* $query = " SELECT  bp_details.meta_value as proposal_details ,SUM(CASE biz.status WHEN 'funded' THEN biz.amount_invested ELSE 0 END) as invested,SUM(CASE  WHEN biz.status='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount_invested ELSE 0 END) as pledged
-                            FROM biz_proposals_investors as biz right outer JOIN {$wpdb->prefix}postmeta bp_details on bp_details.post_id = biz.biz_proposal_id
-                    WHERE bp_details.post_id = " . $business_id . " and data_key = 'proposal_details'";*/
+        /* $query = " SELECT  bp_details.meta_value as proposal_details ,SUM(CASE biz.status WHEN 'funded' THEN biz.amount_invested ELSE 0 END) as invested,SUM(CASE  WHEN biz.status='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount_invested ELSE 0 END) as pledged
+        FROM biz_proposals_investors as biz right outer JOIN {$wpdb->prefix}postmeta bp_details on bp_details.post_id = biz.biz_proposal_id
+        WHERE bp_details.post_id = " . $business_id . " and data_key = 'proposal_details'";*/
 
         // echo "\n\n".$query;
 
         $results_query = DB::select($query);
-        $results=$results_query[0] ;
-         
+        $results       = $results_query[0];
 
         $proposal_details = unserialize($results->proposal_details);
 
@@ -324,8 +334,7 @@ die();*/
 
         $fund_raised_percentage = ($investment_sought != 0) ? ($fund_raised / $investment_sought) * 100 : 0; //display fund raised as sum of pledged and invested
 
- 
-        $funds_yet_to_raise = (double)$investment_sought - (double)$fund_raised;
+        $funds_yet_to_raise = (double) $investment_sought - (double) $fund_raised;
 
         $data = array("bi_investment_sought" => check_null($investment_sought),
             "bi_minimum_investment"              => check_null($minimum_investment),
@@ -335,23 +344,21 @@ die();*/
             "bi_fund_raised_percentage"          => check_null($fund_raised_percentage),
             "bi_funds_yet_to_raise"              => check_null($funds_yet_to_raise));
 
-
-        $biz->bi_investment_sought               = check_null($investment_sought);
-        $biz->bi_minimum_investment              = check_null($minimum_investment);
-        $biz->bi_invested                        = check_null($invested);
-        $biz->bi_pledged                         = check_null($pledged);
-        $biz->bi_fund_raised                     = check_null($fund_raised);
-        $biz->bi_fund_raised_percentage          = check_null($fund_raised_percentage);
-        $biz->bi_funds_yet_to_raise             = check_null($funds_yet_to_raise);
+        $biz->bi_investment_sought      = check_null($investment_sought);
+        $biz->bi_minimum_investment     = check_null($minimum_investment);
+        $biz->bi_invested               = check_null($invested);
+        $biz->bi_pledged                = check_null($pledged);
+        $biz->bi_fund_raised            = check_null($fund_raised);
+        $biz->bi_fund_raised_percentage = check_null($fund_raised_percentage);
+        $biz->bi_funds_yet_to_raise     = check_null($funds_yet_to_raise);
 
         if ($firm_id != '') {
 
-           /* $qry_firm_values = "select SUM(CASE biz.status WHEN 'funded' THEN biz.amount_invested ELSE 0 END) as invested_in_firm,
+            /* $qry_firm_values = "select SUM(CASE biz.status WHEN 'funded' THEN biz.amount_invested ELSE 0 END) as invested_in_firm,
             SUM(CASE WHEN biz.status ='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount_invested ELSE 0 END) as pledged_in_firm
             from users investors JOIN biz_proposals_investors biz
             on biz.investor_id = user_id and biz.biz_proposal_id = " . $business_id . "
             where meta_key = 'firm' ";*/
-
 
             $qry_firm_values = "select SUM(CASE biz.status WHEN 'funded' THEN biz.amount ELSE 0 END) as invested_in_firm,
             SUM(CASE WHEN biz.status ='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount ELSE 0 END) as pledged_in_firm
@@ -361,76 +368,83 @@ die();*/
 
             if (is_array($firm_id)) {
 
-                if(count($firm_id)>0)
+                if (count($firm_id) > 0) {
+                    $firm_id_str = implode(',', $firm_id);
+                }
 
-                $firm_id_str = implode(',', $firm_id);
                 $qry_firm_values .= " where investors.firm_id in  (" . $firm_id_str . ")";
             } else {
                 $qry_firm_values .= " where  investors.firm_id = " . $firm_id;
             }
 
             $res_firm_values_query = DB::select($qry_firm_values);
-            $res_firm_values = $res_firm_values_query[0];
+            $res_firm_values       = $res_firm_values_query[0];
 
             $data["bi_invested_in_firm"] = check_null($res_firm_values->invested_in_firm);
             $data["bi_pledged_in_firm"]  = check_null($res_firm_values->pledged_in_firm);
 
-            $biz->bi_invested_in_firm   = check_null($res_firm_values->invested_in_firm);
-            $biz->bi_pledged_in_firm    = check_null($res_firm_values->pledged_in_firm); 
+            $biz->bi_invested_in_firm = check_null($res_firm_values->invested_in_firm);
+            $biz->bi_pledged_in_firm  = check_null($res_firm_values->pledged_in_firm);
 
+        } else {
+            $data["bi_invested_in_firm"] = 0;
+            $data["bi_pledged_in_firm"]  = 0;
+
+            $biz->bi_invested_in_firm = 0;
+            $biz->bi_pledged_in_firm  = 0;
         }
 
         /* if (isset($latest_activity_date)) {
 
-            if ($business_id != 0 && $business_id != '' && $latest_activity_date == true) {
+        if ($business_id != 0 && $business_id != '' && $latest_activity_date == true) {
 
-                $qry_recent_proposal_pledge_fund = "(
-                                        SELECT MAX( fp.invested_date ) AS last_funded_pledged,
-                                            fp.status AS status
-                                        FROM biz_proposals_investors fp
-                                        WHERE fp.status =  'funded'
-                                        AND fp.biz_proposal_id =" . $business_id . "
-                                        )
-                                        UNION (
+        $qry_recent_proposal_pledge_fund = "(
+        SELECT MAX( fp.invested_date ) AS last_funded_pledged,
+        fp.status AS status
+        FROM biz_proposals_investors fp
+        WHERE fp.status =  'funded'
+        AND fp.biz_proposal_id =" . $business_id . "
+        )
+        UNION (
 
-                                        SELECT MAX( pp.modified_date ) AS last_funded_pledged,
-                                        pp.status AS  status
-                                        FROM biz_proposals_investors pp
-                                        WHERE pp.status =  'pledged'
-                                        AND pp.biz_proposal_id =" . $business_id . "
-                                        )";
+        SELECT MAX( pp.modified_date ) AS last_funded_pledged,
+        pp.status AS  status
+        FROM biz_proposals_investors pp
+        WHERE pp.status =  'pledged'
+        AND pp.biz_proposal_id =" . $business_id . "
+        )";
 
-                $res_recent_proposal_pledge_fund = $wpdb->get_results($qry_recent_proposal_pledge_fund, ARRAY_A);
+        $res_recent_proposal_pledge_fund = $wpdb->get_results($qry_recent_proposal_pledge_fund, ARRAY_A);
 
-                $data["bi_last_invested_date"] = "";
-                $data["bi_last_pledged_date"]  = "";
+        $data["bi_last_invested_date"] = "";
+        $data["bi_last_pledged_date"]  = "";
 
-                if ($res_recent_proposal_pledge_fund != false && count($res_recent_proposal_pledge_fund) > 0) {
+        if ($res_recent_proposal_pledge_fund != false && count($res_recent_proposal_pledge_fund) > 0) {
 
-                    foreach ($res_recent_proposal_pledge_fund as $key_plg_fnd => $value_plg_fnd) {
+        foreach ($res_recent_proposal_pledge_fund as $key_plg_fnd => $value_plg_fnd) {
 
-                        if ($value_plg_fnd['status'] == "pledged") {
-                            $data["bi_last_pledged_date"] = isset($value_plg_fnd['last_funded_pledged']) ? $value_plg_fnd['last_funded_pledged'] : '';
-                        } elseif ($value_plg_fnd['status'] == "funded") {
-                            $data["bi_last_invested_date"] = isset($value_plg_fnd['last_funded_pledged']) ? $value_plg_fnd['last_funded_pledged'] : '';
-                        }
+        if ($value_plg_fnd['status'] == "pledged") {
+        $data["bi_last_pledged_date"] = isset($value_plg_fnd['last_funded_pledged']) ? $value_plg_fnd['last_funded_pledged'] : '';
+        } elseif ($value_plg_fnd['status'] == "funded") {
+        $data["bi_last_invested_date"] = isset($value_plg_fnd['last_funded_pledged']) ? $value_plg_fnd['last_funded_pledged'] : '';
+        }
 
-                    }
+        }
 
-                    if ($data["bi_last_invested_date"] == '') {
-                        $data["bi_latest_activity_date"] = $data["bi_last_pledged_date"];
-                    } else if ($data["bi_last_pledged_date"] == '') {
-                        $data["bi_latest_activity_date"] = $data["bi_last_invested_date"];
-                    } else {
-                        if (strtotime($data["bi_last_invested_date"]) > strtotime($data["bi_last_pledged_date"])) {
-                            $data["bi_latest_activity_date"] = $data["bi_last_invested_date"];
-                        } else {
-                            $data["bi_latest_activity_date"] = $data["bi_last_pledged_date"];
-                        }
+        if ($data["bi_last_invested_date"] == '') {
+        $data["bi_latest_activity_date"] = $data["bi_last_pledged_date"];
+        } else if ($data["bi_last_pledged_date"] == '') {
+        $data["bi_latest_activity_date"] = $data["bi_last_invested_date"];
+        } else {
+        if (strtotime($data["bi_last_invested_date"]) > strtotime($data["bi_last_pledged_date"])) {
+        $data["bi_latest_activity_date"] = $data["bi_last_invested_date"];
+        } else {
+        $data["bi_latest_activity_date"] = $data["bi_last_pledged_date"];
+        }
 
-                    }
-                }
-            }
+        }
+        }
+        }
         } */
 
         return $biz;
