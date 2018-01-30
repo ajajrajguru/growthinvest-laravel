@@ -528,3 +528,13 @@ function get_ordinal_number($number){
     return $abbreviation;
 
 }
+
+
+function check_null($num){
+
+    if(is_null($num))
+        return 0;
+    else
+        return $num ;
+
+}
