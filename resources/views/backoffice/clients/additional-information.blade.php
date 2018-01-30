@@ -130,7 +130,7 @@
 
                     <h5 class="mt-3 mb-2">
                        
-                        3: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary">  @if($investor->hasPermissionTo('is_wealth_manager')) Client Additional Information @else Additional Information @endif</span>
+                        3: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary">  @if(Auth::user()->hasPermissionTo('is_wealth_manager')) Client Additional Information @else Additional Information @endif</span>
                         
 
                        
@@ -380,7 +380,7 @@
                                         <div class="row ml-2 mr-2 mb-2">
                                             <div class="col-sm-12">
                                                 <div class="form-group">
-                                                    @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Is your client looking to invest and actively engage with the company as an Angel?</label>
                                                     @else
                                                     <label class="">Are you looking to invest and actively engage with the company as an Angel?</label>
@@ -402,7 +402,7 @@
                                         </div>
                                         <div class="row ml-2 mr-2 mb-3">
                                             <div class="col-sm-6">
-                                                @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                 <label>Does your client have a specific interest in a particular business sector?</label>
                                                 @else
                                                 <label class="">Do you have a specific interest in a particular business sector? </label>
@@ -415,7 +415,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-sm-6">
-                                                @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                 <label class="mb-4">Has your client invested in an unlisted company before?</label>
                                                 @else
                                                 <label class="">Have you invested in an unlisted company before? </label>
@@ -447,7 +447,7 @@
                                         </div>
                                         <div class="row ml-2 mr-2 mb-3">
                                             <div class="col-sm-12">
-                                                @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                 <label>What is your client looking for?</label>
                                                 @else
                                                 <label class="">What skills do you bring?</label>
@@ -464,7 +464,7 @@
                                         <div class="row mr-2 ml-2 mb-3">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Does your client require assistance to analyse business proposals?</label>
                                                      @else
                                                     <label>Do you require assistance to analyse business proposals? </label>
@@ -483,7 +483,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Will your client be looking to invest alone or part of a group?</label>
                                                     @else
                                                     <label>Will you be looking to invest alone or part of a group? </label>
@@ -504,7 +504,7 @@
                                         <div class="row mr-2 ml-2 mb-2">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Does your client have any companies looking for funding?</label>
                                                     @sle
                                                     <label style="">Do you have any companies looking for funding?</label>
@@ -523,7 +523,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    @if($investor->hasPermissionTo('is_wealth_manager'))
+                                                    @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Has your client used SEIS?</label>
                                                     @else
                                                     <label>Have you used SEIS?</label>
@@ -658,7 +658,7 @@
                         </div>
                         <div>
                             <label>Contact Preferences</label>
-                            @if($investor->hasPermissionTo('is_wealth_manager'))
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="yeshappy" name="marketingmail" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }}  value="yes" >
@@ -692,7 +692,7 @@
                                 <textarea class="form-control" name="plansforusingsite"  >{{ (!empty($additionalInfo) && isset($additionalInfo['plansforusingsite'])) ? $additionalInfo['plansforusingsite']:'' }}</textarea>
                             </div>
 
-                            @if($investor->hasPermissionTo('is_wealth_manager'))
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                             <i class="text-muted"><small>Tell us how you intend to use the GrowthInvest.com website. It will help us provide better service to your client. </small></i><br/>
                             <i class="text-muted"><small>Eg: Interested in investing in online business. </small></i>
                             @else
