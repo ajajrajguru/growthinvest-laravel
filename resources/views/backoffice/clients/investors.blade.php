@@ -60,7 +60,7 @@
                         
                         <div class="p-3 bg-gray">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 mb-3 mb-sm-0">
                                     <label for="">Firm Name</label>
                                     <select name="firm_name" class="form-control investorSearchinput select2-single" id="investor_nominee">
                                         <option value="">All Firms</option>
@@ -71,7 +71,7 @@
                                     <em class="small">Select the firm whose investors you need to view</em>
                                     
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mb-3 mb-sm-0">
                                     <label for="">Investor Name</label>
                                     <select name="investor_name" class="form-control investorSearchinput select2-single" id="investor_nominee">
                                         <option value="">--</option>
@@ -80,9 +80,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label for="">Client Categories</label>
                                     <select name="client_category" class="form-control investorSearchinput" id="investor_nominee">
                                         <option value="">All client categories</option>
@@ -91,7 +89,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3 mb-3 mb-sm-0">
                                     <label for="">Client Certifications</label>
                                     <select name="client_certification" class="form-control investorSearchinput" id="investor_nominee">
                                         <option value="">All Certifications</option>
@@ -100,7 +100,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-3 mb-sm-0">
                                     <label for="">Nominee Account</label>
                                     <select name="investor_nominee" class="form-control investorSearchinput" id="investor_nominee">
                                         <option value="">--</option>
@@ -108,13 +108,16 @@
                                         <option value="non_nominee">No</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-3 mb-sm-0">
                                     <label for="">ID Verification</label>
                                     <select name="idverified" class="form-control investorSearchinput" id="idverified">
                                         <option value="">--</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
+                                </div>
+                                <div class="col-md-3 align-self-end text-right">
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-filters">Reset filter</a>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +126,6 @@
                             <div class="mt-3">
                                 <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary btn-sm">Add Investors</a>
                                 <a href="javascript:void(0)" class="btn btn-link btn-sm download-investor-csv" >Download CSV</a>
-                                <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-filters">Reset filter</a>
                             </div>
                         </div>
 
