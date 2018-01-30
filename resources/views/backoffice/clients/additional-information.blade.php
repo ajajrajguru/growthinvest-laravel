@@ -257,7 +257,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Primary Contact Phone Number</label>
-                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" value="{{ (!empty($investorFai) && isset($investorFai['telephone'])) ? $investorFai['telephone']:'' }}">
+                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="{{ (!empty($investorFai) && isset($investorFai['telephone'])) ? $investorFai['telephone']:'' }}">
                                                     </div>
                                                 </div>
 

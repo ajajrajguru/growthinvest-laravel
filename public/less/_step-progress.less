@@ -66,4 +66,16 @@
 			}
 		}
 	}
+	@media (max-width: 767px) {
+		&_scroller {
+			// white-space: nowrap;
+			overflow-x: auto;
+			&::-webkit-scrollbar {
+				display: none;
+			}
+			& > div {
+				min-width: 600px;
+			}
+		}
+	}
 }
