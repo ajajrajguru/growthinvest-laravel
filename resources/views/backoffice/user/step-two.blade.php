@@ -39,13 +39,13 @@
         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
 
 
-            <div class="row">
-                <div class="col-6">
-                    <h6 class="mt-0">Step 2: <span class="text-primary">Intermediary Profile</span></h6>
+            <div class="d-flex justify-content-between">
+                <div class="">
+                    <h5 class="mt-0">Step 2: <span class="text-primary">Intermediary Profile</span></h5>
                 </div>
-                <div class="col-6">
-                    <a href="javascript:void(0)" class="btn btn-primary editUserBtn">Edit Details</a>
-                    <a href="javascript:void(0)" class="btn btn-primary d-none cancelUpdateBtn">Cancel Updates</a>
+                <div class="">
+                    <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
                 </div>
             </div>
             <hr class="my-3">
