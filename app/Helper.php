@@ -514,7 +514,7 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
             <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
         </span>&nbsp;
         <span class="text-danger">
-            and valid for:' . $validity . '
+            and valid for: ' . $validity . '
         </span>
         </div>
     </div>';

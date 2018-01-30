@@ -298,7 +298,7 @@
 				    			</div>
 				    			<div class="col-md-9">
 				    				<textarea class="rich-editor editmode @if($mode=='view') d-none @endif"" name="ent_invite_content" >{{ (isset($invite_content['ent_invite_content'])) ? $invite_content['ent_invite_content'] : ''}}</textarea>
-				    				<span class="viewmode @if($mode=='edit') d-none @endif @if($mode!='edit') scrollable @endif">{{ (isset($invite_content['ent_invite_content'])) ? $invite_content['ent_invite_content'] : ''}}</span>
+				    				<span class="viewmode @if($mode=='edit') d-none @endif @if($mode!='edit') scrollable @endif">{!! (isset($invite_content['ent_invite_content'])) ? $invite_content['ent_invite_content'] : ''!!}</span>
 				    			</div>
 				    		</div>
 
@@ -308,7 +308,7 @@
 				    			</div>
 				    			<div class="col-md-9">
 				    				<textarea class="rich-editor editmode @if($mode=='view') d-none @endif""  name="inv_invite_content"  >{{ (isset($invite_content['inv_invite_content'])) ? $invite_content['inv_invite_content'] : ''}}</textarea>
-				    				<span class="viewmode @if($mode=='edit') d-none @endif @if($mode!='edit') scrollable @endif">{{ (isset($invite_content['inv_invite_content'])) ? $invite_content['inv_invite_content'] : ''}}</span>
+				    				<span class="viewmode @if($mode=='edit') d-none @endif @if($mode!='edit') scrollable @endif">{!! (isset($invite_content['inv_invite_content'])) ? $invite_content['inv_invite_content'] : ''!!}</span>
 				    			</div>
 				    		</div>
 
@@ -318,7 +318,7 @@
 				    			</div>
 				    			<div class="col-md-9">
 				    				<textarea class="rich-editor editmode @if($mode=='view') d-none @endif""  name="fundmanager_invite_content" >{{ (isset($invite_content['fundmanager_invite_content'])) ? $invite_content['fundmanager_invite_content'] : ''}}</textarea>
-				    				<span class="viewmode @if($mode=='edit') d-none @endif @if($mode!='edit') scrollable @endif">{{ (isset($invite_content['fundmanager_invite_content'])) ? $invite_content['fundmanager_invite_content'] : ''}}</span>
+				    				<span class="viewmode @if($mode=='edit') d-none @endif @if($mode!='edit') scrollable @endif">{!! (isset($invite_content['fundmanager_invite_content'])) ? $invite_content['fundmanager_invite_content'] : ''!!}</span>
 				    			</div>
 				    		</div>
 				    	</div>

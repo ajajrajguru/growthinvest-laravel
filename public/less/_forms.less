@@ -84,6 +84,12 @@ label {
 		max-height: 150px;
 		overflow-y: auto;
 		overflow-x: hidden;
+
+		border: 1px solid @gray;
+		padding: 15px 15px 0;
+		&:empty {
+			display: none;
+		}
 	}
 }
 
