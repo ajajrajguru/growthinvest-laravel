@@ -1805,7 +1805,7 @@ class InvestorController extends Controller
           <tr style="margin-bottom: 0; padding-bottom: 0;">
             <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                    <img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"  style="max-width:100%; height:auto; width: 60px; " /><br>
+                    <img class="bg-background" src="' . url("img/pdf/04-money-bag.png") . '"  style="max-width:100%; height:auto; width: 60px; " /><br>
 
                         ELECTIVE PROFESSIONAL INVESTOR
 
