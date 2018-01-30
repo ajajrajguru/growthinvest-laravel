@@ -43,14 +43,14 @@
 						<div class="form-group">
 							<label>Firm Name <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
 							<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="name" value="{{$firm->name}}"  data-parsley-required data-parsley-required-message="Please enter Firm Name" >
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->name}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->name}}</div>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>FCA Firm Reference Number</label>
 							<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="fca_ref_no" value="{{$firm->fca_ref_no}}" >
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->fca_ref_no}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->fca_ref_no}}</div>
 						</div>
 					</div>
 				</div>
@@ -60,7 +60,7 @@
 						<div class="form-group">
 							<label>Description</label>
 							<textarea class="form-control editmode @if($mode=='view') d-none @endif""  name="description">{{$firm->description}}</textarea>
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->description}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->description}}</div>
 						</div>
 					</div>
 				</div>
@@ -72,19 +72,19 @@
 							<div class="form-group">
 								<label>Address Line 1 <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
 								<textarea class="form-control editmode @if($mode=='view') d-none @endif"" name="address1" data-parsley-required data-parsley-required-message="Please enter Address 1" >{{$firm->address1}}</textarea>
-								<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->address1}}</span>
+								<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->address1}}</div>
 							</div>
 							<div class="form-group">
 								<label>Address Line 2</label>
 								<textarea class="form-control editmode @if($mode=='view') d-none @endif"" name="address2">{{$firm->address2}}</textarea>
-								<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->address2}}</span>
+								<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->address2}}</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Town/City</label>
 										<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="town" value="{{$firm->town}}" >
-										<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->town}}</span>
+										<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->town}}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -104,7 +104,7 @@
 			                                    <option value="{{ $county }}" @if($firm->county == $county) selected @endif>{{ $county }}</option>
 			                                @endforeach
 										</select>
-										<span class="viewmode @if($mode=='edit') d-none @endif">{{ $countyName}}</span>
+										<div class="viewmode @if($mode=='edit') d-none @endif">{{ $countyName}}</div>
 									</div>
 								</div>
 							</div>
@@ -114,7 +114,7 @@
 									<div class="form-group">
 										<label>Postcode <span class="text-danger  @if($mode=='view') d-none @endif"">*</span></label>
 										<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder=""  name="postcode" value="{{$firm->postcode}}"  data-parsley-required data-parsley-required-message="Please enter Postcode"  >
-										<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->postcode}}</span>
+										<div class="viewmode @if($mode=='edit') d-none @endif">{{$firm->postcode}}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -134,7 +134,7 @@
 			                                    <option value="{{ $code }}" @if($firm->country == $code) selected @endif>{{ $country }}</option>
 			                                @endforeach
 										</select>
-										<span class="viewmode @if($mode=='edit') d-none @endif">{{ $countryName }}</span>
+										<div class="viewmode @if($mode=='edit') d-none @endif">{{ $countryName }}</div>
 									</div>
 								</div>
 							</div>
@@ -147,14 +147,14 @@
 						<div class="form-group">
 							<label>Primary Contact Name <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
 							<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="pri_contactname" value="{{ (isset($additional_details['pri_contactname'])) ? $additional_details['pri_contactname'] : ''}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Name">
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactname'])) ? $additional_details['pri_contactname'] : ''}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactname'])) ? $additional_details['pri_contactname'] : ''}}</div>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact’s FCA Number </label>
 							<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="pri_contactfcano" value="{{ (isset($additional_details['pri_contactfcano'])) ? $additional_details['pri_contactfcano'] : ''}}">
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactfcano'])) ? $additional_details['pri_contactfcano'] : ''}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactfcano'])) ? $additional_details['pri_contactfcano'] : ''}}</div>
 						</div>
 					</div>
 				</div>
@@ -164,14 +164,14 @@
 						<div class="form-group">
 							<label>Primary Contact Email Address <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
 							<input type="email" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder=""  name="pri_contactemail" value="{{ (isset($additional_details['pri_contactemail'])) ? $additional_details['pri_contactemail'] : ''}}" data-parsley-required data-parsley-required-message="Please enter Primary Contact Email">
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactemail'])) ? $additional_details['pri_contactemail'] : ''}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactemail'])) ? $additional_details['pri_contactemail'] : ''}}</div>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Primary Contact Phone Number <span class="text-danger reqField @if($mode=='view') d-none @endif"">*</span></label>
 							<input type="tel" class="form-control editmode @if($mode=='view') d-none @endif"" name="pri_contactphoneno" value="{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}" data-parsley-required data-parsley-type="number" placeholder="Eg: 020 7071 3945" data-parsley-required-message="Please enter Primary Contact Phone No">
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($additional_details['pri_contactphoneno'])) ? $additional_details['pri_contactphoneno'] : ''}}</div>
 						</div>
 					</div>
 				</div>
@@ -196,8 +196,8 @@
                                 @endforeach
 
 							</select>
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ $firmtypeName}}</span>
-							<small>Please contact the GrowthInvest team to amend your firm type to add investors, entrepreneurs or other intermediaries</small>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{ $firmtypeName}}</div>
+							<small class="editmode @if($mode=='view') d-none @endif">Please contact the GrowthInvest team to amend your firm type to add investors, entrepreneurs or other intermediaries</small>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -218,7 +218,7 @@
                                 <option value="{{ $n_firm->id }}" @if($firm->parent_id == $n_firm->id) selected @endif>{{ $n_firm->name }}</option>
                                 @endforeach
 							</select>
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ $n_firmName}}</span>
+							<div class="viewmode @if($mode=='edit') d-none @endif">{{ $n_firmName}}</div>
 						</div>
 					</div>
 				</div>
@@ -275,15 +275,15 @@
 				    <div id="invitations" class="collapse show" role="tabpanel">
 
 				    	@if($firm->id)
-				    	<div class="form-group">
+				    	<div class="form-group mt-4">
 								<label>Investor Invite Link</label>
 								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="inv_invite_link" value="http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor" disabled>
-								<span class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor</span>
+								<div class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#investor</div>
 						</div>
 						<div class="form-group">
 								<label>Entrepreneur Invite Link</label>
 								<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="ent_invite_link" value="http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner" disabled>
-								<span class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner</span>
+								<div class="viewmode @if($mode=='edit') d-none @endif">http://seedtwin.ajency.in/register/?{{$firm->invite_key}}#businessowner</div>
 						</div>
 						@endif
 						

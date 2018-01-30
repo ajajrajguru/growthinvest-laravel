@@ -28,9 +28,6 @@ class BusinessListingController extends Controller
         $business_listing        = new BusinessListing;
         $list_args['backoffice'] = true;
         $business_listing_data   = $business_listing->getBusinessList($list_args);
-/*echo "<pre>";
-print_r($business_listing_data);
-die();*/
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
@@ -94,7 +91,7 @@ die();*/
 
             $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->business_title) . "</a></b><br/>" . get_ordinal_number($business_listing->round) . " Round<br/>(" . $business_listing->type . ")
                                                 <br/>
-                                                <i>" . $business_listing->bo_email."</i>";
+                                                <i>" . $business_listing->bo_email . "</i>";
 
             $analyst_feedback = 'Pending';
             if (isset($business_listing->analyst_feedback)) {
@@ -102,10 +99,12 @@ die();*/
                     $analyst_feedback = 'Pending';
                 }
             }
-            $analyst_feedback_html ="<span class='text-warning'> (Analyst Feedback:".$analyst_feedback.")</span>";
+            $analyst_feedback_html = "<span class='text-warning'> (Analyst Feedback:" . $analyst_feedback . ")</span>";
 
-            $biz_status_display = "<small>".implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status)))."</small>";
-            $actionHtml         = $biz_status_display .$analyst_feedback_html. '<br/><select data-id="" class="firm_actions" edit-url="#">
+            //$biz_status_display = "<small>" . implode(' ', array_map('ucfirst', explode('_', $business_listing->business_status))) . "</small>";
+            $biz_status_display = "<small>" . $this->getDisplayBusinessStatus($business_listing->business_status) . "</small>";
+
+            $actionHtml = $biz_status_display . $analyst_feedback_html . '<br/><select data-id="" class="firm_actions" edit-url="#">
                                                 <option>--select--</option>
                                                 <option value="edit">View</option>
                                                 </select>';
@@ -120,7 +119,7 @@ die();*/
             $business_listings_data[] = [
                 'logo'              => '',
                 'name'              => $name_html,
-                'duediligence'      => '', //$business_listing->approver,
+                'duediligence'      => $business_listing->approver,
                 'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
                 'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
                 'firmtoraise'       => $business_listing->firm_name . '<br/>&pound' . $business_listing->target_amount . "<br/> <u>To Raise</u>",
@@ -199,14 +198,19 @@ die();*/
                 JOIN business_investments bpi ON bp.id = bpi.business_id
 
         LEFT OUTER
-        JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))
-        GROUP BY bp.id  ";
+        JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))";
+        $wm_associated_where = "";
+        if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
+            $wm_associated_where .= " WHERE bp.type ='" . $filters['business_listings_type'] . "'";
+        }
+
+        $wm_associated_group_by = " GROUP BY bp.id ";
 
         $sql_limit = " ORDER BY business_title ASC LIMIT " . $skip . "," . $length;
 
         /* echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
         die();*/
-        $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $sql_limit);
+        $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit);
 
         $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
         /* Get business listings count */
@@ -219,7 +223,7 @@ die();*/
         $sql_business_listings_count_where = "";
 
         if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
-            $sql_business_listings_count .= "biz.type ='" . $filters['business_listings_type'] . "'";
+            $sql_business_listings_count .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
         }
 
         $res_business_count = DB::select($sql_business_listings_count);
@@ -285,10 +289,19 @@ die();*/
                 $args['firm_id'] = $biz->firm_id;
             }
 
-            $business_listings_update[] = $this->business_investment_details($biz->id, 0, $args, $biz);
+            $new_biz_list = $this->business_investment_details($biz->id, 0, $args, $biz);
+
+            $res_approver           = DB::select("SELECT def.name FROM `business_has_defaults` bhd LEFT JOIN `defaults` def ON bhd.default_id = def.id where bhd.business_id = " . $biz->id . " AND def.type='approver'");
+            $new_biz_list->approver = '';
+            if (count($res_approver) > 0) {
+                $new_biz_list->approver = $res_approver[0]->name;
+            }
+
+            $business_listings_update[] = $new_biz_list;
 
         }
 
+        
         return ['total_business_listings' => $business_count, 'list' => $business_listings_update];
 
     }
@@ -302,21 +315,12 @@ die();*/
             'firm_id' => '',
         );
 
-        /*   $extract_arg = wp_parse_args($args, $defaults);
-        extract($extract_arg, EXTR_SKIP);*/
-
         $firm_id = $args['firm_id'];
 
         //Added the level of int clause and status
         $query = " SELECT  bp_details.data_value as proposal_details ,SUM(CASE biz.status WHEN 'funded' THEN biz.amount ELSE 0 END) as invested,SUM(CASE  WHEN biz.status='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount ELSE 0 END) as pledged
                             FROM business_investments as biz right outer JOIN business_listing_datas bp_details on bp_details.business_id = biz.business_id
                     WHERE bp_details.business_id = " . $business_id . " and bp_details.data_key = 'proposal_details'";
-
-        /* $query = " SELECT  bp_details.meta_value as proposal_details ,SUM(CASE biz.status WHEN 'funded' THEN biz.amount_invested ELSE 0 END) as invested,SUM(CASE  WHEN biz.status='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount_invested ELSE 0 END) as pledged
-        FROM biz_proposals_investors as biz right outer JOIN {$wpdb->prefix}postmeta bp_details on bp_details.post_id = biz.biz_proposal_id
-        WHERE bp_details.post_id = " . $business_id . " and data_key = 'proposal_details'";*/
-
-        // echo "\n\n".$query;
 
         $results_query = DB::select($query);
         $results       = $results_query[0];
@@ -336,14 +340,6 @@ die();*/
 
         $funds_yet_to_raise = (double) $investment_sought - (double) $fund_raised;
 
-        $data = array("bi_investment_sought" => check_null($investment_sought),
-            "bi_minimum_investment"              => check_null($minimum_investment),
-            "bi_invested"                        => check_null($invested),
-            "bi_pledged"                         => check_null($pledged),
-            "bi_fund_raised"                     => check_null($fund_raised),
-            "bi_fund_raised_percentage"          => check_null($fund_raised_percentage),
-            "bi_funds_yet_to_raise"              => check_null($funds_yet_to_raise));
-
         $biz->bi_investment_sought      = check_null($investment_sought);
         $biz->bi_minimum_investment     = check_null($minimum_investment);
         $biz->bi_invested               = check_null($invested);
@@ -353,12 +349,6 @@ die();*/
         $biz->bi_funds_yet_to_raise     = check_null($funds_yet_to_raise);
 
         if ($firm_id != '') {
-
-            /* $qry_firm_values = "select SUM(CASE biz.status WHEN 'funded' THEN biz.amount_invested ELSE 0 END) as invested_in_firm,
-            SUM(CASE WHEN biz.status ='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount_invested ELSE 0 END) as pledged_in_firm
-            from users investors JOIN biz_proposals_investors biz
-            on biz.investor_id = user_id and biz.biz_proposal_id = " . $business_id . "
-            where meta_key = 'firm' ";*/
 
             $qry_firm_values = "select SUM(CASE biz.status WHEN 'funded' THEN biz.amount ELSE 0 END) as invested_in_firm,
             SUM(CASE WHEN biz.status ='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount ELSE 0 END) as pledged_in_firm
@@ -394,60 +384,41 @@ die();*/
             $biz->bi_pledged_in_firm  = 0;
         }
 
-        /* if (isset($latest_activity_date)) {
-
-        if ($business_id != 0 && $business_id != '' && $latest_activity_date == true) {
-
-        $qry_recent_proposal_pledge_fund = "(
-        SELECT MAX( fp.invested_date ) AS last_funded_pledged,
-        fp.status AS status
-        FROM biz_proposals_investors fp
-        WHERE fp.status =  'funded'
-        AND fp.biz_proposal_id =" . $business_id . "
-        )
-        UNION (
-
-        SELECT MAX( pp.modified_date ) AS last_funded_pledged,
-        pp.status AS  status
-        FROM biz_proposals_investors pp
-        WHERE pp.status =  'pledged'
-        AND pp.biz_proposal_id =" . $business_id . "
-        )";
-
-        $res_recent_proposal_pledge_fund = $wpdb->get_results($qry_recent_proposal_pledge_fund, ARRAY_A);
-
-        $data["bi_last_invested_date"] = "";
-        $data["bi_last_pledged_date"]  = "";
-
-        if ($res_recent_proposal_pledge_fund != false && count($res_recent_proposal_pledge_fund) > 0) {
-
-        foreach ($res_recent_proposal_pledge_fund as $key_plg_fnd => $value_plg_fnd) {
-
-        if ($value_plg_fnd['status'] == "pledged") {
-        $data["bi_last_pledged_date"] = isset($value_plg_fnd['last_funded_pledged']) ? $value_plg_fnd['last_funded_pledged'] : '';
-        } elseif ($value_plg_fnd['status'] == "funded") {
-        $data["bi_last_invested_date"] = isset($value_plg_fnd['last_funded_pledged']) ? $value_plg_fnd['last_funded_pledged'] : '';
-        }
-
-        }
-
-        if ($data["bi_last_invested_date"] == '') {
-        $data["bi_latest_activity_date"] = $data["bi_last_pledged_date"];
-        } else if ($data["bi_last_pledged_date"] == '') {
-        $data["bi_latest_activity_date"] = $data["bi_last_invested_date"];
-        } else {
-        if (strtotime($data["bi_last_invested_date"]) > strtotime($data["bi_last_pledged_date"])) {
-        $data["bi_latest_activity_date"] = $data["bi_last_invested_date"];
-        } else {
-        $data["bi_latest_activity_date"] = $data["bi_last_pledged_date"];
-        }
-
-        }
-        }
-        }
-        } */
-
         return $biz;
+
+    }
+
+    public function getDisplayBusinessStatus($business_status)
+    {
+
+        switch ($business_status) {
+            case 'awaiting_inputs':
+                $display_business_status = "Awaiting Business Owner Inputs";
+                break;
+            case 'early_stage':
+                $display_business_status = "Marked as Incubator";
+                break;
+            case 'listed':
+                $display_business_status = "Listed on Platform";
+                break;
+            case 'fund_raised':
+                $display_business_status = "Fund Raised";
+                break;
+            case 'pending_review':
+                $display_business_status = "Pending Review";
+                break;
+            case 'reject':
+                $display_business_status = "Rejected";
+                break;
+            case 'archive':
+                $display_business_status = "Archived";
+                break;
+            default:
+                $display_business_status = "Pending Review";
+                break;
+
+        }
+        return $display_business_status;
 
     }
 
