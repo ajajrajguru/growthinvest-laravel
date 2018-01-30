@@ -27,8 +27,10 @@
 		    </div>
 		    <div class="col-6">
 		    @if($firm->id)
-		        <a href="javascript:void(0)" class="btn btn-primary editFirmBtn">Edit Details</a>
-		        <a href="javascript:void(0)" class="btn btn-primary d-none cancelFirmUpdateBtn">Cancel Updates</a>
+		    	<div class="float-right">
+			        <a href="javascript:void(0)" class="btn btn-primary editFirmBtn">Edit Details</a>
+			        <a href="javascript:void(0)" class="btn btn-primary d-none cancelFirmUpdateBtn">Cancel Updates</a>
+		        </div>
 		    @endif
 		    </div>
 		</div>
