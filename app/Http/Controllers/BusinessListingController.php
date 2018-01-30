@@ -119,7 +119,7 @@ class BusinessListingController extends Controller
             $business_listings_data[] = [
                 'logo'              => '',
                 'name'              => $name_html,
-                'duediligence'      => '', //$business_listing->approver,
+                'duediligence'      => $business_listing->approver,
                 'created_date'      => date('d/m/Y', strtotime($business_listing->created_at)),
                 'modified_date'     => date('d/m/Y', strtotime($business_listing->updated_at)),
                 'firmtoraise'       => $business_listing->firm_name . '<br/>&pound' . $business_listing->target_amount . "<br/> <u>To Raise</u>",
@@ -289,10 +289,19 @@ class BusinessListingController extends Controller
                 $args['firm_id'] = $biz->firm_id;
             }
 
-            $business_listings_update[] = $this->business_investment_details($biz->id, 0, $args, $biz);
+            $new_biz_list = $this->business_investment_details($biz->id, 0, $args, $biz);
+
+            $res_approver           = DB::select("SELECT def.name FROM `business_has_defaults` bhd LEFT JOIN `defaults` def ON bhd.default_id = def.id where bhd.business_id = " . $biz->id . " AND def.type='approver'");
+            $new_biz_list->approver = '';
+            if (count($res_approver) > 0) {
+                $new_biz_list->approver = $res_approver[0]->name;
+            }
+
+            $business_listings_update[] = $new_biz_list;
 
         }
 
+        
         return ['total_business_listings' => $business_count, 'list' => $business_listings_update];
 
     }
