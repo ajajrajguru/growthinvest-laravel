@@ -614,11 +614,21 @@ class InvestorController extends Controller
     }
 
     public function getAdviceInvestorsData($requestData)
-    {
+    {  
         $data                           = [];
         $conditionStr                   = $requestData['conditions'];
         $conditionExp                   = explode(',', $conditionStr);
         $data['conditions']             = array_filter($conditionExp);
+
+        if(!isset($requestData['financial_advisor_info']['havefinancialadvisor']))
+            $requestData['financial_advisor_info']['havefinancialadvisor'] = '';
+        
+        if(!isset($requestData['financial_advisor_info']['requireadviceseedeisoreis']))
+            $requestData['financial_advisor_info']['requireadviceseedeisoreis'] = '';
+
+        if(!isset($requestData['financial_advisor_info']['advicefromauthorised']))
+            $requestData['financial_advisor_info']['advicefromauthorised'] = '';
+
         $data['financial_advisor_info'] = $requestData['financial_advisor_info'];
 
         return $data;
@@ -712,7 +722,7 @@ class InvestorController extends Controller
         $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
         $html2pdf->pdf->SetDisplayMode('fullpage');
 
-        $html2pdf->writeHTML($html);
+        $html2pdf->writeHTML('');
         // $html2pdf->output();
         $html2pdf->output($outputLink, 'F');
 
