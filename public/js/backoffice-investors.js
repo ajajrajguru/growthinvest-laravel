@@ -356,7 +356,8 @@
       }
     });
     $('.elective-prof-inv-btn').click(function() {
-      return $(this).attr('data-agree', "yes");
+      $(this).attr('data-agree', "yes");
+      return $(this).addClass('d-none');
     });
     return $('.save-elective-prof-inv').click(function() {
       var btnObj, certification_type, clientCategoryId, err, giCode, quizAnswers;
