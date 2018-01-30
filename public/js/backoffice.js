@@ -258,8 +258,7 @@
         }, {
           'data': 'business'
         }, {
-          'data': 'registered_date',
-          "orderable": false
+          'data': 'registered_date'
         }, {
           'data': 'source',
           "orderable": false
@@ -305,8 +304,7 @@
         }, {
           'data': 'business'
         }, {
-          'data': 'registered_date',
-          "orderable": false
+          'data': 'registered_date'
         }, {
           'data': 'source',
           "orderable": false
