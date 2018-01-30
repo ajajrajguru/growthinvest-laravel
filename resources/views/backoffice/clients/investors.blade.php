@@ -58,7 +58,6 @@
 
                         <h5 class="mt-2 mb-0">Selection Filters</h5>
                         
-                         <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-filters">Reset filter</a>
                         <div class="p-3 bg-gray">
                             <div class="row">
                                 <div class="col-md-4">
@@ -124,6 +123,7 @@
                             <div class="mt-3">
                                 <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary btn-sm">Add Investors</a>
                                 <a href="javascript:void(0)" class="btn btn-link btn-sm download-investor-csv" >Download CSV</a>
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-filters">Reset filter</a>
                             </div>
                         </div>
 
