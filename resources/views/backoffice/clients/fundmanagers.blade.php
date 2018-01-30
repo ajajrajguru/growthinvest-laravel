@@ -77,7 +77,7 @@
                         <div class="d-flex justify-content-end">
                             <div class="mt-3">
                                 <a href="{{ url('#')}}" class="btn btn-primary btn-sm">Add Fundmanager</a>
-                                <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm download-fundmanager-csv" >Download CSV</a>
+                                <a href="javascript:void(0)" class="btn btn-link btn-sm download-fundmanager-csv" >Download CSV</a>
                             </div>
                         </div>
 
