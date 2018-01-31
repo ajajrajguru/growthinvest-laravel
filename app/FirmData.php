@@ -34,7 +34,7 @@ class FirmData extends Model
         foreach ($firm_metas as $key => $value) {
             FirmData::updateOrCreate(['data_key' => $key,
                 'firm_id'                       => $firmid],
-                ['data_value' => serialize($value) ]);
+                ['data_value' => json_encode($value) ]);
 
         }
 
@@ -49,9 +49,13 @@ class FirmData extends Model
 
     
     public function getDataValueAttribute( $value ) { 
-        $value = @unserialize( $value );
-         
-        return $value;
+        //$value = @unserialize( $value );
+        //$json = preg_replace("!r?n!", "",  $value);
+        
+        $string = preg_replace("/[\r\n]+/", " ", $value);
+        $json = utf8_encode($string);        
+        $json = (array)json_decode($json );         
+        return $json;
     }
 
 }

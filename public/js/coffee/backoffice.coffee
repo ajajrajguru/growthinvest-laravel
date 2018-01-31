@@ -208,7 +208,7 @@ $(document).ready ->
     'processing': false
     'serverSide': true
     'bAutoWidth': false
-    'aaSorting': [[1,'asc']]
+    'aaSorting': [[0,'asc']]
     'ajax':
       url: '/backoffice/entrepreneurs/get-entrepreneurs'
       type: 'post'
@@ -250,7 +250,7 @@ $(document).ready ->
     'processing': false
     'serverSide': true
     'bAutoWidth': false
-    'aaSorting': [[1,'asc']]
+    'aaSorting': [[0,'asc']]
     'ajax':
       url: '/backoffice/fundmanagers/get-fundmanagers'
       type: 'post'

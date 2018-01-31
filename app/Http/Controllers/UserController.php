@@ -347,7 +347,9 @@ class UserController extends Controller
         $users = $userObj->allUsers();
 
         $fileName = 'approved_intermediary';
+
         $header   = ['Platform GI Code','Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+
         $userData = [];
 
         foreach ($users as $user) {
