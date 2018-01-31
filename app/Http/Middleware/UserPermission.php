@@ -63,6 +63,7 @@ class UserPermission
                 'backoffice/business-listings'                             => ['view_backoffice_proposals', 'view_firm_business_proposals'],
                 'backoffice/business-listings/get-businesslistings'        => ['view_backoffice_proposals', 'view_firm_business_proposals'],
                 'backoffice/business-listing/export-business-listings'    => ['view_backoffice_proposals', 'view_firm_business_proposals'],
+                'backoffice/current-business-valuations'                  => ['view_current_business_valuation'],
 
             ],
 

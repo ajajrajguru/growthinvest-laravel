@@ -346,3 +346,38 @@ $(document).ready ->
     $('select[name="business_listings_type"]').val('').trigger('change') 
     businesslistingsTable.ajax.reload()
     return
+
+
+  businesslistingsTable = $('#datatable-currentbusinessvaluations').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/business-listings/get-businesslistings'
+      type: 'post'
+      data: (data) ->
+        filters = {}
+        filters.firm_name = $('select[name="firm_name"]').val()
+        filters.business_listings_type = $('select[name="business_listings_type"]').val()
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [    
+      { 'data': 'logo' , "orderable": false}    
+      { 'data': 'name' }
+      { 'data': 'duediligence' }
+      { 'data': 'created_date', "orderable": false}
+      { 'data': 'modified_date', "orderable": false}
+      { 'data': 'firmtoraise'}          
+      { 'data': 'activity_sitewide', "orderable": false}
+      { 'data': 'activity_firmwide', "orderable": false}
+      { 'data': 'action' , "orderable": false}
+    ])
