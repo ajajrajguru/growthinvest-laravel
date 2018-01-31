@@ -89,6 +89,8 @@ class FirmController extends Controller
      */
     public function store(Request $request)
     {
+
+
         $firm_data = array(
             'name'                  => is_null($request->input('name')) ? '' : $request->input('name'),
             'description'           => is_null($request->input('description')) ? '' : $request->input('description'),
@@ -106,8 +108,8 @@ class FirmController extends Controller
             'country'               => is_null($request->input('country')) ? '' : $request->input('country'),
             'logoid'                => is_null($request->input('logoid')) ? 0 : $request->input('logoid'),
             'backgroundid'          => is_null($request->input('backgroundid')) ? 0 : $request->input('backgroundid'),
-            'frontend_display'      => is_null($request->input('frontend_display')) ? 'no' : $request->input('frontend_display'),
-            'backend_display'       => is_null($request->input('backend_display')) ? 'no' : $request->input('backend_display'),
+            'frontend_display'      => is_null($request->input('frontend_display')) ? 'no' : 'yes',
+            'backend_display'       => is_null($request->input('backend_display')) ? 'no' : 'yes',
             'blog'                  => is_null($request->input('blog')) ? 1 : $request->input('blog'),
 
         );
@@ -123,6 +125,7 @@ class FirmController extends Controller
             $firm = Firm::where('gi_code', $giCode)->first();
         }
 
+ 
         $firm->name                  = $firm_data['name'];
         $firm->description           = $firm_data['description'];
         $firm->parent_id             = $firm_data['parent_id'];
