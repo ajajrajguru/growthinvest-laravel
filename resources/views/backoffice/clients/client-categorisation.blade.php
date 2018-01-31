@@ -903,7 +903,7 @@
                             <div class="form-group">
                                 <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input has-financial-advisor" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif @if(empty($investorFai)) checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input has-financial-advisor" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif >
                                   <label class="custom-control-label medium" for="havefinancialadvisor_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">

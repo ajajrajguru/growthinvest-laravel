@@ -2019,7 +2019,7 @@ class InvestorController extends Controller
         $financialAdvInfo->data_value = $investorFai;
         $financialAdvInfo->save();
 
-        Session::flash('success_message', 'Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.');
+        Session::flash('success_message', "Your Client's Additional Information has been successfully added");
 
         return redirect(url('backoffice/investor/' . $giCode . '/additional-information'));
 
