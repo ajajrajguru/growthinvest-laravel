@@ -36,7 +36,7 @@ class EntrepreneurController extends Controller
 
     public function getEntrepreneurslist(Request $request)
     {
-        $requestData = $request->all(); //dd($requestData);
+        $requestData = $request->all();  //dd($requestData);
         $data        = [];
         $skip        = $requestData['start'];
         $length      = $requestData['length'];
@@ -53,7 +53,7 @@ class EntrepreneurController extends Controller
 
         $columnName = 'users.first_name';
         $orderBy    = 'asc';
-
+  
         if (isset($columnOrder[$orderValue['column']])) {
             $columnName = $columnOrder[$orderValue['column']];
             $orderBy    = $orderValue['dir'];
@@ -107,6 +107,8 @@ class EntrepreneurController extends Controller
 
     public function getFilteredEntrepreneurs($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
     {
+
+
 
         $entrepreneurQuery = User::join('model_has_roles', function ($join) {
             $join->on('users.id', '=', 'model_has_roles.model_id')
