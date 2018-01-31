@@ -70,6 +70,9 @@
                                     </select>
                                     <small><i>Select the firm whose fund managers you need to view</i></small>
                                 </div>
+                                <div class="col-md-12 align-self-end text-right">
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-sm fundmanagers-reset-filters">Reset filter</a>
+                                </div>
                                
                             </div>
                              

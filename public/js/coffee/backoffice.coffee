@@ -243,7 +243,10 @@ $(document).ready ->
     firm_name = $('select[name="firm_name"]').val() 
     window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name="+firm_name);
 
-
+  $('body').on 'click', '.entrepreneurs-reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change') 
+    entrepreneurTable.ajax.reload()
+    return
 
   fundmanagerTable = $('#datatable-fundmanagers').DataTable(
     'pageLength': 50
@@ -285,6 +288,10 @@ $(document).ready ->
     firm_name = $('select[name="firm_name"]').val() 
     window.open("/backoffice/fundmanager/export-fundmanagers?firm_name="+firm_name);
 
+  $('body').on 'click', '.fundmanagers-reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change') 
+    fundmanagerTable.ajax.reload()
+    return
 
   businesslistingsTable = $('#datatable-businesslistings').DataTable(
     'pageLength': 50
@@ -333,3 +340,9 @@ $(document).ready ->
     firm_name = $('select[name="firm_name"]').val() 
     business_listings_type = $('select[name="business_listings_type"]').val() 
     window.open("/backoffice/business-listing/export-business-listings?firm_name="+firm_name+"&business_listings_type="+business_listings_type);
+
+  $('body').on 'click', '.business-listings-reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change') 
+    $('select[name="business_listings_type"]').val('').trigger('change') 
+    businesslistingsTable.ajax.reload()
+    return
