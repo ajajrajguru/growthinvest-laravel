@@ -448,7 +448,7 @@
                                                 @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
                                                 <label>What is your client's area of expertise?  </label>
                                                  @else
-                                                  <label>What is your area of expertise? </label>
+                                                <label>What is your area of expertise? </label>
                                                  @endif
                                                     <textarea class="form-control" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
                                                     <em class="small">Eg: Web design and online marketing</em>
