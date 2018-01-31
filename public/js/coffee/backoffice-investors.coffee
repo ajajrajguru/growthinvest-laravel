@@ -105,10 +105,10 @@ $(document).ready ->
     
     if err > 0
       scrollTopContainer("#client-category-tabs")
-      $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
-      $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
+      btnObj.closest('.tab-pane').find('.retail-investor-danger').removeClass('d-none')
+      btnObj.closest('.tab-pane').find('.retail-investor-danger').find('#message').html("Please answer the questionnaire before submitting.")
     else
-      $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none')
+      btnObj.closest('.tab-pane').find('.retail-investor-danger').addClass('d-none')
       clientCategoryId = $(this).attr('client-category')
       giCode = $(this).attr('inv-gi-code')
       certification_type = $('select[name="certification_type"]').val()
@@ -143,7 +143,10 @@ $(document).ready ->
           $(".retail-quiz-btn").addClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
-          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          if data.isWealthManager == true
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          else
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
           
@@ -188,7 +191,10 @@ $(document).ready ->
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
-          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          if data.isWealthManager == true
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          else
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
@@ -233,7 +239,10 @@ $(document).ready ->
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
-          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          if data.isWealthManager == true
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          else
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
@@ -264,8 +273,11 @@ $(document).ready ->
         btnObj.removeClass('running')
         $('.elective-prof-inv-btn').removeClass('d-none')
         $(".save-certification").removeClass('d-none')
-        btnObj.addClass('d-none')
-        $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+        btnObj.addClass('d-none')  
+        if data.isWealthManager == true
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+        else
+          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
         $('.investor-certification').html(data.html)
         scrollTopContainer("#add_clients")
 
@@ -315,7 +327,10 @@ $(document).ready ->
           $('.elective-prof-inv-btn').removeClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
-          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          if data.isWealthManager == true
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          else
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
@@ -323,6 +338,20 @@ $(document).ready ->
   $('.elective-prof-inv-btn').click ->
     $(this).attr('data-agree',"yes")
     $(this).addClass('d-none')
+
+  $(document).on 'change', '.has-financial-advisor', ->
+    if($(this).val()=='yes')
+      $('.advised-investor-questionnaire').removeClass('d-none');
+    else
+      $('.advised-investor-questionnaire').addClass('d-none');
+
+
+  $(document).on 'change', 'input[name="investortype"]', ->
+    if($(this).val()=='Angel')
+      $('.investortype-angel').removeClass('d-none');
+    else
+      $('.investortype-angel').addClass('d-none');
+  
   
   $('.save-elective-prof-inv').click ->
     btnObj = $(this)
@@ -330,12 +359,11 @@ $(document).ready ->
     err = validateQuiz($(".elective-prof-inv-quiz-btn"))
     
     if err > 0
-      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none')
-      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.")
+      btnObj.closest('.tab-pane').find('.elective-professional-investor-danger').removeClass('d-none')
+      btnObj.closest('.tab-pane').find('.elective-professional-investor-danger').find('#message').html("Please answer the questionnaire before submitting.")
       scrollTopContainer("#client-category-tabs")
     else
-      
-      $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none')
+      btnObj.closest('.tab-pane').find('.elective-professional-investor-danger').addClass('d-none')
       clientCategoryId = $(this).attr('client-category')
       giCode = $(this).attr('inv-gi-code')
       certification_type = $('select[name="certification_type"]').val()
@@ -365,7 +393,10 @@ $(document).ready ->
           $(".elective-prof-inv-quiz-btn").addClass('d-none')
           $(".save-certification").removeClass('d-none')
           btnObj.addClass('d-none')
-          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          if data.isWealthManager == true
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
+          else
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
  

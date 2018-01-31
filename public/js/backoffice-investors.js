@@ -114,10 +114,10 @@
       err = validateQuiz($(".retail-quiz-btn"));
       if (err > 0) {
         scrollTopContainer("#client-category-tabs");
-        $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
-        return $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.");
+        btnObj.closest('.tab-pane').find('.retail-investor-danger').removeClass('d-none');
+        return btnObj.closest('.tab-pane').find('.retail-investor-danger').find('#message').html("Please answer the questionnaire before submitting.");
       } else {
-        $(".retail-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none');
+        btnObj.closest('.tab-pane').find('.retail-investor-danger').addClass('d-none');
         clientCategoryId = $(this).attr('client-category');
         giCode = $(this).attr('inv-gi-code');
         certification_type = $('select[name="certification_type"]').val();
@@ -157,7 +157,11 @@
             $(".retail-quiz-btn").addClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            if (data.isWealthManager === true) {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            } else {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            }
             $('.investor-certification').html(data.html);
             return scrollTopContainer("#add_clients");
           }
@@ -208,7 +212,11 @@
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            if (data.isWealthManager === true) {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            } else {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            }
             $('.investor-certification').html(data.html);
             return scrollTopContainer("#add_clients");
           }
@@ -258,7 +266,11 @@
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            if (data.isWealthManager === true) {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            } else {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            }
             $('.investor-certification').html(data.html);
             return scrollTopContainer("#add_clients");
           }
@@ -295,7 +307,11 @@
           $('.elective-prof-inv-btn').removeClass('d-none');
           $(".save-certification").removeClass('d-none');
           btnObj.addClass('d-none');
-          $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          if (data.isWealthManager === true) {
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          } else {
+            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+          }
           $('.investor-certification').html(data.html);
           return scrollTopContainer("#add_clients");
         }
@@ -348,7 +364,11 @@
             $('.elective-prof-inv-btn').removeClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            if (data.isWealthManager === true) {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            } else {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            }
             $('.investor-certification').html(data.html);
             return scrollTopContainer("#add_clients");
           }
@@ -359,16 +379,30 @@
       $(this).attr('data-agree', "yes");
       return $(this).addClass('d-none');
     });
+    $(document).on('change', '.has-financial-advisor', function() {
+      if ($(this).val() === 'yes') {
+        return $('.advised-investor-questionnaire').removeClass('d-none');
+      } else {
+        return $('.advised-investor-questionnaire').addClass('d-none');
+      }
+    });
+    $(document).on('change', 'input[name="investortype"]', function() {
+      if ($(this).val() === 'Angel') {
+        return $('.investortype-angel').removeClass('d-none');
+      } else {
+        return $('.investortype-angel').addClass('d-none');
+      }
+    });
     return $('.save-elective-prof-inv').click(function() {
       var btnObj, certification_type, clientCategoryId, err, giCode, quizAnswers;
       btnObj = $(this);
       err = validateQuiz($(".elective-prof-inv-quiz-btn"));
       if (err > 0) {
-        $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').removeClass('d-none');
-        $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').find('#message').html("Please answer the questionnaire before submitting.");
+        btnObj.closest('.tab-pane').find('.elective-professional-investor-danger').removeClass('d-none');
+        btnObj.closest('.tab-pane').find('.elective-professional-investor-danger').find('#message').html("Please answer the questionnaire before submitting.");
         return scrollTopContainer("#client-category-tabs");
       } else {
-        $(".elective-prof-inv-quiz-btn").closest('.quiz-container').find('.quiz-danger').addClass('d-none');
+        btnObj.closest('.tab-pane').find('.elective-professional-investor-danger').addClass('d-none');
         clientCategoryId = $(this).attr('client-category');
         giCode = $(this).attr('inv-gi-code');
         certification_type = $('select[name="certification_type"]').val();
@@ -402,7 +436,11 @@
             $(".elective-prof-inv-quiz-btn").addClass('d-none');
             $(".save-certification").removeClass('d-none');
             btnObj.addClass('d-none');
-            $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            if (data.isWealthManager === true) {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            } else {
+              $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.");
+            }
             $('.investor-certification').html(data.html);
             return scrollTopContainer("#add_clients");
           }

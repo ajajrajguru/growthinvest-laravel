@@ -48,7 +48,7 @@ class InvestorController extends Controller
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Investors';
-        $data['activeMenu']          = 'manage_clients';
+        $data['activeMenu']         = 'manage_clients';
 
         return view('backoffice.clients.investors')->with($data);
     }
@@ -173,24 +173,21 @@ class InvestorController extends Controller
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
             // $investorQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
 
-            $investorQuery->whereIn('users.id', function($query)use($filters){
-                                $query->select('user_id')
-                                ->from(with(new UserHasCertification)->getTable())
-                                ->where('certification_default_id', $filters['client_category'])
-                                ->orderBy('created_at', 'desc')
-                                ->groupBy('user_id');
-                            });
-            
+            $investorQuery->whereIn('users.id', function ($query) use ($filters) {
+                $query->select('user_id')
+                    ->from(with(new UserHasCertification)->getTable())
+                    ->where('certification_default_id', $filters['client_category'])
+                    ->orderBy('created_at', 'desc')
+                    ->groupBy('user_id');
+            });
 
         }
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
                 // $investorQuery->whereNull('user_has_certifications.created_at');
-                $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification','');
-            }
-            else
-            {
+                $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+            } else {
                 $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
 
@@ -227,7 +224,6 @@ class InvestorController extends Controller
             $investorQuery->orderBy($columnName, $orderBy);
         }
         $investorQuery->orderBy('user_has_certifications.created_at', 'desc');
-        
 
         if ($length > 1) {
 
@@ -321,7 +317,7 @@ class InvestorController extends Controller
         $data['breadcrumbs']             = $breadcrumbs;
         $data['pageTitle']               = 'Add Investor';
         $data['mode']                    = 'edit';
-        $data['activeMenu']          = 'add_clients';
+        $data['activeMenu']              = 'add_clients';
 
         return view('backoffice.clients.registration')->with($data);
 
@@ -331,7 +327,6 @@ class InvestorController extends Controller
     {
 
         $investor = User::where('gi_code', $giCode)->first();
-
 
         if (empty($investor)) {
             abort(404);
@@ -355,7 +350,7 @@ class InvestorController extends Controller
         $data['investmentAccountNumber'] = (!empty($investmentAccountNumber)) ? $investmentAccountNumber->data_value : '';
         $data['pageTitle']               = 'Add Investor : Registration';
         $data['mode']                    = 'view';
-        $data['activeMenu']          = 'add_clients';
+        $data['activeMenu']              = 'add_clients';
 
         return view('backoffice.clients.registration')->with($data);
 
@@ -454,7 +449,7 @@ class InvestorController extends Controller
     {
 
         $investor = User::where('gi_code', $giCode)->first();
- 
+
         if (empty($investor)) {
             abort(404);
         }
@@ -468,21 +463,21 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
 
-        $investorCertification           = $investor->getActiveCertification();
-        $investorFai = $investor->userFinancialAdvisorInfo();
+        $investorCertification = $investor->getActiveCertification();
+        $investorFai           = $investor->userFinancialAdvisorInfo();
 
         $data['investor']                = $investor;
         $data['countyList']              = getCounty();
         $data['countryList']             = getCountry();
         $data['clientCategories']        = $clientCategories;
         $data['certificationTypes']      = certificationTypes();
-        $data['investorCertification']   = $investorCertification;  
-        $data['investorFai'] = (!empty($investorFai)) ? $investorFai->data_value : []; 
+        $data['investorCertification']   = $investorCertification;
+        $data['investorFai']             = (!empty($investorFai)) ? $investorFai->data_value : [];
         $data['activeCertificationData'] = (!empty($investorCertification)) ? $investorCertification->certification() : null;
         $data['breadcrumbs']             = $breadcrumbs;
         $data['pageTitle']               = 'Add Investor : Client Categorisation';
         $data['mode']                    = 'view';
-        $data['activeMenu']          = 'add_clients';
+        $data['activeMenu']              = 'add_clients';
 
         return view('backoffice.clients.client-categorisation')->with($data);
 
@@ -520,8 +515,8 @@ class InvestorController extends Controller
         } elseif ($requestData['save-type'] == 'advice_investors') {
             $reqDetails = $this->getAdviceInvestorsData($requestData);
 
-            $details['conditions']          = $reqDetails['conditions'];
-            $financialAdvInfoData = $reqDetails['financial_advisor_info'];
+            $details['conditions'] = $reqDetails['conditions'];
+            $financialAdvInfoData  = $reqDetails['financial_advisor_info'];
 
             $financialAdvInfo = $investor->userFinancialAdvisorInfo();
             if (empty($financialAdvInfo)) {
@@ -531,7 +526,6 @@ class InvestorController extends Controller
             }
             $financialAdvInfo->data_value = $financialAdvInfoData;
             $financialAdvInfo->save();
-             
 
         } elseif ($requestData['save-type'] == 'elective_prof') {
             $details = $this->getElectiveProfData($requestData);
@@ -561,8 +555,9 @@ class InvestorController extends Controller
         }
 
         $certificationvalidityHtml = genActiveCertificationValidityHtml($hasCertification, $fileId);
+        $isWealthManager           = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? true : false;
 
-        return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml]);
+        return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml, 'isWealthManager' => $isWealthManager]);
 
     }
 
@@ -616,20 +611,23 @@ class InvestorController extends Controller
     }
 
     public function getAdviceInvestorsData($requestData)
-    {  
-        $data                           = [];
-        $conditionStr                   = $requestData['conditions'];
-        $conditionExp                   = explode(',', $conditionStr);
-        $data['conditions']             = array_filter($conditionExp);
+    {
+        $data               = [];
+        $conditionStr       = $requestData['conditions'];
+        $conditionExp       = explode(',', $conditionStr);
+        $data['conditions'] = array_filter($conditionExp);
 
-        if(!isset($requestData['financial_advisor_info']['havefinancialadvisor']))
+        if (!isset($requestData['financial_advisor_info']['havefinancialadvisor'])) {
             $requestData['financial_advisor_info']['havefinancialadvisor'] = '';
-        
-        if(!isset($requestData['financial_advisor_info']['requireadviceseedeisoreis']))
-            $requestData['financial_advisor_info']['requireadviceseedeisoreis'] = '';
+        }
 
-        if(!isset($requestData['financial_advisor_info']['advicefromauthorised']))
+        if (!isset($requestData['financial_advisor_info']['requireadviceseedeisoreis'])) {
+            $requestData['financial_advisor_info']['requireadviceseedeisoreis'] = '';
+        }
+
+        if (!isset($requestData['financial_advisor_info']['advicefromauthorised'])) {
             $requestData['financial_advisor_info']['advicefromauthorised'] = '';
+        }
 
         $data['financial_advisor_info'] = $requestData['financial_advisor_info'];
 
@@ -693,7 +691,7 @@ class InvestorController extends Controller
             $fileDiaplayName = "Statement for Professional Investor Certification";
 
         } elseif ($type == 'advice_investors') {
-            $investorFai = $investor->userFinancialAdvisorInfo();
+            $investorFai                              = $investor->userFinancialAdvisorInfo();
             $submissionData['financial_advisor_info'] = (!empty($investorFai)) ? $investorFai->data_value : [];
             $html .= $this->adviceInvestorsHtml($submissionData, $investor);
             $fileDiaplayName = "Statement for Advised Investor Certification";
@@ -1918,19 +1916,21 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Additional Information'];
 
-        $investorFai = $investor->userFinancialAdvisorInfo();
+        $investorFai    = $investor->userFinancialAdvisorInfo();
         $additionalInfo = $investor->userAdditionalInfo();
-
-        $data['countyList']  = getCounty();
-        $data['countryList'] = getCountry();
-        $data['investor']    = $investor;
-        $data['investorFai'] = (!empty($investorFai)) ? $investorFai->data_value : [];
-        $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : []; 
-        $data['sectors']     = getSectors();
-        $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'Add Investor : Additional Information';
-        $data['mode']        = 'view';
-        $data['activeMenu']          = 'add_clients';
+        $sectors = getSectors();
+        sort($sectors);  
+        
+        $data['countyList']     = getCounty();
+        $data['countryList']    = getCountry();
+        $data['investor']       = $investor;
+        $data['investorFai']    = (!empty($investorFai)) ? $investorFai->data_value : [];
+        $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
+        $data['sectors']        = $sectors;
+        $data['breadcrumbs']    = $breadcrumbs;
+        $data['pageTitle']      = 'Add Investor : Additional Information';
+        $data['mode']           = 'view';
+        $data['activeMenu']     = 'add_clients';
 
         return view('backoffice.clients.additional-information')->with($data);
 
@@ -1951,51 +1951,53 @@ class InvestorController extends Controller
             return redirect()->back()->withInput();
         }
 
-        $investorFai['companyname']       = $requestData['companyname'];
-        $investorFai['fcanumber']         = $requestData['fcanumber'];
-        $investorFai['principlecontact']  = $requestData['principlecontact'];
-        $investorFai['primarycontactfca'] = $requestData['primarycontactfca'];
-        $investorFai['email']             = $requestData['email'];
-        $investorFai['telephone']         = $requestData['telephone'];
-        $investorFai['address']           = $requestData['address'];
-        $investorFai['address2']          = $requestData['address2'];
-        $investorFai['city']              = $requestData['city'];
-        $investorFai['county']            = $requestData['county'];
-        $investorFai['postcode']          = $requestData['postcode'];
-        $investorFai['country']           = $requestData['country'];
-        $investorFai["havefinancialadvisor"]              = (isset($requestData["havefinancialadvisor"])) ? $requestData["havefinancialadvisor"] : '' ;
-        $investorFai["requireadviceseedeisoreis"]         = (isset($requestData["requireadviceseedeisoreis"])) ? $requestData["requireadviceseedeisoreis"]: '' ;
-        $investorFai["advicefromauthorised"]              = (isset($requestData["advicefromauthorised"])) ? $requestData["advicefromauthorised"]: '' ;
+        $investorFai['companyname']               = $requestData['companyname'];
+        $investorFai['fcanumber']                 = $requestData['fcanumber'];
+        $investorFai['principlecontact']          = $requestData['principlecontact'];
+        $investorFai['primarycontactfca']         = $requestData['primarycontactfca'];
+        $investorFai['email']                     = $requestData['email'];
+        $investorFai['telephone']                 = $requestData['telephone'];
+        $investorFai['address']                   = $requestData['address'];
+        $investorFai['address2']                  = $requestData['address2'];
+        $investorFai['city']                      = $requestData['city'];
+        $investorFai['county']                    = $requestData['county'];
+        $investorFai['postcode']                  = $requestData['postcode'];
+        $investorFai['country']                   = $requestData['country'];
+        $investorFai["havefinancialadvisor"]      = (isset($requestData["havefinancialadvisor"])) ? $requestData["havefinancialadvisor"] : '';
+        $investorFai["requireadviceseedeisoreis"] = (isset($requestData["requireadviceseedeisoreis"])) ? $requestData["requireadviceseedeisoreis"] : '';
+        $investorFai["advicefromauthorised"]      = (isset($requestData["advicefromauthorised"])) ? $requestData["advicefromauthorised"] : '';
 
         $userMeta["skypeid"]                           = $requestData["skypeid"];
         $userMeta["linkedin"]                          = $requestData["linkedin"];
         $userMeta["facebook"]                          = $requestData["facebook"];
         $userMeta["twitter"]                           = $requestData["facebook"];
-        $userMeta["employmenttype"]                    = (isset($requestData["employmenttype"])) ? $requestData["employmenttype"]: '' ;
+        $userMeta["employmenttype"]                    = (isset($requestData["employmenttype"])) ? $requestData["employmenttype"] : '';
         $userMeta["totalannualincome"]                 = $requestData["totalannualincome"];
         $userMeta["possibleannualinvestment"]          = $requestData["possibleannualinvestment"];
         $userMeta["maximuminvestmentinanyoneproject"]  = $requestData["maximuminvestmentinanyoneproject"];
-        $userMeta["investortype"]                      = (isset($requestData["employmenttype"])) ? $requestData["investortype"]: '' ;
+        $userMeta["investortype"]                      = (isset($requestData["investortype"])) ? $requestData["investortype"] : '';
         $userMeta["specificinterestinbussinesssector"] = $requestData["specificinterestinbussinesssector"];
         $userMeta["investedinanunlistedcompany"]       = $requestData["investedinanunlistedcompany"];
-        $userMeta["comfortablewithliquidityissues"]    = (isset($requestData["comfortablewithliquidityissues"])) ? $requestData["comfortablewithliquidityissues"]: '' ;
+        $userMeta["comfortablewithliquidityissues"]    = (isset($requestData["comfortablewithliquidityissues"])) ? $requestData["comfortablewithliquidityissues"] : '';
         $userMeta["investorlookingfor"]                = $requestData["investorlookingfor"];
-        $userMeta["requireassistance"]                 = (isset($requestData["requireassistance"])) ? $requestData["requireassistance"]: '' ;
-        $userMeta["investas"]                          = (isset($requestData["investas"])) ?  $requestData["investas"]: '' ;
-        $userMeta["haveanycompanieslookingforfunding"] = (isset($requestData["haveanycompanieslookingforfunding"])) ?  $requestData["haveanycompanieslookingforfunding"]: '' ;
-        $userMeta["usedeisorventurecapitaltrusts"]     = (isset($requestData["usedeisorventurecapitaltrusts"])) ? $requestData["usedeisorventurecapitaltrusts"]: '' ;
+        $userMeta["requireassistance"]                 = (isset($requestData["requireassistance"])) ? $requestData["requireassistance"] : '';
+        $userMeta["investas"]                          = (isset($requestData["investas"])) ? $requestData["investas"] : '';
+        $userMeta["haveanycompanieslookingforfunding"] = (isset($requestData["haveanycompanieslookingforfunding"])) ? $requestData["haveanycompanieslookingforfunding"] : '';
+        $userMeta["usedeisorventurecapitaltrusts"]     = (isset($requestData["usedeisorventurecapitaltrusts"])) ? $requestData["usedeisorventurecapitaltrusts"] : '';
         $userMeta["numcompaniesinvested2yr_seis"]      = $requestData["numcompaniesinvested2yr_seis"];
         $userMeta["totalinvestedinseis"]               = $requestData["totalinvestedinseis"];
-        $userMeta["usedeis"]                           = (isset($requestData["usedeis"])) ? $requestData["usedeis"]: '' ;
+        $userMeta["usedeis"]                           = (isset($requestData["usedeis"])) ? $requestData["usedeis"] : '';
         $userMeta["numcompaniesinvested2yr_eis"]       = $requestData["numcompaniesinvested2yr_eis"];
         $userMeta["totalinvestedeis"]                  = $requestData["totalinvestedeis"];
-        $userMeta["usedvct"]                           = (isset($requestData["usedvct"])) ? $requestData["usedvct"]: '' ;
+        $userMeta["usedvct"]                           = (isset($requestData["usedvct"])) ? $requestData["usedvct"] : '';
         $userMeta["numcompaniesinvested2yr_vct"]       = $requestData["numcompaniesinvested2yr_vct"];
         $userMeta["totalinvestedvct"]                  = $requestData["totalinvestedvct"];
         $userMeta["hearaboutsite"]                     = $requestData["hearaboutsite"];
-        $userMeta["marketingmail"]                     = (isset($requestData["marketingmail"])) ? $requestData["marketingmail"]: '' ;
-        $userMeta["marketingmail_party"]               = (isset($requestData["marketingmail_party"])) ?  $requestData["marketingmail_party"]: '' ;
-        $userMeta["plansforusingsite"]                     = $requestData["plansforusingsite"];
+        $userMeta["marketingmail"]                     = (isset($requestData["marketingmail"])) ? $requestData["marketingmail"] : '';
+        $userMeta["marketingmail_party"]               = (isset($requestData["marketingmail_party"])) ? $requestData["marketingmail_party"] : '';
+        $userMeta["plansforusingsite"]                 = $requestData["plansforusingsite"];
+        $userMeta["angelskills"]                       = $requestData["angelskills"];
+        $userMeta["angelexpertise"]                    = $requestData["angelexpertise"];
 
         $additionalInfo = $investor->userAdditionalInfo();
         if (empty($additionalInfo)) {
@@ -2017,7 +2019,8 @@ class InvestorController extends Controller
         $financialAdvInfo->data_value = $investorFai;
         $financialAdvInfo->save();
 
-        Session::flash('success_message', 'Your client registration details added successfully and being redirected to certification stage');
+        Session::flash('success_message', 'Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.');
+
         return redirect(url('backoffice/investor/' . $giCode . '/additional-information'));
 
     }

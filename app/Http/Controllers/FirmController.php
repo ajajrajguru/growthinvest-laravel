@@ -194,8 +194,16 @@ class FirmController extends Controller
         }
 
         $data                       = [];
-        $additional_info            = $firm->getFirmAdditionalInfo();
-        $invite_content             = $firm->getFirmInviteContent();
+        $additional_info            = $firm->getFirmAdditionalInfo($firm->id);
+        $invite_content             = $firm->getFirmInviteContent($firm->id);
+
+ 
+       // echo "<pre>";
+        //print_r($invite_content->getOriginal('data_value'));
+       // dd($invite_content->data_value );
+       // print_r($invite_content->getAttribute('data_value'));
+       // die();
+
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
         $data['network_firms']      = $network_firm->getAllParentFirms();
@@ -212,9 +220,9 @@ class FirmController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
 
         /*echo "<pre>";
-        print_r($data['additional_details'] );
-        print_r($data['invite_content'] );
-        print_r($data['firm']);*/
+        print_r($data);
+        die();*/
+        
         return view('backoffice.firm.add-edit-firm')->with($data);
     }
 
