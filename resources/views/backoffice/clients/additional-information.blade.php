@@ -431,28 +431,33 @@
                                         </div>
 
                                         <div class="row ml-2 mr-2 mb-2 investortype-angel {{ (!empty($additionalInfo) && isset($additionalInfo['investortype']) && $additionalInfo['investortype'] =='Angel') ? '':'d-none' }}">
-                                        <div class="form-group">
-                                        @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
-                                           <label>What skills does your client's bring? </label>
-                                         @else
-                                          <label>What skills do you bring? </label>
-                                         @endif
-                                            <textarea class="form-control" name="angelskills" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</textarea>
-                                        </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
+                                                   <label>What skills does your client's bring? </label>
+                                                 @else
+                                                  <label>What skills do you bring? </label>
+                                                 @endif
+                                                    <textarea class="form-control" name="angelskills" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</textarea>
+                                                </div>
+                                            </div>
 
- 
-                                        </div>
-                                        <div class="row ml-2 mr-2 mb-2 investortype-angel {{ (!empty($additionalInfo) && isset($additionalInfo['investortype']) && $additionalInfo['investortype'] =='Angel') ? '':'d-none' }}">
-                                        
-                                            <div class="form-group">
-                                            @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
-                                            <label>What is your client's area of expertise?  </label>
-                                             @else
-                                              <label>What is your area of expertise? </label>
-                                             @endif
-                                                <textarea class="form-control" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
+                                                <label>What is your client's area of expertise?  </label>
+                                                 @else
+                                                  <label>What is your area of expertise? </label>
+                                                 @endif
+                                                    <textarea class="form-control" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
+                                                </div>
                                             </div>
                                         </div>
+                                        
+                                        <!-- <div class="row ml-2 mr-2 mb-2 investortype-angel {{ (!empty($additionalInfo) && isset($additionalInfo['investortype']) && $additionalInfo['investortype'] =='Angel') ? '':'d-none' }}">
+                                        
+                                            
+                                        </div> -->
 
                                         <div class="row ml-2 mr-2 mb-2">
                                             <div class="col-sm-12">
