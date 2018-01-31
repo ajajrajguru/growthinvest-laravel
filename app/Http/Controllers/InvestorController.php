@@ -464,7 +464,7 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
 
         $investorCertification = $investor->getActiveCertification();
-        $investorFai           = $investor->userFinancialAdvisorInfo();
+        $investorFai           = $investor->userFinancialAdvisorInfo(); 
 
         $data['investor']                = $investor;
         $data['countyList']              = getCounty();

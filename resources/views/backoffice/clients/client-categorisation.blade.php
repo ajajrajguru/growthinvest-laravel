@@ -903,11 +903,11 @@
                             <div class="form-group">
                                 <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input has-financial-advisor" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif @if(empty($investorFai)) checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input has-financial-advisor" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_no">No</label>
                                 </div>
                             </div>
@@ -924,7 +924,7 @@
                                 </div>
                             </div>
 
-                            <div id="" role="tablist" class="gi-collapse mb-3">
+                            <div id="" role="tablist" class="gi-collapse mb-3 advised-investor-questionnaire @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') d-none @endif">
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingOne">
                                         <a data-toggle="collapse" href="#collapse1" role="button">
