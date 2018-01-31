@@ -438,6 +438,7 @@
                                           <label>What skills do you bring? </label>
                                          @endif
                                             <textarea class="form-control" name="angelskills" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</textarea>
+                                            <em class="small">Eg: I have worked as an analyst at a web solutions firm for 5 years</em>
                                         </div>
 
  
@@ -451,6 +452,7 @@
                                               <label>What is your area of expertise? </label>
                                              @endif
                                                 <textarea class="form-control" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
+                                                <em class="small">Eg: Web design and online marketing</em>
                                             </div>
                                         </div>
 
