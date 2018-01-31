@@ -333,6 +333,7 @@
     });
     businesslistingsTable = $('#datatable-businesslistings').DataTable({
       'pageLength': 50,
+      'searching': false,
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
@@ -359,13 +360,12 @@
         }, {
           'data': 'duediligence'
         }, {
-          'data': 'created_date',
-          "orderable": false
+          'data': 'created_date'
         }, {
-          'data': 'modified_date',
-          "orderable": false
+          'data': 'modified_date'
         }, {
-          'data': 'firmtoraise'
+          'data': 'firmtoraise',
+          "orderable": false
         }, {
           'data': 'activity_sitewide',
           "orderable": false
