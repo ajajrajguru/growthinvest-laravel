@@ -88,6 +88,9 @@
                                     </select>
                                     <small>Select the type</small>
                                 </div>
+                                <div class="col-md-12 align-self-end text-right">
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-sm business-listings-reset-filters">Reset filter</a>
+                                </div>
                                
                             </div>
                              
