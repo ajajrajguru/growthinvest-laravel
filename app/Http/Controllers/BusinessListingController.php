@@ -57,10 +57,10 @@ class BusinessListingController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
-            '1' => 'business_listings.title',
+            '1' => 'business_title',
             '2' => 'users.firm.name',
-            '3' => 'users.business',
-            '3' => 'users.created_at',
+            '3' => 'created_at',
+            '4' => 'updated_at',
         );
 
         $columnName = 'business_listings.title';
@@ -112,7 +112,7 @@ class BusinessListingController extends Controller
             $activity_site_wide_html .= "<br/> " . $business_listing->watch_list . " <span class='text-warning'>AW</span>";
             $activity_site_wide_html .= "<br/>" . format_amount($business_listing->bi_pledged, 0, true, true) . " <span class='text-success'>PA</span>";
 
-            $activity_firmwide_html =  format_amount($business_listing->bi_invested_in_firm, 0, true, true) . " <span class='text-info'>FA</span>";
+            $activity_firmwide_html = format_amount($business_listing->bi_invested_in_firm, 0, true, true) . " <span class='text-info'>FA</span>";
             $activity_firmwide_html .= "<br/> " . $business_listing->my_watch_list . " <span class='text-warning'>AW</span>";
             $activity_firmwide_html .= "<br/>" . format_amount($business_listing->bi_pledged_in_firm, 0, true, true) . " <span class='text-success'>PA</span>";
 
@@ -199,36 +199,61 @@ class BusinessListingController extends Controller
 
         LEFT OUTER
         JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))";
-        $wm_associated_where = "";
+
+        $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
+
+        $wm_associated_where               = "";
+        $sql_business_listings_count_where = "";
+
+        if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
+
+            $wm_associated_where .= " WHERE bo_info.firm_id ='" . $filters['firm_name'] . "'";
+
+            $sql_business_listings_count .= "
+            LEFT JOIN users on biz.owner_id = users.id
+            JOIN firms on users.firm_id = firms.id  AND users.firm_id = " . $filters['firm_name'];
+        }
         if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
-            $wm_associated_where .= " WHERE bp.type ='" . $filters['business_listings_type'] . "'";
+
+            $wm_associated_where .= ($wm_associated_where == "" ? " WHERE " : " AND ");
+            $wm_associated_where .= "  bp.type ='" . $filters['business_listings_type'] . "'";
+
+            $sql_business_listings_count .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
         }
 
         $wm_associated_group_by = " GROUP BY bp.id ";
 
-        $sql_limit ="";
-        if($length > 1){
-            $sql_limit = " ORDER BY business_title ASC LIMIT " . $skip . "," . $length;
+        $orderBy_sql = " ORDER BY business_title ASC ";
+
+        $orderBy_sql = "";
+        if (count($orderDataBy) > 0) {
+            $cnt_orderby = 0;
+            $orderBy_sql = " ORDER BY ";
+
+            foreach ($orderDataBy as $columnName => $orderBy) {
+                if ($cnt_orderby > 0) {
+                    $orderBy_sql .= ", ";
+                }
+                $orderBy_sql .= $columnName . " " . $orderBy;
+                $cnt_orderby++;
+            }
         }
 
-        /* echo $wm_associated_firms_query_select_data.$wm_associated_firms_query.$sql_limit;
+        if ($length > 1) {
+            $sql_limit = $orderBy_sql . " LIMIT " . $skip . "," . $length;
+        }
+
+        /*echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
         die();*/
         $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit);
 
-        //echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
-
-        $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
         /* Get business listings count */
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
-            $sql_business_listings_count .= "
-            LEFT JOIN users on biz.owner_id = users.id
-            LEFT JOIN firms on users.firm_id = firms.id  AND users.firm_id = " . $filters['firm_name'];
+
         }
 
-        $sql_business_listings_count_where = "";
-
         if (isset($filters['business_listings_type']) && $filters['business_listings_type'] != "") {
-            $sql_business_listings_count .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
+
         }
 
         $res_business_count = DB::select($sql_business_listings_count);
@@ -280,8 +305,8 @@ class BusinessListingController extends Controller
 
         /*echo "<pre>";
         print_r($business_listings);
-        die();  */ 
-
+        die();  */
+        $business_listings_update = [];
         foreach ($business_listings as $biz) {
 
             $firms = new Firm;
