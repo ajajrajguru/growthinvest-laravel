@@ -49,15 +49,15 @@ class Firm extends Model
         return $parent_firms;
     }
 
-    public function getFirmAdditionalInfo()
+    public function getFirmAdditionalInfo($firm_id)
     {
-        $addionalData = $this->firmData()->where('data_key', 'additional_details')->first();
+        $addionalData = $this->firmData()->where(['data_key'=>'additional_details','firm_id'=>$firm_id])->first();
         return $addionalData;
     }
 
-    public function getFirmInviteContent()
+    public function getFirmInviteContent($firm_id)
     {
-        $addionalData = $this->firmData()->where('data_key', 'invite_content')->first();
+        $addionalData = $this->firmData()->where(['data_key'=>'invite_content','firm_id'=>$firm_id] )->first();
         return $addionalData;
     }
 
