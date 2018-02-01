@@ -295,6 +295,7 @@ $(document).ready ->
 
   businesslistingsTable = $('#datatable-businesslistings').DataTable(
     'pageLength': 50
+    'searching':false
     'processing': false
     'serverSide': true
     'bAutoWidth': false
@@ -319,9 +320,9 @@ $(document).ready ->
       { 'data': 'logo' , "orderable": false}    
       { 'data': 'name' }
       { 'data': 'duediligence' }
-      { 'data': 'created_date', "orderable": false}
-      { 'data': 'modified_date', "orderable": false}
-      { 'data': 'firmtoraise'}          
+      { 'data': 'created_date'}
+      { 'data': 'modified_date'}
+      { 'data': 'firmtoraise', "orderable": false}          
       { 'data': 'activity_sitewide', "orderable": false}
       { 'data': 'activity_firmwide', "orderable": false}
       { 'data': 'action' , "orderable": false}

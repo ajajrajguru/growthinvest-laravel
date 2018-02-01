@@ -217,9 +217,11 @@ class FirmController extends Controller
         $data['mode']               = 'view';
 
         $breadcrumbs         = [];
-        $breadcrumbs[]       = ['url' => url('/'), 'name' => "Home"];
-        $breadcrumbs[]       = ['url' => '/backoffice/firm', 'name' => 'View Firms'];
+        $breadcrumbs[]       = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[]       = ['url' => '/backoffice/firm', 'name' => 'Firm'];
         $breadcrumbs[]       = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[]       = ['url' => '', 'name' => 'View Firm Details'];
+
         $data['breadcrumbs'] = $breadcrumbs;
 
         /*echo "<pre>";
