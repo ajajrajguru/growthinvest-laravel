@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::post('investor/{giCode}/save-client-categorisation','InvestorController@saveClientCategorisation');
 	Route::get('investor/{giCode}/additional-information','InvestorController@additionalInformation');
 	Route::post('investor/{giCode}/save-additional-information','InvestorController@saveAdditionalInformation');
+	Route::get('investor/{giCode}/investment-account','InvestorController@investmentAccount');
+	Route::post('investor/{giCode}/save-investment-account','InvestorController@saveInvestmentAccount');
 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
 	Route::post( 'investor/save-registration', 'InvestorController@saveRegistration' );
  	Route::resource( 'investor', 'InvestorController' );

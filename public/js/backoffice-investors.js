@@ -393,7 +393,7 @@
         return $('.investortype-angel').addClass('d-none');
       }
     });
-    return $('.save-elective-prof-inv').click(function() {
+    $('.save-elective-prof-inv').click(function() {
       var btnObj, certification_type, clientCategoryId, err, giCode, quizAnswers;
       btnObj = $(this);
       err = validateQuiz($(".elective-prof-inv-quiz-btn"));
@@ -445,6 +445,104 @@
             return scrollTopContainer("#add_clients");
           }
         });
+      }
+    });
+    $(document).on('change', 'input[name="nonationalinsuranceno"]', function() {
+      if ($(this).is(':checked')) {
+        $('.nonationalinsuranceno-container').removeClass('d-none');
+        $('input[name="nationality"]').attr('data-parsley-required', true);
+        return $('input[name="domiciled"]').attr('data-parsley-required', true);
+      } else {
+        $('.nonationalinsuranceno-container').addClass('d-none');
+        $('input[name="nationality"]').attr('data-parsley-required', false);
+        return $('input[name="domiciled"]').attr('data-parsley-required', false);
+      }
+    });
+    $(document).on('change', 'input[name="sendtaxcertificateto"]', function() {
+      if ($(this).val() === 'yourself') {
+        $('.sendtaxcertificateto-yourself').addClass('d-none');
+        return $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required', false);
+      } else {
+        $('.sendtaxcertificateto-yourself').removeClass('d-none');
+        return $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required', true);
+      }
+    });
+    $(document).on('change', 'input[name="transfer_at_later_stage"]', function() {
+      if ($(this).val() === 'no') {
+        $('.bank-input').attr('data-parsley-required', true).attr('readonly', false);
+        return $('input[name="subscriptiontransferdate"]').attr('data-parsley-required', false);
+      } else {
+        return $('.bank-input').attr('data-parsley-required', false).attr('readonly', true);
+      }
+    });
+    $(document).on('change', 'input[name="nomineeverification"]', function() {
+      var status;
+      status = 'Not Yet Requested';
+      if ($(this).is(':checked')) {
+        status = $(this).attr('data-text');
+        if ($(this).val() === 'complete_pending_evidence') {
+          $('input[name="nomverificationwithoutface"]').attr('readonly', false);
+          $('.requested-input').prop('checked', false);
+        } else if ($(this).val() === 'requested') {
+          $('input[name="nomverificationwithoutface"]').attr('readonly', true);
+          $('.complete-pending-evidence-input').prop('checked', false);
+          $('input[name="nomverificationwithoutface"]').prop('checked', false);
+        }
+      }
+      return $('input[name="verdisplaystatus"]').val(status);
+    });
+    $(document).on('keyup', '.invest-perc', function() {
+      var ipEmpty;
+      $('.investment-input').attr('readonly', false);
+      $('.aic-investment-input').attr('readonly', false);
+      ipEmpty = true;
+      $('.invest-perc').each(function() {
+        if ($(this).val() !== "" && ipEmpty) {
+          return ipEmpty = false;
+        }
+      });
+      if (!ipEmpty) {
+        $('.aic-investment-input').attr('readonly', true);
+        return $('.invest-amount').attr('readonly', true);
+      }
+    });
+    $(document).on('keyup', '.invest-amount', function() {
+      var iaEmpty;
+      $('.investment-input').attr('readonly', false);
+      $('.aic-investment-input').attr('readonly', false);
+      iaEmpty = true;
+      $('.invest-amount').each(function() {
+        if ($(this).val() !== "" && iaEmpty) {
+          return iaEmpty = false;
+        }
+      });
+      if (!iaEmpty) {
+        $('.aic-investment-input').attr('readonly', true);
+        return $('.invest-perc').attr('readonly', true);
+      }
+    });
+    $(document).on('keyup', '.aic-investment-perc', function() {
+      $('.investment-input').attr('readonly', false);
+      $('.aic-investment-input').attr('readonly', false);
+      if ($(this).val() !== "") {
+        $('.investment-input').attr('readonly', true);
+        return $('.aic-investment-amount').attr('readonly', true);
+      }
+    });
+    $(document).on('keyup', '.aic-investment-amount', function() {
+      $('.investment-input').attr('readonly', false);
+      $('.aic-investment-input').attr('readonly', false);
+      if ($(this).val() !== "") {
+        $('.investment-input').attr('readonly', true);
+        return $('.aic-investment-perc').attr('readonly', true);
+      }
+    });
+    return $(document).on('change', '.completion_status', function() {
+      if ($(this).val() === 'no') {
+        $('.bank-input').attr('data-parsley-required', true).attr('readonly', false);
+        return $('input[name="subscriptiontransferdate"]').attr('data-parsley-required', false);
+      } else {
+        return $('.bank-input').attr('data-parsley-required', false).attr('readonly', true);
       }
     });
   });
