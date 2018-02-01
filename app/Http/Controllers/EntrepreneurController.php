@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\UserData;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Session;
 
 class EntrepreneurController extends Controller
 {
@@ -36,7 +40,7 @@ class EntrepreneurController extends Controller
 
     public function getEntrepreneurslist(Request $request)
     {
-        $requestData = $request->all();  //dd($requestData);
+        $requestData = $request->all(); //dd($requestData);
         $data        = [];
         $skip        = $requestData['start'];
         $length      = $requestData['length'];
@@ -53,7 +57,7 @@ class EntrepreneurController extends Controller
 
         $columnName = 'users.first_name';
         $orderBy    = 'asc';
-  
+
         if (isset($columnOrder[$orderValue['column']])) {
             $columnName = $columnOrder[$orderValue['column']];
             $orderBy    = $orderValue['dir'];
@@ -77,7 +81,7 @@ class EntrepreneurController extends Controller
                                                 </select>';
 
             $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by!=0) {
+            if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by != 0) {
                 $source = "Intermediary";
             }
 
@@ -108,8 +112,6 @@ class EntrepreneurController extends Controller
     public function getFilteredEntrepreneurs($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
     {
 
-
-
         $entrepreneurQuery = User::join('model_has_roles', function ($join) {
             $join->on('users.id', '=', 'model_has_roles.model_id')
                 ->where('model_has_roles.model_type', 'App\User');
@@ -125,34 +127,10 @@ class EntrepreneurController extends Controller
                 $join->on('users.firm_id', '=', 'firms.id');
             });
 
-        /*->where($cond)->select("users.*")*/
-
-        /* $entrepreneurQuery = User::join('model_has_roles', function ($join) {
-        $join->on('users.id', '=', 'model_has_roles.model_id')
-        ->where('model_has_roles.model_type', 'App\User');
-        })->join('roles', function ($join) {
-        $join->on('model_has_roles.role_id', '=', 'roles.id')
-        ->whereIn('roles.name', ['business_owner']);
-        })->leftjoin('user_has_certifications', function ($join) {
-        $join->on('users.id', 'user_has_certifications.user_id');
-        });*/
-
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $entrepreneurQuery->where('users.firm_id', $filters['firm_name']);
         }
 
-        /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
-        $userIds = explode(',', $filters['user_ids']);
-        $userIds = array_filter($userIds);
-
-        $entrepreneurQuery->whereIn('users.id', $userIds);
-        }
-
-        if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
-        $entrepreneurQuery->where('users.id', $filters['investor_name']);
-        }*/
-
-        /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
         $entrepreneurQuery->groupBy('users.id');
         $entrepreneurQuery->select(\DB::raw("firms.name as firm_name, GROUP_CONCAT(business_listings.title ) as business, users.*"));
 
@@ -191,16 +169,13 @@ class EntrepreneurController extends Controller
         $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm', 'Business Proposals', 'Registered Date', 'Source'];
         $userData = [];
 
-        /*echo"<pre>";
-        print_r($entrepreneurs);
-        die();*/
         foreach ($entrepreneurs as $entrepreneur) {
 
             $source = "Self";
-            if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by!=0) {
+            if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by != 0) {
                 $source = "Intermediary";
             }
-            if(!is_null($entrepreneur->invite_key) && $entrepreneur->invite_key!=""){
+            if (!is_null($entrepreneur->invite_key) && $entrepreneur->invite_key != "") {
                 $source = "Invited";
             }
 
@@ -219,6 +194,143 @@ class EntrepreneurController extends Controller
 
         return true;
 
+    }
+
+    public function registration()
+    {
+
+        $user = Auth::user();
+
+        $entrepreneur = new User;
+        $firmsList    = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms        = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/entrepreneurs'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/entrepreneurs'), 'name' => 'Entrepreneur'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+        $data['countyList']              = getCounty();
+        $data['countryList']             = getCountry();
+        $data['entrepreneur']            = $entrepreneur;
+        $data['firms']                   = $firms;
+        $data['investmentAccountNumber'] = '';
+        $data['breadcrumbs']             = $breadcrumbs;
+        $data['pageTitle']               = 'Add Entrepreneur';
+        $data['mode']                    = 'edit';
+        $data['activeMenu']              = 'add_clients';
+        $data['user_can_introduce']      = false;
+        $data['type']                    = 'introduce';
+        if ($user->can('edit introduce_business_owners_in_any_firm') || $user->can('edit introduce_business_owners_in_my_firm')) {
+            $data['user_can_introduce'] = true;
+        }
+        return view('backoffice.clients.registration-entrepreneur')->with($data);
+
+    }
+
+    public function saveRegistration(Request $request)
+    {
+        $requestData = $request->all();
+
+        $firstName    = $requestData['first_name'];
+        $lastName     = $requestData['last_name'];
+        $email        = $requestData['email'];
+        $telephone    = $requestData['telephone'];
+        $password     = $requestData['password'];
+        $addressLine1 = $requestData['address_line_1'];
+        $addressLine2 = $requestData['address_line_2'];
+        $townCity     = $requestData['town_city'];
+        $county       = $requestData['county'];
+        $postcode     = $requestData['postcode'];
+        $country      = $requestData['country'];
+        $firm         = $requestData['firm'];
+        $company      = $requestData['company'];
+        $website      = $requestData['website'];
+        $isSuspended  = (isset($requestData['is_suspended'])) ? 1 : 0;
+        $giCode       = $requestData['gi_code'];
+
+        $userMeta['company'] = $company;
+        $userMeta['website'] = $website;
+
+        dd($userMeta);
+
+        $giArgs = array('prefix' => "GIEN", 'min' => 20000001, 'max' => 30000000);
+
+        if ($giCode == '') {
+
+            if (isset($requestData['g-recaptcha-response'])) {
+
+                $jsonResponse = recaptcha_validate($requestData['g-recaptcha-response']);
+
+                if ($jsonResponse->success == '') {
+                    Session::flash('error_message', 'Please verify that you are not a robot.');
+                    return redirect()->back()->withInput();
+
+                }
+            } else {
+                Session::flash('error_message', 'Please verify that you are not a robot.');
+                return redirect()->back()->withInput();
+            }
+
+            $entrepreneur = new User;
+
+            if ($entrepreneur->isUserAlreadyExists($email) == true) {
+                Session::flash('error_message', 'User with email id already registered.');
+                return redirect()->back()->withInput();
+            }
+
+            $giCode                      = generateGICode($entrepreneur, 'gi_code', $giArgs);
+            $entrepreneur->gi_code       = $giCode;
+            $entrepreneur->registered_by = Auth::user()->id;
+        } else {
+            $entrepreneur = User::where('gi_code', $giCode)->first();
+        }
+
+        $entrepreneur->login_id = $email;
+        $entrepreneur->avatar   = '';
+
+        $entrepreneur->email        = $email;
+        $entrepreneur->first_name   = $firstName;
+        $entrepreneur->last_name    = $lastName;
+        $entrepreneur->password     = Hash::make($password);
+        $entrepreneur->status       = 0;
+        $entrepreneur->telephone_no = $telephone;
+        $entrepreneur->address_1    = $addressLine1;
+        $entrepreneur->address_2    = $addressLine2;
+        $entrepreneur->city         = $townCity;
+        $entrepreneur->postcode     = $postcode;
+        $entrepreneur->county       = $county;
+        $entrepreneur->country      = $country;
+        $entrepreneur->firm_id      = $firm;
+        $entrepreneur->suspended    = $isSuspended;
+        $entrepreneur->deleted      = 0;
+        $entrepreneur->save();
+
+        $entrepreneurId = $entrepreneur->id;
+
+        $userMeta['company'] = $company;
+        $userMeta['website'] = $website;
+
+        $additionalInfo = $entrepreneur->userAdditionalInfo();
+        if (empty($additionalInfo)) {
+            $additionalInfo           = new UserData;
+            $additionalInfo->user_id  = $entrepreneurId;
+            $additionalInfo->data_key = 'additional_info';
+        }
+
+        $additionalInfo->data_value = $userMeta;
+        $additionalInfo->save();
+
+        //assign role
+
+        $roleName = $entrepreneur->getRoleNames()->first();
+        if (empty($roleName)) {
+            $entrepreneur->assignRole('business_owner');
+        }
+
+        Session::flash('success_message', 'Entrepreneur registered successfully');
+        return redirect(url('backoffice/entrepreneur/' . $giCode));
     }
 
     /**
