@@ -491,6 +491,12 @@
       }
       return $('input[name="verdisplaystatus"]').val(status);
     });
+    $(document).on('change', '.completion_status', function() {
+      var cardObj, isValidCard;
+      cardObj = $(this).closest('.ia-card');
+      isValidCard = cardObj.find('.completion_status').parsley().isValid;
+      return console.log(isValidCard);
+    });
     $(document).on('keyup', '.invest-perc', function() {
       var ipEmpty;
       $('.investment-input').attr('readonly', false);
@@ -529,20 +535,12 @@
         return $('.aic-investment-amount').attr('readonly', true);
       }
     });
-    $(document).on('keyup', '.aic-investment-amount', function() {
+    return $(document).on('keyup', '.aic-investment-amount', function() {
       $('.investment-input').attr('readonly', false);
       $('.aic-investment-input').attr('readonly', false);
       if ($(this).val() !== "") {
         $('.investment-input').attr('readonly', true);
         return $('.aic-investment-perc').attr('readonly', true);
-      }
-    });
-    return $(document).on('change', '.completion_status', function() {
-      if ($(this).val() === 'no') {
-        $('.bank-input').attr('data-parsley-required', true).attr('readonly', false);
-        return $('input[name="subscriptiontransferdate"]').attr('data-parsley-required', false);
-      } else {
-        return $('.bank-input').attr('data-parsley-required', false).attr('readonly', true);
       }
     });
   });

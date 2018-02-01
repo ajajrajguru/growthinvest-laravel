@@ -440,6 +440,11 @@ $(document).ready ->
 
     $('input[name="verdisplaystatus"]').val(status) 
 
+  $(document).on 'change', '.completion_status', ->
+    cardObj = $(this).closest('.ia-card')
+    isValidCard = cardObj.find('.completion_status').parsley().isValid
+    console.log isValidCard
+    
   $(document).on 'keyup', '.invest-perc', ->
     $('.investment-input').attr('readonly',false)
     $('.aic-investment-input').attr('readonly',false)
@@ -478,12 +483,7 @@ $(document).ready ->
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-perc').attr('readonly',true)
 
-  $(document).on 'change', '.completion_status', ->
-    if($(this).val()=='no')
-      $('.bank-input').attr('data-parsley-required',true).attr('readonly',false) 
-      $('input[name="subscriptiontransferdate"]').attr('data-parsley-required',false) 
-    else
-      $('.bank-input').attr('data-parsley-required',false).attr('readonly',true) 
+  
 
 
 

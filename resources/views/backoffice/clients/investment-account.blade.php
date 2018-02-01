@@ -203,7 +203,7 @@
 
                                             <div class="form-group">
                                                 <label>National Insurance Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control"  name="nationalinsuranceno completion_status" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
+                                                <input type="text" class="form-control completion_status"  name="nationalinsuranceno" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
                                                 <small  class="form-text text-muted">
                                                 @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
                                                     If your client does not have a National Insurance number, please tick here
