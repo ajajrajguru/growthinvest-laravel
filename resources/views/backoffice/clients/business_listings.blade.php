@@ -77,7 +77,7 @@
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
                                     </select>
-                                    <small>Select the firm whose business proposals/funds you need to view</small>
+                                    <small><i>Select the firm whose business proposals/funds you need to view</i></small>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Type</label>
@@ -86,7 +86,10 @@
                                          <option value="proposal">Proposals</option>
                                          <option value="fund">Funds</option>
                                     </select>
-                                    <small>Select the type</small>
+                                    <small><i>Select the type</i></small>
+                                </div>
+                                <div class="col-md-12 align-self-end text-right">
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-sm business-listings-reset-filters">Reset filter</a>
                                 </div>
                                
                             </div>

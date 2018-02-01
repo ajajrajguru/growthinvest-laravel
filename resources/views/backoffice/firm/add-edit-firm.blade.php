@@ -342,18 +342,18 @@
 					<div class="col-md-3">
 
 						<div class="form-check">
-							<input class="form-check-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1" id="imgFrontEnd" name="frontend_display" @if($firm->frontend_display) checked @endif >
+							<input class="form-check-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1" id="imgFrontEnd" name="frontend_display" @if($firm->frontend_display=='yes') checked @endif >
 							<label class="form-check-label" for="imgFrontEnd">
 						    	Display Image for Frontend Users
 							</label>
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->frontend_display) ?  'Yes' : 'No' }}</span>
+							<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->frontend_display=='yes') ?  'Yes' : 'No' }}</span>
 						</div>
 						<div class="form-check">
-							<input class="form-check-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1"  @if($firm->backend_display) checked @endif id="imgBackEnd" name="backend_display" >
+							<input class="form-check-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1"  @if($firm->backend_display=='yes') checked @endif id="imgBackEnd" name="backend_display" >
 							<label class="form-check-label" for="imgBackEnd">
 						    	Display Image for Backend Users
 							</label>
-							<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->backend_display) ?  'Yes' : 'No' }}</span>
+							<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->backend_display=='yes') ?  'Yes' : 'No' }}</span>
 						</div>
 						<input type="hidden" name="backgroundid" value="{{$firm->backgroundid}}" />
 					</div>

@@ -243,7 +243,10 @@ $(document).ready ->
     firm_name = $('select[name="firm_name"]').val() 
     window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name="+firm_name);
 
-
+  $('body').on 'click', '.entrepreneurs-reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change') 
+    entrepreneurTable.ajax.reload()
+    return
 
   fundmanagerTable = $('#datatable-fundmanagers').DataTable(
     'pageLength': 50
@@ -285,9 +288,14 @@ $(document).ready ->
     firm_name = $('select[name="firm_name"]').val() 
     window.open("/backoffice/fundmanager/export-fundmanagers?firm_name="+firm_name);
 
+  $('body').on 'click', '.fundmanagers-reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change') 
+    fundmanagerTable.ajax.reload()
+    return
 
   businesslistingsTable = $('#datatable-businesslistings').DataTable(
     'pageLength': 50
+    'searching':false
     'processing': false
     'serverSide': true
     'bAutoWidth': false
@@ -312,9 +320,9 @@ $(document).ready ->
       { 'data': 'logo' , "orderable": false}    
       { 'data': 'name' }
       { 'data': 'duediligence' }
-      { 'data': 'created_date', "orderable": false}
-      { 'data': 'modified_date', "orderable": false}
-      { 'data': 'firmtoraise'}          
+      { 'data': 'created_date'}
+      { 'data': 'modified_date'}
+      { 'data': 'firmtoraise', "orderable": false}          
       { 'data': 'activity_sitewide', "orderable": false}
       { 'data': 'activity_firmwide', "orderable": false}
       { 'data': 'action' , "orderable": false}
@@ -333,3 +341,9 @@ $(document).ready ->
     firm_name = $('select[name="firm_name"]').val() 
     business_listings_type = $('select[name="business_listings_type"]').val() 
     window.open("/backoffice/business-listing/export-business-listings?firm_name="+firm_name+"&business_listings_type="+business_listings_type);
+
+  $('body').on 'click', '.business-listings-reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change') 
+    $('select[name="business_listings_type"]').val('').trigger('change') 
+    businesslistingsTable.ajax.reload()
+    return

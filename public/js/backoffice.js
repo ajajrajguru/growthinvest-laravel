@@ -276,6 +276,10 @@
       firm_name = $('select[name="firm_name"]').val();
       return window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name=" + firm_name);
     });
+    $('body').on('click', '.entrepreneurs-reset-filters', function() {
+      $('select[name="firm_name"]').val('').trigger('change');
+      entrepreneurTable.ajax.reload();
+    });
     fundmanagerTable = $('#datatable-fundmanagers').DataTable({
       'pageLength': 50,
       'processing': false,
@@ -322,8 +326,13 @@
       firm_name = $('select[name="firm_name"]').val();
       return window.open("/backoffice/fundmanager/export-fundmanagers?firm_name=" + firm_name);
     });
+    $('body').on('click', '.fundmanagers-reset-filters', function() {
+      $('select[name="firm_name"]').val('').trigger('change');
+      fundmanagerTable.ajax.reload();
+    });
     businesslistingsTable = $('#datatable-businesslistings').DataTable({
       'pageLength': 50,
+      'searching': false,
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
@@ -350,13 +359,12 @@
         }, {
           'data': 'duediligence'
         }, {
-          'data': 'created_date',
-          "orderable": false
+          'data': 'created_date'
         }, {
-          'data': 'modified_date',
-          "orderable": false
+          'data': 'modified_date'
         }, {
-          'data': 'firmtoraise'
+          'data': 'firmtoraise',
+          "orderable": false
         }, {
           'data': 'activity_sitewide',
           "orderable": false
@@ -375,11 +383,16 @@
     $(document).on('change', '#managebusiness_type', function() {
       return window.open("/backoffice/" + $(this).val(), "_self");
     });
-    return $('.download-business-listings-csv').click(function() {
+    $('.download-business-listings-csv').click(function() {
       var business_listings_type, firm_name;
       firm_name = $('select[name="firm_name"]').val();
       business_listings_type = $('select[name="business_listings_type"]').val();
       return window.open("/backoffice/business-listing/export-business-listings?firm_name=" + firm_name + "&business_listings_type=" + business_listings_type);
+    });
+    return $('body').on('click', '.business-listings-reset-filters', function() {
+      $('select[name="firm_name"]').val('').trigger('change');
+      $('select[name="business_listings_type"]').val('').trigger('change');
+      businesslistingsTable.ajax.reload();
     });
   });
 

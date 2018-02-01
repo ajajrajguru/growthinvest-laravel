@@ -200,6 +200,9 @@ class EntrepreneurController extends Controller
             if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by!=0) {
                 $source = "Intermediary";
             }
+            if(!is_null($entrepreneur->invite_key) && $entrepreneur->invite_key!=""){
+                $source = "Invited";
+            }
 
             $userData[] = [$entrepreneur->gi_code,
                 title_case($entrepreneur->first_name . ' ' . $entrepreneur->last_name),
