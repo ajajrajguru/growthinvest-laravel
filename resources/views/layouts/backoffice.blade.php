@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="{{ asset('css/hamburgers.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loading-btn.css') }}">
+
+    <!-- bootstrap datepicker -->
+    <link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
+
+    <script src="{{ asset('/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 @endsection
 
 @section('js')
