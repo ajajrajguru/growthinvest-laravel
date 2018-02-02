@@ -947,3 +947,41 @@ ul.statistics li:last-of-type {
     color: #fff;
   }
 }
+#management-team .carousel-indicators {
+  display: none;
+}
+#management-team .carousel-control-prev,
+#management-team .carousel-control-next {
+  background-image: initial;
+  opacity: 1;
+}
+@media screen and (max-width: 767px) {
+  #management-team .carousel-control-prev,
+  #management-team .carousel-control-next {
+    opacity: 0.3;
+  }
+}
+#management-team .carousel-control-prev .fa,
+#management-team .carousel-control-next .fa {
+  position: absolute;
+  top: 50%;
+  color: #00a9ee;
+  z-index: 5;
+  display: inline-block;
+}
+#management-team .carousel-control-prev {
+  left: -12%;
+}
+@media screen and (max-width: 767px) {
+  #management-team .carousel-control-prev {
+    left: 0;
+  }
+}
+#management-team .carousel-control-next {
+  right: -12%;
+}
+@media screen and (max-width: 767px) {
+  #management-team .carousel-control-next {
+    right: 0;
+  }
+}
