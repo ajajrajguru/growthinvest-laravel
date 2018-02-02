@@ -66,6 +66,11 @@ class UserPermission
                 'backoffice/current-business-valuations'                   => ['view_current_business_valuation'],
                 'backoffice/entrepreneur/registration'                     => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
                 'backoffice/entrepreneur/save-registration'                => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+                'backoffice/entrepreneur/{giCode}/registration'            => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+
+                'backoffice/fundmanager/registration'                     => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+                'backoffice/fundmanager/save-registration'                => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+                'backoffice/fundmanager/{giCode}/registration'            => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
 
             ],
 

@@ -37,8 +37,8 @@
                 <div class="p-2">
                     <div class="row mb-4">
                         <div class="col-md-5">
-                            <h1 class="section-title font-weight-medium text-primary mt-4 mb-0">@if($entrepreneur->id) Edit @else Add @endif Entrepreneur</h1>
-                            <p class="text-muted">@if($entrepreneur->id) Edit @else Add @endif details of Entrepreneur.</p>
+                            <h1 class="section-title font-weight-medium text-primary mt-4 mb-0">@if($fundmanager->id) Edit @else Add @endif Fundmanager</h1>
+                            <p class="text-muted">@if($fundmanager->id) Edit @else Add @endif details of Fundmanager.</p>
                         </div>
                         
                     </div>
@@ -56,7 +56,7 @@
                             
                         </div>
                         <div class="">
-                            @if($entrepreneur->id)
+                            @if($fundmanager->id)
                                 <a href="javascript:void(0)" class="btn btn-primary mb-4 editUserBtn">Edit Details</a>
                                 <a href="javascript:void(0)" class="btn btn-primary mb-4 d-none cancelUpdateBtn">Cancel Updates</a>
 
@@ -70,7 +70,7 @@
                     
                    
 
-                    <form method="post" action="{{ url('backoffice/entrepreneur/save-registration') }}" data-parsley-validate name="add-investor-reg" id="add-investor-reg" enctype="multipart/form-data">
+                    <form method="post" action="{{ url('backoffice/fundmanager/save-registration') }}" data-parsley-validate name="add-investor-reg" id="add-investor-reg" enctype="multipart/form-data">
 
 
                 <div class="row">
@@ -79,15 +79,15 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>First Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="first_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the first name." placeholder="Eg. John" value="{{ ($entrepreneur->id) ? $entrepreneur->first_name :old('first_name')}}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->first_name}}</span>
+                            <input type="text" name="first_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the first name." placeholder="Eg. John" value="{{ ($fundmanager->id) ? $fundmanager->first_name :old('first_name')}}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->first_name}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Last Name <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="last_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the last name." placeholder="Eg. Smith" value="{{ ($entrepreneur->id) ? $entrepreneur->last_name :old('last_name') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->last_name}}</span>
+                            <input type="text" name="last_name" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the last name." placeholder="Eg. Smith" value="{{ ($fundmanager->id) ? $fundmanager->last_name :old('last_name') }}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->last_name}}</span>
                         </div>
                     </div>
                 </div>
@@ -96,22 +96,22 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Email Address <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="email" name="email" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-type="email" data-parsley-required data-parsley-required-message="Please enter email." placeholder="Eg. john_smith@mailinator.com" value="{{ ($entrepreneur->id) ? $entrepreneur->email :old('email')}}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->email}}</span>
+                            <input type="email" name="email" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-type="email" data-parsley-required data-parsley-required-message="Please enter email." placeholder="Eg. john_smith@mailinator.com" value="{{ ($fundmanager->id) ? $fundmanager->email :old('email')}}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->email}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone Number <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" placeholder="Eg: 020 7071 3945" value="{{ ($entrepreneur->id) ? $entrepreneur->telephone_no :old('telephone') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->telephone_no}}</span>
+                            <input type="tel" name="telephone" class="form-control editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" placeholder="Eg: 020 7071 3945" value="{{ ($fundmanager->id) ? $fundmanager->telephone_no :old('telephone') }}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->telephone_no}}</span>
                         </div>
                     </div>
                 </div>
 
                
 
-                @if($entrepreneur->id)
+                @if($fundmanager->id)
                 <div class="row editmode @if($mode=='view') d-none @endif">
                     <div class="col-md-12">
                         <a id="change_pwd" href="javascript:void(0)"><i class="fa fa-unlock-alt"></i> Set password</a>
@@ -119,7 +119,7 @@
                     </div>
                 </div>
                 @endif
-                <div class="row setpassword-cont @if($entrepreneur->id) d-none @endif">
+                <div class="row setpassword-cont @if($fundmanager->id) d-none @endif">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Choose Password </label>
@@ -163,8 +163,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Address Line 1 <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="address_line_1" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($entrepreneur->id) ? $entrepreneur->address_1 :old('address_line_1') }}" data-parsley-required data-parsley-required-message="Please enter the address line 1.">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->address_1}}</span>
+                            <input type="text" name="address_line_1" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($fundmanager->id) ? $fundmanager->address_1 :old('address_line_1') }}" data-parsley-required data-parsley-required-message="Please enter the address line 1.">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->address_1}}</span>
                         </div>
                     </div>
                 </div>
@@ -172,8 +172,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Address Line 2 </label>
-                            <input type="text" name="address_line_2" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($entrepreneur->id) ? $entrepreneur->address_2 :old('address_line_2') }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->address_2}}</span>
+                            <input type="text" name="address_line_2" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($fundmanager->id) ? $fundmanager->address_2 :old('address_line_2') }}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->address_2}}</span>
                         </div>
                     </div>
                 </div>
@@ -182,8 +182,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Town/City</label>
-                            <input type="text" name="town_city" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($entrepreneur->id) ? $entrepreneur->city :old('town_city')  }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->city}}</span>
+                            <input type="text" name="town_city" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" value="{{ ($fundmanager->id) ? $fundmanager->city :old('town_city')  }}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->city}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -197,12 +197,12 @@
                                 @foreach($countyList as $county)
                                     @php
                                     $selected = '';
-                                    if($entrepreneur->county == $county){
+                                    if($fundmanager->county == $county){
                                         $countyName = $county;
                                         $selected = 'selected';
                                     }
 
-                                    if(!$entrepreneur->id && old('county') == $county)
+                                    if(!$fundmanager->id && old('county') == $county)
                                         $selected = 'selected';
 
                                     @endphp
@@ -218,8 +218,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Postcode <span class="text-danger reqField @if($mode=='view') d-none @endif">*</span></label>
-                            <input type="text" name="postcode" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter postcode." value="{{ ($entrepreneur->id) ? $entrepreneur->postcode :old('postcode')  }}">
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $entrepreneur->postcode}}</span>
+                            <input type="text" name="postcode" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" data-parsley-required data-parsley-required-message="Please enter postcode." value="{{ ($fundmanager->id) ? $fundmanager->postcode :old('postcode')  }}">
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ $fundmanager->postcode}}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -233,12 +233,12 @@
                                 @foreach($countryList as $code=>$country)
                                     @php
                                     $selected = '';
-                                    if($entrepreneur->country == $code){
+                                    if($fundmanager->country == $code){
                                         $countryName = $country;
                                         $selected = 'selected';
                                     }
 
-                                    if(!$entrepreneur->id && old('country') == $code)
+                                    if(!$fundmanager->id && old('country') == $code)
                                         $selected = 'selected';
 
                                     @endphp
@@ -264,13 +264,13 @@
                                 @foreach($firms as $firm)
                                     @php
                                     $selected = '';
-                                    if($entrepreneur->firm_id == $firm->id){
+                                    if($fundmanager->firm_id == $firm->id){
                                         $firmName = $firm->name;
                                         $firmGICode = $firm->gi_code;
                                         $selected = 'selected';
                                     }
 
-                                    if(!$entrepreneur->id && old('firm') == $firm->id)
+                                    if(!$fundmanager->id && old('firm') == $firm->id)
                                         $selected = 'selected';
 
 
@@ -284,26 +284,30 @@
                     
                 </div>
 
-                @if($entrepreneur->id=='')
+                @if($fundmanager->id=='')
                 @php $roles = auth()->user()->getRoleNames();
                 @endphp 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Custom Email Content </label>
-                            <textarea class="form-control" name="customemailcontent">You have been registered as an Entrepreneur on GrowthInvest, the home of quality tax-efficient investment opportunities.  You were registered by  {{ $roles[0]}}, {{auth()->user()->first_name}}{{auth()->user()->first_name}}.&#13;&#10;&#13;&#10;GrowthInvest focuses on helping entrepreneurs gain access to our portfolio of investors, helping create a meeting place. By working with the GrowthInvest  team we will help you find a clear path to funding.&#13;&#10;&#13;&#10;Be sure to complete your profile and carefully read through the profile of any potential investor to make sure that your venture completely matches their preferred investment criteria.&#13;&#10;&#13;&#10;</textarea> 
+                            <textarea class="form-control" name="customemailcontent">You have been registered as an Fund Manager on GrowthInvest, the home of quality tax-efficient investment opportunities.  You were registered by  {{ $roles[0]}}, {{auth()->user()->first_name}}{{auth()->user()->first_name}}.
+
+GrowthInvest focuses on helping Fund Managers gain access to our portfolio of investors, helping create a meeting place. By working with the GrowthInvest team we will help you find a clear path to funding.
+
+Be sure to complete your profile and carefully read through the profile of any potential investor to make sure that your venture completely matches their preferred investment criteria.</textarea> 
                             
                         </div>
                     </div>
                 </div>
                 @endif
 
-                @if($entrepreneur->id)
+                @if($fundmanager->id)
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Platform Account Number</label>
-                               {{ $entrepreneur->gi_code }}
+                               {{ $fundmanager->gi_code }}
 
 
                         </div>
@@ -315,18 +319,18 @@
                 @endif
 
                 <div class="row">
-                    @if($entrepreneur->id)
+                    @if($fundmanager->id)
                      <div class="col-md-12">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($entrepreneur->suspended) checked @endif @if(!$entrepreneur->id && old('is_suspended')=='on') checked @endif placeholder="">
+                            <input type="checkbox" class="form-check-input editmode @if($mode=='view') d-none @endif" name="is_suspended" @if($fundmanager->suspended) checked @endif @if(!$fundmanager->id && old('is_suspended')=='on') checked @endif placeholder="">
                             <label class="form-check-label">Suspended</label>
-                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ ($entrepreneur->suspended) ?  'Yes' : 'No' }}</span>
+                            <span class="viewmode @if($mode=='edit') d-none @endif">{{ ($fundmanager->suspended) ?  'Yes' : 'No' }}</span>
                         </div>
                     </div>
                     @endif
 
                     <div class="col-md-12">
-                        @if(!$entrepreneur->id)
+                        @if(!$fundmanager->id)
                         <div class="g-recaptcha" data-sitekey="{{ env('captcha_site_key') }}"></div>
                         @endif
                     </div>
@@ -338,7 +342,7 @@
                 <button type="submit" class="btn btn-primary save-btn mt-3 editmode @if($mode=='view') d-none @endif ld-ext-right">Save <div class="ld ld-ring ld-spin"></div></button>
                 
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="gi_code" value="{{ $entrepreneur->gi_code }}">
+                <input type="hidden" name="gi_code" value="{{ $fundmanager->gi_code }}">
             </form>
                 </div>
             </div>

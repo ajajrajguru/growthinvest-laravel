@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\UserData;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Session;
 
 class FundmanagerController extends Controller
 {
@@ -78,11 +82,11 @@ class FundmanagerController extends Controller
                                                 </select>';
 
             $source = "Self";
-            if ($fundmanager->registered_by !== $fundmanager->id && $fundmanager->registered_by!=0) {
+            if ($fundmanager->registered_by !== $fundmanager->id && $fundmanager->registered_by != 0) {
                 $source = "Intermediary";
             }
 
-            if(!is_null($fundmanager->invite_key) && $fundmanager->invite_key!=""){
+            if (!is_null($fundmanager->invite_key) && $fundmanager->invite_key != "") {
                 $source = "Invited";
             }
 
@@ -132,34 +136,13 @@ class FundmanagerController extends Controller
                 $join->on('users.firm_id', '=', 'firms.id');
             });
 
-        /*->where($cond)->select("users.*")*/
-
-        /* $entrepreneurQuery = User::join('model_has_roles', function ($join) {
-        $join->on('users.id', '=', 'model_has_roles.model_id')
-        ->where('model_has_roles.model_type', 'App\User');
-        })->join('roles', function ($join) {
-        $join->on('model_has_roles.role_id', '=', 'roles.id')
-        ->whereIn('roles.name', ['business_owner']);
-        })->leftjoin('user_has_certifications', function ($join) {
-        $join->on('users.id', 'user_has_certifications.user_id');
-        });*/
+       
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $fundmanager_query->where('users.firm_id', $filters['firm_name']);
         }
 
-        /* if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
-        $userIds = explode(',', $filters['user_ids']);
-        $userIds = array_filter($userIds);
-
-        $entrepreneurQuery->whereIn('users.id', $userIds);
-        }
-
-        if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
-        $entrepreneurQuery->where('users.id', $filters['investor_name']);
-        }*/
-
-        /////////////////// $entrepreneurQuery->groupBy('users.id')->select('users.*');
+       
         $fundmanager_query->groupBy('users.id');
         $fundmanager_query->select(\DB::raw("firms.name as firm_name, GROUP_CONCAT(business_listing_datas.data_value ) as business, users.*"));
 
@@ -198,13 +181,11 @@ class FundmanagerController extends Controller
         $header   = ['Platform GI Code', 'Name', 'Email ID', 'Firm', 'Funds', 'Introduced on', 'Source'];
         $userData = [];
 
-        /*echo"<pre>";
-        print_r($entrepreneurs);
-        die();*/
+         
         foreach ($fundmanagers as $fundmanager) {
 
             $source = "Self";
-            if ($fundmanager->registered_by !== $fundmanager->id && $fundmanager->registered_by!=0) {
+            if ($fundmanager->registered_by !== $fundmanager->id && $fundmanager->registered_by != 0) {
                 $source = "Intermediary";
             }
 
@@ -222,6 +203,182 @@ class FundmanagerController extends Controller
         generateCSV($header, $userData, $fileName);
 
         return true;
+
+    }
+
+    public function registration()
+    {
+
+        $user = Auth::user();
+
+        $fundmanager = new User;
+        $firmsList   = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms       = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/fundmanagers'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/fundmanagers'), 'name' => 'Fundmanager'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+        $data['countyList']              = getCounty();
+        $data['countryList']             = getCountry();
+        $data['fundmanager']            = $fundmanager;
+        $data['firms']                   = $firms;
+        $data['investmentAccountNumber'] = '';
+        $data['breadcrumbs']             = $breadcrumbs;
+        $data['pageTitle']               = 'Add Fundmanager';
+        $data['mode']                    = 'edit';
+        $data['activeMenu']              = 'add_clients';
+        $data['user_can_introduce']      = false;
+        $data['type']                    = 'introduce';
+        if ($user->can('edit introduce_business_owners_in_any_firm') || $user->can('edit introduce_business_owners_in_my_firm')) {
+            $data['user_can_introduce'] = true;
+        }
+        return view('backoffice.clients.registration-fundmanager')->with($data);
+
+    }
+
+    public function saveRegistration(Request $request)
+    {
+        $requestData = $request->all();
+
+        $firstName    = $requestData['first_name'];
+        $lastName     = $requestData['last_name'];
+        $email        = $requestData['email'];
+        $telephone    = $requestData['telephone'];
+        $password     = $requestData['password'];
+        $addressLine1 = $requestData['address_line_1'];
+        $addressLine2 = $requestData['address_line_2'];
+        $townCity     = $requestData['town_city'];
+        $county       = $requestData['county'];
+        $postcode     = $requestData['postcode'];
+        $country      = $requestData['country'];
+        $firm         = $requestData['firm'];
+        $company      = $requestData['company'];
+        $website      = $requestData['website'];
+        $isSuspended  = (isset($requestData['is_suspended'])) ? 1 : 0;
+        $giCode       = $requestData['gi_code'];
+
+        $userMeta['company'] = $company;
+        $userMeta['website'] = $website;
+
+        $giArgs = array('prefix' => "GIEN", 'min' => 20000001, 'max' => 30000000);
+
+        if ($giCode == '') {
+
+            if (isset($requestData['g-recaptcha-response'])) {
+
+                $jsonResponse = recaptcha_validate($requestData['g-recaptcha-response']);
+
+                if ($jsonResponse->success == '') {
+                    Session::flash('error_message', 'Please verify that you are not a robot.');
+                    return redirect()->back()->withInput();
+
+                }
+            } else {
+                Session::flash('error_message', 'Please verify that you are not a robot.');
+                return redirect()->back()->withInput();
+            }
+
+            $fundmanager = new User;
+
+            if ($fundmanager->isUserAlreadyExists($email) == true) {
+                Session::flash('error_message', 'User with email id already registered.');
+                return redirect()->back()->withInput();
+            }
+
+            $giCode                     = generateGICode($fundmanager, 'gi_code', $giArgs);
+            $fundmanager->gi_code       = $giCode;
+            $fundmanager->registered_by = Auth::user()->id;
+        } else {
+            $fundmanager = User::where('gi_code', $giCode)->first();
+        }
+
+        $fundmanager->login_id = $email;
+        $fundmanager->avatar   = '';
+
+        $fundmanager->email        = $email;
+        $fundmanager->first_name   = $firstName;
+        $fundmanager->last_name    = $lastName;
+        $fundmanager->password     = Hash::make($password);
+        $fundmanager->status       = 0;
+        $fundmanager->telephone_no = $telephone;
+        $fundmanager->address_1    = $addressLine1;
+        $fundmanager->address_2    = $addressLine2;
+        $fundmanager->city         = $townCity;
+        $fundmanager->postcode     = $postcode;
+        $fundmanager->county       = $county;
+        $fundmanager->country      = $country;
+        $fundmanager->firm_id      = $firm;
+        $fundmanager->suspended    = $isSuspended;
+        $fundmanager->deleted      = 0;
+        $fundmanager->save();
+
+        $fundmanagerId = $fundmanager->id;
+
+        $userMeta['company'] = $company;
+        $userMeta['website'] = $website;
+
+        $additionalInfo = $fundmanager->userAdditionalInfo();
+        if (empty($additionalInfo)) {
+            $additionalInfo           = new UserData;
+            $additionalInfo->user_id  = $fundmanagerId;
+            $additionalInfo->data_key = 'additional_info';
+        }
+
+        $additionalInfo->data_value = $userMeta;
+        $additionalInfo->save();
+
+        //assign role
+
+        $roleName = $fundmanager->getRoleNames()->first();
+        if (empty($roleName)) {
+            $fundmanager->assignRole('business_owner');
+        }
+
+        Session::flash('success_message', 'Fundmanager registered successfully');
+        return redirect(url('backoffice/fundmanager/' . $giCode . "/registration"));
+    }
+
+    public function editRegistration($giCode)
+    {
+        $user        = Auth::user();
+        $fundmanager = User::where('gi_code', $giCode)->first();
+
+        if (empty($fundmanager)) {
+            abort(404);
+        }
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/fundmanager'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/fundmanager'), 'name' => 'Fundmanager'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+        $investmentAccountNumber         = $fundmanager->userInvestmentAccountNumber();
+        $data['countyList']              = getCounty();
+        $data['countryList']             = getCountry();
+        $data['fundmanager']            = $fundmanager;
+        $data['firms']                   = $firms;
+        $data['breadcrumbs']             = $breadcrumbs;
+        $data['investmentAccountNumber'] = (!empty($investmentAccountNumber)) ? $investmentAccountNumber->data_value : '';
+        $data['pageTitle']               = 'Edit Fundmanager : Registration';
+        $data['mode']                    = 'view';
+        $data['activeMenu']              = 'add_clients';
+        $data['user_can_introduce']      = false;
+        $data['type']                    = 'introduce';
+        if ($user->can('edit introduce_business_owners_in_any_firm') || $user->can('edit introduce_business_owners_in_my_firm')) {
+            $data['user_can_introduce'] = true;
+        }
+
+        $additionalInfo         = $fundmanager->userAdditionalInfo();
+        $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
+
+        return view('backoffice.clients.registration-fundmanager')->with($data);
 
     }
 

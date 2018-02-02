@@ -253,8 +253,6 @@ class EntrepreneurController extends Controller
         $userMeta['company'] = $company;
         $userMeta['website'] = $website;
 
-        dd($userMeta);
-
         $giArgs = array('prefix' => "GIEN", 'min' => 20000001, 'max' => 30000000);
 
         if ($giCode == '') {
@@ -330,7 +328,48 @@ class EntrepreneurController extends Controller
         }
 
         Session::flash('success_message', 'Entrepreneur registered successfully');
-        return redirect(url('backoffice/entrepreneur/' . $giCode));
+        return redirect(url('backoffice/entrepreneur/' . $giCode."/registration"));
+    }
+
+    public function editRegistration($giCode)
+    {
+        $user = Auth::user();
+        $entrepreneur = User::where('gi_code', $giCode)->first();
+
+        if (empty($entrepreneur)) {
+            abort(404);
+        }
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/entrepreneur'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/entrepreneur'), 'name' => 'Entrepreneur'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+        $investmentAccountNumber         = $entrepreneur->userInvestmentAccountNumber();
+        $data['countyList']              = getCounty();
+        $data['countryList']             = getCountry();
+        $data['entrepreneur']            = $entrepreneur;
+        $data['firms']                   = $firms;
+        $data['breadcrumbs']             = $breadcrumbs;
+        $data['investmentAccountNumber'] = (!empty($investmentAccountNumber)) ? $investmentAccountNumber->data_value : '';
+        $data['pageTitle']               = 'Edit Entrepreneur : Registration';
+        $data['mode']                    = 'view';
+        $data['activeMenu']              = 'add_clients';
+        $data['user_can_introduce']      = false;
+        $data['type']                    = 'introduce';
+        if ($user->can('edit introduce_business_owners_in_any_firm') || $user->can('edit introduce_business_owners_in_my_firm')) {
+            $data['user_can_introduce'] = true;
+        }
+
+        $additionalInfo         = $entrepreneur->userAdditionalInfo();
+        $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
+
+        return view('backoffice.clients.registration-entrepreneur')->with($data);
+
     }
 
     /**
