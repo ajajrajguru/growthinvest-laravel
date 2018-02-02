@@ -144,7 +144,7 @@
                     <form method="post" action="{{ url('backoffice/investor/'.$investor->gi_code.'/save-investment-account') }}" data-parsley-validate name="add-investor-ia" id="add-investor-ia" enctype="multipart/form-data">
                     <!-- collapse -->
                     <div id="" role="tablist" class="gi-collapse">
-                        <div class="card ia-card">
+                        <div class="card">
                             <div class="card-header" role="tab" id="headingOne">
                                 <a data-toggle="collapse" href="#collapse1" role="button">
                                     <span class="px-0 col-md-10 col-8">
@@ -152,21 +152,21 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? ucfirst($nomineeDetails['section_status'][1]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[1]" value="">
+                                        <input type="hidden" name="section_status[1]" class="section1-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? $nomineeDetails['section_status'][1] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
 
-                            <div id="collapse1" class="collapse show" role="tabpanel" >
+                            <div id="collapse1" class="collapse show parent-tabpanel" role="tabpanel" data-section='1' >
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="required">Title</label>
-                                                <select name="title" id="user-title" class="form-control completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please select title.">    
+                                                <select name="title" id="user-title" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please select title.">    
 
                                                 <option value="">Select</option>
                                                 @php
@@ -188,22 +188,24 @@
 
                                             <div class="form-group">
                                                 <label>Surname <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status" name="surname" placeholder="" data-parsley-required data-parsley-required-message="Please enter the surname." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['surname'])){{ $nomineeDetails['surname'] }}@else{{$investor->last_name}}@endif">
+                                                <input type="text" class="form-control text-input-status completion_status" name="surname" placeholder="" data-parsley-required data-parsley-required-message="Please enter the surname." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['surname'])){{ $nomineeDetails['surname'] }}@else{{$investor->last_name}}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Forename <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status" name="forename" placeholder="" data-parsley-required data-parsley-required-message="Please enter the forename." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['forename'])){{ $nomineeDetails['forename'] }}@else{{$investor->first_name}}@endif">
+                                                <input type="text" class="form-control text-input-status completion_status" name="forename" placeholder="" data-parsley-required data-parsley-required-message="Please enter the forename." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['forename'])){{ $nomineeDetails['forename'] }}@else{{$investor->first_name}}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control completion_status" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
+                                                <input type="date" class="form-control text-input-status completion_status" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>National Insurance Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control"  name="nationalinsuranceno completion_status" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
+ 
+                                                <input type="text" class="form-control text-input-status completion_status"  name="nationalinsuranceno" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
+ 
                                                 <small  class="form-text text-muted">
                                                 @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
                                                     If your client does not have a National Insurance number, please tick here
@@ -216,7 +218,7 @@
 
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox">
-                                                  <input type="checkbox" class="custom-control-input" value="1" id="ch1" name="nonationalinsuranceno" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') checked @endif>
+                                                  <input type="checkbox" class="custom-control-input completion_status" value="1" id="ch1" name="nonationalinsuranceno" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') checked @endif>
                                                   <label class="custom-control-label" for="ch1">If you do not have a National Insurance number, please tick here</label>
                                                 </div>
                                             </div>
@@ -225,12 +227,12 @@
                                             <div class="nonationalinsuranceno-container @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='') d-none @endif @if(empty($nomineeDetails)) d-none  @endif">
                                             <div class="form-group">
                                                 <label>Nationality <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status" placeholder="" name="nationality" placeholder=""   data-parsley-required-message="Please enter the nationality." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <input type="text" class="form-control text-input-status completion_status" placeholder="" name="nationality" placeholder=""   data-parsley-required-message="Please enter the nationality." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Domiciled <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status" placeholder="" name="domiciled" data-parsley-required-message="Please enter the domiciled." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <input type="text" class="form-control text-input-status completion_status" placeholder="" name="domiciled" data-parsley-required-message="Please enter the domiciled." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
                                             </div>
                                             
                                             <p>If you live outside the UK and in a European Union (EU) member state, please supply one of the following reportable pieces of information for the EU Savings Directive.</p>
@@ -279,22 +281,22 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Telephone <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif">
+                                                <input type="text" class="form-control text-input-status completion_status" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Address <span class="text-danger">*</span></label>
-                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control completion_status" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</textarea>
+                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Postcode <span class="text-danger">*</span></label>
-                                                <input type="text" name="account_postcode" class="form-control completion_status" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['postcode'])){{ $nomineeDetails['postcode'] }}@else{{$investor->postcode}}@endif">
+                                                <input type="text" name="account_postcode" class="form-control text-input-status completion_status" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['postcode'])){{ $nomineeDetails['postcode'] }}@else{{$investor->postcode}}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Email Address <span class="text-danger">*</span></label>
-                                                <input readonly type="email" class="form-control completion_status" placeholder="" name="account_email" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['email'])){{ $nomineeDetails['email'] }}@else{{$investor->email}}@endif">
+                                                <input readonly type="email" class="form-control text-input-status completion_status" placeholder="" name="account_email" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['email'])){{ $nomineeDetails['email'] }}@else{{$investor->email}}@endif">
                                                 <small  class="form-text text-muted">You will not be able to access your account online, without a valid e-mail address. If you do not provide an e-mail address, any communications to service your account will be sent to you by post.</small>
                                             </div>
 
@@ -321,11 +323,11 @@
                                                      <span class="text-danger">*</span></label>
                                                 <div>
                                                     <div class="custom-control custom-radio custom-control-inline">
-                                                      <input type="radio" id="yes2" name="areuspersonal" class="custom-control-input" value="yes" data-parsley-required @if(!empty($nomineeDetails) && $isUsPerson =='yes') checked @endif>
+                                                      <input type="radio" id="yes2" name="areuspersonal" class="custom-control-input checked-input-status completion_status" value="yes" data-parsley-required @if(!empty($nomineeDetails) && $isUsPerson =='yes') checked @endif>
                                                       <label class="custom-control-label" for="yes2">Yes</label>
                                                     </div>
                                                     <div class="custom-control custom-radio custom-control-inline">
-                                                      <input type="radio" id="no2" name="areuspersonal" class="custom-control-input"  value="no" @if(!empty($nomineeDetails) && $isUsPerson =='no') checked @endif >
+                                                      <input type="radio" id="no2" name="areuspersonal" class="custom-control-input completion_status"  value="no" @if(!empty($nomineeDetails) && $isUsPerson =='no') checked @endif >
                                                       <label class="custom-control-label" for="no2">No</label>
                                                     </div>
                                                 </div>
@@ -344,21 +346,22 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section2-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][2])) ? ucfirst($nomineeDetails['section_status'][2]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
+                                        <input type="hidden" name="section_status[2]" class="section2-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][2])) ? $nomineeDetails['section_status'][2] : 'incomplete'  }}">
                                     </span>     
                                   
                                 </a>
                             </div>
 
-                            <div id="collapse2" class="collapse " role="tabpanel" >
+                            <div id="collapse2" class="collapse parent-tabpanel" role="tabpanel" data-section='2'>
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label>Please indicate where you would like the original tax certificate sent to:</label>
                                         <div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="yourself" name="sendtaxcertificateto" class="custom-control-input" value="yourself"  @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') checked  @endif @if(empty($nomineeDetails)) checked  @endif>
+                                              <input type="radio" id="yourself" name="sendtaxcertificateto" class="custom-control-input completion_status" value="yourself"  @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') checked  @endif >
                                               <label class="custom-control-label" for="yourself">
                                             @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
                                               Client Address*
@@ -368,11 +371,11 @@
                                           </label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="adviser" name="sendtaxcertificateto" class="custom-control-input" value="adviser" @if(!empty($nomineeDetails) && $taxCertificateSentTo =='adviser') checked  @endif>
+                                              <input type="radio" id="adviser" name="sendtaxcertificateto" class="custom-control-input completion_status" value="adviser" @if(!empty($nomineeDetails) && $taxCertificateSentTo =='adviser') checked  @endif @if(empty($nomineeDetails)) checked  @endif>
                                               <label class="custom-control-label" for="adviser">Adviser**</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="accountant" name="sendtaxcertificateto" class="custom-control-input" value="accountant" @if(!empty($nomineeDetails) && $taxCertificateSentTo =='accountant') checked  @endif>
+                                              <input type="radio" id="accountant" name="sendtaxcertificateto" class="custom-control-input completion_status" value="accountant" @if(!empty($nomineeDetails) && $taxCertificateSentTo =='accountant') checked  @endif>
                                               <label class="custom-control-label" for="accountant">Accountant**</label>
                                             </div>
                                         </div>
@@ -385,28 +388,28 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Firm Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="txcertificatefirmname" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif   data-parsley-required-message="Please enter the firm name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="txcertificatefirmname" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif   data-parsley-required-message="Please enter the firm name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Contact <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="txcertificatecontact" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the conatct." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="txcertificatecontact" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the conatct." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Telephone <span class="text-danger">*</span></label>
-                                                <input type="tel" class="form-control" placeholder="" name="txcertificatetelephone" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif">
+                                                <input type="tel" class="form-control completion_status text-input-status" placeholder="" name="txcertificatetelephone" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Email Address <span class="text-danger">*</span></label>
-                                                <input type="email" class="form-control" placeholder="" name="txcertificateemail" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the email." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif">
+                                                <input type="email" class="form-control completion_status text-input-status" placeholder="" name="txcertificateemail" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the email." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Address <span class="text-danger">*</span></label>
-                                                <textarea id="" cols="30" rows="3" name="txcertificateaddress" class="form-control" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</textarea>
+                                                <textarea id="" cols="30" rows="3" name="txcertificateaddress" class="form-control text-input-status completion_status" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -423,14 +426,15 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section3-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][3])) ? ucfirst($nomineeDetails['section_status'][3]) : 'Not started'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
+                                        <input type="hidden" name="section_status[3]" class="section3-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][3])) ? $nomineeDetails['section_status'][3] : 'incomplete'  }}">
                                     </span>  
                                 </a>
                             </div>
 
-                            <div id="collapse3" class="collapse " role="tabpanel" >
+                            <div id="collapse3" class="collapse parent-tabpanel" role="tabpanel" data-section='3'>
                                 <div class="card-body">
                                     @if(Auth::user()->hasPermissionTo('is_wealth_manager')) 
                                     <p>Please provide details of the bank account to which your client would like any distributions paid to.</p>
@@ -442,14 +446,14 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Name of Account Holder(s) <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="bankaccntholder1" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder1'])){{ $nomineeDetails['bankaccntholder1'] }}@endif">
-                                                <input type="text" class="form-control" placeholder="" name="bankaccntholder2" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder2'])){{ $nomineeDetails['bankaccntholder2'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntholder1" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder1'])){{ $nomineeDetails['bankaccntholder1'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntholder2" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder2'])){{ $nomineeDetails['bankaccntholder2'] }}@endif">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Bank Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="bankname" data-parsley-required data-parsley-required-message="Please enter the bank name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankname'])){{ $nomineeDetails['bankname'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankname" data-parsley-required data-parsley-required-message="Please enter the bank name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankname'])){{ $nomineeDetails['bankname'] }}@endif">
                                             </div>
                                         </div>
                                     </div>
@@ -458,13 +462,13 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Account Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="bankaccntnumber" data-parsley-required data-parsley-required-message="Please enter the account number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntnumber'])){{ $nomineeDetails['bankaccntnumber'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntnumber" data-parsley-required data-parsley-required-message="Please enter the account number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntnumber'])){{ $nomineeDetails['bankaccntnumber'] }}@endif">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Bank Address <span class="text-danger">*</span></label>
-                                                <textarea   id="" cols="30" rows="1" class="form-control" name="bankaddress" data-parsley-required data-parsley-required-message="Please enter the bank address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaddress'])){{ $nomineeDetails['bankaddress'] }}@endif</textarea>
+                                                <textarea   id="" cols="30" rows="1" class="form-control completion_status text-input-status" name="bankaddress" data-parsley-required data-parsley-required-message="Please enter the bank address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaddress'])){{ $nomineeDetails['bankaddress'] }}@endif</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -473,13 +477,13 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Sort Code <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="bankaccntsortcode" data-parsley-required data-parsley-required-message="Please enter the sort code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntsortcode" data-parsley-required data-parsley-required-message="Please enter the sort code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Postcode <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="" name="clientbankpostcode" data-parsley-required data-parsley-required-message="Please enter the post code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['clientbankpostcode'])){{ $nomineeDetails['clientbankpostcode'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="clientbankpostcode" data-parsley-required data-parsley-required-message="Please enter the post code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['clientbankpostcode'])){{ $nomineeDetails['clientbankpostcode'] }}@endif">
                                             </div>
                                         </div>
                                     </div>
@@ -499,14 +503,15 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section4-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][4])) ? ucfirst($nomineeDetails['section_status'][4]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
+                                        <input type="hidden" name="section_status[4]" class="section4-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][4])) ? $nomineeDetails['section_status'][4] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
 
-                            <div id="collapse4" class="collapse " role="tabpanel" >
+                            <div id="collapse4" class="collapse parent-tabpanel" role="tabpanel" data-section='4'>
                                 <div class="card-body">
                                     <p>Please review all fees and charges below in both sections 4.1 and 4.2. All the latest account charges are listed in the <a href="javascript:void(0);">GrowthInvest Fees and Charges document</a></p>
 
@@ -610,12 +615,20 @@
 
                                                 <div class="form-group">
                                                     <div class="custom-control custom-checkbox">
-                                                      <input type="checkbox" class="custom-control-input" name="advdetailsnotapplicable" value="1" id="ch5">
+                                                      <input type="checkbox" class="custom-control-input completion_status" name="advdetailsnotapplicable" value="1" id="ch5" @if(!empty($nomineeDetails) && isset($nomineeDetails['advdetailsnotapplicable']) && $nomineeDetails['advdetailsnotapplicable']=='1') checked @endif>
                                                       <label class="custom-control-label" for="ch5">Not applicable</label>
                                                     </div>
                                                 </div>
 
+                                                <div class="adv-details-applicable-data">
+                                                    @php
+                                                    $completionClasses = false;
+                                                    if(!empty($nomineeDetails) && isset($nomineeDetails['advdetailsnotapplicable']) && $nomineeDetails['advdetailsnotapplicable']==''){
+                                                        $completionClasses = true;
+                                                    }  
+                                                    @endphp
                                                  @include('backoffice.clients.firm-data')
+                                                </div>
 
                                                 <h5>Client Agreed Adviser Remuneration</h5>
                                                 <p>GrowthInvest can facilitate the payment of fees to your adviser. Please specify the agreed adviser remuneration below:</p>
@@ -710,14 +723,15 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section5-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][5])) ? ucfirst($nomineeDetails['section_status'][5]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
+                                        <input type="hidden" name="section_status[5]" class="section5-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][5])) ? $nomineeDetails['section_status'][5] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
 
-                            <div id="collapse5" class="collapse " role="tabpanel" >
+                            <div id="collapse5" class="collapse parent-tabpanel" role="tabpanel" data-section='5'>
                                 <div class="card-body">
                                     <p>Please carefully read and acknowledge both of the statements below</p>
 
@@ -795,7 +809,7 @@
 
                                                 <div>
                                                     <div class="custom-control custom-checkbox">
-                                                      <input type="checkbox" class="custom-control-input" id="agreeclientdeclarationch2" name="agreeclientdeclaration" value="1" @if(!empty($nomineeDetails) && isset($nomineeDetails['agreeclientdeclaration']) && $nomineeDetails['agreeclientdeclaration'] =='1') checked @endif>
+                                                      <input type="checkbox" class="custom-control-input completion_status checked-input-status" id="agreeclientdeclarationch2" name="agreeclientdeclaration" value="1" @if(!empty($nomineeDetails) && isset($nomineeDetails['agreeclientdeclaration']) && $nomineeDetails['agreeclientdeclaration'] =='1') checked @endif>
                                                       <label class="custom-control-label" for="agreeclientdeclarationch2">Please Tick here to confirm and agree with the Client Declaration and the Data Protection Policy</label>
                                                     </div>
                                                 </div>
@@ -817,14 +831,15 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section6-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][6])) ? ucfirst($nomineeDetails['section_status'][6]) : 'Not started'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
+                                        <input type="hidden" name="section_status[6]" class="section6-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][6])) ? $nomineeDetails['section_status'][6] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
 
-                            <div id="collapse6" class="collapse" role="tabpanel" >
+                            <div id="collapse6" class="collapse parent-tabpanel" role="tabpanel" data-section='6'>
                                 <div class="card-body">
                                     @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                     <p>
@@ -840,7 +855,7 @@
                                       <div class="text-info" ><i class="fa  fa-exclamation-circle" ></i> Please tick one of the boxes below to indicate Know Your Customer & Anti-Money Laundering preferences </div>
                                       <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input complete-pending-evidence-input disabledInput" id="complete_pending_evidence" @if($mode=='view') disabled @endif name="nomineeverification" value="complete_pending_evidence" @if(!empty($nomineeDetails) && $idVerificationStatus =='complete_pending_evidence') checked @endif  data-text="Complete Pending Evidence" >
+                                            <input type="checkbox" class="custom-control-input checked-input-status completion_status complete-pending-evidence-input disabledInput" id="complete_pending_evidence" @if($mode=='view') disabled @endif name="nomineeverification" value="complete_pending_evidence" @if(!empty($nomineeDetails) && $idVerificationStatus =='complete_pending_evidence') checked @endif  data-text="Complete Pending Evidence" >
                                             <label class="custom-control-label normal" for="complete_pending_evidence">  I/We have obtained evidence that meets the standard requirements which are defined withing the guidance for the UK financial Sector issued by the JMLSG.</label>
                                         </div>
                                     </div>
@@ -852,7 +867,7 @@
                                     </div>
                                      <div class="form-group">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input requested-input disabledInput" id="requested" @if($mode=='view') disabled @endif name="nomineeverification" value="requested" @if(!empty($nomineeDetails) && $idVerificationStatus =='requested') checked @endif  data-text="Requested">
+                                            <input type="checkbox" class="custom-control-input checked-input-status completion_status requested-input disabledInput" id="requested" @if($mode=='view') disabled @endif name="nomineeverification" value="requested" @if(!empty($nomineeDetails) && $idVerificationStatus =='requested') checked @endif  data-text="Requested">
                                             <label class="custom-control-label normal" for="requested">  Please tick this box if like your client's identity to be verified via GrowthInvest partner, Onfido.com KYC/AML. </label>
                                         </div>
                                     </div> 
@@ -866,11 +881,11 @@
                                     <div class="form-group">
                                         <div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="yes" name="nomineeverification" value="requested" class="custom-control-input" @if(!empty($nomineeDetails) && $idVerificationStatus =='requested') checked @endif data-text="Requested">
+                                              <input type="radio" id="yes" name="nomineeverification" value="requested" class="checked-input-status completion_status custom-control-input" @if(!empty($nomineeDetails) && $idVerificationStatus =='requested') checked @endif data-text="Requested">
                                               <label class="custom-control-label" for="yes">Request Identity and anti-money laundering checks</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="no" name="rnomineeverification" value="complete_pending_evidence" class="custom-control-input" @if(!empty($nomineeDetails) && $idVerificationStatus =='complete_pending_evidence') checked @endif @if(empty($nomineeDetails)) checked @endif data-text="Complete Pending Evidence">
+                                              <input type="radio" id="no" name="rnomineeverification" value="complete_pending_evidence" class="checked-input-status completion_status custom-control-input" @if(!empty($nomineeDetails) && $idVerificationStatus =='complete_pending_evidence') checked @endif @if(empty($nomineeDetails)) checked @endif data-text="Complete Pending Evidence">
                                               <label class="custom-control-label" for="no">I have already completed the KYC and AML checks through an FCA regulated person and will provide a copy of this.</label>
                                             </div>
                                         </div>
@@ -905,25 +920,26 @@
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
-                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block">Incomplete</small>
+                                        <small class="mr-sm-3 mr-0 d-block d-md-inline-block section7-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][7])) ? ucfirst($nomineeDetails['section_status'][7]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
+                                        <input type="hidden" name="section_status[7]" class="section7-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][7])) ? $nomineeDetails['section_status'][7] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
 
-                            <div id="collapse7" class="collapse" role="tabpanel" >
+                            <div id="collapse7" class="collapse parent-tabpanel" role="tabpanel" data-section='7'>
                                 <div class="card-body">
                                     <p class="mb-1">Please provide details below of the amount you will be transferring to your Investment Account.</p>
 
                                     <div class="form-group">
                                         <div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="transfer_at_later_stage_no" name="transfer_at_later_stage" class="custom-control-input"  value="no" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') checked @endif >
+                                              <input type="radio" id="transfer_at_later_stage_no" name="transfer_at_later_stage" class="custom-control-input completion_status"  value="no" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') checked @endif >
                                               <label class="custom-control-label" for="transfer_at_later_stage_no">I will transfer funds immediately and provide details below</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                              <input type="radio" id="transfer_at_later_stage_yes" name="transfer_at_later_stage" class="custom-control-input" value="yes"  @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='yes') checked @endif >
+                                              <input type="radio" id="transfer_at_later_stage_yes" name="transfer_at_later_stage" class="custom-control-input completion_status text-input-status" value="yes"  @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='yes') checked @endif >
                                               <label class="custom-control-label" for="transfer_at_later_stage_yes"> I will transfer funds at a later stage</label>
                                             </div>
                                         </div>
@@ -935,15 +951,30 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label mt-4">Bank Transfer <span class="text-danger">*</span></label>
                                                 <div class="col-sm-8">
+                                                    @php
+                                                    $dataParsley = '';
+                                                    $completionClasses = '';
+                                                    if(!empty($nomineeDetails) && (isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no')){
+                                                        $dataParsley = 'data-parsley-required';
+                                                        $completionClasses = 'completion_status text-input-status';
+                                                    }
+
+                                                    if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!=''){
+                                                        $dataParsley = '';
+                                                        $completionClasses = '';
+                                                    }
+
+                                                    @endphp
+
                                                     <label for="">Deposit Amount</label>
-                                                    <input type="text" class="form-control bank-input" id="" name="subscriptioninvamntbank" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the deposite amount." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif">
+                                                    <input type="text" class="form-control bank-input {{ $completionClasses }}" id="" name="subscriptioninvamntbank" placeholder="" {{ $dataParsley }} data-parsley-required-message="Please enter the deposite amount." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!='') readonly @endif>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Expected Date of Bank Transfer</label>
-                                                <input type="text" class="form-control bank-input" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
+                                                <input type="text" class="form-control bank-input text-input-status completion_status" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
                                             </div>
                                         </div>
                                     </div>
@@ -953,7 +984,21 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Cheque <span class="text-danger">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <input type="number" name="subscriptioninvamntcheq" class="form-control bank-input" id="" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the cheque." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif">
+                                                    @php
+                                                    $dataParsley = '';
+                                                    $completionClasses = '';
+                                                    if(!empty($nomineeDetails) && (isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no')){
+                                                        $dataParsley = 'data-parsley-required';
+                                                        $completionClasses = 'completion_status text-input-status';
+                                                    }
+
+                                                    if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank']) && $nomineeDetails['subscriptioninvamntbank']!=''){
+                                                        $dataParsley = '';
+                                                        $completionClasses = '';
+                                                    }
+
+                                                    @endphp
+                                                    <input type="number" name="subscriptioninvamntcheq" class="form-control bank-input {{ $completionClasses }}" id="" placeholder=""  {{ $dataParsley }} data-parsley-required-message="Please enter the cheque." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank']) && $nomineeDetails['subscriptioninvamntbank']!='') readonly @endif>
                                                 </div>
                                             </div>
                                         </div>
@@ -1003,7 +1048,7 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Reference: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control bank-input" id="" name="subscriptionreffnamelname" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the reference." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif">
+                                                    <input type="text" class="form-control completion_status text-input-status bank-input" id="" name="subscriptionreffnamelname" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the reference." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif">
                                                     <small class="form-text text-muted">First and Last Name</small>
                                                 </div>
                                             </div>

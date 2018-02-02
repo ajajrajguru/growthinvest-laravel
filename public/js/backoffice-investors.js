@@ -447,32 +447,43 @@
         });
       }
     });
+    $(document).on('change', 'input[name="advdetailsnotapplicable"]', function() {
+      if ($(this).is(':checked')) {
+        return $('.adv-details-applicable-data').find('.form-control').removeClass('text-input-status').removeClass('completion_status');
+      } else {
+        return $('.adv-details-applicable-data').find('.form-control').addClass('text-input-status').addClass('completion_status');
+      }
+    });
     $(document).on('change', 'input[name="nonationalinsuranceno"]', function() {
       if ($(this).is(':checked')) {
         $('.nonationalinsuranceno-container').removeClass('d-none');
-        $('input[name="nationality"]').attr('data-parsley-required', true);
-        return $('input[name="domiciled"]').attr('data-parsley-required', true);
+        $('input[name="nationality"]').attr('data-parsley-required', true).addClass('text-input-status').addClass('completion_status');
+        return $('input[name="domiciled"]').attr('data-parsley-required', true).addClass('text-input-status').addClass('completion_status');
       } else {
         $('.nonationalinsuranceno-container').addClass('d-none');
-        $('input[name="nationality"]').attr('data-parsley-required', false);
-        return $('input[name="domiciled"]').attr('data-parsley-required', false);
+        $('input[name="nationality"]').attr('data-parsley-required', false).removeClass('text-input-status').removeClass('completion_status');
+        return $('input[name="domiciled"]').attr('data-parsley-required', false).removeClass('text-input-status').removeClass('completion_status');
       }
     });
     $(document).on('change', 'input[name="sendtaxcertificateto"]', function() {
       if ($(this).val() === 'yourself') {
         $('.sendtaxcertificateto-yourself').addClass('d-none');
-        return $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required', false);
+        return $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required', false).removeClass('text-input-status').removeClass('completion_status');
       } else {
         $('.sendtaxcertificateto-yourself').removeClass('d-none');
-        return $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required', true);
+        return $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required', true).addClass('text-input-status').addClass('completion_status');
       }
     });
     $(document).on('change', 'input[name="transfer_at_later_stage"]', function() {
       if ($(this).val() === 'no') {
-        $('.bank-input').attr('data-parsley-required', true).attr('readonly', false);
-        return $('input[name="subscriptiontransferdate"]').attr('data-parsley-required', false);
+        $('.bank-input').each(function() {
+          if ($(this).val() !== '') {
+            return $(this).attr('data-parsley-required', true).attr('readonly', false).addClass('text-input-status').addClass('completion_status');
+          }
+        });
+        return $('input[name="subscriptiontransferdate"]').attr('data-parsley-required', false).attr('readonly', false).addClass('text-input-status').addClass('completion_status');
       } else {
-        return $('.bank-input').attr('data-parsley-required', false).attr('readonly', true);
+        return $('.bank-input').attr('data-parsley-required', false).attr('readonly', true).removeClass('text-input-status').removeClass('completion_status');
       }
     });
     $(document).on('change', 'input[name="nomineeverification"]', function() {
@@ -490,6 +501,59 @@
         }
       }
       return $('input[name="verdisplaystatus"]').val(status);
+    });
+    $(document).on('change', 'input[name="subscriptioninvamntbank"]', function() {
+      if ($(this).val() !== '') {
+        $('input[name="subscriptioninvamntcheq"]').attr('readonly', true).attr('data-parsley-required', false);
+        return $('input[name="subscriptioninvamntcheq"]').removeClass('text-input-status').removeClass('completion_status');
+      } else {
+        $('input[name="subscriptioninvamntcheq"]').attr('readonly', false).attr('data-parsley-required', true);
+        return $('input[name="subscriptioninvamntcheq"]').addClass('text-input-status').addClass('completion_status');
+      }
+    });
+    $(document).on('change', 'input[name="subscriptioninvamntcheq"]', function() {
+      if ($(this).val() !== '') {
+        $('input[name="subscriptioninvamntbank"]').attr('readonly', true).attr('data-parsley-required', false);
+        return $('input[name="subscriptioninvamntbank"]').removeClass('text-input-status').removeClass('completion_status');
+      } else {
+        $('input[name="subscriptioninvamntbank"]').attr('readonly', false).attr('data-parsley-required', true);
+        return $('input[name="subscriptioninvamntbank"]').addClass('text-input-status').addClass('completion_status');
+      }
+    });
+    $(document).on('change', '.completion_status', function() {
+      var cardObj, dataInComp, dataValid, sectionNo;
+      cardObj = $(this).closest('.parent-tabpanel');
+      sectionNo = cardObj.attr('data-section');
+      dataValid = 0;
+      cardObj.find('.completion_status').each(function() {
+        if (!$(this).parsley().isValid()) {
+          return dataValid++;
+        }
+      });
+      dataInComp = 0;
+      cardObj.find('.text-input-status').each(function() {
+        if ($(this).val() === '') {
+          return dataInComp++;
+        }
+      });
+      cardObj.find('.checked-input-status').each(function() {
+        var ckName;
+        ckName = $(this).attr('name');
+        if (!$('input[name="' + ckName + '"]').is(':checked')) {
+          return dataInComp++;
+        }
+      });
+      console.log(dataInComp);
+      console.log(dataValid);
+      if (dataInComp === 0 && dataValid === 0) {
+        console.log('Complete');
+        $('.section' + sectionNo + '-status').text('Complete');
+        return $('.section' + sectionNo + '-status-input').val('complete');
+      } else {
+        console.log('Incomplete');
+        $('.section' + sectionNo + '-status').text('Incomplete');
+        return $('.section' + sectionNo + '-status-input').val('incomplete');
+      }
     });
     $(document).on('keyup', '.invest-perc', function() {
       var ipEmpty;
