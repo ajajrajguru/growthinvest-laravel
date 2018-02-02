@@ -382,3 +382,17 @@ $(document).ready ->
       { 'data': 'activity_firmwide', "orderable": false}
       { 'data': 'action' , "orderable": false}
     ])
+
+
+
+  $('.save-professsional-inv').click ->
+    btnObj = $(this)
+    $.ajax
+      type: 'get'
+      url: '/backoffice/firm-invite/'+giCode
+      headers:
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      data:{}
+      success: (data) ->          
+        console.log(data)
+        scrollTopContainer("#invite-clients") 
