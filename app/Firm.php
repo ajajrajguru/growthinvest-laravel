@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Firm extends Model
 {
-    protected $table = 'firms';
+    protected $table       = 'firms';
     protected $child_firms = [];
 
     // protected $guard_name = 'backoffice';
@@ -51,13 +51,19 @@ class Firm extends Model
 
     public function getFirmAdditionalInfo($firm_id)
     {
-        $addionalData = $this->firmData()->where(['data_key'=>'additional_details','firm_id'=>$firm_id])->first();
+        $addionalData = $this->firmData()->where(['data_key' => 'additional_details', 'firm_id' => $firm_id])->first();
         return $addionalData;
     }
 
     public function getFirmInviteContent($firm_id)
     {
-        $addionalData = $this->firmData()->where(['data_key'=>'invite_content','firm_id'=>$firm_id] )->first();
+
+        // echo "=====".$firm_id;
+        $addionalData = $this->firmData()->where(['data_key' => 'invite_content', 'firm_id' => $firm_id])->first();
+        /*print_r($this->firmData());
+        print_r($addionalData);*/
+        /*\DB::enableQueryLog();
+        dd(\DB::getQueryLog());*/
         return $addionalData;
     }
 
@@ -90,8 +96,8 @@ class Firm extends Model
     public function getAllChildFirmsByFirmID($firm_id)
     {
 
-        $first               = Firm::where(['parent_id' => $firm_id])->pluck('id')->all();
-        $this->child_firms = array_merge($this->child_firms,$first);
+        $first             = Firm::where(['parent_id' => $firm_id])->pluck('id')->all();
+        $this->child_firms = array_merge($this->child_firms, $first);
 
         if (count($first > 0)) {
             foreach ($first as $value) {
@@ -105,6 +111,36 @@ class Firm extends Model
 
         $parent_firms = Firm::where(['parent_id' => $firm_id])->orderBy('name', 'asc')->get()*/;
         return $this->child_firms;
+    }
+
+    public function getInviteData($firm_id,$invite_type="")
+    {
+
+        $firm = Firm::find($firm_id)->select(['id', 'name', 'invite_key'])->get()->first();
+        $invite_content   = $this->getFirmInviteContent($firm_id);
+        $invite_content_data = $invite_content->data_value;
+         if($invite_type!=""){
+            switch ($invite_type) {
+                case 'businessowner':
+                        $invite_content_data = $invite_content_data['ent_invite_content'];
+                    break; 
+                case 'fundmanager':
+                        $invite_content_data = $invite_content_data['fundmanager_invite_content'];
+                    break; 
+
+                case 'investor':
+                        $invite_content_data = $invite_content_data['inv_invite_content'];
+                    break; 
+            }
+        }
+        $firm_invite_data = [
+            'id'             => $firm['id'],
+            'name'           => $firm->name,
+            'invite_key'     => $firm->invite_key,
+            'invite_content' => $invite_content_data,
+        ];
+        return $firm_invite_data;
+
     }
 
 }

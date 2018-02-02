@@ -223,5 +223,13 @@ class User extends Authenticatable
         return $this->morphMany( 'App\DocumentFile', 'object');
     }
 
+    public function isUserAlreadyExists($email){
+        $user = User::where('email','=',$email)->first();
+        if ($user === null) {
+           return false;
+        }
+        return true;
+    }
+
 
 }
