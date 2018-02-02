@@ -64,6 +64,10 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('fundmanager/registration', 'FundmanagerController@registration');
     Route::post('fundmanager/save-registration', 'FundmanagerController@saveRegistration');
     Route::get('fundmanager/{giCode}/registration', 'FundmanagerController@editRegistration');
+    Route::get('firm-invite/{giCode}/{type}', 'FirmController@getInvite');
+
+
+    
 });
 
 Route::resource('users', 'UserController');

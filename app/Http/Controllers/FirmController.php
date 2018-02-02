@@ -35,19 +35,19 @@ class FirmController extends Controller
         $firmsList = getModelList('App\Firm');
         $firms     = $firmsList['list'];
 
-        $fileName = 'firms_list_as_on_'.date('d-m-Y');
-        $header   = ['Platform GI Code', 'Name','Firm Type','Parent Firm'];
+        $fileName = 'firms_list_as_on_' . date('d-m-Y');
+        $header   = ['Platform GI Code', 'Name', 'Firm Type', 'Parent Firm'];
         $firmData = [];
- 
+
         foreach ($firms as $firm) {
-            $firmData[] = [ $firm->gi_code, 
-                            title_case($firm->name),
-                            title_case($firm->firmType()->name),
-                            (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :''
+            $firmData[] = [$firm->gi_code,
+                title_case($firm->name),
+                title_case($firm->firmType()->name),
+                (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) : '',
             ];
         }
-         
-        generateCSV($header,$firmData,$fileName);
+
+        generateCSV($header, $firmData, $fileName);
 
         return true;
 
@@ -90,7 +90,6 @@ class FirmController extends Controller
     public function store(Request $request)
     {
 
-
         $firm_data = array(
             'name'                  => is_null($request->input('name')) ? '' : $request->input('name'),
             'description'           => is_null($request->input('description')) ? '' : $request->input('description'),
@@ -125,7 +124,6 @@ class FirmController extends Controller
             $firm = Firm::where('gi_code', $giCode)->first();
         }
 
- 
         $firm->name                  = $firm_data['name'];
         $firm->description           = $firm_data['description'];
         $firm->parent_id             = $firm_data['parent_id'];
@@ -179,7 +177,7 @@ class FirmController extends Controller
         //return $firm_id;
 
         Session::flash('success_message', 'Firm details saved successfully.');
-        return redirect(url('backoffice/firms/' . $giCode ));
+        return redirect(url('backoffice/firms/' . $giCode));
     }
 
     /**
@@ -196,16 +194,15 @@ class FirmController extends Controller
             abort(404);
         }
 
-        $data                       = [];
-        $additional_info            = $firm->getFirmAdditionalInfo($firm->id);
-        $invite_content             = $firm->getFirmInviteContent($firm->id);
+        $data            = [];
+        $additional_info = $firm->getFirmAdditionalInfo($firm->id);
+        $invite_content  = $firm->getFirmInviteContent($firm->id);
 
- 
-       // echo "<pre>";
+        // echo "<pre>";
         //print_r($invite_content->getOriginal('data_value'));
-       // dd($invite_content->data_value );
-       // print_r($invite_content->getAttribute('data_value'));
-       // die();
+        // dd($invite_content->data_value );
+        // print_r($invite_content->getAttribute('data_value'));
+        // die();
 
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
@@ -216,19 +213,22 @@ class FirmController extends Controller
         $data['invite_content']     = (!empty($invite_content)) ? $invite_content->data_value : [];
         $data['mode']               = 'view';
 
-        $breadcrumbs         = [];
-        $breadcrumbs[]       = ['url' => url('/'), 'name' => "Manage"];
-        $breadcrumbs[]       = ['url' => '/backoffice/firm', 'name' => 'Firm'];
-        $breadcrumbs[]       = ['url' => '', 'name' => $firm->name];
-        $breadcrumbs[]       = ['url' => '', 'name' => 'View Firm Details'];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Firm Details'];
 
         $data['breadcrumbs'] = $breadcrumbs;
 
-        /*echo "<pre>";
-        print_r($data);
-        die();*/
-        
         return view('backoffice.firm.add-edit-firm')->with($data);
+    }
+
+    public function getInvite($firm_id, $invite_type)
+    {
+        $firm   = Firm::where('id', $firm_id)->first();
+        $result = $firm->getInviteData($firm_id,$invite_type);        
+        return $result;
     }
 
     /**

@@ -22,7 +22,7 @@
                     <small><i>Select the firm whose invite you need to view</i></small>
                 </div>
                  <div class="col-md-4 text-right">
-                     <a href="javascript:void(0)" class="btn btn-primary btn-sm btn-view-invite">View Invite</a>
+                     <a href="javascript:void(0)" class="btn btn-primary btn-sm btn-view-invite" invite-type="{{$invite_type}}" >View Invite</a>
                 </div> 
             </div>
         </div> 
@@ -64,7 +64,7 @@ echo "var edit_mode = 'no' ";
 ?>
 
      function loadCkeditor(){
-        alert('asd')
+         
         // CKEDITOR.replace( 'rich-editor' );
         // CKEDITOR.replaceClass('rich-editor');
         var elements = CKEDITOR.document.find( '.rich-editor' ),

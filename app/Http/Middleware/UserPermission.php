@@ -68,9 +68,11 @@ class UserPermission
                 'backoffice/entrepreneur/save-registration'                => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
                 'backoffice/entrepreneur/{giCode}/registration'            => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
 
-                'backoffice/fundmanager/registration'                     => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
-                'backoffice/fundmanager/save-registration'                => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
-                'backoffice/fundmanager/{giCode}/registration'            => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+                'backoffice/fundmanager/registration'                      => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+                'backoffice/fundmanager/save-registration'                 => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+                'backoffice/fundmanager/{giCode}/registration'             => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
+
+                'backoffice/firm-invite/{giCode}/{type}'                   => ['view_firms', 'add_investor', 'introduce_business_owners_in_my_firm', 'introduce_business_owners_in_any_firm'],
 
             ],
 
@@ -85,7 +87,7 @@ class UserPermission
     }
 
     public function getUriPermissions($uriPath)
-    {
+    { 
         $routePerrmissions = $this->routePermission();
         $uriPermission     = [];
         $guard             = '';

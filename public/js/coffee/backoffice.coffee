@@ -385,14 +385,20 @@ $(document).ready ->
 
 
 
-  $('.save-professsional-inv').click ->
-    btnObj = $(this)
+  $('.btn-view-invite').click ->
+
+    
+    invite_type = $(this).attr('invite-type')     
+    firmid = $('#invite_firm_name').val()
+    if firmid==""
+      alert "Please select firm"
+      return
+
     $.ajax
       type: 'get'
-      url: '/backoffice/firm-invite/'+giCode
-      headers:
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      data:{}
+      url: '/backoffice/firm-invite/'+firmid+'/'+invite_type      
       success: (data) ->          
         console.log(data)
-        scrollTopContainer("#invite-clients") 
+        CKEDITOR.instances['invite_content'].setData(data.invite_content);
+        $('input[name="invite_link"]').val("http://seedtwin.ajency.in/register/?"+data.invite_key+"#"+invite_type)
+         
