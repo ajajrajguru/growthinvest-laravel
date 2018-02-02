@@ -2112,7 +2112,7 @@ class InvestorController extends Controller
         $nomineeDetails['domiciled']                          = $requestData['domiciled'];
         $nomineeDetails['tinnumber']                          = $requestData['tinnumber'];
         $nomineeDetails['city']                               = $requestData['account_city'];
-        $nomineeDetails['county']                             = $requestData['account_county'];
+        $nomineeDetails['country']                             = $requestData['account_country'];
         $nomineeDetails['telephone']                          = $requestData['account_telephone'];
         $nomineeDetails['address']                            = $requestData['account_address'];
         $nomineeDetails['postcode']                           = $requestData['account_postcode'];
