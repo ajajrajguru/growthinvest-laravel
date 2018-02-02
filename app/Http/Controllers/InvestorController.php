@@ -442,7 +442,6 @@ class InvestorController extends Controller
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
-
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client registration details added successfully and being redirected to certification stage.' : 'You are being redirected to certification page';
         Session::flash('success_message', $successMessage);
 
@@ -1933,7 +1932,7 @@ class InvestorController extends Controller
         $data['sectors']        = $sectors;
         $data['breadcrumbs']    = $breadcrumbs;
         $data['pageTitle']      = 'Add Investor : Additional Information';
-        $data['mode']           = 'view';
+        $data['mode']           = (empty($additionalInfo)) ? 'edit':'view';
         $data['activeMenu']     = 'add_clients';
 
         return view('backoffice.clients.additional-information')->with($data);
@@ -2023,12 +2022,9 @@ class InvestorController extends Controller
         $financialAdvInfo->data_value = $investorFai;
         $financialAdvInfo->save();
 
-        
-
-
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client Additional Information has successfully been added.' : 'Thank you. The Additional Information page has now been successfully updated';
         Session::flash('success_message', $successMessage);
-   
+
         return redirect(url('backoffice/investor/' . $giCode . '/additional-information'));
 
     }
@@ -2057,18 +2053,18 @@ class InvestorController extends Controller
 
         }
 
-        $data['countyList']              = getCounty();
-        $data['countryList']             = getCountry();
-        $data['investor']                = $investor;
+        $data['countyList']           = getCounty();
+        $data['countryList']          = getCountry();
+        $data['investor']             = $investor;
         $data['taxCertificateSentTo'] = (!empty($nomineeApplication)) ? $nomineeApplication->tax_certificate_sent_to : '';
-        $data['idVerificationStatus']  = (!empty($nomineeApplication)) ? $nomineeApplication->id_verification_status : '';
-        $data['isUsPerson']            = (!empty($nomineeApplication)) ? $nomineeApplication->is_us_person : '';
-        $data['nomineeDetails']          = (!empty($nomineeApplication)) ? $nomineeApplication->details : [];
-        $data['investorFai']             = $investorFai;
-        $data['breadcrumbs']             = $breadcrumbs;
-        $data['pageTitle']               = 'Add Investor : Client Investment Account';
-        $data['mode']                    = 'edit';
-        $data['activeMenu']              = 'add_clients';
+        $data['idVerificationStatus'] = (!empty($nomineeApplication)) ? $nomineeApplication->id_verification_status : '';
+        $data['isUsPerson']           = (!empty($nomineeApplication)) ? $nomineeApplication->is_us_person : '';
+        $data['nomineeDetails']       = (!empty($nomineeApplication)) ? $nomineeApplication->details : []; 
+        $data['investorFai']          = $investorFai;
+        $data['breadcrumbs']          = $breadcrumbs;
+        $data['pageTitle']            = 'Add Investor : Client Investment Account';
+        $data['mode']                 = (empty($nomineeApplication)) ? 'edit':'view';
+        $data['activeMenu']           = 'add_clients';
 
         return view('backoffice.clients.investment-account')->with($data);
 
@@ -2110,6 +2106,7 @@ class InvestorController extends Controller
         $nomineeDetails['surname']                            = $requestData['surname'];
         $nomineeDetails['forename']                           = $requestData['forename'];
         $nomineeDetails['dateofbirth']                        = $requestData['dateofbirth'];
+        $nomineeDetails['nationalinsuranceno']                = $requestData['nationalinsuranceno'];
         $nomineeDetails['nonationalinsuranceno']              = (isset($requestData['nonationalinsuranceno'])) ? $requestData['nonationalinsuranceno'] : '';
         $nomineeDetails['nationality']                        = $requestData['nationality'];
         $nomineeDetails['domiciled']                          = $requestData['domiciled'];
@@ -2153,6 +2150,7 @@ class InvestorController extends Controller
         $nomineeDetails['subscriptionaccountname']            = $requestData['subscriptionaccountname'];
         $nomineeDetails['subscriptionaccountno']              = $requestData['subscriptionaccountno'];
         $nomineeDetails['subscriptionreffnamelname']          = $requestData['subscriptionreffnamelname'];
+        $nomineeDetails['section_status']                     = $requestData['section_status'];
 
         $nomineeApplication = $investor->investorNomineeApplication();
         if (empty($nomineeApplication)) {
@@ -2166,9 +2164,6 @@ class InvestorController extends Controller
         $nomineeApplication->details                          = $nomineeDetails;
         $nomineeApplication->chargesfinancial_advisor_details = $investorFai;
         $nomineeApplication->save();
-
- 
-
 
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
         Session::flash('success_message', $successMessage);

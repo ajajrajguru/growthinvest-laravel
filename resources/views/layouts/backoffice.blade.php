@@ -11,7 +11,7 @@
     <link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
 
-    <script src="{{ asset('/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+    
 @endsection
 
 @section('js')
@@ -26,6 +26,7 @@
     <!-- Parsley text validation -->
     <script type="text/javascript" src="{{ asset('/bower_components/parsleyjs/dist/parsley.min.js') }}" ></script>
 
+    <script src="{{ asset('/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 
 @endsection
 
