@@ -347,13 +347,16 @@ class UserController extends Controller
         $users = $userObj->allUsers();
 
         $fileName = 'approved_intermediary';
-        $header   = ['Platform GI Code Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+
+        $header   = ['Platform GI Code','Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+
         $userData = [];
 
         foreach ($users as $user) {
             $userData[] = [ $user->gi_code, 
                             title_case($user->first_name . ' ' . $user->last_name),
                             $user->email,
+                            title_case($user->roles()->pluck('display_name')->implode(' ')),
                             (!empty($user->firm)) ? $user->firm->name : '',
                             $user->telephone_no
             ];

@@ -61,6 +61,11 @@ class User extends Authenticatable
         return $this->hasMany('App\UserHasCertification', 'user_id');
     }
 
+    public function nomineeApplication()
+    {
+        return $this->hasOne('App\NomineeApplication', 'user_id');
+    }
+
     public function userAdditionalInfo()
     {
         $userData = $this->userData()->where('data_key','additional_info')->first();
@@ -76,6 +81,12 @@ class User extends Authenticatable
     public function userIntermidaiteCompInfo()
     {
         $userData = $this->userData()->where('data_key','intermediary_company_info')->first();
+        return $userData;
+    }
+
+    public function investorNomineeApplication()
+    {
+        $userData = $this->nomineeApplication()->first();
         return $userData;
     }
 

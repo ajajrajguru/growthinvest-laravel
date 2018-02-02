@@ -82,6 +82,7 @@
                         </div>
                     </div>
 
+                    
                     <ul class="progress-indicator">
                         <li class="active">
                             <a href="javascript:void(0)">Registration</a>
@@ -96,7 +97,7 @@
                             <span class="bubble"></span>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">Investment Account</a>
+                            <a href="{{ ($investor->id) ? url('backoffice/investor/'.$investor->gi_code.'/investment-account'): 'javascript:void(0)'}}">Investment Account</a>
                             <span class="bubble"></span>
                         </li>
                     </ul>
@@ -132,7 +133,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Title  </label>
-                            <select name="title" id="user-title" class="form-control editmode @if($mode=='view') d-none @endif">    
+                            <select name="title" id="user-title" class="form-control editmode @if($mode=='view') d-none @endif" >    
 
                                 <option value="">Select</option>                                                                                                    
                                 <option value="mr" @if(!$investor->id && old('title') == "mr") selected @endif @if($investor->id && $investor->title == "mr") selected @endif >Mr</option>                                                                                            

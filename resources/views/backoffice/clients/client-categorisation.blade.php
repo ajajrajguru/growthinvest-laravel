@@ -97,7 +97,7 @@
                             <span class="bubble"></span>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">Investment Account</a>
+                            <a href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account</a>
                             <span class="bubble"></span>
                         </li>
                     </ul>
@@ -344,7 +344,7 @@
                                        <input type="checkbox" class="custom-control-input retail-input" name="ri_check_0" id="ri_acceptInvestments" @if($isRetail && !empty($investorCertification) && isset($investorCertification->details['conditions']) && in_array('ri_check_0',$investorCertification->details['conditions'])) checked @endif>
                                        <label class="custom-control-label normal text-primary" for="ri_acceptInvestments">
                                     @if(Auth::user()->hasPermissionTo('is_wealth_manager'))    
-                                       I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
+                                       I accept on behalf of my client that the Investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
                                     @else
                                         I accept that the investments to which the promotions will relate may expose him/her to a significant risk of losing all of the money or other assets invested. I am aware that it is open to him/her to seek advice from an authorised person who specialises in advising on non-readily realisable securities.
                                     @endif
@@ -903,11 +903,11 @@
                             <div class="form-group">
                                 <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_yes" name="havefinancialadvisor" value="yes" class="custom-control-input has-financial-advisor" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'yes') checked @endif >
                                   <label class="custom-control-label medium" for="havefinancialadvisor_yes">Yes</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') checked @endif>
+                                  <input type="radio" id="havefinancialadvisor_no" name="havefinancialadvisor" value="no" class="custom-control-input has-financial-advisor" @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') checked @endif>
                                   <label class="custom-control-label medium" for="havefinancialadvisor_no">No</label>
                                 </div>
                             </div>
@@ -924,7 +924,7 @@
                                 </div>
                             </div>
 
-                            <div id="" role="tablist" class="gi-collapse mb-3">
+                            <div id="" role="tablist" class="gi-collapse mb-3 advised-investor-questionnaire @if(!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] == 'no') d-none @endif">
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingOne">
                                         <a data-toggle="collapse" href="#collapse1" role="button">

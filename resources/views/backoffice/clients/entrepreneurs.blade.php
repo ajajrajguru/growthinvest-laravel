@@ -67,7 +67,10 @@
                                         <option value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
                                     </select>
-                                    <small>Select the firm whose business owners you need to view</small>
+                                    <small><i>Select the firm whose business owners you need to view</i></small>
+                                </div>
+                                <div class="col-md-12 align-self-end text-right">
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-sm entrepreneurs-reset-filters">Reset filter</a>
                                 </div>
                                
                             </div>

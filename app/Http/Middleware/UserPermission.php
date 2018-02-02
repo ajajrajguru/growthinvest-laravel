@@ -52,6 +52,8 @@ class UserPermission
                 'backoffice/investor/{giCode}/save-client-categorisation'  => ['add_investor'],
                 'backoffice/investor/{giCode}/additional-information'      => ['add_investor'],
                 'backoffice/investor/{giCode}/save-additional-information' => ['add_investor'],
+                'backoffice/investor/{giCode}/investment-account'          => ['add_investor'],
+                'backoffice/investor/{giCode}/save-investment-account'     => ['add_investor'],
                 'backoffice/investor/download-certification/{fileid}'      => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
 
                 'backoffice/entrepreneurs'                                 => ['view_all_business_owners', 'view_firm_business_owners'],
@@ -62,7 +64,7 @@ class UserPermission
                 'backoffice/fundmanager/export-fundmanagers'               => ['view_all_fund_managers', 'view_firm_fund_managers'],
                 'backoffice/business-listings'                             => ['view_backoffice_proposals', 'view_firm_business_proposals'],
                 'backoffice/business-listings/get-businesslistings'        => ['view_backoffice_proposals', 'view_firm_business_proposals'],
-                'backoffice/business-listing/export-business-listings'    => ['view_backoffice_proposals', 'view_firm_business_proposals'],
+                'backoffice/business-listing/export-business-listings'     => ['view_backoffice_proposals', 'view_firm_business_proposals'],
 
             ],
 

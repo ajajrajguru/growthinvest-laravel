@@ -82,6 +82,10 @@ class FundmanagerController extends Controller
                 $source = "Intermediary";
             }
 
+            if(!is_null($fundmanager->invite_key) && $fundmanager->invite_key!=""){
+                $source = "Invited";
+            }
+
             $fundmanagers_data[] = [
                 'name'            => $nameHtml,
                 'email'           => $fundmanager->email,
