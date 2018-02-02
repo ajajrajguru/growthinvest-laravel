@@ -88,6 +88,17 @@ ul.statistics {
 	&:not(:last-of-type) {
 		margin-bottom: 15px;
 	}
+	.media {
+		@media (max-width: 767px) {
+			flex-wrap: wrap;
+		}
+		.proposal-logo,
+		.media-body {
+			@media (max-width: 767px) {
+				flex-basis: 100%;
+			}
+		}
+	}
 }
 
 // management team
