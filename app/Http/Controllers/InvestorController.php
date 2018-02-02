@@ -1932,7 +1932,7 @@ class InvestorController extends Controller
         $data['sectors']        = $sectors;
         $data['breadcrumbs']    = $breadcrumbs;
         $data['pageTitle']      = 'Add Investor : Additional Information';
-        $data['mode']           = 'view';
+        $data['mode']           = (empty($additionalInfo)) ? 'edit':'view';
         $data['activeMenu']     = 'add_clients';
 
         return view('backoffice.clients.additional-information')->with($data);
@@ -2063,7 +2063,7 @@ class InvestorController extends Controller
         $data['investorFai']          = $investorFai;
         $data['breadcrumbs']          = $breadcrumbs;
         $data['pageTitle']            = 'Add Investor : Client Investment Account';
-        $data['mode']                 = 'edit';
+        $data['mode']                 = (empty($nomineeApplication)) ? 'edit':'view';
         $data['activeMenu']           = 'add_clients';
 
         return view('backoffice.clients.investment-account')->with($data);

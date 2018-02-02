@@ -5,6 +5,21 @@
 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
+
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+        // select2
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy'
+        });
+    });
+        
+
+  </script>
+
+
 @endsection
 @section('backoffice-content')
 
@@ -198,7 +213,7 @@
 
                                             <div class="form-group">
                                                 <label>Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control text-input-status completion_status" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
+                                                <input type="text" class="form-control datepicker text-input-status completion_status" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
                                             </div>
 
                                             <div class="form-group">
@@ -975,7 +990,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Expected Date of Bank Transfer</label>
-                                                <input type="text" class="form-control bank-input text-input-status completion_status" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
+                                                <input type="text" class="form-control datepicker bank-input text-input-status completion_status" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
                                             </div>
                                         </div>
                                     </div>
