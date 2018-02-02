@@ -60,34 +60,33 @@ ul.statistics {
 
 
 /* other rounds tab */
-.other-rounds {
-	.proposal-card {
-		.proposal-logo {
-			// padding: 15px;
-			.logo {
-
-			}
+.proposal_horizontal-card {
+	.proposal-logo {
+		width: 60px;
+		height: 60px;
+		img {
+			max-width: 60px;
+			height: auto;
 		}
-		.proposal-details {
-			// padding: 15px;
-			border-right: 1px solid @gray;
-			@media (max-width: 767px) {
-				border-right: none;
-			}
-			.additional-info {
-				[class*='col-'] {
-					&:not(:last-of-type) {
-						border-right: 1px solid @gray;
-						@media (max-width: 767px) {
-							border-right: none;
-						}
+	}
+	.proposal-details {
+		border-right: 1px solid @gray;
+		@media (max-width: 767px) {
+			border-right: none;
+		}
+		.additional-info {
+			[class*='col-'] {
+				&:not(:last-of-type) {
+					border-right: 1px solid @gray;
+					@media (max-width: 767px) {
+						border-right: none;
 					}
 				}
 			}
 		}
-		.proposal-view {
-			// padding: 15px;
-		}
+	}
+	&:not(:last-of-type) {
+		margin-bottom: 15px;
 	}
 }
 
@@ -106,5 +105,12 @@ ul.statistics {
 			max-width: 150px;
 			height: auto;
 		}
+	}
+}
+
+// modal fix (modal hiding behind overlay)
+.modal-open {
+	.mm-slideout {
+		z-index: initial;
 	}
 }

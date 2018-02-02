@@ -855,3 +855,56 @@ ul.statistics li:last-of-type {
     color: inherit;
   }
 }
+/* other rounds tab */
+.proposal_horizontal-card .proposal-logo {
+  width: 60px;
+  height: 60px;
+}
+.proposal_horizontal-card .proposal-logo img {
+  max-width: 60px;
+  height: auto;
+}
+.proposal_horizontal-card .proposal-details {
+  border-right: 1px solid #dddddd;
+}
+@media (max-width: 767px) {
+  .proposal_horizontal-card .proposal-details {
+    border-right: none;
+  }
+}
+.proposal_horizontal-card .proposal-details .additional-info [class*='col-']:not(:last-of-type) {
+  border-right: 1px solid #dddddd;
+}
+@media (max-width: 767px) {
+  .proposal_horizontal-card .proposal-details .additional-info [class*='col-']:not(:last-of-type) {
+    border-right: none;
+  }
+}
+.proposal_horizontal-card:not(:last-of-type) {
+  margin-bottom: 15px;
+}
+@media (max-width: 767px) {
+  .management-individual {
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+  }
+}
+.management-individual .avatar {
+  width: 150px;
+  height: 150px;
+}
+@media (max-width: 767px) {
+  .management-individual .avatar {
+    -webkit-flex-basis: 100%;
+        -ms-flex-preferred-size: 100%;
+            flex-basis: 100%;
+  }
+}
+.management-individual .avatar img {
+  max-width: 150px;
+  height: auto;
+}
+.modal-open .mm-slideout {
+  z-index: initial;
+}
