@@ -126,6 +126,10 @@ function certificationTypes()
     return ['self_certified' => 'Self Certified', 'approved' => 'Approved', 'uncertified' => 'Uncertified'];
 }
 
+function getCaptchaKey(){
+    return env('captcha_private_key');
+}
+
 function recaptcha_validate($recaptcha)
 {
     $captcha    = $recaptcha;

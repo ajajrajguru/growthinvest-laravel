@@ -59,26 +59,29 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
  	Route::resource( 'business-listings', 'BusinessListingController' );
  	Route::post( 'business-listings/get-businesslistings', 'BusinessListingController@getBusinessListings' );
  	Route::get('business-listing/export-business-listings','BusinessListingController@exportBusinessListings');
+     Route::resource('current-business-valuations', 'CurrentBusinessValuation');
+    Route::get('entrepreneur/registration', 'EntrepreneurController@registration');
+    Route::post('entrepreneur/save-registration', 'EntrepreneurController@saveRegistration');
+    Route::get('entrepreneur/{giCode}/registration', 'EntrepreneurController@editRegistration');
+
+    Route::get('fundmanager/registration', 'FundmanagerController@registration');
+    Route::post('fundmanager/save-registration', 'FundmanagerController@saveRegistration');
+    Route::get('fundmanager/{giCode}/registration', 'FundmanagerController@editRegistration');
+    Route::get('firm-invite/{giCode}/{type}', 'FirmController@getInvite');
+
+
 
 });
 
- 
+Route::resource('users', 'UserController');
+Route::resource('roles', 'RoleController');
+Route::resource('permissions', 'PermissionController');
 
-	Route::resource('users','UserController');
-	Route::resource('roles', 'RoleController');
-	Route::resource('permissions', 'PermissionController');
-
-Route::group(['middleware' => ['auth']], function () { 
+Route::group(['middleware' => ['auth']], function () {
 });
- 
-
-
 
 Auth::routes();
 
 Route::get('/', 'UserController@index')->name('home');
- 
+
 Route::get('/logout', 'Auth\LoginController@logout');
-
-
-

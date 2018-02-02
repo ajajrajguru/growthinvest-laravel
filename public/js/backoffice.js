@@ -389,10 +389,75 @@
       business_listings_type = $('select[name="business_listings_type"]').val();
       return window.open("/backoffice/business-listing/export-business-listings?firm_name=" + firm_name + "&business_listings_type=" + business_listings_type);
     });
-    return $('body').on('click', '.business-listings-reset-filters', function() {
+    $('body').on('click', '.business-listings-reset-filters', function() {
       $('select[name="firm_name"]').val('').trigger('change');
       $('select[name="business_listings_type"]').val('').trigger('change');
       businesslistingsTable.ajax.reload();
+    });
+    businesslistingsTable = $('#datatable-currentbusinessvaluations').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/business-listings/get-businesslistings',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_name = $('select[name="firm_name"]').val();
+          filters.business_listings_type = $('select[name="business_listings_type"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': 'logo',
+          "orderable": false
+        }, {
+          'data': 'name'
+        }, {
+          'data': 'duediligence'
+        }, {
+          'data': 'created_date',
+          "orderable": false
+        }, {
+          'data': 'modified_date',
+          "orderable": false
+        }, {
+          'data': 'firmtoraise'
+        }, {
+          'data': 'activity_sitewide',
+          "orderable": false
+        }, {
+          'data': 'activity_firmwide',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ]
+    });
+    return $('.btn-view-invite').click(function() {
+      var firmid, invite_type;
+      invite_type = $(this).attr('invite-type');
+      firmid = $('#invite_firm_name').val();
+      if (firmid === "") {
+        alert("Please select firm");
+        return;
+      }
+      return $.ajax({
+        type: 'get',
+        url: '/backoffice/firm-invite/' + firmid + '/' + invite_type,
+        success: function(data) {
+          console.log(data);
+          CKEDITOR.instances['invite_content'].setData(data.invite_content);
+          return $('input[name="invite_link"]').val("http://seedtwin.ajency.in/register/?" + data.invite_key + "#" + invite_type);
+        }
+      });
     });
   });
 
