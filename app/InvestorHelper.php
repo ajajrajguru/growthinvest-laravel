@@ -114,6 +114,31 @@ function get_input_lable_box_style($input_element_value, $type_input = "text", $
 
 }
 
+function nl2br_preg_rnnr($string, $replace_char = '<br/>')
+{
+    //return preg_replace('/(\r\n|\n|\r)/', $replace_char, $string);
+    $new_comma_seperated_string = preg_replace('/(\r\n|\n|\r)/', $replace_char, $string);
+
+    $new_string_array     = explode(',', $new_comma_seperated_string);
+    $formated_new_string2 = "";
+
+    $count = count($new_string_array);
+    for ($i = 0; $i < $count; $i++) {
+
+        if (trim($new_string_array[$i]) != "") {
+            if ($i > 0) {
+                $formated_new_string2 .= ", ";
+            }
+
+            $formated_new_string2 .= $new_string_array[$i];
+        }
+
+    }
+
+    return $formated_new_string2;
+
+}
+
 function transferAssetsSubheaders($label, $sublabel = '', $args = array())
 {
 

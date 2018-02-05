@@ -1177,7 +1177,7 @@
                         </div>
                         <div>
                             
-                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}" target="_blank"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
                             <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>
