@@ -2200,7 +2200,7 @@ class InvestorController extends Controller
             }
 
             $output_link       = $destination_dir . '/nominee_application_pdf_' . $now_date . '.pdf';
-            $callbackurl       = url('investor/adobe/signed-doc-callback') . '?type=nominee_application';
+            $callbackurl       = url('investor/adobe/'.$investor->gi_code.'/signed-doc-callback') . '?type=nominee_application';
             $adobesign_message = "Please sign GrownthInvest application form document";
             $adobesign_name    = "GrownthInvest Application Form";
 
@@ -2228,8 +2228,17 @@ class InvestorController extends Controller
         }
     }
 
-    public function updateInvestorNomineePdf()
+    public function updateInvestorNomineePdf(Request $request,$giCode)
     {
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $nomineeApplication  = $investor->investorNomineeApplication();
+        $nomineeApplication->signed_url = '1';
+        
+        $nomineeApplication->save();
 
     }
 
