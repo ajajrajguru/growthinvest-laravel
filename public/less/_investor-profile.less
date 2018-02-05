@@ -20,3 +20,19 @@
 		}
 	}
 }
+
+.message-board {
+	& > .media {
+		&:not(:last-of-type) {
+			margin-bottom: 15px;
+		}
+	}
+	.media-avatar {
+		height: 40px;
+		width: 40px;
+		& > img {
+			max-width: 40px;
+			height: auto;
+		}
+	}
+}
