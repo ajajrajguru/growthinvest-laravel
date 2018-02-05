@@ -744,9 +744,9 @@ label.required:after {
   font-size: 0.85rem;
 }
 .mm-wrapper_opened header {
-  -webkit-transform: translateY(-99.99999999px);
-      -ms-transform: translateY(-99.99999999px);
-          transform: translateY(-99.99999999px);
+  -webkit-transform: translateY(-100px);
+      -ms-transform: translateY(-100px);
+          transform: translateY(-100px);
 }
 @-webkit-keyframes fadeInUp {
   0% {
@@ -984,4 +984,21 @@ ul.statistics li:last-of-type {
   #management-team .carousel-control-next {
     right: 0;
   }
+}
+.investor-keypoints li {
+  line-height: 24px;
+}
+.investor-keypoints li a {
+  font-weight: 600;
+}
+.investor-keypoints li a:hover {
+  text-decoration: none;
+}
+.investor-info .investor-avatar {
+  height: 80px;
+  width: 80px;
+}
+.investor-info .investor-avatar img {
+  max-width: 80px;
+  height: auto;
 }
