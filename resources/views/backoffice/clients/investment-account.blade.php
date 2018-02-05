@@ -14,6 +14,8 @@
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy'
         });
+
+        $('[data-toggle="tooltip"]').tooltip()
     });
         
 
@@ -1179,7 +1181,20 @@
                         <div>
                             
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}" target="_blank"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
-                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature"><i class="fa fa-send"></i> Submit</button>
+
+                            @php
+                            
+                            $disableSubmit = '';
+                            if(isset($nomineeDetails['section_status']) && !empty($nomineeDetails['section_status']) && in_array('incomplete',$nomineeDetails['section_status'])){
+                                $disableSubmit = 'disabled';
+                            }
+                            
+                            if($adobeDocKey != '')
+                            {
+                                $disableSubmit = 'disabled';
+                            }
+                            @endphp
+                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature" {{ $disableSubmit }}  @if($adobeDocKey != '') data-toggle="tooltip"  title="Nominee Application is already sent for signature" data-original-title="Nominee Application is already sent for signature" @endif ><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>
 

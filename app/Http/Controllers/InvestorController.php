@@ -2017,6 +2017,8 @@ class InvestorController extends Controller
         $data['idVerificationStatus'] = (!empty($nomineeApplication)) ? $nomineeApplication->id_verification_status : '';
         $data['isUsPerson']           = (!empty($nomineeApplication)) ? $nomineeApplication->is_us_person : '';
         $data['nomineeDetails']       = (!empty($nomineeApplication)) ? $nomineeApplication->details : [];
+        $data['adobeDocKey']       = (!empty($nomineeApplication)) ? $nomineeApplication->adobe_doc_key : '';
+        $data['signedUrl']       = (!empty($nomineeApplication)) ? $nomineeApplication->signed_url : '';
         $data['investorFai']          = $investorFai;
         $data['breadcrumbs']          = $breadcrumbs;
         $data['pageTitle']            = 'Add Investor : Client Investment Account';
