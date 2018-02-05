@@ -2228,21 +2228,30 @@ class InvestorController extends Controller
         }
     }
 
-    public function updateInvestorNomineePdf(Request $request,$giCode)
+    public function updateInvestorNomineePdf(Request $request)
     {
-        $investor = User::where('gi_code', $giCode)->first();
-        if (empty($investor)) {
-            abort(404);
-        }
+        $eventType = $request->input("eventType");
 
-        $nomineeApplication  = $investor->investorNomineeApplication();
+        if ($eventType == "ESIGNED") {
+            $dockey = $request->input("documentKey");
 
-        $adobe_echo_sign = new AdobeSignature();
-        $dockeyUrl     = $adobe_echo_sign->getAdobeDocUrlByDocKey($nomineeApplication->adobe_doc_key);
-        $nomineeApplication->signed_url = $dockeyUrl ;
+            $response_data   = '';
+            $returnd_doc_key = '';
+
+            $type          = 'nominee';
+            $adobe_echo_sign = new AdobeSignature();
         
-        $nomineeApplication->save();
+            $nomineeData = NomineeApplication::where('adobe_doc_key',$dockey)->first();
+            
+            if(!empty($nomineeData)){
+                $nomineeApplication->signed_url = $dockeyUrl ;
+                $nomineeApplication->doc_signed_date = date('Y-m-d H:i:s') ;
+                $nomineeApplication->save();
+            }
+  
 
+        }
+ 
     }
 
 }

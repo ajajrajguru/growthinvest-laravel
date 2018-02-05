@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'investor/adobe/{giCode}/signed-doc-callback'
+        '/investor/adobe/signed-doc-callback'
     ];
 }

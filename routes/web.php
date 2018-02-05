@@ -76,7 +76,7 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 });
 
 
-Route::post( 'investor/adobe/{giCode}/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf' );
+Route::post( 'investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf' );
 
 Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController');
