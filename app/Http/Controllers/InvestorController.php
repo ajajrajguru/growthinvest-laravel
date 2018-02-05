@@ -2239,11 +2239,12 @@ class InvestorController extends Controller
             $returnd_doc_key = '';
 
             $type          = 'nominee';
-            $adobe_echo_sign = new AdobeSignature();
+            $adobeechosign = new AdobeSignature();
         
             $nomineeData = NomineeApplication::where('adobe_doc_key',$dockey)->first();
             
             if(!empty($nomineeData)){
+                $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey);
                 $nomineeApplication->signed_url = $dockeyUrl ;
                 $nomineeApplication->doc_signed_date = date('Y-m-d H:i:s') ;
                 $nomineeApplication->save();
