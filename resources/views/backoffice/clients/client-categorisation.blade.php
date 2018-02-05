@@ -97,7 +97,7 @@
                             <span class="bubble"></span>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">Investment Account</a>
+                            <a href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account</a>
                             <span class="bubble"></span>
                         </li>
                     </ul>

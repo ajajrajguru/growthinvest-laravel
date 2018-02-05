@@ -352,7 +352,8 @@ $(document).ready ->
     else
       $('.investortype-angel').addClass('d-none');
   
-  
+
+
   $('.save-elective-prof-inv').click ->
     btnObj = $(this)
     
@@ -399,5 +400,153 @@ $(document).ready ->
             $('.gi-success').removeClass('d-none').find('#message').html("Your client has successfully been confirmed as Investor on our platform. He/She will be now be able to participate in business proposal.")
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
+
+  $(document).on 'change', 'input[name="advdetailsnotapplicable"]', ->
+    if $(this).is(':checked')
+      $('.adv-details-applicable-data').find('.form-control').removeClass('text-input-status').removeClass('completion_status')
+    else
+      $('.adv-details-applicable-data').find('.form-control').addClass('text-input-status').addClass('completion_status')  
+
+  $(document).on 'change', 'input[name="nonationalinsuranceno"]', ->
+    if $(this).is(':checked')
+      $('.nonationalinsuranceno-container').removeClass('d-none');
+      $('input[name="nationality"]').attr('data-parsley-required',true).addClass('text-input-status').addClass('completion_status') 
+      $('input[name="domiciled"]').attr('data-parsley-required',true).addClass('text-input-status').addClass('completion_status')  
+    else
+      $('.nonationalinsuranceno-container').addClass('d-none');
+      $('input[name="nationality"]').attr('data-parsley-required',false).removeClass('text-input-status').removeClass('completion_status')  
+      $('input[name="domiciled"]').attr('data-parsley-required',false).removeClass('text-input-status').removeClass('completion_status')  
+
+  $(document).on 'change', 'input[name="sendtaxcertificateto"]', ->
+    if($(this).val()=='yourself')
+      $('.sendtaxcertificateto-yourself').addClass('d-none');
+      $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required',false).removeClass('text-input-status').removeClass('completion_status')   
+    else
+      $('.sendtaxcertificateto-yourself').removeClass('d-none');
+      $('.sendtaxcertificateto-yourself').find('.form-control').attr('data-parsley-required',true).addClass('text-input-status').addClass('completion_status') 
+
+  $(document).on 'change', 'input[name="transfer_at_later_stage"]', ->
+    if($(this).val()=='no')
+      $('.bank-input').each ->
+        if($(this).val() != '')
+          $(this).attr('data-parsley-required',true).attr('readonly',false).addClass('text-input-status').addClass('completion_status') 
+         
+      $('input[name="subscriptiontransferdate"]').attr('data-parsley-required',false).attr('readonly',false).addClass('text-input-status').addClass('completion_status')   
+    else
+      $('.bank-input').attr('data-parsley-required',false).attr('readonly',true).removeClass('text-input-status').removeClass('completion_status')    
+
+  $(document).on 'change', 'input[name="nomineeverification"]', ->
+    status = 'Not Yet Requested'
+    if $(this).is(':checked')
+      status = $(this).attr('data-text')
+      if($(this).val()=='complete_pending_evidence')
+        $('input[name="nomverificationwithoutface"]').attr('readonly',false) 
+        $('.requested-input').prop('checked',false) 
+      else if($(this).val()=='requested')
+        $('input[name="nomverificationwithoutface"]').attr('readonly',true) 
+        $('.complete-pending-evidence-input').prop('checked',false) 
+        $('input[name="nomverificationwithoutface"]').prop('checked',false) 
+
+    $('input[name="verdisplaystatus"]').val(status) 
+
+ 
+  $(document).on 'change', 'input[name="subscriptioninvamntbank"]', ->
+    if($(this).val() != '')
+      $('input[name="subscriptioninvamntcheq"]').attr('readonly',true).attr('data-parsley-required',false)
+      $('input[name="subscriptioninvamntcheq"]').removeClass('text-input-status').removeClass('completion_status')
+    else
+      $('input[name="subscriptioninvamntcheq"]').attr('readonly',false).attr('data-parsley-required',true)
+      $('input[name="subscriptioninvamntcheq"]').addClass('text-input-status').addClass('completion_status')
+
+
+  $(document).on 'change', 'input[name="subscriptioninvamntcheq"]', ->
+    if($(this).val() != '')
+      $('input[name="subscriptioninvamntbank"]').attr('readonly',true).attr('data-parsley-required',false)
+      $('input[name="subscriptioninvamntbank"]').removeClass('text-input-status').removeClass('completion_status')
+    else
+      $('input[name="subscriptioninvamntbank"]').attr('readonly',false).attr('data-parsley-required',true)
+      $('input[name="subscriptioninvamntbank"]').addClass('text-input-status').addClass('completion_status')
+
+ 
+  $(document).on 'change', '.completion_status', ->
+    cardObj = $(this).closest('.parent-tabpanel')
+    sectionNo = cardObj.attr('data-section')
+    dataValid = 0
+
+    # validate section
+    cardObj.find('.completion_status').each ->
+      if(!$(this).parsley().isValid())
+        dataValid++
+
+    # check if data is complete
+    dataInComp = 0
+
+    cardObj.find('.text-input-status').each ->
+      if($(this).val() == '')
+        dataInComp++
+
+    cardObj.find('.checked-input-status').each ->
+      ckName = $(this).attr 'name'
+      if !$('input[name="'+ckName+'"]').is(':checked')
+        dataInComp++
+
+    console.log dataInComp
+    console.log dataValid
+    if dataInComp == 0 && dataValid == 0
+      console.log 'Complete'
+      $('.section'+sectionNo+'-status').text('Complete') 
+      $('.section'+sectionNo+'-status-input').val('complete') 
+    else
+      console.log 'Incomplete'
+      $('.section'+sectionNo+'-status').text('Incomplete') 
+      $('.section'+sectionNo+'-status-input').val('incomplete')
+    
+ 
+  $(document).on 'keyup', '.invest-perc', ->
+    $('.investment-input').attr('readonly',false)
+    $('.aic-investment-input').attr('readonly',false)
+    ipEmpty = true
+    $('.invest-perc').each ->
+      if($(this).val()!="" && ipEmpty)
+        ipEmpty = false
+
+    if !ipEmpty
+      $('.aic-investment-input').attr('readonly',true)
+      $('.invest-amount').attr('readonly',true)
+
+  $(document).on 'keyup', '.invest-amount', ->
+    $('.investment-input').attr('readonly',false)
+    $('.aic-investment-input').attr('readonly',false)
+    iaEmpty = true
+    $('.invest-amount').each ->
+      if($(this).val()!="" && iaEmpty)
+        iaEmpty = false
+
+    if !iaEmpty
+      $('.aic-investment-input').attr('readonly',true)
+      $('.invest-perc').attr('readonly',true)
+
+  $(document).on 'keyup', '.aic-investment-perc', ->
+    $('.investment-input').attr('readonly',false)
+    $('.aic-investment-input').attr('readonly',false)
+    if($(this).val()!="")
+      $('.investment-input').attr('readonly',true)
+      $('.aic-investment-amount').attr('readonly',true)
+
+  $(document).on 'keyup', '.aic-investment-amount', ->
+    $('.investment-input').attr('readonly',false)
+    $('.aic-investment-input').attr('readonly',false)
+    if($(this).val()!="")
+      $('.investment-input').attr('readonly',true)
+      $('.aic-investment-perc').attr('readonly',true)
+
+  
+
+
+
+
+
+
+      
  
   

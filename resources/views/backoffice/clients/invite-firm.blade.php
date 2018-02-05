@@ -46,7 +46,7 @@
 
     <div class="d-flex justify-content-between">
         <div>
-            <button type="submit" class="btn btn-primary save-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Save <div class="ld ld-ring ld-spin"></div></button>
+            <button type="submit" class="btn btn-primary save-invite-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Save <div class="ld ld-ring ld-spin"></div></button>
             <button type="submit" class="btn  cancel-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Cancel <div class="ld ld-ring ld-spin"></div></button>
         </div>
         <div>

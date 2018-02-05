@@ -5,7 +5,7 @@
 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
-  <script src='https://www.google.com/recaptcha/api.js'></script>
+
 @endsection
 @section('backoffice-content')
 
@@ -111,7 +111,7 @@
                             <span class="bubble"></span>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">Investment Account</a>
+                            <a href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account</a>
                             <span class="bubble"></span>
                         </li>
                     </ul>
@@ -124,7 +124,7 @@
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                         </div>
                         <div class="">
-                            <a href="#" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a>
+                            <a href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}" class="btn btn-primary mb-4">Next <i class="fa fa-angle-double-right"></i></a>
                         </div>
                     </div>
 
@@ -134,7 +134,10 @@
                         
 
                        
-                         <button class="btn btn-primary pull-right">Edit Details</button>
+                        @if($investor->id)
+                             <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
+                            <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
+                        @endif
                     </h5>
                     <hr class="my-3">
                     <!-- Additional Information Content HERE -->
@@ -154,21 +157,26 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label>Skype ID</label>
-                                        <input type="text" name="skypeid" class="form-control" placeholder="Eg: johnSmith_avon" value="{{ (!empty($additionalInfo) && isset($additionalInfo['skypeid'])) ? $additionalInfo['skypeid']:'' }}"  >
+                                        <input type="text" name="skypeid" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: johnSmith_avon" value="{{ (!empty($additionalInfo) && isset($additionalInfo['skypeid'])) ? $additionalInfo['skypeid']:'' }}"  >
+
+                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['skypeid'])) ? $additionalInfo['skypeid']:'' }}</div>
                                     </div>
                                     <div class="col-sm-6">
                                         <label>LinkedIN</label>
-                                        <input type="text" name="linkedin" class="form-control" placeholder="Eg: www.linkedin.com/john-smith"  value="{{ (!empty($additionalInfo) && isset($additionalInfo['linkedin'])) ? $additionalInfo['linkedin']:'' }}">
+                                        <input type="text" name="linkedin" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: www.linkedin.com/john-smith"  value="{{ (!empty($additionalInfo) && isset($additionalInfo['linkedin'])) ? $additionalInfo['linkedin']:'' }}">
+                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['linkedin'])) ? $additionalInfo['linkedin']:'' }}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label>Facebook</label>
-                                        <input type="text" name="facebook" class="form-control" placeholder="Eg: www.Facebook.com/john-smith" value="{{ (!empty($additionalInfo) && isset($additionalInfo['facebook'])) ? $additionalInfo['facebook']:'' }}" >
+                                        <input type="text" name="facebook" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: www.Facebook.com/john-smith" value="{{ (!empty($additionalInfo) && isset($additionalInfo['facebook'])) ? $additionalInfo['facebook']:'' }}" >
+                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['facebook'])) ? $additionalInfo['facebook']:'' }}</div>
                                     </div>
                                     <div class="col-sm-6">
                                         <label>Twitter</label>
-                                        <input type="text" name="twitter" class="form-control" placeholder="Eg: www.Twitter.com/john-smith" value="{{ (!empty($additionalInfo) && isset($additionalInfo['twitter'])) ? $additionalInfo['twitter']:'' }}" >
+                                        <input type="text" name="twitter" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Eg: www.Twitter.com/john-smith" value="{{ (!empty($additionalInfo) && isset($additionalInfo['twitter'])) ? $additionalInfo['twitter']:'' }}" >
+                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (!empty($additionalInfo) && isset($additionalInfo['twitter'])) ? $additionalInfo['twitter']:'' }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -182,7 +190,7 @@
                         </div>
                         <div class="form-group">
                             <label>Does your client have a financial advisor or a wealth manager (authorised person)?</label>
-                            <div>
+                            <div class=" editmode @if($mode=='view') d-none @endif">
                                 <div class="custom-control custom-radio">
                                   <input type="radio" id="yesrodio1" name="havefinancialadvisor" value="yes" class="custom-control-input has-financial-advisor"  {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='yes') ? 'checked':'' }}>
                                   <label class="custom-control-label normal" for="yesrodio1" >Yes</label>
@@ -192,10 +200,11 @@
                                   <label class="custom-control-label normal" for="norodio1" >No</label>
                                 </div>
                             </div>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor'])) ? title_case($investorFai['havefinancialadvisor']) :'' }}</div>
                         </div>
                         <div class="form-group">
                             <label>Does your client require advice on seed EIS/SEIS?</label>
-                            <div>
+                            <div class="editmode @if($mode=='view') d-none @endif">
                                 <div class="custom-control custom-radio">
                                   <input type="radio" id="yesrodio2" name="requireadviceseedeisoreis" value="yes" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['requireadviceseedeisoreis']) && $investorFai['requireadviceseedeisoreis'] =='yes') ? 'checked':'' }} >
                                   <label class="custom-control-label normal" for="yesrodio2" >Yes</label>
@@ -205,10 +214,11 @@
                                   <label class="custom-control-label normal" for="norodio2" >No</label>
                                 </div>
                             </div>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($investorFai) && isset($investorFai['requireadviceseedeisoreis'])) ? title_case($investorFai['requireadviceseedeisoreis']) :'' }}</div>
                         </div>
                         <div class="form-group">
                             <label>Is your client receiving advice from an Authorised Person in relation to unlisted shares and unlisted debt securities?</label>
-                            <div>
+                            <div class="editmode @if($mode=='view') d-none @endif">
                                 <div class="custom-control custom-radio">
                                   <input type="radio" id="yesrodio3" name="advicefromauthorised" value="yes" class="custom-control-input" {{ (!empty($investorFai) && isset($investorFai['advicefromauthorised']) && $investorFai['advicefromauthorised'] =='yes') ? 'checked':'' }} >
                                   <label class="custom-control-label normal" for="yesrodio3" >Yes</label>
@@ -218,6 +228,7 @@
                                   <label class="custom-control-label normal" for="norodio3">No</label>
                                 </div>
                             </div>
+                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($investorFai) && isset($investorFai['advicefromauthorised'])) ? title_case($investorFai['advicefromauthorised']):'' }}</div>
                         </div>
 
                         <div id="" role="tablist" class="gi-collapse advised-investor-questionnaire mb-3 {{ (!empty($investorFai) && isset($investorFai['havefinancialadvisor']) && $investorFai['havefinancialadvisor'] =='yes') ? '':'d-none' }} ">
@@ -234,81 +245,7 @@
                                     <div class="card-body">
                                         <p><em>To be completed by your adviser/investment institution/intermediary</em></p>
 
-                                        <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Firm Name</label>
-
-                                                        <input type="text" class="form-control" name="companyname" value="{{ (!empty($investorFai) && isset($investorFai['companyname'])) ? $investorFai['companyname']:'' }}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>FCA Firm Reference Number</label>
-                                                        <input type="text" class="form-control" name="fcanumber" value="{{ (!empty($investorFai) && isset($investorFai['fcanumber'])) ? $investorFai['fcanumber']:'' }}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Primary Contact Name</label>
-                                                        <input type="text" class="form-control" name="principlecontact" value="{{ (!empty($investorFai) && isset($investorFai['principlecontact'])) ? $investorFai['principlecontact']:'' }}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Primary Contact's FCA Number</label>
-                                                        <input type="text" class="form-control" name="primarycontactfca" value="{{ (!empty($investorFai) && isset($investorFai['primarycontactfca'])) ? $investorFai['primarycontactfca']:'' }}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Primary Contact Email Address</label>
-                                                        <input type="email" class="form-control" name="email"  data-parsley-type="email" value="{{ (!empty($investorFai) && isset($investorFai['email'])) ? $investorFai['email']:'' }}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Primary Contact Phone Number</label>
-                                                        <input type="text" class="form-control" name="telephone" data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="{{ (!empty($investorFai) && isset($investorFai['telephone'])) ? $investorFai['telephone']:'' }}">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <fieldset>
-                                                        <legend>Firm Address</legend>
-                                                        <div class="form-group">
-                                                            <label>Address 1</label>
-                                                            <textarea class="form-control" name="address">{{ (!empty($investorFai) && isset($investorFai['address'])) ? $investorFai['address']:'' }}</textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Address 2</label>
-                                                            <textarea class="form-control" name="address2">{{ (!empty($investorFai) && isset($investorFai['address2'])) ? $investorFai['address2']:'' }}</textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Town</label>
-                                                            <input type="text" class="form-control" name="city" value="{{ (!empty($investorFai) && isset($investorFai['city'])) ? $investorFai['city']:'' }}">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>County</label>
-                                                            <select class="form-control" name="county">
-                                                                <option value="">Please Select</option>
-                                                   
-                                                                @foreach($countyList as $county) 
-                                                                    <option value="{{ $county }}" @if(!empty($investorFai) && isset($investorFai['county']) && $investorFai['county'] == $county) selected @endif >{{ $county }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label>Postcode</label>
-                                                                    <input type="text" class="form-control" name="postcode" value="{{ (!empty($investorFai) && isset($investorFai['postcode'])) ? $investorFai['postcode']:'' }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <label>Country</label>
-                                                                <select class="form-control" name="country">
-                                                                    <option value="">Please Select</option>
-                                                                     
-                                                                    @foreach($countryList as $code=>$country)
-                                                                        <option value="{{ $code }}" @if(!empty($investorFai) && isset($investorFai['country']) && $investorFai['country'] == $code) selected @endif>{{ $country }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </fieldset>
-                                                </div>
-                                            </div>
+                                        @include('backoffice.clients.firm-data')
                                     </div>
                                 </div>
                             </div>
@@ -332,7 +269,7 @@
                                             <div class="col-sm-12">
                                                 <div class="form-group">
                                                     <label>Self employed or Employed?</label>
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="employed" name="employmenttype" class="custom-control-input" value="Employed" {{ (!empty($additionalInfo) && isset($additionalInfo['employmenttype']) && $additionalInfo['employmenttype'] =='Employed') ? 'checked':'' }}>
                                                           <label class="custom-control-label normal" for="employed">Employed</label>
@@ -342,13 +279,14 @@
                                                           <label class="custom-control-label normal" for="selfemployed">Self Employed</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['employmenttype'])) ? $additionalInfo['employmenttype']:'' }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row ml-2 mr-2 mb-3">
                                             <div class="col-sm-4">
                                                 <label>Total Annual Income: (including Dividends and Pension)</label>
-                                                <select class="form-control" name="totalannualincome" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="totalannualincome" >
                                                      <option value="">Select</option>
                                                       <option value="£ 25,000- £ 50,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalannualincome']) && $additionalInfo['totalannualincome'] =='£ 25,000- £ 50,000') ? 'selected':'' }}>£ 25,000 - £ 50,000</option>
                                                       <option value="£ 51,000- £ 100,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalannualincome']) && $additionalInfo['totalannualincome'] =='£ 51,000- £ 100,000') ? 'selected':'' }}>£ 51,000 - £ 100,000</option>
@@ -356,26 +294,29 @@
                                                       50
                                                       <option value="£ 200,000+" {{ (!empty($additionalInfo) && isset($additionalInfo['totalannualincome']) && $additionalInfo['totalannualincome'] =='£ 200,000+') ? 'selected':'' }}>£ 200,000+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['totalannualincome'])) ? $additionalInfo['totalannualincome'] :'' }}</div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <label class="mb-4">Possible annual investment</label>
-                                                <select class="form-control" name="possibleannualinvestment" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="possibleannualinvestment" >
                                                     <option value="">Select</option>
                                                       <option value="£ 1 - £ 10,000" {{ (!empty($additionalInfo) && isset($additionalInfo['possibleannualinvestment']) && $additionalInfo['possibleannualinvestment'] =='£ 1 - £ 10,000') ? 'selected':'' }}>£ 1 - £ 10,000</option>
                                                       <option value="£ 10,000 - £ 25,000" {{ (!empty($additionalInfo) && isset($additionalInfo['possibleannualinvestment']) && $additionalInfo['possibleannualinvestment'] =='£ 10,000 - £ 25,000') ? 'selected':'' }}>£ 10,000 - £ 25,000</option>
                                                       <option value="£ 25,000 - £ 75,000" {{ (!empty($additionalInfo) && isset($additionalInfo['possibleannualinvestment']) && $additionalInfo['possibleannualinvestment'] =='£ 25,000 - £ 75,000') ? 'selected':'' }}>£ 25,000 - £ 75,000</option>
                                                       <option value="£ 75,000 - £ 100,000" {{ (!empty($additionalInfo) && isset($additionalInfo['possibleannualinvestment']) && $additionalInfo['possibleannualinvestment'] =='£ 75,000 - £ 100,000') ? 'selected':'' }}>£ 75,000 - £ 100,000</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">  {{ (!empty($additionalInfo) && isset($additionalInfo['possibleannualinvestment'])) ? $additionalInfo['possibleannualinvestment']:'' }}</div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <label class="mb-4">Maximum investment in any one project</label>
-                                                <select class="form-control" name="maximuminvestmentinanyoneproject" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="maximuminvestmentinanyoneproject" >
                                                     <option value="">Select</option>
                                                     <option value="£ 1 - £ 10,000" {{ (!empty($additionalInfo) && isset($additionalInfo['maximuminvestmentinanyoneproject']) && $additionalInfo['maximuminvestmentinanyoneproject'] =='£ 1 - £ 10,000') ? 'selected':'' }}>£ 1 - £ 10,000</option>
                                                     <option value="£ 10,000 - £ 25,000" {{ (!empty($additionalInfo) && isset($additionalInfo['maximuminvestmentinanyoneproject']) && $additionalInfo['maximuminvestmentinanyoneproject'] =='£ 10,000 - £ 25,000') ? 'selected':'' }}>£ 10,000 - £ 25,000</option>
                                                     <option value="£ 25,000 - £ 75,000" {{ (!empty($additionalInfo) && isset($additionalInfo['maximuminvestmentinanyoneproject']) && $additionalInfo['maximuminvestmentinanyoneproject'] =='£ 25,000 - £ 75,000') ? 'selected':'' }}>£ 25,000 - £ 75,000</option>
                                                     <option value="£ 75,000 - £ 100,000" {{ (!empty($additionalInfo) && isset($additionalInfo['maximuminvestmentinanyoneproject']) && $additionalInfo['maximuminvestmentinanyoneproject'] =='£ 75,000 - £ 100,000') ? 'selected':'' }}>£ 75,000 - £ 100,000</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['maximuminvestmentinanyoneproject'])) ? $additionalInfo['maximuminvestmentinanyoneproject']:'' }}</div>
                                             </div>
                                         </div>
                                         <div class="row ml-2 mr-2 mb-2">
@@ -387,7 +328,7 @@
                                                     <label class="">Are you looking to invest and actively engage with the company as an Angel?</label>
                                                     @endif
 
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="angel" name="investortype" class="custom-control-input" value="Angel" {{ (!empty($additionalInfo) && isset($additionalInfo['investortype']) && $additionalInfo['investortype'] =='Angel') ? 'checked':'' }}>
                                                           <label class="custom-control-label normal" for="angel">Angel</label>
@@ -397,6 +338,7 @@
                                                           <label class="custom-control-label normal" for="justinvestor"> Just Investor</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['investortype'])) ? $additionalInfo['investortype']:'' }}</div>
                                                     <i class="text-muted"><small>In this instance an Angel is considered to be an individual who alongside the provision of capital, wishes to take some form of active involvement in the business</small></i>
                                                 </div>
                                             </div>
@@ -408,12 +350,13 @@
                                                 @else
                                                 <label class="">Do you have a specific interest in a particular business sector? </label>
                                                 @endif
-                                                <select class="form-control" name="specificinterestinbussinesssector"  >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="specificinterestinbussinesssector"  >
                                                     <option value="">Select</option>
                                                     @foreach($sectors as $sector)
                                                     <option value="{{  $sector }}" {{ (!empty($additionalInfo) && isset($additionalInfo['specificinterestinbussinesssector']) && $additionalInfo['specificinterestinbussinesssector'] ==$sector) ? 'selected':'' }}>{{  $sector }}</option>
                                                     @endforeach
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['specificinterestinbussinesssector'])) ? $additionalInfo['specificinterestinbussinesssector']:'' }}</div>
                                             </div>
                                             <div class="col-sm-6">
                                                 @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
@@ -422,11 +365,12 @@
                                                 <label class="">Have you invested in an unlisted company before? </label>
                                                 @endif
 
-                                                <select class="form-control"  name="investedinanunlistedcompany">
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif"  name="investedinanunlistedcompany">
                                                     <option value="">Select</option>
                                                     <option value="Yes" {{ (!empty($additionalInfo) && isset($additionalInfo['investedinanunlistedcompany']) && $additionalInfo['investedinanunlistedcompany'] =='Yes') ? 'selected':'' }}>Yes</option>
                                                     <option value="No" {{ (!empty($additionalInfo) && isset($additionalInfo['investedinanunlistedcompany']) && $additionalInfo['investedinanunlistedcompany'] =='No') ? 'selected':'' }}>No</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['investedinanunlistedcompany'])) ? $additionalInfo['investedinanunlistedcompany']:'' }}</div>
                                             </div>
                                         </div>
 
@@ -438,7 +382,8 @@
                                                  @else
                                                   <label>What skills do you bring? </label>
                                                  @endif
-                                                    <textarea class="form-control" name="angelskills" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</textarea>
+                                                    <textarea class="form-control editmode @if($mode=='view') d-none @endif" name="angelskills" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</textarea>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['angelskills'])) ? $additionalInfo['angelskills']:'' }}</div>
                                                     <em class="small">Eg: I have worked as an analyst at a web solutions firm for 5 years</em>
                                                 </div>
                                             </div>
@@ -450,7 +395,8 @@
                                                  @else
                                                 <label>What is your area of expertise? </label>
                                                  @endif
-                                                    <textarea class="form-control" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
+                                                    <textarea class="form-control editmode @if($mode=='view') d-none @endif" name="angelexpertise" >{{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</textarea>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['angelexpertise'])) ? $additionalInfo['angelexpertise']:'' }}</div>
                                                     <em class="small">Eg: Web design and online marketing</em>
                                                 </div>
                                             </div>
@@ -465,7 +411,7 @@
                                             <div class="col-sm-12">
                                                 <div class="form-group">
                                                     <label>Is your client comfortable with the liquidity issues?</label>
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yescomfortable" value="yes" name="comfortablewithliquidityissues" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['comfortablewithliquidityissues']) && $additionalInfo['comfortablewithliquidityissues'] =='yes') ? 'checked':'' }}>
                                                           <label class="custom-control-label normal" for="yescomfortable">Yes</label>
@@ -475,6 +421,7 @@
                                                           <label class="custom-control-label normal" for="notcomfortable">No</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (!empty($additionalInfo) && isset($additionalInfo['comfortablewithliquidityissues'])) ? $additionalInfo['comfortablewithliquidityissues']:'' }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -486,12 +433,13 @@
                                                 <label class="">What skills do you bring?</label>
                                                 @endif
 
-                                                <select class="form-control" name="investorlookingfor" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="investorlookingfor" >
                                                     <option value="">Select</option>
                                                     <option value="Combination of both" {{ (!empty($additionalInfo) && isset($additionalInfo['investorlookingfor']) && $additionalInfo['investorlookingfor'] =='Combination of both') ? 'selected':'' }}>Combination of both</option>
                                                     <option value="Long term growth" {{ (!empty($additionalInfo) && isset($additionalInfo['investorlookingfor']) && $additionalInfo['investorlookingfor'] =='Long term growth') ? 'selected':'' }}>Long term growth</option>
                                                     <option value="Tax efficient investment" {{ (!empty($additionalInfo) && isset($additionalInfo['investorlookingfor']) && $additionalInfo['investorlookingfor'] =='Tax efficient investment') ? 'selected':'' }}>Tax efficient investment</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['investorlookingfor'])) ? $additionalInfo['investorlookingfor']:'' }}</div>
                                             </div>
                                         </div>
                                         <div class="row mr-2 ml-2 mb-3">
@@ -502,7 +450,7 @@
                                                      @else
                                                     <label>Do you require assistance to analyse business proposals? </label>
                                                     @endif
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yesrequire" name="requireassistance" class="custom-control-input" {{ (!empty($additionalInfo) && isset($additionalInfo['requireassistance']) && $additionalInfo['requireassistance'] =='yes') ? 'checked':'' }}  value="yes">
                                                           <label class="custom-control-label normal" for="yesrequire">Yes</label>
@@ -512,6 +460,7 @@
                                                           <label class="custom-control-label normal" for="notrequire">No</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['requireassistance'])) ? $additionalInfo['requireassistance']:'' }}</div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -521,7 +470,7 @@
                                                     @else
                                                     <label>Will you be looking to invest alone or part of a group? </label>
                                                     @endif
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="alone" name="investas" class="custom-control-input" value="Alone" {{ (!empty($additionalInfo) && isset($additionalInfo['investas']) && $additionalInfo['investas'] =='Alone') ? 'checked':'' }} >
                                                           <label class="custom-control-label normal" for="alone">Alone</label>
@@ -531,6 +480,7 @@
                                                           <label class="custom-control-label normal" for="partofgroup">Part of group</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['investas'])) ? $additionalInfo['investas']:'' }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -542,7 +492,7 @@
                                                     @else
                                                     <label style="">Do you have any companies looking for funding?</label>
                                                     @endif
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="fundingyes" name="haveanycompanieslookingforfunding" value="yes" class="custom-control-input" {{ (!empty($additionalInfo) && isset($additionalInfo['haveanycompanieslookingforfunding']) && $additionalInfo['haveanycompanieslookingforfunding'] =='yes') ? 'checked':'' }} >
                                                           <label class="custom-control-label normal" for="fundingyes">Yes</label>
@@ -552,6 +502,7 @@
                                                           <label class="custom-control-label normal" for="fundingno">No</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['haveanycompanieslookingforfunding'])) ? $additionalInfo['haveanycompanieslookingforfunding']:'' }}</div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -561,7 +512,7 @@
                                                     @else
                                                     <label>Have you used SEIS?</label>
                                                     @endif
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yesused" value="yes" name="usedeisorventurecapitaltrusts" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['usedeisorventurecapitaltrusts']) && $additionalInfo['usedeisorventurecapitaltrusts'] =='yes') ? 'checked':'' }}>
                                                           <label class="custom-control-label normal" for="yesused">Yes</label>
@@ -571,23 +522,25 @@
                                                           <label class="custom-control-label normal" for="notused">No</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['usedeisorventurecapitaltrusts'])) ? $additionalInfo['usedeisorventurecapitaltrusts']:'' }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mr-2 ml-2 mb-3">
                                             <div class="col-sm-6">
                                                 <label>Number of companies invested in the last 2 years for SEIS</label>
-                                                <select class="form-control" name="numcompaniesinvested2yr_seis" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="numcompaniesinvested2yr_seis" >
                                                    <option value="">Select</option>
                                                     <option value="0" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_seis']) && $additionalInfo['numcompaniesinvested2yr_seis'] =='0') ? 'selected':'' }}>0</option>
                                                     <option value="1" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_seis']) && $additionalInfo['numcompaniesinvested2yr_seis'] =='1') ? 'selected':'' }} >1</option>
                                                     <option value="2-4" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_seis']) && $additionalInfo['numcompaniesinvested2yr_seis'] =='2-4') ? 'selected':'' }}>2 - 4</option>
                                                     <option value="5+"  {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_seis']) && $additionalInfo['numcompaniesinvested2yr_seis'] =='5+') ? 'selected':'' }}>5+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_seis'])) ? $additionalInfo['numcompaniesinvested2yr_seis']:'' }}</div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <label>Total annual amount invested in SEIS</label>
-                                                <select class="form-control" name="totalinvestedinseis"  >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="totalinvestedinseis"  >
                                                    <option value="">Select</option>
                                                         <option value="£ 1 - £ 10,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedinseis']) && $additionalInfo['totalinvestedinseis'] =='£ 1 - £ 10,000') ? 'selected':'' }}>£ 1 - £ 10,000</option>
                                                         <option value="£ 10,000 - £ 25,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedinseis']) && $additionalInfo['totalinvestedinseis'] =='£ 10,000 - £ 25,000') ? 'selected':'' }}>£ 10,000 - £ 25,000 </option>
@@ -595,6 +548,7 @@
                                                         <option value="£ 50,000 - £ 100,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedinseis']) && $additionalInfo['totalinvestedinseis'] =='£ 50,000 - £ 100,000') ? 'selected':'' }}>£ 50,000 - £ 100,000</option>
                                                         <option value="£ 100,000+" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedinseis']) && $additionalInfo['totalinvestedinseis'] =='£ 100,000+') ? 'selected':'' }}>£ 100,000+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedinseis'])) ? $additionalInfo['totalinvestedinseis']:'' }}</div>
                                             </div>
                                         </div>
                                         <div class="row mr-2 ml-2 mb-2">
@@ -605,7 +559,7 @@
                                                     @else
                                                      <label>Have you used EIS?</label>
                                                     @endif
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yesused2" name="usedeis" value="yes" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['usedeis']) && $additionalInfo['usedeis'] =='yes') ? 'checked':'' }}>
                                                           <label class="custom-control-label normal" for="yesused2">Yes</label>
@@ -615,23 +569,25 @@
                                                           <label class="custom-control-label normal" for="notused2">No</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['usedeis'])) ? $additionalInfo['usedeis']:'' }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mr-2 ml-2 mb-3">
                                             <div class="col-sm-6">
                                                 <label>Number of companies invested in the last 2 years for EIS</label>
-                                                <select class="form-control"  name="numcompaniesinvested2yr_eis">
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif"  name="numcompaniesinvested2yr_eis">
                                                     <option value="">Select</option>
                                                       <option value="0" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_eis']) && $additionalInfo['numcompaniesinvested2yr_eis'] =='0') ? 'selected':'' }}>0</option>
                                                       <option value="1" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_eis']) && $additionalInfo['numcompaniesinvested2yr_eis'] =='1') ? 'selected':'' }}>1</option>
                                                       <option value="2-4" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_eis']) && $additionalInfo['numcompaniesinvested2yr_eis'] =='2-4') ? 'selected':'' }}>2 - 4 </option>
                                                       <option value="5+" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_eis']) && $additionalInfo['numcompaniesinvested2yr_eis'] =='5+') ? 'selected':'' }}>5+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_eis'])) ? $additionalInfo['numcompaniesinvested2yr_eis']:'' }}</div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <label>Total annual amount invested in EIS</label>
-                                                <select class="form-control" name="totalinvestedeis" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="totalinvestedeis" >
                                                     <option value="">Select</option>
                                                     <option value="£ 1 - £ 10,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedeis']) && $additionalInfo['totalinvestedeis'] =='£ 1 - £ 10,000') ? 'selected':'' }}>£ 1 - £ 10,000</option>
                                                     <option value="£ 10,000 - £ 25,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedeis']) && $additionalInfo['totalinvestedeis'] =='£ 10,000 - £ 25,000') ? 'selected':'' }}>£ 10,000 - £ 25,000 </option>
@@ -639,6 +595,7 @@
                                                     <option value="£ 50,000 - £ 100,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedeis']) && $additionalInfo['totalinvestedeis'] =='£ 50,000 - £ 100,000') ? 'selected':'' }}>£ 50,000 - £ 100,000</option>
                                                     <option value="£ 100,000+" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedeis']) && $additionalInfo['totalinvestedeis'] =='£ 100,000+') ? 'selected':'' }}>£ 100,000+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedeis'])) ? $additionalInfo['totalinvestedeis']:'' }}</div>
                                             </div>
                                         </div>
                                         <div class="row mr-2 ml-2 mb-3">
@@ -649,7 +606,7 @@
                                                     @else
                                                      <label>Have you used VCT?</label>
                                                      @endif
-                                                    <div>
+                                                    <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
                                                           <input type="radio" id="yesused3" name="usedvct" value="yes" class="custom-control-input"  {{ (!empty($additionalInfo) && isset($additionalInfo['usedvct']) && $additionalInfo['usedvct'] =='yes') ? 'checked':'' }}>
                                                           <label class="custom-control-label normal" for="yesused3">Yes</label>
@@ -659,23 +616,25 @@
                                                           <label class="custom-control-label normal" for="notused3">No</label>
                                                         </div>
                                                     </div>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['usedvct'])) ? $additionalInfo['usedvct']:'' }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mr-2 ml-2 mb-3">
                                             <div class="col-sm-6">
                                                 <label>Number of companies invested in the last 2 years for EIS</label>
-                                                <select class="form-control" name="numcompaniesinvested2yr_vct" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="numcompaniesinvested2yr_vct" >
                                                     <option value="">Select</option>
                                                     <option value="0" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_vct']) && $additionalInfo['numcompaniesinvested2yr_vct'] =='0') ? 'selected':'' }}>0</option>
                                                     <option value="1" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_vct']) && $additionalInfo['numcompaniesinvested2yr_vct'] =='1') ? 'selected':'' }}>1</option>
                                                     <option value="2-4" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_vct']) && $additionalInfo['numcompaniesinvested2yr_vct'] =='2-4') ? 'selected':'' }}>2 - 4 </option>
                                                     <option value="5+" {{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_vct']) && $additionalInfo['numcompaniesinvested2yr_vct'] =='5+') ? 'selected':'' }}>5+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">{{ (!empty($additionalInfo) && isset($additionalInfo['numcompaniesinvested2yr_vct'])) ? $additionalInfo['numcompaniesinvested2yr_vct']:'' }}</div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <label>Total annual amount invested in VCT</label>
-                                                <select class="form-control" name="totalinvestedvct" >
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="totalinvestedvct" >
                                                     <option value="">Select</option>
                                                     <option value="£ 1 - £ 10,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedvct']) && $additionalInfo['totalinvestedvct'] =='£ 1 - £ 10,000') ? 'selected':'' }} >£ 1 - £ 10,000</option>
                                                     <option value="£ 10,000 - £ 25,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedvct']) && $additionalInfo['totalinvestedvct'] =='£ 10,000 - £ 25,000') ? 'selected':'' }} >£ 10,000 - £ 25,000 </option>
@@ -683,6 +642,7 @@
                                                     <option value="£ 50,000 - £ 100,000" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedvct']) && $additionalInfo['totalinvestedvct'] =='£ 50,000 - £ 100,000') ? 'selected':'' }}>£ 50,000 - £ 100,000</option>
                                                     <option value="£ 100,000+" {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedvct']) && $additionalInfo['totalinvestedvct'] =='£ 100,000+') ? 'checked':'' }}>£ 100,000+</option>
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['totalinvestedvct'])) ? $additionalInfo['totalinvestedvct']:'' }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -692,7 +652,8 @@
                         <div>
                             <div class="form-group">
                                 <label>Where did you hear about the site?</label>
-                                <textarea class="form-control" name="hearaboutsite" >{{ (!empty($additionalInfo) && isset($additionalInfo['hearaboutsite'])) ? $additionalInfo['hearaboutsite']:'' }}</textarea>
+                                <textarea class="form-control editmode @if($mode=='view') d-none @endif" name="hearaboutsite" >{{ (!empty($additionalInfo) && isset($additionalInfo['hearaboutsite'])) ? $additionalInfo['hearaboutsite']:'' }}</textarea>
+                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['hearaboutsite'])) ? $additionalInfo['hearaboutsite']:'' }}</div>
                             </div>
                         </div>
                         <div>
@@ -700,26 +661,26 @@
                             @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="yeshappy" name="marketingmail" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }}  value="yes" {{ (empty($additionalInfo)) ? 'checked':'' }} >
+                                        <input type="checkbox" class="custom-control-input disabledInput" id="yeshappy" @if($mode=='view') disabled @endif name="marketingmail" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }}  value="yes" {{ (empty($additionalInfo)) ? 'checked':'' }} >
                                         <label class="custom-control-label normal" for="yeshappy">Yes, my Client is happy to receive marketing emails from the platform.</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="yeshappy2" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail_party']) && $additionalInfo['marketingmail_party'] =='yes') ? 'checked':'' }} name="marketingmail_party" value="yes" {{ (empty($additionalInfo)) ? 'checked':'' }} >
+                                        <input type="checkbox" class="custom-control-input disabledInput" @if($mode=='view') disabled @endif id="yeshappy2" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail_party']) && $additionalInfo['marketingmail_party'] =='yes') ? 'checked':'' }} name="marketingmail_party" value="yes" {{ (empty($additionalInfo)) ? 'checked':'' }} >
                                         <label class="custom-control-label normal" for="yeshappy2">Yes, my Client happy to receive marketing emails from strategic 3rd parties of the Platform.</label>
                                     </div>
                                 </div>
                             @else
                                  <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="yeshappy" name="marketingmail" value="yes" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }} >
+                                        <input type="checkbox" class="custom-control-input disabledInput" id="yeshappy" @if($mode=='view') disabled @endif name="marketingmail" value="yes" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail']) && $additionalInfo['marketingmail'] =='yes') ? 'checked':'' }} >
                                         <label class="custom-control-label normal" for="yeshappy"> I am happy to receive marketing emails from the platform.</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="yeshappy2" name="marketingmail_party" value="yes" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail_party']) && $additionalInfo['marketingmail_party'] =='yes') ? 'checked':'' }} >
+                                        <input type="checkbox" class="custom-control-input disabledInput" id="yeshappy2" @if($mode=='view') disabled @endif name="marketingmail_party" value="yes" {{ (!empty($additionalInfo) && isset($additionalInfo['marketingmail_party']) && $additionalInfo['marketingmail_party'] =='yes') ? 'checked':'' }} >
                                         <label class="custom-control-label normal" for="yeshappy2">I am happy to receive marketing emails from strategic 3rd parties of the Platform.</label>
                                     </div>
                                 </div>
@@ -728,7 +689,8 @@
                         <div class="mb-3">
                             <div class="form-group">
                                 <label>Plans for using the site</label>
-                                <textarea class="form-control" name="plansforusingsite"  >{{ (!empty($additionalInfo) && isset($additionalInfo['plansforusingsite'])) ? $additionalInfo['plansforusingsite']:'' }}</textarea>
+                                <textarea class="form-control editmode @if($mode=='view') d-none @endif" name="plansforusingsite"  >{{ (!empty($additionalInfo) && isset($additionalInfo['plansforusingsite'])) ? $additionalInfo['plansforusingsite']:'' }}</textarea>
+                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['plansforusingsite'])) ? $additionalInfo['plansforusingsite']:'' }}</div>
                             </div>
 
                             @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
@@ -749,7 +711,7 @@
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
                             <div class="">
-                                <a href="#" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></a>
+                                <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}" class="btn btn-primary mt-4">Next <i class="fa fa-angle-double-right"></i></a>
                             </div>
                         </div>
                     </form>

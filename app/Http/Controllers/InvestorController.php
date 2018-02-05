@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Defaults;
 use App\DocumentFile;
+use App\NomineeApplication;
 use App\User;
 use App\UserData;
 use App\UserHasCertification;
@@ -441,7 +442,9 @@ class InvestorController extends Controller
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
-        Session::flash('success_message', 'Your client registration details added successfully and being redirected to certification stage');
+        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client registration details added successfully and being redirected to certification stage.' : 'You are being redirected to certification page';
+        Session::flash('success_message', $successMessage);
+
         return redirect(url('backoffice/investor/' . $giCode . '/client-categorisation'));
     }
 
@@ -464,7 +467,7 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
 
         $investorCertification = $investor->getActiveCertification();
-        $investorFai           = $investor->userFinancialAdvisorInfo(); 
+        $investorFai           = $investor->userFinancialAdvisorInfo();
 
         $data['investor']                = $investor;
         $data['countyList']              = getCounty();
@@ -647,7 +650,7 @@ class InvestorController extends Controller
     {
 
         $args                     = array();
-        $header_footer_start_html = $this->getHeaderPageMarkup($args);
+        $header_footer_start_html = getHeaderPageMarkup($args);
 
         $html = '<style type="text/css"></style>' . $header_footer_start_html;
         $html .= '<style>
@@ -764,49 +767,7 @@ class InvestorController extends Controller
         exit();
     }
 
-    public function getHeaderPageMarkup($args)
-    {
-
-        $backtop    = isset($args['backtop']) ? $args['backtop'] : "28mm";
-        $backbottom = isset($args['backbottom']) ? $args['backbottom'] : "14mm";
-        $backleft   = isset($args['backleft']) ? $args['backleft'] : "14mm";
-        $backright  = isset($args['backright']) ? $args['backright'] : "14mm";
-
-        $header_footer_start_html = '<page  ';
-        if (isset($args['hideheader'])) {
-            $header_footer_start_html .= '  hideheader="' . $args['hideheader'] . '" ';
-        }
-
-        if (isset($args['hidefooter'])) {
-            $header_footer_start_html .= '  hidefooter="' . $args['hidefooter'] . '" ';
-        }
-
-        $header_footer_start_html .= ' backtop="' . $backtop . '" backbottom="' . $backbottom . '" backleft="' . $backleft . '"  backright="' . $backleft . '" style="font-size: 12pt">
-    <page_header>
-        <table style="border: none; background-color:#FFF; margin:0;"  class="w100per"  >
-            <tr>
-                <td style="text-align: left;"  class="w100per">
-                  <img src="' . url("img/pdf/header-edge-main-cert.png") . '" class="w100per"   />
-                </td>
-            </tr>
-        </table>
-    </page_header>
-    <page_footer>
-        <table style="border: none; background-color:#FFF; width: 100%;  "  >
-            <tr>
-                <td style="text-align:center;"  class="w100per" >
-                  <img src="' . url("img/pdf/footer_ta_pdf-min.png") . '" class="w70per"  style="width: 90%;"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align: center;    width: 100%">page [[page_cu]]/[[page_nb]]</td>
-            </tr>
-        </table>
-    </page_footer>';
-
-        return $header_footer_start_html;
-
-    }
+    
 
     public function sophisticatedCertificationHtml($sophisticatedData, $investor)
     {
@@ -1918,9 +1879,9 @@ class InvestorController extends Controller
 
         $investorFai    = $investor->userFinancialAdvisorInfo();
         $additionalInfo = $investor->userAdditionalInfo();
-        $sectors = getSectors();
-        sort($sectors);  
-        
+        $sectors        = getSectors();
+        sort($sectors);
+
         $data['countyList']     = getCounty();
         $data['countryList']    = getCountry();
         $data['investor']       = $investor;
@@ -1929,7 +1890,7 @@ class InvestorController extends Controller
         $data['sectors']        = $sectors;
         $data['breadcrumbs']    = $breadcrumbs;
         $data['pageTitle']      = 'Add Investor : Additional Information';
-        $data['mode']           = 'view';
+        $data['mode']           = (empty($additionalInfo)) ? 'edit':'view';
         $data['activeMenu']     = 'add_clients';
 
         return view('backoffice.clients.additional-information')->with($data);
@@ -2019,10 +1980,194 @@ class InvestorController extends Controller
         $financialAdvInfo->data_value = $investorFai;
         $financialAdvInfo->save();
 
-        Session::flash('success_message', "Your Client's Additional Information has been successfully added");
+        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client Additional Information has successfully been added.' : 'Thank you. The Additional Information page has now been successfully updated';
+        Session::flash('success_message', $successMessage);
 
         return redirect(url('backoffice/investor/' . $giCode . '/additional-information'));
 
+    }
+
+    public function investmentAccount($giCode)
+    {
+
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Client Investment Account'];
+
+        $nomineeApplication = $investor->investorNomineeApplication();
+
+        if (!empty($nomineeApplication)) {
+            $investorFai = $nomineeApplication->chargesfinancial_advisor_details;
+        } else {
+            $investorFai = $investor->userFinancialAdvisorInfo();
+            $investorFai = (!empty($investorFai)) ? $investorFai->data_value : [];
+
+        }
+
+        $data['countyList']           = getCounty();
+        $data['countryList']          = getCountry();
+        $data['investor']             = $investor;
+        $data['taxCertificateSentTo'] = (!empty($nomineeApplication)) ? $nomineeApplication->tax_certificate_sent_to : '';
+        $data['idVerificationStatus'] = (!empty($nomineeApplication)) ? $nomineeApplication->id_verification_status : '';
+        $data['isUsPerson']           = (!empty($nomineeApplication)) ? $nomineeApplication->is_us_person : '';
+        $data['nomineeDetails']       = (!empty($nomineeApplication)) ? $nomineeApplication->details : []; 
+        $data['investorFai']          = $investorFai;
+        $data['breadcrumbs']          = $breadcrumbs;
+        $data['pageTitle']            = 'Add Investor : Client Investment Account';
+        $data['mode']                 = (empty($nomineeApplication)) ? 'edit':'view';
+        $data['activeMenu']           = 'add_clients';
+
+        return view('backoffice.clients.investment-account')->with($data);
+
+    }
+
+    public function saveInvestmentAccount(Request $request)
+    {
+        $requestData = $request->all();
+
+        $giCode = $requestData['gi_code'];
+
+        $investor = User::where('gi_code', $giCode)->first();
+
+        $investorId = $investor->id;
+
+        if (empty($investor)) {
+            Session::flash('error_message', 'Error while saving data.');
+            return redirect()->back()->withInput();
+        }
+
+        $sendtaxcertificateto = $requestData['sendtaxcertificateto'];
+        $nomineeverification  = (isset($requestData['nomineeverification'])) ? $requestData['nomineeverification'] : '';
+        $areuspersonal        = $requestData['areuspersonal'];
+
+        $investorFai['companyname']       = $requestData['companyname'];
+        $investorFai['fcanumber']         = $requestData['fcanumber'];
+        $investorFai['principlecontact']  = $requestData['principlecontact'];
+        $investorFai['primarycontactfca'] = $requestData['primarycontactfca'];
+        $investorFai['email']             = $requestData['email'];
+        $investorFai['telephone']         = $requestData['telephone'];
+        $investorFai['address']           = $requestData['address'];
+        $investorFai['address2']          = $requestData['address2'];
+        $investorFai['city']              = $requestData['city'];
+        $investorFai['county']            = $requestData['county'];
+        $investorFai['postcode']          = $requestData['postcode'];
+        $investorFai['country']           = $requestData['country'];
+
+        $nomineeDetails['title']                              = $requestData['title'];
+        $nomineeDetails['surname']                            = $requestData['surname'];
+        $nomineeDetails['forename']                           = $requestData['forename'];
+        $nomineeDetails['dateofbirth']                        = $requestData['dateofbirth'];
+        $nomineeDetails['nationalinsuranceno']                = $requestData['nationalinsuranceno'];
+        $nomineeDetails['nonationalinsuranceno']              = (isset($requestData['nonationalinsuranceno'])) ? $requestData['nonationalinsuranceno'] : '';
+        $nomineeDetails['nationality']                        = $requestData['nationality'];
+        $nomineeDetails['domiciled']                          = $requestData['domiciled'];
+        $nomineeDetails['tinnumber']                          = $requestData['tinnumber'];
+        $nomineeDetails['city']                               = $requestData['account_city'];
+        $nomineeDetails['country']                             = $requestData['account_country'];
+        $nomineeDetails['telephone']                          = $requestData['account_telephone'];
+        $nomineeDetails['address']                            = $requestData['account_address'];
+        $nomineeDetails['postcode']                           = $requestData['account_postcode'];
+        $nomineeDetails['email']                              = $requestData['account_email'];
+        $nomineeDetails['txcertificatefirmname']              = $requestData['txcertificatefirmname'];
+        $nomineeDetails['txcertificatecontact']               = $requestData['txcertificatecontact'];
+        $nomineeDetails['txcertificatetelephone']             = $requestData['txcertificatetelephone'];
+        $nomineeDetails['txcertificateemail']                 = $requestData['txcertificateemail'];
+        $nomineeDetails['txcertificateaddress']               = $requestData['txcertificateaddress'];
+        $nomineeDetails['bankaccntholder1']                   = $requestData['bankaccntholder1'];
+        $nomineeDetails['bankaccntholder2']                   = $requestData['bankaccntholder2'];
+        $nomineeDetails['bankname']                           = $requestData['bankname'];
+        $nomineeDetails['bankaccntnumber']                    = $requestData['bankaccntnumber'];
+        $nomineeDetails['bankaccntsortcode']                  = $requestData['bankaccntsortcode'];
+        $nomineeDetails['bankaddress']                        = $requestData['bankaddress'];
+        $nomineeDetails['clientbankpostcode']                 = $requestData['clientbankpostcode'];
+        $nomineeDetails['adviserinitialinvestpercent']        = $requestData['adviserinitialinvestpercent'];
+        $nomineeDetails['adviserinitialinvestfixedamnt']      = $requestData['adviserinitialinvestfixedamnt'];
+        $nomineeDetails['advdetailsnotapplicable']            = (isset($requestData['advdetailsnotapplicable'])) ? $requestData['advdetailsnotapplicable'] : '';
+        $nomineeDetails['ongoingadvinitialinvestpercent']     = $requestData['ongoingadvinitialinvestpercent'];
+        $nomineeDetails['ongoingadvinitialinvestfixedamnt']   = $requestData['ongoingadvinitialinvestfixedamnt'];
+        $nomineeDetails['ongoingadvchargesvatyettobeapplied'] = $requestData['ongoingadvchargesvatyettobeapplied'];
+        $nomineeDetails['intermediaryinitialinvestpercent']   = $requestData['intermediaryinitialinvestpercent'];
+        $nomineeDetails['intermediaryvattobeapplied']         = $requestData['intermediaryvattobeapplied'];
+        $nomineeDetails['intermediaryinitialinvestfixedamnt'] = $requestData['intermediaryinitialinvestfixedamnt'];
+        $nomineeDetails['agreeclientdeclaration']             = (isset($requestData['agreeclientdeclaration'])) ? $requestData['agreeclientdeclaration'] : '';
+        $nomineeDetails['nomverificationwithoutface']         = (isset($requestData['nomverificationwithoutface'])) ? $requestData['nomverificationwithoutface'] : '';
+        $nomineeDetails['verdisplaystatus']                   = $requestData['verdisplaystatus'];
+        $nomineeDetails['transfer_at_later_stage']            = (isset($requestData['transfer_at_later_stage'])) ? $requestData['transfer_at_later_stage'] : '';
+        $nomineeDetails['subscriptioninvamntbank']            = $requestData['subscriptioninvamntbank'];
+        $nomineeDetails['subscriptiontransferdate']           = $requestData['subscriptiontransferdate'];
+        $nomineeDetails['subscriptioninvamntcheq']            = $requestData['subscriptioninvamntcheq'];
+        $nomineeDetails['subscriptionbankname']               = $requestData['subscriptionbankname'];
+        $nomineeDetails['subscriptionsortcode']               = $requestData['subscriptionsortcode'];
+        $nomineeDetails['subscriptionaccountname']            = $requestData['subscriptionaccountname'];
+        $nomineeDetails['subscriptionaccountno']              = $requestData['subscriptionaccountno'];
+        $nomineeDetails['subscriptionreffnamelname']          = $requestData['subscriptionreffnamelname'];
+        $nomineeDetails['section_status']                     = $requestData['section_status'];
+
+        $nomineeApplication = $investor->investorNomineeApplication();
+        if (empty($nomineeApplication)) {
+            $nomineeApplication          = new NomineeApplication;
+            $nomineeApplication->user_id = $investorId;
+        }
+
+        $nomineeApplication->tax_certificate_sent_to          = $sendtaxcertificateto;
+        $nomineeApplication->id_verification_status           = $nomineeverification;
+        $nomineeApplication->is_us_person                     = $areuspersonal;
+        $nomineeApplication->details                          = $nomineeDetails;
+        $nomineeApplication->chargesfinancial_advisor_details = $investorFai;
+        $nomineeApplication->save();
+
+        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
+        Session::flash('success_message', $successMessage);
+
+        return redirect(url('backoffice/investor/' . $giCode . '/investment-account'));
+
+    }
+
+    public function downloadInvestorNominee($giCode){
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $this->getInvestorNomineePdf($investor);
+
+    }
+
+    public function getInvestorNomineePdf($investor){
+
+        $dataInvestorNomination = $investor->getInvestorNomineeData(); 
+        $additionalArgs['pdfaction'] = '';
+        $html = getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
+        $now_date  = date('d-m-Y', time());
+
+        $file_name = 'GrowthInvest Client Application Form of ' . $dataInvestorNomination['display_name'] . '  - ' . $now_date . '.pdf';
+
+        $pdf_title = 'GrowthInvest One Client Application Form ';
+
+        $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
+        $html2pdf->pdf->SetDisplayMode('fullpage');
+        $html2pdf->writeHTML($html, isset($_GET['vuehtml']));
+
+        $html2pdf->Output($file_name);
+
+
+    }
+
+    public function adobeSignataureEmail(){
+        if($nomineeapplication_dockey==false || $nomineeapplication_dockey==""){
+            $args['investor_id'] = $user_id;
+            $args['stats_pg']    = 'nomination';
+            $args['pdfaction']   = 'esign';
+           
+            downloadSendesignpdf($args);
+        }
     }
 
 }
