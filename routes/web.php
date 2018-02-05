@@ -50,6 +50,8 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
 	Route::get('investor/{giCode}/additional-information','InvestorController@additionalInformation');
 	Route::post('investor/{giCode}/save-additional-information','InvestorController@saveAdditionalInformation');
 	Route::get('investor/{giCode}/investment-account','InvestorController@investmentAccount');
+	Route::get('investor/{giCode}/download-investor-nominee','InvestorController@downloadInvestorNominee');
+
 	Route::post('investor/{giCode}/save-investment-account','InvestorController@saveInvestmentAccount');
 	Route::post( 'investor/get-investors', 'InvestorController@getInvestors' );
 	Route::post( 'investor/save-registration', 'InvestorController@saveRegistration' );

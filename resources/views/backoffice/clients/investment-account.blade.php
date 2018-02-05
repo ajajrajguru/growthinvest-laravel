@@ -1173,10 +1173,11 @@
 
                     <div class="d-flex justify-content-between">
                         <div>
-                            <button type="button" class="btn btn-primary">&laquo; Prev</button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary"><i class="fa fa-download"></i> Download</button>
+                            
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
                             <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>

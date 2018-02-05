@@ -231,5 +231,69 @@ class User extends Authenticatable
         return true;
     }
 
+    /* Get nominee application data for the nominee form download */
+    public function getInvestorNomineeData()
+    {
+        $nomineeApplication = $this->investorNomineeApplication();
+
+        if (!empty($nomineeApplication)) {
+            $investorFai = $nomineeApplication->chargesfinancial_advisor_details;
+        } else {
+            $investorFai = $investor->userFinancialAdvisorInfo();
+            $investorFai = (!empty($investorFai)) ? $investorFai->data_value : [];
+
+        }
+
+
+        $user_info["user_role"] = title_case($this->roles()->pluck('display_name')->implode(' '));
+
+        $user_info["display_name"] = $this->first_name.' '.$this->last_name;
+
+        $user_info["username"] = '';
+
+        $user_info["user_email"] = $this->email;
+
+        //$user_info["avatar"] = get_avatar($id, 150);
+
+        $user_avatar = '';
+
+        $user_info['avatar_id']               = '';
+        $user_info['avatar']                  = '';
+        $user_info['nomineeapplication_info'] = $nomineeApplication->details;
+        $user_info['nomineeapplication_info']['areuspersonal'] = $nomineeApplication->is_us_person;
+        $user_info['nomineeapplication_info']['verified'] = $nomineeApplication->id_verification_status;
+        $user_info['nomineeapplication_info']['sendtaxcertificateto'] = $nomineeApplication->tax_certificate_sent_to;
+
+        // //get the signature attachment id and url
+        // if (isset($user_info['nomineeapplication_info']['signatureimgid'])) {
+
+        //     $img_sign_url_src                          = get_attached_file($user_info['nomineeapplication_info']['signatureimgid'], false);
+        //     @list($signimage_width, $signimage_height) = getimagesize($img_sign_url_src);
+        //     $sign_url                                  = wp_get_attachment_url($user_info['nomineeapplication_info']['signatureimgid']);
+
+        //     $user_info['nomineeapplication_info']['signature_large'] = array('imageurl' => $sign_url,
+        //         'width'                                                                     => $signimage_width['width'],
+        //         'height'                                                                    => $signimage_height['height'],
+        //     );
+
+        // }
+
+
+        $user_info["chargesfinancial_advisor_info"] = $nomineeApplication->chargesfinancial_advisor_details;
+
+        $user_info["financial_advisor_info"] = [];
+
+        $user_info["taxfinancial_advisor_info"] = [];
+
+        $user_info['organization_info'] = [];
+
+        $user_info['additional_info'] = $this->userAdditionalInfo()->data_value;
+
+        $user_info["ID"] = $this->id;
+
+        return $user_info;
+
+    }
+
 
 }
