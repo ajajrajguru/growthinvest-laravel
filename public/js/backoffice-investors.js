@@ -447,6 +447,10 @@
         });
       }
     });
+    $(document).on('click', '.submit-signature', function() {
+      $('input[name="send_signature"]').val('yes');
+      return $('form[name="add-investor-ia"]').submit();
+    });
     $(document).on('change', 'input[name="advdetailsnotapplicable"]', function() {
       if ($(this).is(':checked')) {
         return $('.adv-details-applicable-data').find('.form-control').removeClass('text-input-status').removeClass('completion_status');
