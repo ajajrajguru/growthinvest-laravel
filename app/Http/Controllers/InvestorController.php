@@ -2244,10 +2244,10 @@ class InvestorController extends Controller
             $nomineeData = NomineeApplication::where('adobe_doc_key',$dockey)->first();
             
             if(!empty($nomineeData)){
-                $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey);
-                $nomineeApplication->signed_url = $dockeyUrl ;
-                $nomineeApplication->doc_signed_date = date('Y-m-d H:i:s') ;
-                $nomineeApplication->save();
+                $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey); 
+                $nomineeData->signed_url = $dockeyUrl ;
+                $nomineeData->doc_signed_date = date('Y-m-d H:i:s') ;
+                $nomineeData->save();
             }
   
 
