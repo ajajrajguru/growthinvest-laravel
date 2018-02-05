@@ -344,7 +344,7 @@ class BusinessListingController extends Controller
             'firm_id' => '',
         );
 
-        $firm_id = $args['firm_id'];
+        $firm_id = isset($args['firm_id']) ? $args['firm_id'] : '';
 
         //Added the level of int clause and status
         $query = " SELECT  bp_details.data_value as proposal_details ,SUM(CASE biz.status WHEN 'funded' THEN biz.amount ELSE 0 END) as invested,SUM(CASE  WHEN biz.status='pledged' and biz.details like '%ready-to-invest%' THEN biz.amount ELSE 0 END) as pledged
@@ -501,6 +501,59 @@ class BusinessListingController extends Controller
         generateCSV($header, $userData, $fileName);
 
         return true;
+
+    }
+
+    public function getBusinessDetails($slug = 'fonmoney')
+    {
+
+        $business_listing = BusinessListing::where('slug', $slug)->first();
+
+        $data_keys = [
+            'isEIS', 'hmrc_status', 'tradingname', 'markit_overview', 'management_team', 'company_details',
+            'fundcharges_details', 'proposal_desc_details', 'fiancial_field', 'use_of_funds', 'exit_strategy',
+            'proposal_details', 'busi_pro_selected_firms', 'fundvct_details', 'check_list_items', 'fund_productoverview',
+            'fund_manageroverview', 'fund_minamountdesc', 'fund_closedate', 'fund_launchdate', 'fund_openclosed',
+            'fund_investmentobjective', 'fund_targetreturn', 'fund_typeoffund', 'fund_managername', 'fund_nominee_custody',
+            'fund_minmaxinvestment', 'fundcharges_details', 'investment_opportunities', 'company_transfer_asset'];
+
+        $serialized_meta_keys = [
+            'isEIS', 'hmrc_status', 'tradingname', 'markit_overview', 'management_team', 'company_details', 'fundcharges_details',
+            'proposal_desc_details', 'fiancial_field', 'use_of_funds', 'proposal_details', 'busi_pro_selected_firms', 'fundvct_details'];
+
+        $business_datas = $business_listing->businessListingData()->whereIn('data_key', $data_keys)->get()->toArray();
+
+        foreach ($business_datas as $key => $business_data) {
+
+            if (in_array($business_data['data_key'], $serialized_meta_keys)) {
+                $business_data_ar[$business_data['data_key']] = @unserialize($business_data['data_value']);
+            } else {
+                $business_data_ar[$business_data['data_key']] = $business_data['data_value'];
+            }
+
+        }
+
+        //$biz_defaults = $business_listing->getBusinessDefaultsByBizId('',['type'=>'approver']);
+        $biz_defaults = $business_listing->getBusinessDefaultsByBizId();
+        $approvers          = $business_listing->getApproversFromDefaultAr($biz_defaults);
+        $milestones         = $business_listing->getMilestonesFromDefaultAr($biz_defaults);
+        $stages_of_business = $business_listing->getStagesOfBusinessFromDefaultAr($biz_defaults);
+
+        $biz_investments = $this->business_investment_details($business_listing->id, 0, array(), $business_listing);
+
+        $biz_investments_ar = $biz_investments->toArray();
+        $business_ar        = $business_listing->toArray();
+
+        $data = array_merge($business_ar, $business_data_ar);
+        $data['approvers']  = $approvers;
+        $data['milestones']  = $milestones;
+        $data['stages_of_business']  = $stages_of_business;
+
+        /*echo "<pre>";
+        print_r($data);
+        die(); */
+
+        return view('frontend.single-business-view', $data);
 
     }
 
