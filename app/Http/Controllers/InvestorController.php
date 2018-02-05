@@ -650,7 +650,7 @@ class InvestorController extends Controller
     {
 
         $args                     = array();
-        $header_footer_start_html = $this->getHeaderPageMarkup($args);
+        $header_footer_start_html = getHeaderPageMarkup($args);
 
         $html = '<style type="text/css"></style>' . $header_footer_start_html;
         $html .= '<style>
@@ -767,49 +767,7 @@ class InvestorController extends Controller
         exit();
     }
 
-    public function getHeaderPageMarkup($args)
-    {
-
-        $backtop    = isset($args['backtop']) ? $args['backtop'] : "28mm";
-        $backbottom = isset($args['backbottom']) ? $args['backbottom'] : "14mm";
-        $backleft   = isset($args['backleft']) ? $args['backleft'] : "14mm";
-        $backright  = isset($args['backright']) ? $args['backright'] : "14mm";
-
-        $header_footer_start_html = '<page  ';
-        if (isset($args['hideheader'])) {
-            $header_footer_start_html .= '  hideheader="' . $args['hideheader'] . '" ';
-        }
-
-        if (isset($args['hidefooter'])) {
-            $header_footer_start_html .= '  hidefooter="' . $args['hidefooter'] . '" ';
-        }
-
-        $header_footer_start_html .= ' backtop="' . $backtop . '" backbottom="' . $backbottom . '" backleft="' . $backleft . '"  backright="' . $backleft . '" style="font-size: 12pt">
-    <page_header>
-        <table style="border: none; background-color:#FFF; margin:0;"  class="w100per"  >
-            <tr>
-                <td style="text-align: left;"  class="w100per">
-                  <img src="' . url("img/pdf/header-edge-main-cert.png") . '" class="w100per"   />
-                </td>
-            </tr>
-        </table>
-    </page_header>
-    <page_footer>
-        <table style="border: none; background-color:#FFF; width: 100%;  "  >
-            <tr>
-                <td style="text-align:center;"  class="w100per" >
-                  <img src="' . url("img/pdf/footer_ta_pdf-min.png") . '" class="w70per"  style="width: 90%;"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align: center;    width: 100%">page [[page_cu]]/[[page_nb]]</td>
-            </tr>
-        </table>
-    </page_footer>';
-
-        return $header_footer_start_html;
-
-    }
+    
 
     public function sophisticatedCertificationHtml($sophisticatedData, $investor)
     {
@@ -2112,7 +2070,7 @@ class InvestorController extends Controller
         $nomineeDetails['domiciled']                          = $requestData['domiciled'];
         $nomineeDetails['tinnumber']                          = $requestData['tinnumber'];
         $nomineeDetails['city']                               = $requestData['account_city'];
-        $nomineeDetails['county']                             = $requestData['account_county'];
+        $nomineeDetails['country']                             = $requestData['account_country'];
         $nomineeDetails['telephone']                          = $requestData['account_telephone'];
         $nomineeDetails['address']                            = $requestData['account_address'];
         $nomineeDetails['postcode']                           = $requestData['account_postcode'];
@@ -2170,6 +2128,46 @@ class InvestorController extends Controller
 
         return redirect(url('backoffice/investor/' . $giCode . '/investment-account'));
 
+    }
+
+    public function downloadInvestorNominee($giCode){
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $this->getInvestorNomineePdf($investor);
+
+    }
+
+    public function getInvestorNomineePdf($investor){
+
+        $dataInvestorNomination = $investor->getInvestorNomineeData(); 
+        $additionalArgs['pdfaction'] = '';
+        $html = getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
+        $now_date  = date('d-m-Y', time());
+
+        $file_name = 'GrowthInvest Client Application Form of ' . $dataInvestorNomination['display_name'] . '  - ' . $now_date . '.pdf';
+
+        $pdf_title = 'GrowthInvest One Client Application Form ';
+
+        $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
+        $html2pdf->pdf->SetDisplayMode('fullpage');
+        $html2pdf->writeHTML($html, isset($_GET['vuehtml']));
+
+        $html2pdf->Output($file_name);
+
+
+    }
+
+    public function adobeSignataureEmail(){
+        if($nomineeapplication_dockey==false || $nomineeapplication_dockey==""){
+            $args['investor_id'] = $user_id;
+            $args['stats_pg']    = 'nomination';
+            $args['pdfaction']   = 'esign';
+           
+            downloadSendesignpdf($args);
+        }
     }
 
 }

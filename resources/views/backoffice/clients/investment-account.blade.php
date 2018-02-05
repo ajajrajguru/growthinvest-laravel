@@ -135,6 +135,10 @@
                         @endif
                      </span>
                     </h5>
+                    @if($investor->id)
+                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
+                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
+                                    @endif
                     <hr class="my-3">
 
                     <!-- Investment Account Content HERE -->
@@ -166,6 +170,7 @@
                                         SECTION 1: CLIENT ACCOUNT DETAILS
                                     </span>
 
+                                    
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? ucfirst($nomineeDetails['section_status'][1]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
@@ -199,27 +204,32 @@
                                                 <option value="miss" @if($selTitile == "miss") selected @endif>Miss</option>                                                                                           
                                                  <option value="ms" @if($selTitile == "ms") selected @endif>Ms</option>                                                                
                                              </select>
+                                             <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ title_case($selTitile) }}</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Surname <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status" name="surname" placeholder="" data-parsley-required data-parsley-required-message="Please enter the surname." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['surname'])){{ $nomineeDetails['surname'] }}@else{{$investor->last_name}}@endif">
+                                                <label>Surname <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="surname" placeholder="" data-parsley-required data-parsley-required-message="Please enter the surname." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['surname'])){{ $nomineeDetails['surname'] }}@else{{$investor->last_name}}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['surname'])){{ $nomineeDetails['surname'] }}@else{{$investor->last_name}}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Forename <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status" name="forename" placeholder="" data-parsley-required data-parsley-required-message="Please enter the forename." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['forename'])){{ $nomineeDetails['forename'] }}@else{{$investor->first_name}}@endif">
+                                                <label>Forename <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="forename" placeholder="" data-parsley-required data-parsley-required-message="Please enter the forename." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['forename'])){{ $nomineeDetails['forename'] }}@else{{$investor->first_name}}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['forename'])){{ $nomineeDetails['forename'] }}@else{{$investor->first_name}}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control datepicker text-input-status completion_status" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
+                                                <label>Date of Birth <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control datepicker text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>National Insurance Number <span class="text-danger">*</span></label>
+                                                <label>National Insurance Number <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
   
-                                                <input type="text" class="form-control text-input-status completion_status"  name="nationalinsuranceno" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif"  name="nationalinsuranceno" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif</div>
  
  
                                                 <small  class="form-text text-muted">
@@ -234,7 +244,7 @@
 
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox">
-                                                  <input type="checkbox" class="custom-control-input completion_status" value="1" id="ch1" name="nonationalinsuranceno" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') checked @endif>
+                                                  <input type="checkbox" class="custom-control-input completion_status disabledInput" @if($mode=='view') disabled @endif value="1" id="ch1" name="nonationalinsuranceno" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') checked @endif>
                                                   <label class="custom-control-label" for="ch1">If you do not have a National Insurance number, please tick here</label>
                                                 </div>
                                             </div>
@@ -242,20 +252,25 @@
 
                                             <div class="nonationalinsuranceno-container @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='') d-none @endif @if(empty($nomineeDetails)) d-none  @endif">
                                             <div class="form-group">
-                                                <label>Nationality <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status" placeholder="" name="nationality" placeholder=""   data-parsley-required-message="Please enter the nationality." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <label>Nationality <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" placeholder="" name="nationality" placeholder=""   data-parsley-required-message="Please enter the nationality." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Domiciled <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status" placeholder="" name="domiciled" data-parsley-required-message="Please enter the domiciled." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <label>Domiciled <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" placeholder="" name="domiciled" data-parsley-required-message="Please enter the domiciled." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif</div>
                                             </div>
                                             
                                             <p>If you live outside the UK and in a European Union (EU) member state, please supply one of the following reportable pieces of information for the EU Savings Directive.</p>
                                             <p class="mt-3 text-center">EITHER</p>
                                                 
                                             <div class="form-group">
-                                                <input type="text" class="form-control" placeholder="" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
+                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
+                                                
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif</div>
+
                                                 <small  class="form-text text-muted">your Tax Identification Number (TIN) - This is a number assigned to you by your government or local authority. It is the reference number usually used on your tax return.</small>
                                             </div>
 
@@ -265,29 +280,35 @@
                                             
                                             <div class="form-group">
                                                 <label>City</label>
-                                                <input type="text" class="form-control" placeholder="" name="account_city" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['city'])){{ $nomineeDetails['city'] }}@else{{ $investor->city }}@endif">
+                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="account_city" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['city'])){{ $nomineeDetails['city'] }}@else{{ $investor->city }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['city'])){{ $nomineeDetails['city'] }}@else{{ $investor->city }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Country</label>
-                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="account_county">
+                                                <select class="form-control editmode @if($mode=='view') d-none @endif" name="account_country">
                                                     <option value="">Please Select</option>
                                                     @php
-                                                    $countyName = '';
-
-                                                    @endphp
-                                                    @foreach($countyList as $county)
+                                                    $countryName = '';
+                                                    
+                                                    @endphp 
+                                                    @foreach($countryList as $code=>$country)
                                                         @php
                                                         $selected = '';
-                                                        if(!empty($nomineeDetails) && isset($nomineeDetails['county']) && $nomineeDetails['county']==$county)
+                                                        if(!empty($nomineeDetails) && isset($nomineeDetails['country']) && $nomineeDetails['country']==$code){
                                                             $selected = 'selected';
-                                                        if(empty($nomineeDetails) && $investor->county==$county)
+                                                            $countryName = $country;
+                                                        }
+                                                        if(empty($nomineeDetails) && $investor->country==$code){
                                                             $selected = 'selected';
-                    
+                                                            $countryName = $country;
+                                                        }
+                                                            
                                                         @endphp
-                                                        <option value="{{ $county }}" {{ $selected }}>{{ $county }}</option>
+                                                        <option value="{{ $code }}" {{ $selected }}>{{ $country }}</option>
                                                     @endforeach
                                                 </select>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ $countryName }}</div>
                                                 <small class="form-text text-muted">Place of birth (city and country, as on your passport)</small>
                                             </div>
                                         </div>
@@ -296,23 +317,28 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Telephone <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif">
+                                                <label>Telephone <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Address <span class="text-danger">*</span></label>
-                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</textarea>
+                                                <label>Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</textarea>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Postcode <span class="text-danger">*</span></label>
-                                                <input type="text" name="account_postcode" class="form-control text-input-status completion_status" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['postcode'])){{ $nomineeDetails['postcode'] }}@else{{$investor->postcode}}@endif">
+                                                <label>Postcode <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" name="account_postcode" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['postcode'])){{ $nomineeDetails['postcode'] }}@else{{$investor->postcode}}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['postcode'])){{ $nomineeDetails['postcode'] }}@else{{$investor->postcode}}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Email Address <span class="text-danger">*</span></label>
-                                                <input readonly type="email" class="form-control text-input-status completion_status" placeholder="" name="account_email" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['email'])){{ $nomineeDetails['email'] }}@else{{$investor->email}}@endif">
+                                                <label>Email Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input readonly type="email" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" placeholder="" name="account_email" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['email'])){{ $nomineeDetails['email'] }}@else{{$investor->email}}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['email'])){{ $nomineeDetails['email'] }}@else{{$investor->email}}@endif</div>
+
                                                 <small  class="form-text text-muted">You will not be able to access your account online, without a valid e-mail address. If you do not provide an e-mail address, any communications to service your account will be sent to you by post.</small>
                                             </div>
 
@@ -336,8 +362,8 @@
                                                     Are you a US Person?
                                                 @endif
 
-                                                     <span class="text-danger">*</span></label>
-                                                <div>
+                                                     <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <div class="editmode @if($mode=='view') d-none @endif">
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                       <input type="radio" id="yes2" name="areuspersonal" class="custom-control-input checked-input-status completion_status" value="yes" data-parsley-required @if(!empty($nomineeDetails) && $isUsPerson =='yes') checked @endif>
                                                       <label class="custom-control-label" for="yes2">Yes</label>
@@ -347,6 +373,7 @@
                                                       <label class="custom-control-label" for="no2">No</label>
                                                     </div>
                                                 </div>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails)) {{ title_case($isUsPerson)}} @endif</div>
                                                 <small  class="form-text text-muted">If you have ticked ‘Yes’, Platform One will not be able to accept your application.</small>
                                             </div>
                                         </div>
@@ -375,7 +402,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label>Please indicate where you would like the original tax certificate sent to:</label>
-                                        <div>
+                                        <div class="editmode @if($mode=='view') d-none @endif">
                                             <div class="custom-control custom-radio">
                                               <input type="radio" id="yourself" name="sendtaxcertificateto" class="custom-control-input completion_status" value="yourself"  @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') checked  @endif >
                                               <label class="custom-control-label" for="yourself">
@@ -395,37 +422,49 @@
                                               <label class="custom-control-label" for="accountant">Accountant**</label>
                                             </div>
                                         </div>
+
+                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails)) {{ title_case($taxCertificateSentTo)}} @endif</div>
                                     </div>
 
-                                    <p class="mb-1">* Will be correspondence address if filled out</p>
-                                    <p>** If you have indicated that you would like your Accountant or Financial Adviser to receive your EIS Certificates please provide their details below:</p>
+                                    <p class="mb-1 @if($mode=='view') d-none @endif">* Will be correspondence address if filled out</p>
+                                    <p class="@if($mode=='view') d-none @endif">** If you have indicated that you would like your Accountant or Financial Adviser to receive your EIS Certificates please provide their details below:</p>
 
                                     <div class="row sendtaxcertificateto-yourself @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') d-none  @endif @if(empty($nomineeDetails)) d-none  @endif">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Firm Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="txcertificatefirmname" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif   data-parsley-required-message="Please enter the firm name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif">
+                                                <label>Firm Name <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatefirmname" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif   data-parsley-required-message="Please enter the firm name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif">
+
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Contact <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="txcertificatecontact" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the conatct." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif">
+                                                <label>Contact <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatecontact" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the conatct." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif">
+
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Telephone <span class="text-danger">*</span></label>
-                                                <input type="tel" class="form-control completion_status text-input-status" placeholder="" name="txcertificatetelephone" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif">
+                                                <label>Telephone <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="tel" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatetelephone" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif">
+
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Email Address <span class="text-danger">*</span></label>
-                                                <input type="email" class="form-control completion_status text-input-status" placeholder="" name="txcertificateemail" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the email." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif">
+                                                <label>Email Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="email" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificateemail" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the email." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif">
+
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif</div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Address <span class="text-danger">*</span></label>
-                                                <textarea id="" cols="30" rows="3" name="txcertificateaddress" class="form-control text-input-status completion_status" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</textarea>
+                                                <label>Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <textarea id="" cols="30" rows="3" name="txcertificateaddress" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</textarea>
+
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</div>
                                             </div>
                                         </div>
                                     </div>
@@ -461,15 +500,18 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Name of Account Holder(s) <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntholder1" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder1'])){{ $nomineeDetails['bankaccntholder1'] }}@endif">
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntholder2" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder2'])){{ $nomineeDetails['bankaccntholder2'] }}@endif">
+                                                <label>Name of Account Holder(s) <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="bankaccntholder1" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder1'])){{ $nomineeDetails['bankaccntholder1'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="bankaccntholder2" data-parsley-required data-parsley-required-message="Please enter the account holder name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder2'])){{ $nomineeDetails['bankaccntholder2'] }}@endif">
+
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder1'])){{ $nomineeDetails['bankaccntholder1'] }}@endif <br> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntholder2'])){{ $nomineeDetails['bankaccntholder2'] }}@endif</div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Bank Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankname" data-parsley-required data-parsley-required-message="Please enter the bank name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankname'])){{ $nomineeDetails['bankname'] }}@endif">
+                                                <label>Bank Name <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="bankname" data-parsley-required data-parsley-required-message="Please enter the bank name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankname'])){{ $nomineeDetails['bankname'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankname'])){{ $nomineeDetails['bankname'] }}@endif</div>
                                             </div>
                                         </div>
                                     </div>
@@ -477,14 +519,16 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Account Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntnumber" data-parsley-required data-parsley-required-message="Please enter the account number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntnumber'])){{ $nomineeDetails['bankaccntnumber'] }}@endif">
+                                                <label>Account Number <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="bankaccntnumber" data-parsley-required data-parsley-required-message="Please enter the account number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntnumber'])){{ $nomineeDetails['bankaccntnumber'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntnumber'])){{ $nomineeDetails['bankaccntnumber'] }}@endif</div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Bank Address <span class="text-danger">*</span></label>
-                                                <textarea   id="" cols="30" rows="1" class="form-control completion_status text-input-status" name="bankaddress" data-parsley-required data-parsley-required-message="Please enter the bank address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaddress'])){{ $nomineeDetails['bankaddress'] }}@endif</textarea>
+                                                <label>Bank Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <textarea   id="" cols="30" rows="1" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="bankaddress" data-parsley-required data-parsley-required-message="Please enter the bank address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaddress'])){{ $nomineeDetails['bankaddress'] }}@endif</textarea>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankaddress'])){{ $nomineeDetails['bankaddress'] }}@endif</div>
                                             </div>
                                         </div>
                                     </div>
@@ -492,14 +536,16 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Sort Code <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="bankaccntsortcode" data-parsley-required data-parsley-required-message="Please enter the sort code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif">
+                                                <label>Sort Code <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="bankaccntsortcode" data-parsley-required data-parsley-required-message="Please enter the sort code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif</div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Postcode <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status" placeholder="" name="clientbankpostcode" data-parsley-required data-parsley-required-message="Please enter the post code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['clientbankpostcode'])){{ $nomineeDetails['clientbankpostcode'] }}@endif">
+                                                <label>Postcode <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="clientbankpostcode" data-parsley-required data-parsley-required-message="Please enter the post code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['clientbankpostcode'])){{ $nomineeDetails['clientbankpostcode'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['clientbankpostcode'])){{ $nomineeDetails['clientbankpostcode'] }}@endif</div>
                                             </div>
                                         </div>
                                     </div>
@@ -586,19 +632,21 @@
                                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                                         <!-- <div class="form-group"> -->
                                                             <label>% of investment</label>
-                                                            <input type="number" class="form-control invest-perc investment-input" {{ $readonlyInvPer }} placeholder="" name="adviserinitialinvestpercent" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestpercent'])){{ $nomineeDetails['adviserinitialinvestpercent'] }}@endif">
+                                                            <input type="number" class="form-control invest-perc investment-input editmode @if($mode=='view') d-none @endif" {{ $readonlyInvPer }} placeholder="" name="adviserinitialinvestpercent" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestpercent'])){{ $nomineeDetails['adviserinitialinvestpercent'] }}@endif">
+                                                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestpercent'])){{ $nomineeDetails['adviserinitialinvestpercent'] }} @else - @endif</div>
                                                         <!-- </div> -->
                                                     </div>
                                                     <div class="col-sm-1 text-center mb-3 mb-sm-0">OR</div>
                                                     <div class="col-sm-5 mb-3 mb-sm-0">
                                                         <!-- <div class="form-group"> -->
                                                             <label>Fixed amount: (applicable to each payment in)</label>
-                                                            <input type="number" class="form-control invest-amount investment-input" {{ $readonlyInvAmt }} placeholder="" name="adviserinitialinvestfixedamnt" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestfixedamnt'])){{ $nomineeDetails['adviserinitialinvestfixedamnt'] }}@endif">
+                                                            <input type="number" class="form-control invest-amount investment-input editmode @if($mode=='view') d-none @endif" {{ $readonlyInvAmt }} placeholder="" name="adviserinitialinvestfixedamnt" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestfixedamnt'])){{ $nomineeDetails['adviserinitialinvestfixedamnt'] }}@endif">
+                                                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestfixedamnt'])){{ $nomineeDetails['adviserinitialinvestfixedamnt'] }} @else - @endif</div>
                                                         <!-- </div> -->
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <label>Is VAT to be applied?</label>
-                                                        <div>
+                                                        <div class="editmode @if($mode=='view') d-none @endif">
                                                             <div class="custom-control custom-radio custom-control-inline">
                                                               <input type="radio" id="adviservattobeapplied_yes" name="adviservattobeapplied" class="custom-control-input" value="yes" @if(!empty($nomineeDetails) && isset($nomineeDetails['adviservattobeapplied']) && $nomineeDetails['adviservattobeapplied']=='yes') checked  @endif>
                                                               <label class="custom-control-label" for="adviservattobeapplied_yes">Yes</label>
@@ -608,6 +656,8 @@
                                                               <label class="custom-control-label" for="adviservattobeapplied_no">No</label>
                                                             </div>
                                                         </div>
+
+                                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['adviservattobeapplied'])) {{ title_case($nomineeDetails['adviservattobeapplied']) }}  @endif</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -631,7 +681,7 @@
 
                                                 <div class="form-group">
                                                     <div class="custom-control custom-checkbox">
-                                                      <input type="checkbox" class="custom-control-input completion_status" name="advdetailsnotapplicable" value="1" id="ch5" @if(!empty($nomineeDetails) && isset($nomineeDetails['advdetailsnotapplicable']) && $nomineeDetails['advdetailsnotapplicable']=='1') checked @endif>
+                                                      <input type="checkbox" class="custom-control-input completion_status disabledInput" @if($mode=='view') disabled @endif  name="advdetailsnotapplicable" value="1" id="ch5" @if(!empty($nomineeDetails) && isset($nomineeDetails['advdetailsnotapplicable']) && $nomineeDetails['advdetailsnotapplicable']=='1') checked @endif>
                                                       <label class="custom-control-label" for="ch5">Not applicable</label>
                                                     </div>
                                                 </div>
@@ -654,19 +704,23 @@
                                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                                         <!-- <div class="form-group"> -->
                                                             <label>% of investment</label>
-                                                            <input type="number" name="ongoingadvinitialinvestpercent" {{ $readonlyInvPer }} class="form-control investment-input invest-perc" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvinitialinvestpercent'])){{ $nomineeDetails['ongoingadvinitialinvestpercent'] }}@endif">
+                                                            <input type="number" name="ongoingadvinitialinvestpercent" {{ $readonlyInvPer }} class="form-control investment-input invest-perc editmode @if($mode=='view') d-none @endif" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvinitialinvestpercent'])){{ $nomineeDetails['ongoingadvinitialinvestpercent'] }}@endif">
+
+                                                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvinitialinvestpercent'])){{ $nomineeDetails['ongoingadvinitialinvestpercent'] }} @else - @endif</div>
                                                         <!-- </div> -->
                                                     </div>
                                                     <div class="col-sm-1 text-center mb-3 mb-sm-0">OR</div>
                                                     <div class="col-sm-5 mb-3 mb-sm-0">
                                                         <!-- <div class="form-group"> -->
                                                             <label>Fixed amount: (applicable to each payment in)</label>
-                                                            <input type="number" name="ongoingadvinitialinvestfixedamnt" {{ $readonlyInvAmt }} class="form-control  invest-amount investment-input" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvinitialinvestfixedamnt'])){{ $nomineeDetails['ongoingadvinitialinvestfixedamnt'] }}@endif">
+                                                            <input type="number" name="ongoingadvinitialinvestfixedamnt" {{ $readonlyInvAmt }} class="form-control  invest-amount investment-input editmode @if($mode=='view') d-none @endif" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvinitialinvestfixedamnt'])){{ $nomineeDetails['ongoingadvinitialinvestfixedamnt'] }}@endif">
+
+                                                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvinitialinvestfixedamnt'])){{ $nomineeDetails['ongoingadvinitialinvestfixedamnt'] }} @else - @endif</div>
                                                         <!-- </div> -->
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <label>Is VAT to be applied?</label>
-                                                        <div>
+                                                        <div class="editmode @if($mode=='view') d-none @endif">
                                                             <div class="custom-control custom-radio custom-control-inline">
                                                               <input type="radio" id="ongoingadvchargesvatyettobeapplied_yes" name="ongoingadvchargesvatyettobeapplied" value="yes" class="custom-control-input" @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvchargesvatyettobeapplied']) && $nomineeDetails['ongoingadvchargesvatyettobeapplied']=='yes') checked  @endif>
                                                               <label class="custom-control-label" for="ongoingadvchargesvatyettobeapplied_yes">Yes</label>
@@ -676,6 +730,8 @@
                                                               <label class="custom-control-label" for="ongoingadvchargesvatyettobeapplied_no">No</label>
                                                             </div>
                                                         </div>
+
+                                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvchargesvatyettobeapplied'])) {{ title_case($nomineeDetails['ongoingadvchargesvatyettobeapplied'])}}   @endif</div>
                                                     </div>
                                                 </div>
 
@@ -684,19 +740,23 @@
                                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                                         <!-- <div class="form-group"> -->
                                                             <label>% of investment</label>
-                                                            <input type="number" {{ $readonlyagreeInvPer }} class="form-control aic-investment-perc  aic-investment-input" name="intermediaryinitialinvestpercent" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryinitialinvestpercent'])){{ $nomineeDetails['intermediaryinitialinvestpercent'] }}@endif">
+                                                            <input type="number" {{ $readonlyagreeInvPer }} class="form-control aic-investment-perc  aic-investment-input editmode @if($mode=='view') d-none @endif" name="intermediaryinitialinvestpercent" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryinitialinvestpercent'])){{ $nomineeDetails['intermediaryinitialinvestpercent'] }}@endif">
+
+                                                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryinitialinvestpercent'])){{ $nomineeDetails['intermediaryinitialinvestpercent'] }} @else - @endif</div>
                                                         <!-- </div> -->
                                                     </div>
                                                     <div class="col-sm-1 text-center mb-3 mb-sm-0">OR</div>
                                                     <div class="col-sm-5 mb-3 mb-sm-0">
                                                         <!-- <div class="form-group"> -->
                                                             <label>Fixed amount: (applicable to each payment in)</label>
-                                                            <input type="number" {{ $readonlyagreeInvAmt }} class="form-control aic-investment-amount aic-investment-input" name="intermediaryinitialinvestfixedamnt" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryinitialinvestfixedamnt'])){{ $nomineeDetails['intermediaryinitialinvestfixedamnt'] }}@endif">
+                                                            <input type="number" {{ $readonlyagreeInvAmt }} class="form-control aic-investment-amount aic-investment-input editmode @if($mode=='view') d-none @endif" name="intermediaryinitialinvestfixedamnt" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryinitialinvestfixedamnt'])){{ $nomineeDetails['intermediaryinitialinvestfixedamnt'] }}@endif">
+
+                                                            <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryinitialinvestfixedamnt'])){{ $nomineeDetails['intermediaryinitialinvestfixedamnt'] }} @else - @endif</div>
                                                         <!-- </div> -->
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <label>Is VAT to be applied?</label>
-                                                        <div>
+                                                        <div class="editmode @if($mode=='view') d-none @endif">
                                                             <div class="custom-control custom-radio custom-control-inline">
                                                               <input type="radio" id="intermediaryvattobeapplied_yes" name="intermediaryvattobeapplied" value="yes" class="custom-control-input" @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryvattobeapplied']) && $nomineeDetails['intermediaryvattobeapplied']=='yes') checked  @endif>
                                                               <label class="custom-control-label" for="intermediaryvattobeapplied_yes">Yes</label>
@@ -706,6 +766,7 @@
                                                               <label class="custom-control-label" for="intermediaryvattobeapplied_no">No</label>
                                                             </div>
                                                         </div>
+                                                        <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryvattobeapplied'])) {{ title_case($nomineeDetails['intermediaryvattobeapplied'])}}  @endif</div>
                                                     </div>
                                                 </div>
 
@@ -825,7 +886,7 @@
 
                                                 <div>
                                                     <div class="custom-control custom-checkbox">
-                                                      <input type="checkbox" class="custom-control-input completion_status checked-input-status" id="agreeclientdeclarationch2" name="agreeclientdeclaration" value="1" @if(!empty($nomineeDetails) && isset($nomineeDetails['agreeclientdeclaration']) && $nomineeDetails['agreeclientdeclaration'] =='1') checked @endif>
+                                                      <input type="checkbox" class="custom-control-input completion_status checked-input-status disabledInput"  @if($mode=='view') disabled @endif id="agreeclientdeclarationch2" name="agreeclientdeclaration" value="1" @if(!empty($nomineeDetails) && isset($nomineeDetails['agreeclientdeclaration']) && $nomineeDetails['agreeclientdeclaration'] =='1') checked @endif>
                                                       <label class="custom-control-label" for="agreeclientdeclarationch2">Please Tick here to confirm and agree with the Client Declaration and the Data Protection Policy</label>
                                                     </div>
                                                 </div>
@@ -949,7 +1010,7 @@
                                     <p class="mb-1">Please provide details below of the amount you will be transferring to your Investment Account.</p>
 
                                     <div class="form-group">
-                                        <div>
+                                        <div class="editmode @if($mode=='view') d-none @endif">
                                             <div class="custom-control custom-radio">
                                               <input type="radio" id="transfer_at_later_stage_no" name="transfer_at_later_stage" class="custom-control-input completion_status"  value="no" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') checked @endif >
                                               <label class="custom-control-label" for="transfer_at_later_stage_no">I will transfer funds immediately and provide details below</label>
@@ -965,7 +1026,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label for="inputPassword" class="col-sm-4 col-form-label mt-4">Bank Transfer <span class="text-danger">*</span></label>
+                                                <label for="inputPassword" class="col-sm-4 col-form-label mt-4">Bank Transfer <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
                                                 <div class="col-sm-8">
                                                     @php
                                                     $dataParsley = '';
@@ -983,14 +1044,16 @@
                                                     @endphp
 
                                                     <label for="">Deposit Amount</label>
-                                                    <input type="text" class="form-control bank-input {{ $completionClasses }}" id="" name="subscriptioninvamntbank" placeholder="" {{ $dataParsley }} data-parsley-required-message="Please enter the deposite amount." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!='') readonly @endif>
+                                                    <input type="text" class="form-control bank-input {{ $completionClasses }} editmode @if($mode=='view') d-none @endif" id="" name="subscriptioninvamntbank" placeholder="" {{ $dataParsley }} data-parsley-required-message="Please enter the deposite amount." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!='') readonly @endif>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Expected Date of Bank Transfer</label>
-                                                <input type="text" class="form-control datepicker bank-input text-input-status completion_status" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
+                                                <input type="text" class="form-control datepicker bank-input text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif</div>
                                             </div>
                                         </div>
                                     </div>
@@ -998,7 +1061,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label for="inputPassword" class="col-sm-4 col-form-label">Cheque <span class="text-danger">*</span></label>
+                                                <label for="inputPassword" class="col-sm-4 col-form-label">Cheque <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
                                                 <div class="col-sm-8">
                                                     @php
                                                     $dataParsley = '';
@@ -1014,7 +1077,8 @@
                                                     }
 
                                                     @endphp
-                                                    <input type="number" name="subscriptioninvamntcheq" class="form-control bank-input {{ $completionClasses }}" id="" placeholder=""  {{ $dataParsley }} data-parsley-required-message="Please enter the cheque." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank']) && $nomineeDetails['subscriptioninvamntbank']!='') readonly @endif>
+                                                    <input type="number" name="subscriptioninvamntcheq" class="form-control bank-input {{ $completionClasses }} editmode @if($mode=='view') d-none @endif" id="" placeholder=""  {{ $dataParsley }} data-parsley-required-message="Please enter the cheque." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank']) && $nomineeDetails['subscriptioninvamntbank']!='') readonly @endif>
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1026,7 +1090,8 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Bank Name</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" readonly class="form-control" name="subscriptionbankname" id="" placeholder="" value="HSBC">
+                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionbankname" id="" placeholder="" value="HSBC">
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> HSBC</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1034,7 +1099,8 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Sort Code</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" readonly class="form-control" name="subscriptionsortcode" id="" placeholder="" value="401307">
+                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionsortcode" id="" placeholder="" value="401307">
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">401307</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1045,7 +1111,8 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Account Name</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" readonly class="form-control" id="" name="subscriptionaccountname" placeholder="" value="P1 GrowthInvest">
+                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" id="" name="subscriptionaccountname" placeholder="" value="P1 GrowthInvest">
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">P1 GrowthInvest</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1053,7 +1120,8 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Account No.</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" readonly class="form-control" name="subscriptionaccountno" id="" placeholder="" value="93671402">
+                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionaccountno" id="" placeholder="" value="93671402">
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> 93671402</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1062,9 +1130,11 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label for="inputPassword" class="col-sm-4 col-form-label">Reference: <span class="text-danger">*</span></label>
+                                                <label for="inputPassword" class="col-sm-4 col-form-label">Reference: <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control completion_status text-input-status bank-input" id="" name="subscriptionreffnamelname" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the reference." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif">
+                                                    <input type="text" class="form-control completion_status text-input-status bank-input editmode @if($mode=='view') d-none @endif" id="" name="subscriptionreffnamelname" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the reference." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif">
+                                                    
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif</div>
                                                     <small class="form-text text-muted">First and Last Name</small>
                                                 </div>
                                             </div>
@@ -1090,7 +1160,7 @@
                         If you need to return to the Investment Account form at a later stage   
                     @endif
                     , please use the Save button  to save all current details until you are ready to submit for online signature or download the form.</p>
-                        <button type="submit" class="btn btn-primary" >Save</button>
+                        <button type="submit" class="btn btn-primary editmode @if($mode=='view') d-none @endif" >Save</button>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
                     </div>
@@ -1103,11 +1173,12 @@
 
                     <div class="d-flex justify-content-between">
                         <div>
-                            <button type="button" class="btn btn-primary">&laquo; Prev</button>
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary"><i class="fa fa-download"></i> Download</button>
-                            <button type="button" class="btn btn-primary"><i class="fa fa-send"></i> Submit</button>
+                            
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}" target="_blank"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>
 
