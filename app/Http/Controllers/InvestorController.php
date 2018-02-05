@@ -2175,7 +2175,7 @@ class InvestorController extends Controller
         if ($nomineeApplication->adobe_doc_key == false || $nomineeApplication->adobe_doc_key == "") {
             $dataInvestorNomination      = $investor->getInvestorNomineeData();
             $additionalArgs['pdfaction'] = '';
-            $html                        = '';//getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
+            $html                        = getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
             $now_date                    = date('d-m-Y', time());
 
             $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
