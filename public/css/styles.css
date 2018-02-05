@@ -1002,3 +1002,14 @@ ul.statistics li:last-of-type {
   max-width: 80px;
   height: auto;
 }
+.message-board > .media:not(:last-of-type) {
+  margin-bottom: 15px;
+}
+.message-board .media-avatar {
+  height: 40px;
+  width: 40px;
+}
+.message-board .media-avatar > img {
+  max-width: 40px;
+  height: auto;
+}
