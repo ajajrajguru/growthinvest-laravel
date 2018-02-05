@@ -2236,7 +2236,10 @@ class InvestorController extends Controller
         }
 
         $nomineeApplication  = $investor->investorNomineeApplication();
-        $nomineeApplication->signed_url = '1';
+
+        $adobe_echo_sign = new AdobeSignature();
+        $dockeyUrl     = $adobe_echo_sign->getAdobeDocUrlByDocKey($nomineeApplication->adobe_doc_key);
+        $nomineeApplication->signed_url = $dockeyUrl ;
         
         $nomineeApplication->save();
 
