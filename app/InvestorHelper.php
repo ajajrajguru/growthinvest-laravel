@@ -2866,7 +2866,7 @@ function getHtmlForNominationApplicationformPdf($firmStats, $statsPage, $firmId 
                                    <td style="Width: 100%;">';
 
     if ($additionalArgs['pdfaction'] == "esign") {
-        //$table_html.='{{Sig_es_:signer1:signature}}';
+ 
         $html .= '<div class="inputcss" style="height:60px;"><input style="margin-top:5px;" type="text" class="signature_style" name="Sig_es_:signer1:signature" /></div> ';
     } else {
         $html .= '<div class="inputcss" style="padding: 5px;"><BR><BR><br></div>';
@@ -2965,7 +2965,7 @@ function getHtmlForNominationApplicationformPdf($firmStats, $statsPage, $firmId 
     $html = $html . $header_footer_end_html;
 
     $html .= '<page backimg="' . $lastpage_image . '"> </page>';
-
+   
     return $html;
 
 }
