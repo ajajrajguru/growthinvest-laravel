@@ -108,7 +108,7 @@ class InvestorController extends Controller
 
             $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select class="form-control form-control-sm">
+            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="'.url('backoffice/investor/'.$investor->gi_code.'/investor-profile').'">
             <option id="select" value="">-Select-</option>
             <option value="edit_profile">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
@@ -2255,6 +2255,57 @@ class InvestorController extends Controller
 
         }
  
+    }
+
+
+    public function investorProfile($giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $investorCertification = $investor->getActiveCertification();
+
+        $breadcrumbs   = [];  
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
+
+        $data['investor']          = $investor;
+        $data['investorCertification']          =  (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'View Profile';
+        $data['activeMenu']         = 'manage_clients';
+
+        return view('backoffice.clients.investor-profile')->with($data);
+
+    }
+
+    public function investorInvest($giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $investorCertification = $investor->getActiveCertification();
+
+        $breadcrumbs   = [];  
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
+
+        $data['investor']          = $investor;
+        $data['investorCertification']          =  (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'View Profile';
+        $data['activeMenu']         = 'manage_clients';
+
+        return view('backoffice.clients.investor-invest')->with($data);
+
     }
 
 }

@@ -43,6 +43,8 @@ class UserPermission
                 'backoffice/firms/{giCode}'                                => ['edit_firm', 'edit_my_firm'],
 
                 'backoffice/investor'                                      => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/{giCode}/investor-profile'                                      => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/{giCode}/investor-invest'                                      => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/get-investors'                        => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/export-investors'                     => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/registration'                         => ['add_investor'],
