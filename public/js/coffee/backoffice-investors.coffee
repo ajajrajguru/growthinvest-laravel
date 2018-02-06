@@ -544,6 +544,44 @@ $(document).ready ->
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-perc').attr('readonly',true)
 
+
+  investorInvestTable = $('#datatable-investor-invest').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/investor/get-investor-invest'
+      type: 'post'
+      data: (data) ->
+
+        filters = {}
+        
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [
+      
+    ])
+
+  $('body').on 'click', '.reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change')
+    $('select[name="investor_name"]').val('').trigger('change')
+    $('select[name="client_category"]').val('')
+    $('select[name="client_certification"]').val('')
+    $('select[name="investor_nominee"]').val('')
+    $('select[name="idverified"]').val('')
+   
+    investorTable.ajax.reload()
+    return
+
   
 
 

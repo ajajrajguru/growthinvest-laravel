@@ -1,6 +1,6 @@
 (function() {
   $(document).ready(function() {
-    var investorTable, scrollTopContainer, validateQuiz;
+    var investorInvestTable, investorTable, scrollTopContainer, validateQuiz;
     investorTable = $('#datatable-investors').DataTable({
       'pageLength': 50,
       'processing': false,
@@ -597,13 +597,41 @@
         return $('.aic-investment-amount').attr('readonly', true);
       }
     });
-    return $(document).on('keyup', '.aic-investment-amount', function() {
+    $(document).on('keyup', '.aic-investment-amount', function() {
       $('.investment-input').attr('readonly', false);
       $('.aic-investment-input').attr('readonly', false);
       if ($(this).val() !== "") {
         $('.investment-input').attr('readonly', true);
         return $('.aic-investment-perc').attr('readonly', true);
       }
+    });
+    investorInvestTable = $('#datatable-investor-invest').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/investor/get-investor-invest',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': []
+    });
+    return $('body').on('click', '.reset-filters', function() {
+      $('select[name="firm_name"]').val('').trigger('change');
+      $('select[name="investor_name"]').val('').trigger('change');
+      $('select[name="client_category"]').val('');
+      $('select[name="client_certification"]').val('');
+      $('select[name="investor_nominee"]').val('');
+      $('select[name="idverified"]').val('');
+      investorTable.ajax.reload();
     });
   });
 
