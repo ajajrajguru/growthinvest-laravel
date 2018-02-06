@@ -71,9 +71,17 @@ Route::group(['middleware' => ['auth','userPermission'], 'prefix' => 'backoffice
     Route::get('fundmanager/{giCode}/registration', 'FundmanagerController@editRegistration');
     Route::get('firm-invite/{giCode}/{type}', 'FirmController@getInvite');
 
+});
 
+Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'], function () {
+
+
+	Route::get('single-company/{slug}', 'BusinessListingController@getBusinessDetails');
 
 });
+
+
+Route::post( 'investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf' );
 
 Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController');

@@ -10,6 +10,7 @@ use App\UserData;
 use App\UserHasCertification;
 use Auth;
 use Illuminate\Http\Request;
+use App\AdobeSignature;
 
 //Importing laravel-permission models
 use Illuminate\Support\Facades\Hash;
@@ -766,8 +767,6 @@ class InvestorController extends Controller
 
         exit();
     }
-
-    
 
     public function sophisticatedCertificationHtml($sophisticatedData, $investor)
     {
@@ -1890,7 +1889,7 @@ class InvestorController extends Controller
         $data['sectors']        = $sectors;
         $data['breadcrumbs']    = $breadcrumbs;
         $data['pageTitle']      = 'Add Investor : Additional Information';
-        $data['mode']           = (empty($additionalInfo)) ? 'edit':'view';
+        $data['mode']           = (empty($additionalInfo)) ? 'edit' : 'view';
         $data['activeMenu']     = 'add_clients';
 
         return view('backoffice.clients.additional-information')->with($data);
@@ -2017,11 +2016,13 @@ class InvestorController extends Controller
         $data['taxCertificateSentTo'] = (!empty($nomineeApplication)) ? $nomineeApplication->tax_certificate_sent_to : '';
         $data['idVerificationStatus'] = (!empty($nomineeApplication)) ? $nomineeApplication->id_verification_status : '';
         $data['isUsPerson']           = (!empty($nomineeApplication)) ? $nomineeApplication->is_us_person : '';
-        $data['nomineeDetails']       = (!empty($nomineeApplication)) ? $nomineeApplication->details : []; 
+        $data['nomineeDetails']       = (!empty($nomineeApplication)) ? $nomineeApplication->details : [];
+        $data['adobeDocKey']       = (!empty($nomineeApplication)) ? $nomineeApplication->adobe_doc_key : '';
+        $data['signedUrl']       = (!empty($nomineeApplication)) ? $nomineeApplication->signed_url : '';
         $data['investorFai']          = $investorFai;
         $data['breadcrumbs']          = $breadcrumbs;
         $data['pageTitle']            = 'Add Investor : Client Investment Account';
-        $data['mode']                 = (empty($nomineeApplication)) ? 'edit':'view';
+        $data['mode']                 = (empty($nomineeApplication)) ? 'edit' : 'view';
         $data['activeMenu']           = 'add_clients';
 
         return view('backoffice.clients.investment-account')->with($data);
@@ -2070,7 +2071,7 @@ class InvestorController extends Controller
         $nomineeDetails['domiciled']                          = $requestData['domiciled'];
         $nomineeDetails['tinnumber']                          = $requestData['tinnumber'];
         $nomineeDetails['city']                               = $requestData['account_city'];
-        $nomineeDetails['country']                             = $requestData['account_country'];
+        $nomineeDetails['country']                            = $requestData['account_country'];
         $nomineeDetails['telephone']                          = $requestData['account_telephone'];
         $nomineeDetails['address']                            = $requestData['account_address'];
         $nomineeDetails['postcode']                           = $requestData['account_postcode'];
@@ -2109,6 +2110,10 @@ class InvestorController extends Controller
         $nomineeDetails['subscriptionaccountno']              = $requestData['subscriptionaccountno'];
         $nomineeDetails['subscriptionreffnamelname']          = $requestData['subscriptionreffnamelname'];
         $nomineeDetails['section_status']                     = $requestData['section_status'];
+        
+        $sendSignature                     = $requestData['send_signature'];
+
+
 
         $nomineeApplication = $investor->investorNomineeApplication();
         if (empty($nomineeApplication)) {
@@ -2123,6 +2128,11 @@ class InvestorController extends Controller
         $nomineeApplication->chargesfinancial_advisor_details = $investorFai;
         $nomineeApplication->save();
 
+
+        if($nomineeApplication->adobe_doc_key == '' && $sendSignature=='yes'){
+            $this->adobeSignataureEmail($investor);
+        }
+
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
         Session::flash('success_message', $successMessage);
 
@@ -2130,7 +2140,8 @@ class InvestorController extends Controller
 
     }
 
-    public function downloadInvestorNominee($giCode){
+    public function downloadInvestorNominee($giCode)
+    {
         $investor = User::where('gi_code', $giCode)->first();
         if (empty($investor)) {
             abort(404);
@@ -2140,12 +2151,13 @@ class InvestorController extends Controller
 
     }
 
-    public function getInvestorNomineePdf($investor){
+    public function getInvestorNomineePdf($investor)
+    {
 
-        $dataInvestorNomination = $investor->getInvestorNomineeData(); 
+        $dataInvestorNomination      = $investor->getInvestorNomineeData();
         $additionalArgs['pdfaction'] = '';
-        $html = getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
-        $now_date  = date('d-m-Y', time());
+        $html                        = getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
+        $now_date                    = date('d-m-Y', time());
 
         $file_name = 'GrowthInvest Client Application Form of ' . $dataInvestorNomination['display_name'] . '  - ' . $now_date . '.pdf';
 
@@ -2157,17 +2169,92 @@ class InvestorController extends Controller
 
         $html2pdf->Output($file_name);
 
-
     }
 
-    public function adobeSignataureEmail(){
-        if($nomineeapplication_dockey==false || $nomineeapplication_dockey==""){
-            $args['investor_id'] = $user_id;
-            $args['stats_pg']    = 'nomination';
-            $args['pdfaction']   = 'esign';
-           
-            downloadSendesignpdf($args);
+    public function adobeSignataureEmail($investor)
+    {
+        $nomineeApplication = $investor->investorNomineeApplication();
+        if ($nomineeApplication->adobe_doc_key == false || $nomineeApplication->adobe_doc_key == "") {
+            $dataInvestorNomination      = $investor->getInvestorNomineeData();
+            $additionalArgs['pdfaction'] = '';
+            $html                        = getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
+            $now_date                    = date('d-m-Y', time());
+
+            $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
+            $html2pdf->pdf->SetDisplayMode('fullpage');
+            $html2pdf->writeHTML($html, isset($_GET['vuehtml']));
+
+            $tmp_foldername = "tmp_nominee_applications";
+
+            $foldername = uniqid("ab1234cde_folder1_a932_");
+
+            if (!file_exists(public_path() . '/userdocs/' . $tmp_foldername)) {
+
+                mkdir(public_path() . '/userdocs/' . $tmp_foldername);
+
+            }
+
+            $destination_dir = public_path() . '/userdocs/' . $tmp_foldername . '/' . $foldername;
+
+            if (!file_exists($destination_dir)) {
+
+                mkdir($destination_dir);
+            }
+
+            $output_link       = $destination_dir . '/nominee_application_pdf_' . $now_date . '.pdf';
+            $callbackurl       = url('investor/adobe/'.$investor->gi_code.'/signed-doc-callback') . '?type=nominee_application';
+            $adobesign_message = "Please sign GrownthInvest application form document";
+            $adobesign_name    = "GrownthInvest Application Form";
+
+            $html2pdf->Output($output_link, 'F');
+
+   
+            $adobe_sign_args = array(
+                'pdf_url'         => $output_link,
+                'name'            => $adobesign_name,
+                'message'         => $adobesign_message,
+                'recipient_email' => 'prajay@ajency.in',
+                'ccs'             => 'sharang@ajency.in',
+                'callbackInfo'    => $callbackurl,
+            );
+
+            $adobe_echo_sign = new AdobeSignature();
+            $dockeyvalue     = $adobe_echo_sign->sendPdfForSignature($adobe_sign_args);
+
+            $nominee_db_dockey = $adobe_echo_sign->getAdobeDocKeys('nominee');
+
+            $nomineeApplication                = $investor->investorNomineeApplication();
+            $nomineeApplication->adobe_doc_key = $dockeyvalue;
+            $nomineeApplication->save();
+
         }
+    }
+
+    public function updateInvestorNomineePdf(Request $request)
+    {
+        $eventType = $request->input("eventType");
+
+        if ($eventType == "ESIGNED") {
+            $dockey = $request->input("documentKey");
+
+            $response_data   = '';
+            $returnd_doc_key = '';
+
+            $type          = 'nominee';
+            $adobeechosign = new AdobeSignature();
+        
+            $nomineeData = NomineeApplication::where('adobe_doc_key',$dockey)->first();
+            
+            if(!empty($nomineeData)){
+                $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey); 
+                $nomineeData->signed_url = $dockeyUrl ;
+                $nomineeData->doc_signed_date = date('Y-m-d H:i:s') ;
+                $nomineeData->save();
+            }
+  
+
+        }
+ 
     }
 
 }

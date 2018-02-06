@@ -601,3 +601,142 @@ function format_amount($amount, $decimal = 0, $prefix = false, $commafy = true)
 
     return $amount;
 }
+
+
+/* Function to download transfer asset pdf, stock transfer asset pdf, letter of authority, nomination pdf or to send those pdf for esignature */
+function downloadSendESignPdf($args)
+{
+
+    $firmId   = 0;
+    $stats_pg = '';
+    $investor = [];
+    if ($args['investor_id'] != '') {
+        $investor_id = $args['investor_id'];
+        $investor = \App\User::find($investor_id);
+    }
+    if ($args['stats_pg'] != '') {
+        $stats_pg = $args['stats_pg'];
+    }
+    // if ($args['id'] != '') {
+    //     $id = $args['id'];
+    // }
+
+    $additionalArgs['pdfaction'] = $args['pdfaction'];
+
+    $now_date  = date('d-m-Y', time());
+    $file_name = 'statsfile.pdf';
+    $pdf_title = 'Statistics data ';
+
+    $default_PDF_MARGIN_LEFT  = 16;
+    $default_PDF_MARGIN_TOP   = 12;
+    $default_PDF_MARGIN_RIGHT = 8;
+    $default_auto_page_break  = 12;
+    $default_font_size        = 10;
+    $printheader1             = false;
+    $printfooter1             = false;
+
+    switch ($stats_pg) {
+
+        case 'nomination':$data_investor_nomination = $investor->getInvestorNomineeData(); 
+
+            $html = getHtmlForNominationApplicationformPdf($data_investor_nomination, $stats_pg, '', $additionalArgs);
+
+            $file_name = 'GrowthInvest Client Application Form of ' . $data_investor_nomination['display_name'] . '  - ' . $now_date . '.pdf';
+
+            $pdf_title = 'GrowthInvest One Client Application Form ';
+
+            break;
+
+        default:
+            $html = "Proper data not available";
+            break;
+    }
+    
+    //$html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(16, 12, 8, 12));
+    $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
+    $html2pdf->pdf->SetDisplayMode('fullpage');
+    $html2pdf->writeHTML($html, isset($_GET['vuehtml']));
+
+  
+
+    //Generate pdf file in temp folder, and delete the file after it is sent for esignature from temp folder
+
+    if ($stats_pg == "nomination") {
+        $tmp_foldername                = "tmp_nominee_applications";
+        $adobesign_args['investor_id'] = $investor_id;
+    } else {
+        $tmp_foldername = "tmp_transferassets";
+
+    }
+
+    $foldername = uniqid("ab1234cde_folder1_a932_");
+
+   
+    if (!file_exists(public_path(). '/userdocs/' . $tmp_foldername)) {
+
+        mkdir(public_path(). '/userdocs/' .  $tmp_foldername);
+
+    }
+
+    $destination_dir = public_path(). '/userdocs/' .  $tmp_foldername . '/' . $foldername;
+
+    if (!file_exists($destination_dir)) {
+
+        mkdir($destination_dir);
+
+    }
+
+    $investor_data = $investor;
+     
+
+    $output_link = '';
+    $callbackurl = '';
+    switch ($stats_pg) {
+
+        case 'nomination':
+
+            $output_link       = $destination_dir . '/nominee_application_pdf_' . $now_date . '.pdf';
+            $callbackurl       = url('investor/adobe/signed-doc-callback').'?type=nominee_application';
+            $adobesign_message = "Please sign GrownthInvest application form document";
+            $adobesign_name    = "GrownthInvest Application Form";
+            break;
+
+    }
+
+    if ($callbackurl != '' & $output_link != '') {
+
+        $html2pdf->Output($output_link, 'F');
+
+        $adobe_sign_cc_mails    = 'prajay@ajency.in';
+        $adobe_sign_cc_mails_ar = explode(',', $adobe_sign_cc_mails);
+
+        $adobesign_args = array('recipient_email' => 'prajay+1@ajency.in',
+
+            'ccs'                                     => $adobe_sign_cc_mails_ar, /* array('gustaf.sander@growthinvest.com','david.lovell@growthinvest.com'), */
+            'pdffile_link' => $output_link,
+            'callbackInfo'                            => $callbackurl,
+            /* 'last_pledgeid'  =>$last_pledgeid,*/
+            'stats_pg'                                => $stats_pg,
+            'transferasset_id'                        => '',
+            'adobesign_msg'                           => $adobesign_message,
+            'adobesign_name'                          => $adobesign_name,
+            'investor_id'                             => $investor_id,
+
+            /*'transferasset_id'=> */
+        );
+
+        //send_pdf_for_signature( $investor_data->user_email,$output_link,$last_pledgeid);
+         
+        $adobeSignature = new \App\AdobeSignature();
+        $adobeSignature->send_pdf_for_signature($adobesign_args);
+    
+        $success = true;
+        return $success;
+    } else {
+        $success = false;
+        return $success;
+    }
+      
+
+    //return $output;
+}

@@ -401,6 +401,10 @@ $(document).ready ->
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
+  $(document).on 'click', '.submit-signature', ->
+    $('input[name="send_signature"]').val 'yes'
+    $('form[name="add-investor-ia"]').submit()
+    
   $(document).on 'change', 'input[name="advdetailsnotapplicable"]', ->
     if $(this).is(':checked')
       $('.adv-details-applicable-data').find('.form-control').removeClass('text-input-status').removeClass('completion_status')

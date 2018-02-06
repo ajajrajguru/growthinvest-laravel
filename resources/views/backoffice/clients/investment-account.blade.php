@@ -14,6 +14,8 @@
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy'
         });
+
+        $('[data-toggle="tooltip"]').tooltip()
     });
         
 
@@ -1160,8 +1162,9 @@
                         If you need to return to the Investment Account form at a later stage   
                     @endif
                     , please use the Save button  to save all current details until you are ready to submit for online signature or download the form.</p>
-                        <button type="submit" class="btn btn-primary editmode @if($mode=='view') d-none @endif" >Save</button>
+                        <button type="submit" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-nominee" >Save</button>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="send_signature">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
                     </div>
                      </form>
@@ -1178,7 +1181,20 @@
                         <div>
                             
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}" target="_blank"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
-                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif"><i class="fa fa-send"></i> Submit</button>
+
+                            @php
+                            
+                            $disableSubmit = '';
+                            if(isset($nomineeDetails['section_status']) && !empty($nomineeDetails['section_status']) && in_array('incomplete',$nomineeDetails['section_status'])){
+                                $disableSubmit = 'disabled';
+                            }
+                            
+                            if($adobeDocKey != '')
+                            {
+                                $disableSubmit = 'disabled';
+                            }
+                            @endphp
+                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature" {{ $disableSubmit }}  @if($adobeDocKey != '') data-toggle="tooltip"  title="Nominee Application is already sent for signature" data-original-title="Nominee Application is already sent for signature" @endif ><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>
 
