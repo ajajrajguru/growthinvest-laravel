@@ -16,8 +16,13 @@
         $('.select2-single').select2({
             // placeholder: "Search here"
         });
+
+        $(document).on('change', '.investor_actions', function() {
+           var editUrl = $(this).attr('edit-url')
+           window.open(editUrl);
+        });
     });
-  
+
 
 </script>
 
