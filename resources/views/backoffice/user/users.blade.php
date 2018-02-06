@@ -39,7 +39,7 @@
                 <div class="col-md-6">
                     <div class="float-right">
                         <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
-                        <a href="{{ url('backoffice/user/export-users')}}" class="btn btn-link">Download CSV</a>
+                        <a href="{{ url('backoffice/user/export-users')}}" class="btn btn-outline-primary">Download CSV</a>
 
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <tbody>
                         @foreach($users as $user)
                             <tr >
- 
+
                                 <td><b><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">{{  title_case($user->first_name.' '.$user->last_name) }}</a></b></td>
                                 <td class="toggle-mob">{{  $user->email }}</td>
                                 <td class="toggle-mob">{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
@@ -92,7 +92,7 @@
                                     <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">View Profile</a>
                                 </td>
 
-                            </tr> 
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
