@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var IntermediaryTable, api, businesslistingsTable, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, updateSerachinput, usersTable;
+    var IntermediaryTable, api, businesslistingsTable, clearInput, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, updateSerachinput, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -34,7 +34,7 @@
         });
         searchField += '</select>';
       } else {
-        searchField = '<input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />';
+        searchField = '<div class="input-group">  <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-muted"></i></button>  </div> </div>';
       }
       $(this).closest('table').find('tr.filters td').eq($(this).index()).html(searchField);
     });
@@ -53,6 +53,16 @@
       tableObj.columns().eq(0).each(function(colIdx) {
         $('.datatable-search', $('.filters td')[colIdx]).on('keyup change', function() {
           tableObj.column(colIdx).search(this.value).draw();
+        });
+      });
+    };
+    clearInput = function(tableObj) {
+      $('body').on('click', '.clear-input', function() {
+        $(this).closest('.input-group').find('input').val('');
+        tableObj.columns().eq(0).each(function(colIdx) {
+          var colVal;
+          colVal = $('input', $('.filters td')[colIdx]).val();
+          tableObj.columns(colIdx).search(colVal).draw();
         });
       });
     };
@@ -119,6 +129,7 @@
       });
       initSerachForTable(usersTable);
       updateSerachinput(usersTable);
+      clearInput(usersTable);
     }
     if ($('#datatable-Intermediary').length) {
       IntermediaryTable = $('#datatable-Intermediary').DataTable({
