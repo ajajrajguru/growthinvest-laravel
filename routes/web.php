@@ -50,10 +50,12 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('investor/{giCode}/save-additional-information', 'InvestorController@saveAdditionalInformation');
     Route::get('investor/{giCode}/investment-account', 'InvestorController@investmentAccount');
     Route::get('investor/{giCode}/download-investor-nominee', 'InvestorController@downloadInvestorNominee');
-
     Route::post('investor/{giCode}/save-investment-account', 'InvestorController@saveInvestmentAccount');
     Route::post('investor/get-investors', 'InvestorController@getInvestors');
     Route::post('investor/save-registration', 'InvestorController@saveRegistration');
+    
+    Route::get('investor/{giCode}/investor-profile', 'InvestorController@investorProfile');
+    Route::get('investor/{giCode}/investor-invest', 'InvestorController@investorInvest');
     Route::resource('investor', 'InvestorController');
 
     //business
@@ -81,6 +83,15 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('dashboard/financials', ['type' => 'financials', 'uses' => 'UserController@showDashboard']);
     Route::get('dashboard/knowledge', ['type' => 'knowledge', 'uses' => 'UserController@showDashboard']);
     /*End Coming soon routes on dashboard */
+
+    /*Coming soon routes on manage */
+    Route::get('manage/manage-backoffice', ['type' => 'manage-backoffice', 'uses' => 'UserController@showAdminManage']);
+    Route::get('manage/manage-frontoffice', ['type' => 'manage-frontoffice', 'uses' => 'UserController@showAdminManage']);
+    Route::get('manage/companylist', ['type' => 'manage-companylist', 'uses' => 'UserController@showAdminManage']);
+    Route::get('manage/manage-act-feed-group', ['type' => 'manage-activityfeedgroup', 'uses' => 'UserController@showAdminManage']);
+    /*End Coming soon routes on manage */
+
+
 
 });
 
