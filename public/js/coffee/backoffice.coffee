@@ -11,10 +11,10 @@ $(document).ready ->
 			hash = hashes[i].split('=')
 			# vars.push hash[0]
 			vars[hash[0]] = hash[1]
-			$('td[data-search="'+hash[0]+'"]').find('.datatable-search').val(hash[1]) 
+			$('td[data-search="'+hash[0]+'"]').find('.datatable-search').val(hash[1])
 			i++
 		vars
-	
+
 	$('.dataFilterTable thead th.w-search').each ->
 		title = $(this).text()
 		searchType = $(this).closest('table').find('tr.filters td').eq($(this).index()).attr 'data-search';
@@ -26,7 +26,7 @@ $(document).ready ->
 				searchField += '<option value="'+value+'">' + value + '</option>'
 			searchField += '</select>'
 		else
-			searchField = '<input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />'
+			searchField = '<div class="input-group">  <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-muted"></i></button>  </div> </div>'
 
 		$(this).closest('table').find('tr.filters td').eq($(this).index()).html searchField
 		return
@@ -49,6 +49,17 @@ $(document).ready ->
 			return
 		return
 
+	clearInput = (tableObj) ->
+		$('body').on 'click', '.clear-input', ->
+			$(this).closest('.input-group').find('input').val('')
+			tableObj.columns().eq(0).each (colIdx) ->
+				colVal = $('input', $('.filters td')[colIdx]).val()
+				tableObj.columns(colIdx).search(colVal).draw()
+				return
+			return
+		return
+
+
 	if $('#datatable-firms').length
 		firmsTable = $('#datatable-firms').DataTable(
 			"paging": false
@@ -64,7 +75,7 @@ $(document).ready ->
 			]
 
 		)
-		
+
 		initSerachForTable(firmsTable)
 
 
@@ -99,6 +110,7 @@ $(document).ready ->
 		)
 		initSerachForTable(usersTable)
 		updateSerachinput(usersTable)
+		clearInput(usersTable)
 
 	if $('#datatable-Intermediary').length
 		IntermediaryTable = $('#datatable-Intermediary').DataTable(
@@ -223,12 +235,12 @@ $(document).ready ->
 		$('#change_pwd').removeClass('d-none');
 		$('.setpassword-cont').addClass('d-none');
 
- 
+
 	if $('form').length && $('form').attr('data-parsley-validate') == true
 		$('form').parsley().on 'form:success', ->
 			$(this)[0].$element.find('.save-btn .fa-check').addClass('d-none')
 			$(this)[0].$element.find('.save-btn').addClass 'running'
- 
+
 
 
 	$('[data-toggle="popover"]').popover()
@@ -276,11 +288,11 @@ $(document).ready ->
 				return
 
 
-		'columns': [        
+		'columns': [
 			{ 'data': 'name' }
 			{ 'data': 'email' }
 			{ 'data': 'firm'}
-			{ 'data': 'business' }         
+			{ 'data': 'business' }
 			{ 'data': 'registered_date'}
 			{ 'data': 'source', "orderable": false}
 			{ 'data': 'action' , "orderable": false}
@@ -292,11 +304,11 @@ $(document).ready ->
 		return
 
 	$('.download-entrepreneur-csv').click ->
-		firm_name = $('select[name="firm_name"]').val() 
+		firm_name = $('select[name="firm_name"]').val()
 		window.open("/backoffice/entrepreneur/export-entrepreneurs?firm_name="+firm_name);
 
 	$('body').on 'click', '.entrepreneurs-reset-filters', ->
-		$('select[name="firm_name"]').val('').trigger('change') 
+		$('select[name="firm_name"]').val('').trigger('change')
 		entrepreneurTable.ajax.reload()
 		return
 
@@ -321,11 +333,11 @@ $(document).ready ->
 				return
 
 
-		'columns': [        
+		'columns': [
 			{ 'data': 'name' }
 			{ 'data': 'email' }
 			{ 'data': 'firm'}
-			{ 'data': 'business' }         
+			{ 'data': 'business' }
 			{ 'data': 'registered_date'}
 			{ 'data': 'source', "orderable": false}
 			{ 'data': 'action' , "orderable": false}
@@ -337,11 +349,11 @@ $(document).ready ->
 		return
 
 	$('.download-fundmanager-csv').click ->
-		firm_name = $('select[name="firm_name"]').val() 
+		firm_name = $('select[name="firm_name"]').val()
 		window.open("/backoffice/fundmanager/export-fundmanagers?firm_name="+firm_name);
 
 	$('body').on 'click', '.fundmanagers-reset-filters', ->
-		$('select[name="firm_name"]').val('').trigger('change') 
+		$('select[name="firm_name"]').val('').trigger('change')
 		fundmanagerTable.ajax.reload()
 		return
 
@@ -368,13 +380,13 @@ $(document).ready ->
 				return
 
 
-		'columns': [    
-			{ 'data': 'logo' , "orderable": false}    
+		'columns': [
+			{ 'data': 'logo' , "orderable": false}
 			{ 'data': 'name' }
 			{ 'data': 'duediligence' }
 			{ 'data': 'created_date'}
 			{ 'data': 'modified_date'}
-			{ 'data': 'firmtoraise', "orderable": false}          
+			{ 'data': 'firmtoraise', "orderable": false}
 			{ 'data': 'activity_sitewide', "orderable": false}
 			{ 'data': 'activity_firmwide', "orderable": false}
 			{ 'data': 'action' , "orderable": false}
@@ -384,19 +396,19 @@ $(document).ready ->
 	$('.businesslistingsSearchinput').change ->
 		businesslistingsTable.ajax.reload()
 		return
- 
 
-	$(document).on 'change', '#managebusiness_type', -> 
+
+	$(document).on 'change', '#managebusiness_type', ->
 		window.open("/backoffice/"+$(this).val(),"_self");
-	
+
 	$('.download-business-listings-csv').click ->
-		firm_name = $('select[name="firm_name"]').val() 
-		business_listings_type = $('select[name="business_listings_type"]').val() 
+		firm_name = $('select[name="firm_name"]').val()
+		business_listings_type = $('select[name="business_listings_type"]').val()
 		window.open("/backoffice/business-listing/export-business-listings?firm_name="+firm_name+"&business_listings_type="+business_listings_type);
 
 	$('body').on 'click', '.business-listings-reset-filters', ->
-		$('select[name="firm_name"]').val('').trigger('change') 
-		$('select[name="business_listings_type"]').val('').trigger('change') 
+		$('select[name="firm_name"]').val('').trigger('change')
+		$('select[name="business_listings_type"]').val('').trigger('change')
 		businesslistingsTable.ajax.reload()
 		return
 
@@ -423,13 +435,13 @@ $(document).ready ->
 				return
 
 
-		'columns': [    
-			{ 'data': 'logo' , "orderable": false}    
+		'columns': [
+			{ 'data': 'logo' , "orderable": false}
 			{ 'data': 'name' }
 			{ 'data': 'duediligence' }
 			{ 'data': 'created_date', "orderable": false}
 			{ 'data': 'modified_date', "orderable": false}
-			{ 'data': 'firmtoraise'}          
+			{ 'data': 'firmtoraise'}
 			{ 'data': 'activity_sitewide', "orderable": false}
 			{ 'data': 'activity_firmwide', "orderable": false}
 			{ 'data': 'action' , "orderable": false}
@@ -439,8 +451,8 @@ $(document).ready ->
 
 	$('.btn-view-invite').click ->
 
-		
-		invite_type = $(this).attr('invite-type')     
+
+		invite_type = $(this).attr('invite-type')
 		firmid = $('#invite_firm_name').val()
 		if firmid==""
 			alert "Please select firm"
@@ -448,9 +460,8 @@ $(document).ready ->
 
 		$.ajax
 			type: 'get'
-			url: '/backoffice/firm-invite/'+firmid+'/'+invite_type      
-			success: (data) ->          
+			url: '/backoffice/firm-invite/'+firmid+'/'+invite_type
+			success: (data) ->
 				console.log(data)
 				CKEDITOR.instances['invite_content'].setData(data.invite_content);
 				$('input[name="invite_link"]').val("http://seedtwin.ajency.in/register/?"+data.invite_key+"#"+invite_type)
-				 
