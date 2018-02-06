@@ -1,0 +1,56 @@
+
+ul.chromelike-tabs{
+    line-height: 35px;
+    max-height: 35px;
+    overflow: hidden;
+    display: flex;
+    @media screen and (max-width: 480px) {
+        overflow: initial;
+        display: block;
+    }
+    & > li{
+        float: left;
+        flex: 1;
+        margin: 5px -10px 0;
+        border-top-right-radius: 25px 170px;
+        border-top-left-radius: 20px 90px;
+        height: 170px;
+        background: #ddd;
+        position: relative;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
+        text-align: center;
+        @media screen and (max-width: 480px) {
+            width: 100% !important;
+            height: auto;
+            margin: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+        }
+        &.active{
+            z-index: 2;
+            background: #f9f9f9;
+            a{
+                color: @brand-primary;
+                font-weight: 600;
+            }
+        }
+        & > a{
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-decoration: none;
+            color: #222;
+            padding: 0 15px;
+            white-space: nowrap;
+            @media screen and (max-width: 480px) {
+                display: block;
+            }
+        }
+        &:first-child{
+            margin-left: 0;
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
