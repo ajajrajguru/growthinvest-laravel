@@ -2,7 +2,11 @@
 
 @section('js')
   @parent
+<script type="text/javascript">
 
+    var userRoles = <?php echo json_encode($roles);?>;
+    console.log(userRoles)
+</script>
 <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
 
 <script type="text/javascript">

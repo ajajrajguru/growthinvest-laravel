@@ -11,29 +11,39 @@ $(document).ready ->
 			hash = hashes[i].split('=')
 			# vars.push hash[0]
 			vars[hash[0]] = hash[1]
-			console.log $('td[data-search="'+hash[0]+'"]').length
-			$('td[data-search="'+hash[0]+'"]').find('input').val(hash[1]) 
+			$('td[data-search="'+hash[0]+'"]').find('.datatable-search').val(hash[1]) 
 			i++
 		vars
 	
 	$('.dataFilterTable thead th.w-search').each ->
 		title = $(this).text()
-		$(this).closest('table').find('tr.filters td').eq($(this).index()).html '<input type="text" class="form-control" placeholder="Search ' + title + '" />'
+		searchType = $(this).closest('table').find('tr.filters td').eq($(this).index()).attr 'data-search';
+		if(searchType=='role')
+			searchField = '<select class="form-control datatable-search">'
+			searchField += '<option value="">Search ' + title + '</option>'
+			$(userRoles).each (id,value) ->
+				value = value.trim()
+				searchField += '<option value="'+value+'">' + value + '</option>'
+			searchField += '</select>'
+		else
+			searchField = '<input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />'
+
+		$(this).closest('table').find('tr.filters td').eq($(this).index()).html searchField
 		return
 
 
 	updateSerachinput = (tableObj) ->
 		urlParms = getUrlVars()
 		tableObj.columns().eq(0).each (colIdx) ->
-			colVal = $('input', $('.filters td')[colIdx]).val()
-			tableObj.column(colIdx).search(colVal).draw()
+			colVal = $('.datatable-search', $('.filters td')[colIdx]).val()
+			tableObj.columns(colIdx).search(colVal).draw()
 			return
 		return
 
 	initSerachForTable = (tableObj) ->
 		urlParms = getUrlVars()
 		tableObj.columns().eq(0).each (colIdx) ->
-			$('input', $('.filters td')[colIdx]).on 'keyup change', ->
+			$('.datatable-search', $('.filters td')[colIdx]).on 'keyup change', ->
 				tableObj.column(colIdx).search(@value).draw()
 				return
 			return
@@ -59,9 +69,9 @@ $(document).ready ->
 
 
 
-	$(document).on 'keyup', '.user-search-input input', ->
+	$(document).on 'keyup change', '.user-search-input .datatable-search', ->
 		urlParams = ''
-		$('.user-search-input input').each ->
+		$('.user-search-input .datatable-search').each ->
 			textVal = $(this).val()
 			dataType = $(this).closest('td').attr 'data-search'
 
