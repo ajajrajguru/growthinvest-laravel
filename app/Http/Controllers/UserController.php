@@ -651,7 +651,7 @@ class UserController extends Controller
         }
 
 
-        return view('backoffice.dashboard-coming-soon.dashboard')->with($data);
+        return view('backoffice.dashboard-coming-soon.manage')->with($data);
     }
 
 }

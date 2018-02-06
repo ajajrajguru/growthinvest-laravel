@@ -26,7 +26,7 @@ class FirmController extends Controller
         $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Firms';
-         $data['activeMenu'] = 'firms';
+        $data['activeMenu'] = 'firms';
 
         return view('backoffice.firm.list')->with($data);
     }
