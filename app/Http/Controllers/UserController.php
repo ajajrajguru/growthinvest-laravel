@@ -46,26 +46,31 @@ class UserController extends Controller
     {
 
         $user = new User;
+        
         if ($userType == 'intermidiate') {
-            $userType = 'View Yet To Be Approved Intermediaries';
+
+            $userTypeText = 'View Yet To Be Approved Intermediaries';
             $users    = $user->getIntermidiateUsers();
             $blade    = "intermediaries";
+            $activeMenu =  "intermediate";
         } else {
-            $userType = 'User';
+            $userTypeText = 'User';
             $users    = $user->allUsers();
             $blade    = "users";
+            $activeMenu =  "users";
         }
  
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage Backoffice"];
-        $breadcrumbs[] = ['url' => '', 'name' => $userType];
+        $breadcrumbs[] = ['url' => '', 'name' => $userTypeText];
 
         $data['roles']              = Role::where('type', 'backoffice')->pluck('display_name');
         $data['users']       = $users;
-        $data['userType']    = $userType;
+        $data['userType']    = $userTypeText;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = $userType;
+        $data['pageTitle']   = $userTypeText;
+        $data['activeMenu'] = $activeMenu;
 
         return view('backoffice.user.' . $blade)->with($data);
 

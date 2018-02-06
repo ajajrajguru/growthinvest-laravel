@@ -13,7 +13,7 @@
                <a class="nav-link @if($activeMenu == 'firms') active @endif "   href="{{url('backoffice/firm')}}">View/Add Firm</a>
            </li>
            <li class="nav-item">
-               <a class="nav-link @if($activeMenu == 'intermediate') active @endif "   href="{{url('backoffice/user/intermediate')}}">Intermediary Registration</a>
+               <a class="nav-link @if($activeMenu == 'intermediate') active @endif "   href="{{url('backoffice/user/intermidiate')}}">Intermediary Registration</a>
            </li>
             <li class="nav-item">
                <a class="nav-link @if($activeMenu == 'manage-companylist') active @endif " href="{{url('backoffice/manage/companylist')}}">View/Add Company</a>
