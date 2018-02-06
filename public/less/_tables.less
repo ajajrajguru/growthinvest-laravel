@@ -5,6 +5,32 @@
 		}
 	}
 }
+.table-solid-bg {
+	thead {
+		&:first-of-type {
+			tr {
+				background: @brand-primary;
+				color: #fff;
+			}
+		}
+		&:last-of-type {
+			tr.filters {
+				td {
+					border-top: none;
+					padding: 0.25rem 0.5rem;
+					.form-control{
+						border-color: transparent;
+					}
+				}
+			}
+		}
+		tr{
+			&.filters {
+				background: #fff;
+			}
+		}
+	}
+}
 
 .table{
 	thead{
