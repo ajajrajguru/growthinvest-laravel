@@ -1025,6 +1025,7 @@ ul.chromelike-tabs {
   overflow: hidden;
   display: -moz-box;
   display: flex;
+  border-bottom: 0;
 }
 ul.chromelike-tabs > li {
   float: left;
@@ -1050,15 +1051,16 @@ ul.chromelike-tabs > li > a {
   -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
   text-align: center;
+  font-size: 14px;
 }
 ul.chromelike-tabs > li > a.active {
   color: #00a9ee !important;
   z-index: 1;
-  font-weight: 600;
+  font-weight: 500;
 }
 ul.chromelike-tabs > li:first-child {
-  margin-left: 30px;
+  margin-left: 15px;
 }
 ul.chromelike-tabs > li:last-child {
-  margin-right: 30px;
+  margin-right: 15px;
 }
