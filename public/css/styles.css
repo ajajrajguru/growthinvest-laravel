@@ -525,11 +525,11 @@ div.dataTables_wrapper div.dataTables_info {
   background: #dddddd;
   border-radius: 50%;
 }
+.progress-indicator li .bubble.completed:after {
+  background: #00a9ee;
+}
 .progress-indicator li.active a {
   color: #00a9ee;
-}
-.progress-indicator li.active .bubble:after {
-  background-color: #00a9ee;
 }
 .progress-indicator li.completed .bubble:after {
   background-color: #00a9ee;
