@@ -26,7 +26,7 @@
                 <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
                      <div class="mt-4 p-2">
 
-                        <h1 class="section-title font-weight-medium text-primary mb-0">{{$page_title}}</h1>
+                        <h1 class="section-title font-weight-medium text-primary mb-0">{{$pageTitle}}</h1>
                         <p class="text-muted">{{$page_short_desc}}</p>
                         @include('backoffice.coming-soon')
                     </div>
