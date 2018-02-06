@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $user = new User;
         
-        if ($userType == 'intermidiate') {
+        if ($userType == 'intermediate') {
 
             $userTypeText = 'View Yet To Be Approved Intermediaries';
             $users    = $user->getIntermidiateUsers();
@@ -516,7 +516,7 @@ class UserController extends Controller
         switch ($action['type']) {
             case 'home':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Home'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Home';
@@ -525,7 +525,7 @@ class UserController extends Controller
                 break;
             case 'portfolio':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Portfolio Summary'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Portfolio Summary';
@@ -535,7 +535,7 @@ class UserController extends Controller
                 break; 
             case 'investment-offers':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Investment Offers'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Investment Offers';
@@ -545,7 +545,7 @@ class UserController extends Controller
                 break;
             case 'transferassets':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Transfer Assets'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Transfer Assets';
@@ -555,7 +555,7 @@ class UserController extends Controller
                 break;
             case 'activity':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Activity Analysis'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Activity Analysis';
@@ -565,7 +565,7 @@ class UserController extends Controller
                 break;
             case 'document':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Document Library'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Document Library';
@@ -575,7 +575,7 @@ class UserController extends Controller
                 break;
             case 'financials':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Financials'];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Investment Clients'];
                 $data['breadcrumbs']     = $breadcrumbs;
@@ -587,7 +587,7 @@ class UserController extends Controller
 
             case 'knowledge':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Knowledge Portal'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Knowledge Portal';
@@ -615,7 +615,7 @@ class UserController extends Controller
         switch ($action['type']) {
             case 'manage-backoffice':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Manage BackOffice'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Manage Backoffice';
@@ -624,7 +624,7 @@ class UserController extends Controller
                 break;
             case 'manage-frontoffice':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Manage FrontOffice'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Manage FrontOffice';
@@ -634,7 +634,7 @@ class UserController extends Controller
                 break; 
             case 'manage-companylist':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Company List'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'View Companies';
@@ -644,7 +644,7 @@ class UserController extends Controller
                 break;
             case 'manage-activityfeedgroup':
                 $breadcrumbs             = [];
-                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Activity Feed Group'];
                 $data['breadcrumbs']     = $breadcrumbs;
                 $data['page_title']      = 'Activity Feed Group';
