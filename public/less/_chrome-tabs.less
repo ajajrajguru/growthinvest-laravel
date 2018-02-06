@@ -4,7 +4,7 @@ ul.chromelike-tabs{
     max-height: 32px;
     overflow: hidden;
     display: flex;
-    // border-bottom: 0;
+    border-bottom: 0;
     & > li{
         float: left;
         flex: 1;
@@ -27,18 +27,19 @@ ul.chromelike-tabs{
             position: relative;
             box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
             text-align: center;
+            font-size: 14px;
             &.active {
                 color: @brand-primary !important;
                 z-index: 1;
-                font-weight: 600;
+                font-weight: 500;
             }
             
         }
         &:first-child{
-            margin-left: 30px;
+            margin-left: 15px;
         }
         &:last-child {
-            margin-right: 30px;
+            margin-right: 15px;
         }
     }
 }
