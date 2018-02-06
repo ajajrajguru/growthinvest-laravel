@@ -65,7 +65,7 @@ class LogSuccessfulLogin
 
             if (count(array_intersect($user_permissions, array('manage_options', 'view_firms'))) > 0) {
 
-                $menus[] = ['url' => '#manage', 'name' => 'Manage'];
+                $menus[] = ['url' => url('backoffice/user/all'), 'name' => 'Manage'];
             }
 
             if (in_array('manage_options', $user_permissions)) {
