@@ -20,12 +20,13 @@ class FirmController extends Controller
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Firm'];
 
         $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Firms';
+        $data['activeMenu'] = 'firms';
 
         return view('backoffice.firm.list')->with($data);
     }
