@@ -37,7 +37,7 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <h1 class="section-title font-weight-medium text-primary mb-0">{{$page_title}}</h1>
+                    <h1 class="section-title font-weight-medium text-primary mb-0">{{$pageTitle}}</h1>
                     <p class="text-muted"></p>
                 </div>
                  
