@@ -527,6 +527,10 @@ class BusinessListingController extends Controller
 
             if (in_array($business_data['data_key'], $serialized_meta_keys)) {
                 $business_data_ar[$business_data['data_key']] = @unserialize($business_data['data_value']);
+                if($business_data['data_key']=="company_details"){
+                    $business_data_ar[$business_data['data_key']] = @unserialize($business_data_ar[$business_data['data_key']]);
+                    
+                }
             } else {
                 $business_data_ar[$business_data['data_key']] = $business_data['data_value'];
             }

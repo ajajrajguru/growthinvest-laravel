@@ -415,11 +415,15 @@
 
 				<h5 class="text-primary">Use of Funds:</h5>
 				<ol class="pl-3">
-					<li>lorem1</li>
-					<li>lorem2</li>
-					<li>lorem3</li>
-					<li>lorem4</li>
-					<li>lorem5</li>
+
+					 
+					@foreach($use_of_funds as $use_of_fund)
+						<li> {{$use_of_fund['value']}} - {{$use_of_fund['amount']}}</li> 
+					@endforeach
+
+
+					
+					
 				</ol>
 			</div>
 
@@ -428,44 +432,44 @@
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label for="">Company Name</label>
-							<div>fonmoney</div>
+							<div>{{$title}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Company Number</label>
-							<div>08936601</div>
+							<div>{{$company_details['number']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Company type</label>
-							<div>Private Limited Company</div>
+							<div>{{$company_details['type']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Incorporation Date</label>
-							<div>01 Jan 0014</div>
+							<div>{{$company_details['incorporationdate']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Telephone Numbere</label>
-							<div>978956457890</div>
+							<div>{{$company_details['telephone']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">SIC 2003</label>
-							<div>NA</div>
+							<div>{{$company_details['sic2003']}}</div>
 						</div>
 					</div>
 
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label for="">Website</label>
-							<div><a href="www.fonmoney.com" target="_blank">www.fonmoney.com</a></div>
+							<div><a href="www.fonmoney.com" target="_blank">{{$proposal_details['website']}}</a></div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Registered Address</label>
-							<div>17 Heathman's Road</div>
+							<div>{{$company_details['tradingaddress']}}</div>
 						</div>
 
 						<div class="form-group">
@@ -474,7 +478,7 @@
 						</div>
 						<div class="form-group">
 							<label for="">Type of accounts filling</label>
-							<div>fonmoney</div>
+							<div>{{$company_details['typeofaccount']}}</div>
 						</div>
 
 						<div class="form-group">
@@ -484,39 +488,39 @@
 
 						<div class="form-group">
 							<label for="">Next annual returns due</label>
-							<div>Invalid date</div>
+							<div>{{$company_details['nextannualreturnsdue']}}</div>
 						</div>
 					</div>
 
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label for="">Latest annual accounts</label>
-							<div>Invalid date</div>
+							<div>{{$company_details['latestannualaccounts']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Next annual accounts due</label>
-							<div>Invalid date</div>
+							<div>{{$company_details['nextannualaccountsdue']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">SIC 2007</label>
-							<div>68999</div>
+							<div>{{$company_details['sic2007']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Social Media</label>
-							<div>fonmoney</div>
+							<div></div>
 						</div>
 
 						<div class="form-group">
 							<label for="">Trading Address</label>
-							<div>17 Heathman's Road, SW6 4TJ</div>
+							<div>{{$company_details['tradingaddress']}}</div>
 						</div>
 
 						<div class="form-group">
 							<label for="">HMRC Reference</label>
-							<div>FEDSFEWRFE34543554</div>
+							<div></div>
 						</div>
 					</div>
 				</div>
