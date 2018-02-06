@@ -331,6 +331,9 @@ label.required:after {
 .select2-container .select2-search .select2-search__field {
   padding-left: 24px;
 }
+.modal-open .mm-slideout {
+  z-index: initial;
+}
 .btn {
   font-size: 0.8rem;
   border-radius: 2px;
