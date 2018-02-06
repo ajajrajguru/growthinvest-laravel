@@ -110,7 +110,7 @@ function generateGICode(\Illuminate\Database\Eloquent\Model $model, $refernceKey
     if (empty($record)) {
         $result = $formattedGI;
     } else {
-        $result = $this->generateRefernceId($model, $refernceKey, $args);
+        $result = $this->generateGICode($model, $refernceKey, $args);
     }
 
     return $result;
@@ -601,5 +601,21 @@ function format_amount($amount, $decimal = 0, $prefix = false, $commafy = true)
 
     return $amount;
 }
+
+function getObjectComments($objectType,$objectId,$parent){
+    $commentData=[];
+    $comments = \App\Comment::where('object_type',$objectType)->where('object_id',$objectId)->where('parent',$parent)->orderBy('created_at', 'desc')->get(); 
+
+    if($comments->count()){
+        foreach ($comments as $key => $comment) {
+            $comment['reply'] = getObjectComments($objectType,$objectId,$comment->id);
+        }
+    }
+  
+    return $comments;
+ 
+}
+
+
 
  

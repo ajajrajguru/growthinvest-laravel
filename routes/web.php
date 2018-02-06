@@ -56,7 +56,11 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     
     Route::get('investor/{giCode}/investor-profile', 'InvestorController@investorProfile');
     Route::get('investor/{giCode}/investor-invest', 'InvestorController@investorInvest');
-    Route::resource('investor', 'InvestorController');
+    Route::get('investor/{giCode}/investor-news-update', 'InvestorController@investorNewsUpdate');
+    Route::post('/save-news-update', 'InvestorController@saveInvestorNewsUpdate');
+    Route::post('/delete-news-update', 'InvestorController@deleteInvestorNewsUpdate');
+    Route::post('investor/get-investor-invest', 'InvestorController@getInvestorInvest');
+    Route::resource('investor', 'InvestorController'); 
 
     //business
     Route::resource('business-listings', 'BusinessListingController');

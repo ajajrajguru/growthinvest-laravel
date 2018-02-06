@@ -605,6 +605,65 @@
         return $('.aic-investment-perc').attr('readonly', true);
       }
     });
+    $(document).on('click', '.reply-comment', function() {
+      $(this).closest('.reply-del-action').addClass('d-none');
+      return $(this).closest('.media-action').find('.reply-to-comment').removeClass('d-none');
+    });
+    $(document).on('click', '.submit-query', function() {
+      var btnObj, objectId, objectType, parentId, qType, query;
+      btnObj = $(this);
+      query = $(this).closest('.submit-query-cont').find('textarea').val();
+      parentId = $(this).attr('parent-id');
+      qType = $('#question_type').val();
+      objectType = $('#object_type').val();
+      objectId = $('#object_id').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/save-news-update',
+        data: {
+          'query': query,
+          'parentId': parentId,
+          'type': qType,
+          'object-type': objectType,
+          'object-id': objectId
+        },
+        success: function(data) {
+          console.log(parentId);
+          if (parentId !== '0') {
+            btnObj.closest('.media-body').append(data.comment_html);
+            btnObj.closest('.media-action').find('.reply-del-action').removeClass('d-none');
+            btnObj.closest('.media-action').find('.reply-to-comment').addClass('d-none');
+          } else {
+            $('.main-media-container').append(data.comment_html);
+            console.log("child");
+          }
+          btnObj.closest('.submit-query-cont').find('textarea').val('');
+        },
+        error: function(request, status, error) {
+          throwError();
+        }
+      });
+    });
+    $(document).on('click', '.delete-comment', function() {
+      var btnObj, commentId;
+      if (confirm('Are you sure you want to delete this comment?')) {
+        btnObj = $(this);
+        commentId = $(this).attr('comment-id');
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/delete-news-update',
+          data: {
+            'commentId': commentId
+          },
+          success: function(data) {
+            btnObj.closest('.media').remove();
+          },
+          error: function(request, status, error) {
+            throwError();
+          }
+        });
+      }
+    });
     investorInvestTable = $('#datatable-investor-invest').DataTable({
       'pageLength': 50,
       'processing': false,
