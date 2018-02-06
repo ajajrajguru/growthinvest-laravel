@@ -46,6 +46,12 @@
 				background: @gray;
 				border-radius: 50%;
 			}
+			&.completed {
+				&:after {
+					background: @brand-primary;
+				}
+			}
+
 		}
 
 		&.active{
@@ -54,7 +60,7 @@
 			}
 			.bubble{
 				&:after{
-					background-color: @brand-primary;
+					// background-color: @brand-primary;
 				}
 			}
 		}
