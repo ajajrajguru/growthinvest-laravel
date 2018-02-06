@@ -34,10 +34,10 @@
     <!-- tabs -->
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#invest">Invest</a>
+                <a class="nav-link" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " data-toggle="tab" href="#profile">Profile</a>
+                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#news-updates">News/Updates</a>

@@ -40,7 +40,7 @@
                 <a class="nav-link active"   href="#profile">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link "  href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-updates')}}">News/Updates</a>
+                <a class="nav-link "  href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
             </li>
         </ul>
 
