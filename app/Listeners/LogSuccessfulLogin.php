@@ -30,7 +30,24 @@ class LogSuccessfulLogin
     public function handle(Login $event)
     {
         $this->storeUserMenus($event);
+        
+    }
 
+     public function redirectOnSuccessfullLogin($event)
+    {
+        $user = $event->user;
+        $user_permissions_ar = $user->getAllPermissions();
+
+        //print_r($user_permissions_ar);
+        
+        $redirect_to =url("/");
+        if ($user->can('backoffice_access')) {
+
+            $redirect_to = url("/backoffice/dashboard");
+        }
+        /*print_r($redirect_to);
+        die();*/
+        return redirect($redirect_to);
     }
 
     public function storeUserMenus($event)
@@ -53,6 +70,7 @@ class LogSuccessfulLogin
 
         session(['user_data' => $user_data]);
         session(['user_menus' => array('admin' => $admin_menus)]);
+        $this->redirectOnSuccessfullLogin($event);
     }
 
     public function getUserAdminMenus($user_permissions)

@@ -54,7 +54,7 @@ class UserPermission
                 'backoffice/investor/{giCode}/save-additional-information' => ['add_investor'],
                 'backoffice/investor/{giCode}/investment-account'          => ['add_investor'],
                 'backoffice/investor/{giCode}/save-investment-account'     => ['add_investor'],
-                'backoffice/investor/{giCode}/download-investor-nominee'      => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/{giCode}/download-investor-nominee'   => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
 
                 'backoffice/entrepreneurs'                                 => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'               => ['view_all_business_owners', 'view_firm_business_owners'],
@@ -65,7 +65,7 @@ class UserPermission
                 'backoffice/business-listings'                             => ['view_backoffice_proposals', 'view_firm_business_proposals'],
                 'backoffice/business-listings/get-businesslistings'        => ['view_backoffice_proposals', 'view_firm_business_proposals'],
                 'backoffice/business-listing/export-business-listings'     => ['view_backoffice_proposals', 'view_firm_business_proposals'],
- 
+
                 'backoffice/current-business-valuations'                   => ['view_current_business_valuation'],
                 'backoffice/entrepreneur/registration'                     => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
                 'backoffice/entrepreneur/save-registration'                => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
@@ -76,7 +76,17 @@ class UserPermission
                 'backoffice/fundmanager/{giCode}/registration'             => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
 
                 'backoffice/firm-invite/{giCode}/{type}'                   => ['view_firms', 'add_investor', 'introduce_business_owners_in_my_firm', 'introduce_business_owners_in_any_firm'],
- 
+
+                /*Dashboard coming soon routes*/
+                'backoffice/dashboard'                                     => ['backoffice_access'],
+                'backoffice/dashboard/portfolio'                           => ['backoffice_access'],
+                'backoffice/dashboard/investment_offers'                   => ['backoffice_access'],
+                'backoffice/dashboard/transferasset'                       => ['backoffice_access'],
+                'backoffice/dashboard/activity_feed/summary'               => ['backoffice_access'],
+                'backoffice/dashboard/compliance'                          => ['backoffice_access'],
+                'backoffice/dashboard/financials'                          => ['backoffice_access'],
+                'backoffice/dashboard/knowledge'                           => ['backoffice_access'],
+                /*End Dashboard coming soon routes*/
 
             ],
 
@@ -91,7 +101,7 @@ class UserPermission
     }
 
     public function getUriPermissions($uriPath)
-    { 
+    {
         $routePerrmissions = $this->routePermission();
         $uriPermission     = [];
         $guard             = '';
