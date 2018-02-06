@@ -68,10 +68,10 @@
                     <tbody>
                         @foreach($users as $user)
                             <tr >
-                                <td><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b></td>
-                                <td><a class="investor_email" href="mailto: {{  $user->email }}">{{  $user->email }}</a></td>
+                                <td><b><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">{{  title_case($user->first_name.' '.$user->last_name) }}</a></b></td>
+                                <td>{{  $user->email }}</td>
                                 <td>{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
-                                <td>{{   (!empty($user->firm))?$user->firm->name:'' }}</td>
+                                <td>@if(!empty($user->firm)) <a href="">{{  $user->firm->name  }}</a> @endif</td>
                                     <td>
                                     <select data-id="78523" class="firm_actions form-control form-control-sm" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>
