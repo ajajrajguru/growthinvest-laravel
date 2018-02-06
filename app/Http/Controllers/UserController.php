@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $user = new User;
         if ($userType == 'intermidiate') {
-            $userType = 'Intermediary Registrations';
+            $userType = 'View Yet To Be Approved Intermediaries';
             $users    = $user->getIntermidiateUsers();
             $blade    = "intermediaries";
         } else {
@@ -55,11 +55,13 @@ class UserController extends Controller
             $users    = $user->allUsers();
             $blade    = "users";
         }
-
+ 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage Backoffice"];
         $breadcrumbs[] = ['url' => '', 'name' => $userType];
 
+        $data['roles']              = Role::where('type', 'backoffice')->pluck('display_name');
         $data['users']       = $users;
         $data['userType']    = $userType;
         $data['breadcrumbs'] = $breadcrumbs;
@@ -344,25 +346,25 @@ class UserController extends Controller
     public function exportUsers()
     {
         $userObj = new User;
-        $users = $userObj->allUsers();
+        $users   = $userObj->allUsers();
 
         $fileName = 'approved_intermediary';
 
-        $header   = ['Platform GI Code','Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+        $header = ['Platform GI Code', 'Name', 'Email', 'Role', 'Firm', 'Telephone No'];
 
         $userData = [];
 
         foreach ($users as $user) {
-            $userData[] = [ $user->gi_code, 
-                            title_case($user->first_name . ' ' . $user->last_name),
-                            $user->email,
-                            title_case($user->roles()->pluck('display_name')->implode(' ')),
-                            (!empty($user->firm)) ? $user->firm->name : '',
-                            $user->telephone_no
+            $userData[] = [$user->gi_code,
+                title_case($user->first_name . ' ' . $user->last_name),
+                $user->email,
+                title_case($user->roles()->pluck('display_name')->implode(' ')),
+                (!empty($user->firm)) ? $user->firm->name : '',
+                $user->telephone_no,
             ];
         }
-         
-        generateCSV($header,$userData,$fileName);
+
+        generateCSV($header, $userData, $fileName);
 
         return true;
 
@@ -500,4 +502,101 @@ class UserController extends Controller
 
         return response()->json(['status' => true]);
     }
+
+    /* Coming soon Pages */
+    public function showDashboard(\Illuminate\Http\Request $request)
+    {
+        $action = $request->route()->getAction();
+
+        switch ($action['type']) {
+            case 'home':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Home'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Home';
+                $data['page_short_desc'] = '';
+                $data['activeMenu']      = 'home';
+                break;
+            case 'portfolio':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Portfolio Summary'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Portfolio Summary';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'portfolio';
+                break; 
+            case 'investment-offers':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Investment Offers'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Investment Offers';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'investment_offers';
+                break;
+            case 'transferassets':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Transfer Assets'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Transfer Assets';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'transferassets';
+                break;
+            case 'activity':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Activity Analysis'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Activity Analysis';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'transferassets';
+                break;
+            case 'document':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Document Library'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Document Library';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'documents';
+                break;
+            case 'financials':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Financials'];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Investment Clients'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Investment Clients';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'financials';
+                break;
+
+            case 'knowledge':
+                $breadcrumbs             = [];
+                $breadcrumbs[]           = ['url' => url('/'), 'name' => "Dashboard"];
+                $breadcrumbs[]           = ['url' => '', 'name' => 'Knowledge Portal'];
+                $data['breadcrumbs']     = $breadcrumbs;
+                $data['page_title']      = 'Knowledge Portal';
+                $data['page_short_desc'] = '';
+
+                $data['activeMenu'] = 'knowledge';
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+        return view('backoffice.dashboard-coming-soon.dashboard')->with($data);
+    }
+
 }

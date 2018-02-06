@@ -6,23 +6,77 @@
   });
 
   $(document).ready(function() {
-    var IntermediaryTable, api, businesslistingsTable, entrepreneurTable, firmsTable, fundmanagerTable, initSerachForTable, usersTable;
+    var IntermediaryTable, api, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, updateSerachinput, usersTable;
+    getUrlVars = function() {
+      var hash, hashes, i, vars;
+      vars = [];
+      hash = void 0;
+      hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+      i = 0;
+      while (i < hashes.length) {
+        hash = hashes[i].split('=');
+        vars[hash[0]] = hash[1];
+        $('td[data-search="' + hash[0] + '"]').find('.datatable-search').val(hash[1]);
+        i++;
+      }
+      return vars;
+    };
     $('.dataFilterTable thead th.w-search').each(function() {
-      var title;
+      var searchField, searchType, title;
       title = $(this).text();
-      $(this).closest('table').find('tr.filters td').eq($(this).index()).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+      searchType = $(this).closest('table').find('tr.filters td').eq($(this).index()).attr('data-search');
+      if (searchType === 'role') {
+        searchField = '<select class="form-control datatable-search">';
+        searchField += '<option value="">Search ' + title + '</option>';
+        $(userRoles).each(function(id, value) {
+          value = value.trim();
+          return searchField += '<option value="' + value + '">' + value + '</option>';
+        });
+        searchField += '</select>';
+      } else {
+        searchField = '<div class="input-group"> <div class="input-group-prepend pr-2"><i class="fa fa-search text-muted"></i></div> <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-secondary"></i></button>  </div> </div>';
+      }
+      $(this).closest('table').find('tr.filters td').eq($(this).index()).html(searchField);
     });
-    initSerachForTable = function(tableObj) {
+    updateSerachinput = function(tableObj) {
+      var urlParms;
+      urlParms = getUrlVars();
       tableObj.columns().eq(0).each(function(colIdx) {
-        $('input', $('.filters td')[colIdx]).on('keyup change', function() {
+        var colVal;
+        colVal = $('.datatable-search', $('.filters td')[colIdx]).val();
+        tableObj.columns(colIdx).search(colVal).draw();
+      });
+    };
+    initSerachForTable = function(tableObj) {
+      var urlParms;
+      urlParms = getUrlVars();
+      tableObj.columns().eq(0).each(function(colIdx) {
+        $('.datatable-search', $('.filters td')[colIdx]).on('keyup change', function() {
           tableObj.column(colIdx).search(this.value).draw();
         });
+      });
+    };
+    clearInput = function(tableObj) {
+      $('body').on('click', '.clear-input', function() {
+        var column;
+        $(this).closest('.input-group').find('input').val('');
+        tableObj.columns().eq(0).each(function(colIdx) {
+          var colVal;
+          colVal = $('input', $('.filters td')[colIdx]).val();
+          tableObj.columns(colIdx).search(colVal).draw();
+        });
+        if ($(window).width() < 767) {
+          if ($('.toggle-btn input:checkbox:not(:checked)')) {
+            column = 'table .' + $('.toggle-btn input').attr('name');
+            $(column).hide();
+          }
+        }
       });
     };
     if ($('#datatable-firms').length) {
       firmsTable = $('#datatable-firms').DataTable({
         "paging": false,
-        "info": false,
+        "info": true,
         'aaSorting': [[1, 'asc']],
         'columns': [
           {
@@ -44,10 +98,26 @@
       });
       initSerachForTable(firmsTable);
     }
+    $(document).on('keyup change', '.user-search-input .datatable-search', function() {
+      var urlParams;
+      urlParams = '';
+      $('.user-search-input .datatable-search').each(function() {
+        var dataType, textVal;
+        textVal = $(this).val();
+        dataType = $(this).closest('td').attr('data-search');
+        if (textVal !== '') {
+          if (urlParams !== "") {
+            urlParams += '&';
+          }
+          return urlParams += dataType + '=' + textVal;
+        }
+      });
+      return window.history.pushState("", "", "?" + urlParams);
+    });
     if ($('#datatable-users').length) {
       usersTable = $('#datatable-users').DataTable({
         "paging": false,
-        "info": false,
+        "info": true,
         'aaSorting': [[0, 'asc']],
         'columns': [
           {
@@ -65,11 +135,13 @@
         ]
       });
       initSerachForTable(usersTable);
+      updateSerachinput(usersTable);
+      clearInput(usersTable);
     }
     if ($('#datatable-Intermediary').length) {
       IntermediaryTable = $('#datatable-Intermediary').DataTable({
         "paging": false,
-        "info": false,
+        "info": true,
         'aaSorting': [[1, 'asc']],
         'columns': [
           {
@@ -441,7 +513,7 @@
         }
       ]
     });
-    return $('.btn-view-invite').click(function() {
+    $('.btn-view-invite').click(function() {
       var firmid, invite_type;
       invite_type = $(this).attr('invite-type');
       firmid = $('#invite_firm_name').val();
@@ -459,6 +531,16 @@
         }
       });
     });
+    if ($(window).width() < 767) {
+      if ($('.toggle-btn input:checkbox:not(:checked)')) {
+        column = 'table .' + $('.toggle-btn input').attr('name');
+        $(column).hide();
+      }
+      $('body').on('click', '.toggle-btn', function() {
+        column = 'table .' + $(this).find('input[type="checkbox"]').attr('name');
+        $(column).toggle();
+      });
+    }
   });
 
 }).call(this);

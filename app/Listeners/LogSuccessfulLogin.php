@@ -29,6 +29,7 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event)
     {
+
         $this->storeUserMenus($event);
 
     }
@@ -36,7 +37,7 @@ class LogSuccessfulLogin
     public function storeUserMenus($event)
     {
         $user = $event->user;
-        
+
         $user_permissions = [];
 
         $user_permissions_ar = $user->getAllPermissions();
@@ -53,6 +54,7 @@ class LogSuccessfulLogin
 
         session(['user_data' => $user_data]);
         session(['user_menus' => array('admin' => $admin_menus)]);
+
     }
 
     public function getUserAdminMenus($user_permissions)
@@ -63,7 +65,7 @@ class LogSuccessfulLogin
 
             if (count(array_intersect($user_permissions, array('manage_options', 'view_firms'))) > 0) {
 
-                $menus[] = ['url' => '#manage', 'name' => 'Manage'];
+                $menus[] = ['url' => url('backoffice/user/all'), 'name' => 'Manage'];
             }
 
             if (in_array('manage_options', $user_permissions)) {
