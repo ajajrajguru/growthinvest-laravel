@@ -78,17 +78,18 @@
                             @endphp
                             <tr >
                                 <td><input type="checkbox" class="form-control delete_intm_users" name="intermediary_user_delete[]" id="" value="{{ $user->id }}"></td>
-                                <td><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br><a class="investor_email" href="mailto: {{  $user->email }}">{{  $user->email }}</a></td>
+                                <td><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}"><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br>{{  $user->email }}</a></td>
                                 
                                 <td>{{ (isset($compInfo['company'])) ? title_case($compInfo['company']) : ''}} </td>
                                 <td>{{ (isset($compInfo['typeaccount']) && $compInfo['typeaccount']) ? title_case($compInfo['typeaccount']) : ''}}</td>
                                 <td>{{   date('d/m/Y', strtotime($user->created_at)) }}</td>
                                 <td>-</td>
                                     <td>
-                                    <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
+                                    <!-- <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>
                                     <option value="edit-intermediary">Edit Profile</option>
-                                    </select>
+                                    </select> -->
+                                    <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">View Profile</a>
                                 </td>
 
                             </tr>
