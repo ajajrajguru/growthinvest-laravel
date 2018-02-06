@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $user = new User;
         if ($userType == 'intermidiate') {
-            $userType = 'Intermediary Registrations';
+            $userType = 'View Yet To Be Approved Intermediaries';
             $users    = $user->getIntermidiateUsers();
             $blade    = "intermediaries";
         } else {
@@ -55,9 +55,10 @@ class UserController extends Controller
             $users    = $user->allUsers();
             $blade    = "users";
         }
-
+ 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage Backoffice"];
         $breadcrumbs[] = ['url' => '', 'name' => $userType];
 
         $data['roles']              = Role::where('type', 'backoffice')->pluck('display_name');
