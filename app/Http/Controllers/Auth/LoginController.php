@@ -41,12 +41,13 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
     /**
      * Redirect user to custom url on login
      *
      * @return     string  ( description_of_the_return_value )
      */
-    public function redirectTo()
+    protected function redirectTo()
     {
 
         $user = Auth::user();

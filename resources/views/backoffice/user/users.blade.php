@@ -54,10 +54,10 @@
                     </thead>
                     <thead>
                         <tr class="filters">
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
+                            <td class="user-search-input" data-search="name"></td>
+                            <td class="user-search-input" data-search="email"></td>
+                            <td class="user-search-input" data-search="role"></td>
+                            <td class="user-search-input" data-search="firm"></td>
                             <td></td>
                         </tr>
                     </thead>
