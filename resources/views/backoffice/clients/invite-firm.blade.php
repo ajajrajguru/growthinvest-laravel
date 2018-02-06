@@ -46,11 +46,32 @@
 
     <div class="d-flex justify-content-between">
         <div>
-            <button type="submit" class="btn btn-primary save-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Save <div class="ld ld-ring ld-spin"></div></button>
+            <button type="submit" class="btn btn-primary save-invite-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Save <div class="ld ld-ring ld-spin"></div></button>
             <button type="submit" class="btn  cancel-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Cancel <div class="ld ld-ring ld-spin"></div></button>
         </div>
         <div>
-            <button type="submit" class="btn btn-primary send-invite-btn editmode @if($mode=='view') d-none @endif ld-ext-right">Send Invite <div class="ld ld-ring ld-spin"></div></button>
+            <button type="submit" class="btn btn-primary send-invite-btn editmode @if($mode=='view') d-none @endif ld-ext-right" data-toggle="modal" data-target="#sendInvite">Send Invite <div class="ld ld-ring ld-spin"></div></button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="sendInvite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Send Invinite</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            The invite feature is not currently enabled on this account. Please contact the GrowthInvest Client Service team on 020 7071 3945 or support <a href="mailto:support@GrowthInvest.com">support@GrowthInvest.com</a> to discuss the options
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                <button type="button" class="btn btn-primary">ok</button>
+            </div>
         </div>
     </div>
 </div>

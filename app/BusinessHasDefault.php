@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BusinessHasDefaults extends Model
+class BusinessHasDefault extends Model
 {
-    public function business()
+    public function belongsBusiness()
     {
         return $this->belongsTo('App\BusinessListing','business_id');
     }
 
-    public function default()
+    public function belongsDefault()
     {
         return $this->belongsTo('App\Defaults','default_id');
     }
@@ -25,5 +25,9 @@ class BusinessHasDefaults extends Model
 	public function setDataValueAttribute( $value ) { 
 		$this->attributes['data_value'] = serialize( $value );
 
-	}
+	} 
+
+
+   
+    
 }

@@ -84,6 +84,10 @@ class EntrepreneurController extends Controller
             if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by != 0) {
                 $source = "Intermediary";
             }
+            
+            if (!is_null($entrepreneur->invite_key) && $entrepreneur->invite_key != "") {
+                $source = "Invited";
+            }
 
             $entrepreneursData[] = [
                 'name'            => $nameHtml,

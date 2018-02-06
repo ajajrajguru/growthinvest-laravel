@@ -22,6 +22,10 @@ class CreateBusinessHasDefaults extends Migration
                   ->references( 'id' )
                   ->on( 'business_listings' )
                   ->onDelete( 'cascade' );     
+            $table->foreign('default_id')
+                ->references('id')
+                ->on('defaults')
+                ->onDelete('cascade');
         });
     }
 
