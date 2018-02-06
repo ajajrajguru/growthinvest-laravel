@@ -36,7 +36,7 @@
         <div class="profile-content px-md-4 px-sm-0">
 
 
-        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
+        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
 
 
             <div class="d-flex justify-content-between">
@@ -44,7 +44,7 @@
                     <h5 class="mt-0">Step 2: <span class="text-primary">Intermediary Profile</span></h5>
                 </div>
                 <div class="">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm editUserBtn">Edit Details</a>
                     <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
                 </div>
             </div>
@@ -441,7 +441,7 @@
 
                 <div class="d-flex justify-content-between">
                     <div class="">
-                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
+                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-outline-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>
