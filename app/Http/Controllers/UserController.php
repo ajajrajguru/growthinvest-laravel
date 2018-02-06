@@ -519,7 +519,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Home'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Home';
+                $data['pageTitle']      = 'Home';
                 $data['page_short_desc'] = '';
                 $data['activeMenu']      = 'home';
                 break;
@@ -528,7 +528,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Portfolio Summary'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Portfolio Summary';
+                $data['pageTitle']      = 'Portfolio Summary';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'portfolio';
@@ -538,7 +538,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Investment Offers'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Investment Offers';
+                $data['pageTitle']      = 'Investment Offers';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'investment_offers';
@@ -548,7 +548,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Transfer Assets'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Transfer Assets';
+                $data['pageTitle']      = 'Transfer Assets';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'transferassets';
@@ -558,17 +558,17 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Activity Analysis'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Activity Analysis';
+                $data['pageTitle']      = 'Activity Analysis';
                 $data['page_short_desc'] = '';
 
-                $data['activeMenu'] = 'transferassets';
+                $data['activeMenu'] = 'activity';
                 break;
             case 'document':
                 $breadcrumbs             = [];
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Document Library'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Document Library';
+                $data['pageTitle']      = 'Document Library';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'documents';
@@ -579,7 +579,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Financials'];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Investment Clients'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Investment Clients';
+                $data['pageTitle']      = 'Investment Clients';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'financials';
@@ -590,7 +590,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Knowledge Portal'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Knowledge Portal';
+                $data['pageTitle']      = 'Knowledge Portal';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'knowledge';
@@ -618,7 +618,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Manage BackOffice'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Manage Backoffice';
+                $data['pageTitle']      = 'Manage Backoffice';
                 $data['page_short_desc'] = '';
                 $data['activeMenu']      = 'manage-backoffice';
                 break;
@@ -627,7 +627,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Manage FrontOffice'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Manage FrontOffice';
+                $data['pageTitle']      = 'Manage FrontOffice';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'manage-frontoffice';
@@ -637,7 +637,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Company List'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'View Companies';
+                $data['pageTitle']      = 'View Companies';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'manage-companylist';
@@ -647,7 +647,7 @@ class UserController extends Controller
                 $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
                 $breadcrumbs[]           = ['url' => '', 'name' => 'Activity Feed Group'];
                 $data['breadcrumbs']     = $breadcrumbs;
-                $data['page_title']      = 'Activity Feed Group';
+                $data['pageTitle']      = 'Activity Feed Group';
                 $data['page_short_desc'] = '';
 
                 $data['activeMenu'] = 'manage-activityfeedgroup';
