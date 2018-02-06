@@ -444,6 +444,16 @@ label.required:after {
       -ms-flex-pack: start;
           justify-content: flex-start;
 }
+.table-solid-bg thead:first-of-type tr {
+  background: #00a9ee;
+  color: #fff;
+}
+.table-solid-bg thead:last-of-type tr.filters td {
+  border-top: none;
+}
+.table-solid-bg thead tr.filters {
+  background: #fff;
+}
 .breadcrumb {
   background-color: transparent;
   padding: 0;
@@ -747,9 +757,9 @@ label.required:after {
   font-size: 0.85rem;
 }
 .mm-wrapper_opened header {
-  -webkit-transform: translateY(-99.99999999px);
-      -ms-transform: translateY(-99.99999999px);
-          transform: translateY(-99.99999999px);
+  -webkit-transform: translateY(-100px);
+      -ms-transform: translateY(-100px);
+          transform: translateY(-100px);
 }
 @-webkit-keyframes fadeInUp {
   0% {
@@ -1030,12 +1040,7 @@ ul.chromelike-tabs {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-@media screen and (max-width: 480px) {
-  ul.chromelike-tabs {
-    overflow: initial;
-    display: block;
-  }
+  border-bottom: 0;
 }
 ul.chromelike-tabs > li {
   float: left;
@@ -1043,33 +1048,9 @@ ul.chromelike-tabs > li {
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  margin: 5px -10px 0;
-  border-top-right-radius: 25px 170px;
-  border-top-left-radius: 20px 90px;
-  height: 170px;
-  background: #ddd;
-  position: relative;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-  text-align: center;
-}
-@media screen and (max-width: 480px) {
-  ul.chromelike-tabs > li {
-    width: 100% !important;
-    height: auto;
-    margin: 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  }
-}
-ul.chromelike-tabs > li.active {
-  z-index: 2;
-  background: #f9f9f9;
-}
-ul.chromelike-tabs > li.active a {
-  color: #00a9ee;
-  font-weight: 600;
+  margin: 0 -10px 0;
 }
 ul.chromelike-tabs > li > a {
-  display: inline-block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1077,11 +1058,18 @@ ul.chromelike-tabs > li > a {
   color: #222;
   padding: 0 15px;
   white-space: nowrap;
+  border-top-right-radius: 25px 170px !important;
+  border-top-left-radius: 20px 90px !important;
+  height: 170px;
+  background: #ddd;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
-@media screen and (max-width: 480px) {
-  ul.chromelike-tabs > li > a {
-    display: block;
-  }
+ul.chromelike-tabs > li > a.active {
+  color: #00a9ee !important;
+  z-index: 1;
+  font-weight: 600;
 }
 ul.chromelike-tabs > li:first-child {
   margin-left: 0;
