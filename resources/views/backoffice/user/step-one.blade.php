@@ -40,7 +40,7 @@
                 </div>
                 <div class="">
                 @if($user->id)
-                    <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm editUserBtn">Edit Details</a>
                     <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
                 @endif
                 </div>
