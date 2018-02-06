@@ -420,6 +420,20 @@ label.required:after {
 .table-striped-bg thead tr {
   background: url(../img/striped_diag.png);
 }
+.table-solid-bg thead:first-of-type tr {
+  background: #00a9ee;
+  color: #fff;
+}
+.table-solid-bg thead:last-of-type tr.filters td {
+  border-top: none;
+  padding: 0.25rem 0.5rem;
+}
+.table-solid-bg thead:last-of-type tr.filters td .form-control {
+  border-color: transparent;
+}
+.table-solid-bg thead tr.filters {
+  background: #fff;
+}
 .table thead th {
   font-size: 0.8rem;
 }
@@ -1015,4 +1029,54 @@ ul.statistics li:last-of-type {
 .message-board .media-avatar > img {
   max-width: 40px;
   height: auto;
+}
+.message-board a:hover {
+  text-decoration: none;
+}
+.message-board a:focus {
+  outline: 0;
+}
+ul.chromelike-tabs {
+  line-height: 32px;
+  max-height: 32px;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+ul.chromelike-tabs > li {
+  float: left;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  margin: 0 -10px 0;
+}
+ul.chromelike-tabs > li > a {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  color: #222;
+  padding: 0 15px;
+  white-space: nowrap;
+  border-top-right-radius: 25px 170px !important;
+  border-top-left-radius: 20px 90px !important;
+  height: 170px;
+  background: #ddd;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+ul.chromelike-tabs > li > a.active {
+  color: #00a9ee !important;
+  z-index: 1;
+  font-weight: 600;
+}
+ul.chromelike-tabs > li:first-child {
+  margin-left: 30px;
+}
+ul.chromelike-tabs > li:last-child {
+  margin-right: 30px;
 }

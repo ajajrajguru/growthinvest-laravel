@@ -40,46 +40,59 @@
                     <div class="float-right">
                         <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
                         <a href="{{ url('backoffice/user/export-users')}}" class="btn btn-link">Download CSV</a>
-                     
+
                     </div>
                 </div>
             </div>
 
+            <div class="card bg-light mt-3 d-sm-none" id="toggle-mob">
+              <div class="card-body text-center">
+                <label class="card-text font-weight-medium">The below table has been optimized for mobile view. Click the below button to view all columns.</label>
+                   <div class="btn-group-toggle" data-toggle="buttons">
+                       <label class="btn btn-sm btn-outline-primary toggle-btn">
+                           <input type="checkbox" checked autocomplete="off" name="toggle-mob"> Toggle Columns
+                       </label>
+                   </div>
+              </div>
+            </div>
+
             <div class="table-responsive mt-3">
-                <table id="datatable-users" class="table dataFilterTable table-hover table-striped-bg">
+                <table id="datatable-users" class="table dataFilterTable table-hover table-solid-bg">
                     <thead>
                         <tr>
                             <th class="w-search">Name</th>
-                            <th class="w-search">Email</th>
-                            <th class="w-search">Role</th>
+                            <th class="w-search toggle-mob">Email</th>
+                            <th class="w-search toggle-mob">Role</th>
                             <th class="w-search">Firm</th>
-                            <th style="min-width: 100px;">Action</th>
+                            <th class="toggle-mob" style="min-width: 100px;">Action</th>
                         </tr>
                     </thead>
                     <thead>
                         <tr class="filters">
                             <td class="user-search-input" data-search="name"></td>
-                            <td class="user-search-input" data-search="email"></td>
-                            <td class="user-search-input" data-search="role"></td>
+                            <td class="user-search-input toggle-mob" data-search="email"></td>
+                            <td class="user-search-input toggle-mob" data-search="role"></td>
                             <td class="user-search-input" data-search="firm"></td>
-                            <td></td>
+                            <td class="toggle-mob"></td>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($users as $user)
                             <tr >
+ 
                                 <td><b><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">{{  title_case($user->first_name.' '.$user->last_name) }}</a></b></td>
-                                <td>{{  $user->email }}</td>
-                                <td>{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
-                                <td>@if(!empty($user->firm)) <a href="">{{  $user->firm->name  }}</a> @endif</td>
-                                    <td>
-                                    <select data-id="78523" class="firm_actions form-control form-control-sm" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
+                                <td class="toggle-mob">{{  $user->email }}</td>
+                                <td class="toggle-mob">{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
+                                <td>@if(!empty($user->firm)) <a href="{{ url('backoffice/firms/'.$user->firm->gi_code.'/')}}" target="_blank">{{  $user->firm->name  }}</a> @endif</td>
+                                <td class="toggle-mob">
+                                    <!-- <select data-id="78523" class="firm_actions form-control form-control-sm" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>
                                     <option value="edit-intermediary">Edit Profile</option>
-                                    </select>
+                                    </select> -->
+                                    <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">View Profile</a>
                                 </td>
 
-                            </tr>
+                            </tr> 
                         @endforeach
                     </tbody>
                 </table>
