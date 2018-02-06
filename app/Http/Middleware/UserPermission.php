@@ -94,6 +94,13 @@ class UserPermission
                 'backoffice/dashboard/knowledge'                           => ['backoffice_access'],
                 /*End Dashboard coming soon routes*/
 
+                /*Coming soon routes on manage */
+                'backoffice/manage/manage-backoffice'                      => ['backoffice_access'],
+                'backoffice/manage/manage-frontoffice'                     => ['backoffice_access'],
+                'backoffice/manage/companylist'                            => ['backoffice_access'],
+                'backoffice/manage/manage-act-feed-group'                  => ['backoffice_access'],
+                /*End Coming soon routes on manage */
+
             ],
 
             'frontoffice' =>

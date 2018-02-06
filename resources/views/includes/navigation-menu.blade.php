@@ -13,7 +13,7 @@
       <ul class="navbar-menu">
 
         <li class="" id="">
-          <a href="#">Dashboard</a>
+          <a href="{{url('backoffice/dashboard')}}">Dashboard</a>
         </li>
         <li class="has-submenu">
           <a href="#">Investments</a>
