@@ -16,31 +16,42 @@
       while (i < hashes.length) {
         hash = hashes[i].split('=');
         vars[hash[0]] = hash[1];
-        console.log($('td[data-search="' + hash[0] + '"]').length);
-        $('td[data-search="' + hash[0] + '"]').find('input').val(hash[1]);
+        $('td[data-search="' + hash[0] + '"]').find('.datatable-search').val(hash[1]);
         i++;
       }
       return vars;
     };
     $('.dataFilterTable thead th.w-search').each(function() {
-      var title;
+      var searchField, searchType, title;
       title = $(this).text();
-      $(this).closest('table').find('tr.filters td').eq($(this).index()).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
+      searchType = $(this).closest('table').find('tr.filters td').eq($(this).index()).attr('data-search');
+      if (searchType === 'role') {
+        searchField = '<select class="form-control datatable-search">';
+        searchField += '<option value="">Search ' + title + '</option>';
+        $(userRoles).each(function(id, value) {
+          value = value.trim();
+          return searchField += '<option value="' + value + '">' + value + '</option>';
+        });
+        searchField += '</select>';
+      } else {
+        searchField = '<input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />';
+      }
+      $(this).closest('table').find('tr.filters td').eq($(this).index()).html(searchField);
     });
     updateSerachinput = function(tableObj) {
       var urlParms;
       urlParms = getUrlVars();
       tableObj.columns().eq(0).each(function(colIdx) {
         var colVal;
-        colVal = $('input', $('.filters td')[colIdx]).val();
-        tableObj.column(colIdx).search(colVal).draw();
+        colVal = $('.datatable-search', $('.filters td')[colIdx]).val();
+        tableObj.columns(colIdx).search(colVal).draw();
       });
     };
     initSerachForTable = function(tableObj) {
       var urlParms;
       urlParms = getUrlVars();
       tableObj.columns().eq(0).each(function(colIdx) {
-        $('input', $('.filters td')[colIdx]).on('keyup change', function() {
+        $('.datatable-search', $('.filters td')[colIdx]).on('keyup change', function() {
           tableObj.column(colIdx).search(this.value).draw();
         });
       });
@@ -70,10 +81,10 @@
       });
       initSerachForTable(firmsTable);
     }
-    $(document).on('keyup', '.user-search-input input', function() {
+    $(document).on('keyup change', '.user-search-input .datatable-search', function() {
       var urlParams;
       urlParams = '';
-      $('.user-search-input input').each(function() {
+      $('.user-search-input .datatable-search').each(function() {
         var dataType, textVal;
         textVal = $(this).val();
         dataType = $(this).closest('td').attr('data-search');
