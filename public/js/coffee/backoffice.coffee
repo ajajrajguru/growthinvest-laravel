@@ -504,3 +504,8 @@ $(document).ready ->
 			alert "Please select firm"
 			return  
 		$('form[name="form-invite-firm"]').submit();
+
+	#tabs functionality on mobile
+	$('.squareline-tabs .nav-link.active').click ->
+	  $('.squareline-tabs .nav-item .nav-link').toggleClass 'd-none d-block'
+	 return
