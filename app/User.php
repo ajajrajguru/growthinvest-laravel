@@ -46,6 +46,10 @@ class User extends Authenticatable
         return $value;
     }
 
+    public function displayName() { 
+         return $this->first_name.' '.$this->last_name;
+    }
+
     public function firm()
     {
         return $this->belongsTo('App\Firm', 'firm_id');
@@ -110,6 +114,11 @@ class User extends Authenticatable
         $userData = $this->userData()->where('data_key','taxstructure_info')->first();
         return $userData;
     }
+
+    public function comments(){
+        return $this->morphMany( 'App\Comment', 'object');
+    }
+
 
     public function getActiveCertification(){
         $activeCertification = $this->userCertification()->where('active',1)->first();

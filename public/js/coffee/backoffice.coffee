@@ -482,3 +482,19 @@ $(document).ready ->
 	    $(column).toggle()
 	    return
 	  return
+
+
+	$('select[name="invite_firm_name"]').change ->
+		$('#invite_display').addClass('d-none')
+		
+	$('.cancel-invite-btn').click ->
+		$('#invite_display').addClass('d-none')
+
+	$('.save-invite-btn').click ->
+
+		invite_type = $(this).attr('invite-type')
+		firmid = $('#invite_firm_name').val()
+		if firmid==""
+			alert "Please select firm"
+			return  
+		$('form[name="form-invite-firm"]').submit();

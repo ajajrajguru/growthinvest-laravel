@@ -30,66 +30,12 @@ class LogSuccessfulLogin
     public function handle(Login $event)
     {
 
-        $this->storeUserMenus($event);
+         //storeUserMenus($event);
+         $user = $event->user;
+         storeUserMenus($user);
 
-    }
-
-    public function storeUserMenus($event)
-    {
-        $user = $event->user;
-
-        $user_permissions = [];
-
-        $user_permissions_ar = $user->getAllPermissions();
-        $user_roles          = $user->getRoleNames(); // Returns a collection
-
-        foreach ($user_permissions_ar as $key => $value) {
-            $user_permissions[] = ($value->getAttribute('name'));
-        }
-
-        $admin_menus = $this->getUserAdminMenus($user_permissions);
-        //$dashboard_menus = $this->getUserDashboardMenus($user_roles,$user_permissions);
-
-        $user_data['role'] = isset($user_roles[0]) ? $user_roles[0] : '';
-
-        session(['user_data' => $user_data]);
-        session(['user_menus' => array('admin' => $admin_menus)]);
-
-    }
-
-    public function getUserAdminMenus($user_permissions)
-    {
-        $menus = [];
-
-        if (count(array_intersect($user_permissions, array('manage_options', 'edit_my_firm'))) > 0) {
-
-            if (count(array_intersect($user_permissions, array('manage_options', 'view_firms'))) > 0) {
-
-                $menus[] = ['url' => url('backoffice/user/all'), 'name' => 'Manage'];
-            }
-
-            if (in_array('manage_options', $user_permissions)) {
-
-                $menus[] = ['url' => '#Statistics', 'name' => 'Statistics'];
-                $menus[] = ['url' => '#View-document-templates', 'name' => 'View Document Templates'];
-                $menus[] = ['url' => '#View-email-templates', 'name' => 'View Email Templates'];
-
-                if (in_array('view_groups', $user_permissions)) {
-
-                    $menus[] = ['url' => '#view-groups', 'name' => 'View Groups'];
-                }
-
-                if (count(array_intersect($user_permissions, array('view_firm_leads', 'view_all_leads'))) > 0) {
-
-                    $menus[] = ['url' => '#view-leads', 'name' => 'View Leads'];
-                }
-
-            }
-
-        }
-
-        return $menus;
-    }
+    } 
+    
 
     public function getUserDashboardMenus($user_roles, $user_permissions)
     {

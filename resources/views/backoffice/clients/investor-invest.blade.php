@@ -37,10 +37,10 @@
                 <a class="nav-link active" data-toggle="tab" href="#invest">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " data-toggle="tab" href="#profile">Profile</a>
+                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " data-toggle="tab" href="#news-updates">News/Updates</a>
+                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
             </li>
         </ul>
 
@@ -131,7 +131,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped-bg">
+                    <table id="datatable-investor-invest" class="table dataFilterTable table-hover table-striped-bg">
                         <thead>
                             <tr>
                                 <th>Investment Offer</th>
@@ -147,48 +147,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><a href="" target="_blank">lorem ipsum dollar</a></td>
-                                <td></td>
-                                <td>EIS</td>
-                                <td>Single Company</td>
-                                <td></td>
-                                <td><div class="text-nowrap">&pound; 50,000</div></td>
-                                <td>
-                                    <div class="text-nowrap">&pound; 7,000</div>
-                                </td>
-                                <td>
-                                    <div class="text-nowrap">&pound; 170,000</div>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-primary btn-sm">Invest</a>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-sm btn-link">Download</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a href="" target="_blank">lorem ipsum dollar</a></td>
-                                <td></td>
-                                <td>EIS</td>
-                                <td>Single Company</td>
-                                <td></td>
-                                <td><div class="text-nowrap">&pound; 50,000</div></td>
-                                <td>
-                                    <div class="text-nowrap">&pound; 7,000</div>
-                                </td>
-                                <td>
-                                    <div class="text-nowrap">&pound; 170,000</div>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-primary btn-sm">Invest</a>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-sm btn-link">Download</a>
-                                </td>
-                            </tr>
+
                         </tbody>
                     </table>
+
+                     
                 </div>
             </div> <!-- /invest tab -->
 
