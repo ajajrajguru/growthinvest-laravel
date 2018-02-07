@@ -375,6 +375,10 @@ $(document).ready ->
 				filters = {}
 				filters.firm_name = $('select[name="firm_name"]').val()
 				filters.business_listings_type = $('select[name="business_listings_type"]').val()
+				business_invest_listings = 'yes'
+				if window.location.pathname.indexOf('invest-listings')==-1
+					business_invest_listings ="no"
+				filters.invest_listings = business_invest_listings
 				data.filters = filters
 				data
 
@@ -417,6 +421,8 @@ $(document).ready ->
 		return
 
 
+	  
+
 	businesslistingsTable = $('#datatable-currentbusinessvaluations').DataTable(
 		'pageLength': 50
 		'processing': false
@@ -429,8 +435,8 @@ $(document).ready ->
 			data: (data) ->
 				filters = {}
 				filters.firm_name = $('select[name="firm_name"]').val()
-				filters.business_listings_type = $('select[name="business_listings_type"]').val()
-				data.filters = filters
+				filters.business_listings_type = $('select[name="business_listings_type"]').val()				
+				data.filters = filters				
 				data
 
 			error: ->

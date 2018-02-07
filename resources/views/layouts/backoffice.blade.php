@@ -11,7 +11,8 @@
     <link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
 
-    
+    <link rel="stylesheet" href="{{ cdn('css/styles_cdn.css') }}">
+    <link rel="stylesheet" href="{{ cdn('css/styles_cdn2.css') }}">
 @endsection
 
 @section('js')

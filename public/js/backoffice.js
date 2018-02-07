@@ -413,10 +413,15 @@
         url: '/backoffice/business-listings/get-businesslistings',
         type: 'post',
         data: function(data) {
-          var filters;
+          var business_invest_listings, filters;
           filters = {};
           filters.firm_name = $('select[name="firm_name"]').val();
           filters.business_listings_type = $('select[name="business_listings_type"]').val();
+          business_invest_listings = 'yes';
+          if (window.location.pathname.indexOf('invest-listings') === -1) {
+            business_invest_listings = "no";
+          }
+          filters.invest_listings = business_invest_listings;
           data.filters = filters;
           return data;
         },

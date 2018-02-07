@@ -683,6 +683,7 @@ function getUserAdminMenus($user_permissions)
 /* USER MENU END*/
 
 /* CDN START */
+ 
 function cdn($asset)
 {
 
@@ -729,3 +730,4 @@ function cdnPath($cdn, $asset)
 
 }
 /* CDN END */
+ 
