@@ -218,8 +218,18 @@ a:hover {
   border-right: 1px solid #ccc;
 }
 @media (max-width: 767px) {
+  .squareline-tabs .nav-tabs .nav-item:not(:last-child) {
+    border-right: none;
+  }
+}
+@media (max-width: 767px) {
   .squareline-tabs .nav-tabs .nav-item {
     width: 100%;
+  }
+}
+@media (max-width: 767px) {
+  .squareline-tabs .nav-tabs .nav-item:last-child .nav-link {
+    border-bottom: none;
   }
 }
 .squareline-tabs .nav-tabs .nav-item .nav-link {
@@ -233,12 +243,18 @@ a:hover {
 @media (max-width: 767px) {
   .squareline-tabs .nav-tabs .nav-item .nav-link {
     text-align: left;
+    border-bottom: 1px solid #ccc;
   }
 }
 .squareline-tabs .nav-tabs .nav-item .nav-link.active {
   display: block !important;
   color: #00a9ee;
   background: #fff;
+}
+@media (max-width: 767px) {
+  .squareline-tabs .nav-tabs .nav-item .nav-link.active {
+    border-bottom: none;
+  }
 }
 .squareline-tabs .nav-tabs .nav-item .nav-link.active:after {
   width: 100%;
