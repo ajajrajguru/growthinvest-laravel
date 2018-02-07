@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     //firms
     Route::get('firms/add', 'FirmController@create');
     Route::post('firms/save-firm', 'FirmController@store');
+    Route::post('firms/save-firm-invite', 'FirmController@saveFirmInvite');
     Route::get('firms/{giCode}', 'FirmController@show');
     Route::get('firm/export-firm', 'FirmController@exportFirms');
     Route::resource('firm', 'FirmController');

@@ -26,7 +26,7 @@ class FirmController extends Controller
         $data['firms']       = $firms;
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Firms';
-        $data['activeMenu'] = 'firms';
+        $data['activeMenu']  = 'firms';
 
         return view('backoffice.firm.list')->with($data);
     }
@@ -228,8 +228,57 @@ class FirmController extends Controller
     public function getInvite($firm_id, $invite_type)
     {
         $firm   = Firm::where('id', $firm_id)->first();
-        $result = $firm->getInviteData($firm_id,$invite_type);        
+        $result = $firm->getInviteData($firm_id, $invite_type);
         return $result;
+    }
+
+    public function saveFirmInvite(Request $request)
+    {
+
+        $firm_id            = is_null($request->input('invite_firm_name')) ? '' : $request->input('invite_firm_name');
+        $invite_content_txt = is_null($request->input('invite_content')) ? '' : $request->input('invite_content');
+        $invite_type        = is_null($request->input('invite_type')) ? '' : $request->input('invite_type');
+
+        /* echo "<pre>";
+        echo"<br/>".$invite_type."<br/>";
+        print_r($invite_content_txt);
+        die();
+         */
+        if ($firm_id == "" || is_null($firm_id)) {
+            Session::flash('error_message', 'Please select firm');
+            return redirect()->back()->withInput();
+        }
+        if ($invite_type == "" || is_null($invite_type)) {
+            Session::flash('error_message', 'Invite Type missing');
+            return redirect()->back()->withInput();
+        }
+
+        $firm                = Firm::where('id', $firm_id)->first();
+        $invite_content_data = $firm->getFirmInviteContent($firm->id);
+        $invite_content      = $invite_content_data->data_value;
+
+        switch ($invite_type) {
+            case 'businessowner':$invite_content['ent_invite_content'] = $invite_content_txt;
+                break;
+            case 'investor':$invite_content['inv_invite_content'] = $invite_content_txt;
+                break;
+            case 'fundmanager':$invite_content['fundmanager_invite_content'] = $invite_content_txt;
+                break;
+        }
+
+        /*echo "<pre>";
+        print_r($invite_content);
+        die();*/
+        $firm_metas = array('invite_content' => $invite_content);
+
+        $firm_data = new FirmData();
+        $result    = $firm_data->insertUpdateFirmdata($firm_metas, $firm_id);
+
+        //return $firm_id;
+
+        Session::flash('success_message', 'Firm Invite content saved successfully.');
+        return redirect()->back()->withInput();
+
     }
 
     /**
