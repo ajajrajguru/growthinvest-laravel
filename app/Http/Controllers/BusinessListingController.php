@@ -28,10 +28,11 @@ class BusinessListingController extends Controller
 
         $business_listing             = new BusinessListing;
         $list_args['backoffice']      = true;
-        $list_args['invest_listings'] = false;
+        $list_args['invest_listings'] = 'no';
         if ($biz_type == "invest-listings") {
-            $list_args['invest_listings'] = true;
+            $list_args['invest_listings'] = 'yes';
         }
+
 
         $business_listing_data = $business_listing->getBusinessList($list_args);
 
@@ -51,6 +52,7 @@ class BusinessListingController extends Controller
         $data['breadcrumbs']       = $breadcrumbs;
         $data['pageTitle']         = 'Manage Clients : Growthinvest';
         $data['activeMenu']        = 'manage_clients';
+        $data['invest_listings']        = $list_args['invest_listings'] ;
 
         return view('backoffice.clients.business_listings')->with($data);
 
@@ -232,7 +234,7 @@ class BusinessListingController extends Controller
 
             $sql_business_listings_count_where .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
         }
-        
+
         if (isset($filters['invest_listings']) && $filters['invest_listings'] != "") {
 
             $wm_associated_where .= ($wm_associated_where == "" ? " WHERE " : " AND ");
