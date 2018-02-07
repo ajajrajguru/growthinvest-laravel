@@ -477,6 +477,11 @@ $(document).ready ->
 				$('input[name="invite_link"]').val("http://seedtwin.ajency.in/register/?"+data.invite_key+"#"+invite_type)
 
 
+	#tabs functionality on mobile
+	$('body').on 'click', '.squareline-tabs .nav-link.active', (e)->
+		e.preventDefault()
+		$('.squareline-tabs .nav-item .nav-link').toggleClass 'd-none d-block'
+
 	# toggle columns
 	if $(window).width() < 767
 	  if $('.toggle-btn input:checkbox:not(:checked)')
@@ -504,8 +509,3 @@ $(document).ready ->
 			alert "Please select firm"
 			return  
 		$('form[name="form-invite-firm"]').submit();
-
-	#tabs functionality on mobile
-	$('.squareline-tabs .nav-link.active').click ->
-	  $('.squareline-tabs .nav-item .nav-link').toggleClass 'd-none d-block'
-	 return
