@@ -1,0 +1,47 @@
+#management-team {
+    .carousel-indicators {
+        display: none;
+    }
+    .carousel-control-prev,
+    .carousel-control-next {
+        background-image: initial;
+        opacity: 1;
+        @media screen and (max-width: 767px) {
+            opacity: 0.3;
+        }
+        .fa {
+            position: absolute;
+            top: 50%;
+            color: @brand-primary;
+            z-index: 5;
+            display: inline-block;
+        }
+    }
+    .carousel-control-prev {
+        left: -12%;
+        @media screen and (max-width: 767px) {
+            left: 0;
+        }
+    }
+    .carousel-control-next {
+        right: -12%;
+        @media screen and (max-width: 767px) {
+            right: 0;
+        }
+    }
+}
+
+// management team
+.management-individual {
+    .avatar {
+        width: 150px;
+        height: 150px;
+        @media (max-width: 767px) {
+            flex-basis: 100%;
+        }
+        img {
+            max-width: 150px;
+            height: auto;
+        }
+    }
+}
