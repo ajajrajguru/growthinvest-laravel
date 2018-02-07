@@ -74,6 +74,9 @@ header.sticky {
 .text-primary {
   color: #00a9ee !important;
 }
+.text-secondary {
+  color: #4162b3 !important;
+}
 .font-weight-medium {
   font-weight: 600;
 }
@@ -112,6 +115,9 @@ header.sticky {
 }
 .border-1 {
   border-width: 1px !important;
+}
+.word-break {
+  word-break: break-all;
 }
 body {
   font-family: 'Source Sans Pro', sans-serif;
@@ -393,7 +399,7 @@ label.required:after {
 }
 .btn-outline-primary {
   color: #00a9ee;
-  background-color: transparent;
+  background-color: #fff;
   border-color: #00a9ee;
 }
 .btn-outline-primary:hover {
