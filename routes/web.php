@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     //firms
     Route::get('firms/add', 'FirmController@create');
     Route::post('firms/save-firm', 'FirmController@store');
+    Route::post('firms/save-firm-invite', 'FirmController@saveFirmInvite');
     Route::get('firms/{giCode}', 'FirmController@show');
     Route::get('firm/export-firm', 'FirmController@exportFirms');
     Route::resource('firm', 'FirmController');
@@ -63,7 +64,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::resource('investor', 'InvestorController'); 
 
     //business
-    Route::resource('business-listings', 'BusinessListingController');
+    Route::get('business/{type}', 'BusinessListingController@index');
     Route::post('business-listings/get-businesslistings', 'BusinessListingController@getBusinessListings');
     Route::get('business-listing/export-business-listings', 'BusinessListingController@exportBusinessListings');
     Route::resource('current-business-valuations', 'CurrentBusinessValuation');

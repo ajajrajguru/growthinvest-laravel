@@ -415,10 +415,15 @@
         url: '/backoffice/business-listings/get-businesslistings',
         type: 'post',
         data: function(data) {
-          var filters;
+          var business_invest_listings, filters;
           filters = {};
           filters.firm_name = $('select[name="firm_name"]').val();
           filters.business_listings_type = $('select[name="business_listings_type"]').val();
+          business_invest_listings = 'yes';
+          if (window.location.pathname.indexOf('invest-listings') === -1) {
+            business_invest_listings = "no";
+          }
+          filters.invest_listings = business_invest_listings;
           data.filters = filters;
           return data;
         },
@@ -533,6 +538,10 @@
         }
       });
     });
+    $('body').on('click', '.squareline-tabs .nav-link.active', function(e) {
+      e.preventDefault();
+      return $('.squareline-tabs .nav-item .nav-link').toggleClass('d-none d-block');
+    });
     if ($(window).width() < 767) {
       if ($('.toggle-btn input:checkbox:not(:checked)')) {
         column = 'table .' + $('.toggle-btn input').attr('name');
@@ -542,7 +551,24 @@
         column = 'table .' + $(this).find('input[type="checkbox"]').attr('name');
         $(column).toggle();
       });
+      return;
     }
+    $('select[name="invite_firm_name"]').change(function() {
+      return $('#invite_display').addClass('d-none');
+    });
+    $('.cancel-invite-btn').click(function() {
+      return $('#invite_display').addClass('d-none');
+    });
+    return $('.save-invite-btn').click(function() {
+      var firmid, invite_type;
+      invite_type = $(this).attr('invite-type');
+      firmid = $('#invite_firm_name').val();
+      if (firmid === "") {
+        alert("Please select firm");
+        return;
+      }
+      return $('form[name="form-invite-firm"]').submit();
+    });
   });
 
 }).call(this);

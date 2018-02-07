@@ -373,6 +373,10 @@ $(document).ready ->
 				filters = {}
 				filters.firm_name = $('select[name="firm_name"]').val()
 				filters.business_listings_type = $('select[name="business_listings_type"]').val()
+				business_invest_listings = 'yes'
+				if window.location.pathname.indexOf('invest-listings')==-1
+					business_invest_listings ="no"
+				filters.invest_listings = business_invest_listings
 				data.filters = filters
 				data
 
@@ -415,6 +419,8 @@ $(document).ready ->
 		return
 
 
+	  
+
 	businesslistingsTable = $('#datatable-currentbusinessvaluations').DataTable(
 		'pageLength': 50
 		'processing': false
@@ -427,8 +433,8 @@ $(document).ready ->
 			data: (data) ->
 				filters = {}
 				filters.firm_name = $('select[name="firm_name"]').val()
-				filters.business_listings_type = $('select[name="business_listings_type"]').val()
-				data.filters = filters
+				filters.business_listings_type = $('select[name="business_listings_type"]').val()				
+				data.filters = filters				
 				data
 
 			error: ->
@@ -469,6 +475,11 @@ $(document).ready ->
 				$('input[name="invite_link"]').val("http://seedtwin.ajency.in/register/?"+data.invite_key+"#"+invite_type)
 
 
+	#tabs functionality on mobile
+	$('body').on 'click', '.squareline-tabs .nav-link.active', (e)->
+		e.preventDefault()
+		$('.squareline-tabs .nav-item .nav-link').toggleClass 'd-none d-block'
+
 	# toggle columns
 	if $(window).width() < 767
 	  if $('.toggle-btn input:checkbox:not(:checked)')
@@ -480,3 +491,19 @@ $(document).ready ->
 	    $(column).toggle()
 	    return
 	  return
+
+
+	$('select[name="invite_firm_name"]').change ->
+		$('#invite_display').addClass('d-none')
+		
+	$('.cancel-invite-btn').click ->
+		$('#invite_display').addClass('d-none')
+
+	$('.save-invite-btn').click ->
+
+		invite_type = $(this).attr('invite-type')
+		firmid = $('#invite_firm_name').val()
+		if firmid==""
+			alert "Please select firm"
+			return  
+		$('form[name="form-invite-firm"]').submit();

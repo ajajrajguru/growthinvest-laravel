@@ -17,17 +17,26 @@ class BusinessListingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($biz_type = 'all')
     {
+
         /* $firms = new Firm;
         $result = $firms->getAllChildFirmsByFirmID(28);
         echo"<pre>";
         print_r($result);
         die();*/
 
-        $business_listing        = new BusinessListing;
-        $list_args['backoffice'] = true;
-        $business_listing_data   = $business_listing->getBusinessList($list_args);
+        $business_listing             = new BusinessListing;
+        $list_args['backoffice']      = true;
+        $list_args['invest_listings'] = 'no';
+        if ($biz_type == "invest-listings") {
+            $list_args['invest_listings'] = 'yes';
+        }
+
+        $business_listing_data = $business_listing->getBusinessList($list_args);
+
+        /*echo "<pre>";
+        print_r($business_listing_data);*/
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
@@ -42,6 +51,7 @@ class BusinessListingController extends Controller
         $data['breadcrumbs']       = $breadcrumbs;
         $data['pageTitle']         = 'Manage Clients : Growthinvest';
         $data['activeMenu']        = 'manage_clients';
+        $data['invest_listings']   = $list_args['invest_listings'];
 
         return view('backoffice.clients.business_listings')->with($data);
 
@@ -49,14 +59,16 @@ class BusinessListingController extends Controller
 
     public function getBusinessListings(Request $request)
     {
-        $requestData = $request->all(); //dd($requestData);
-        $data        = [];
-        $skip        = $requestData['start'];
-        $length      = $requestData['length'];
-        $orderValue  = $requestData['order'][0];
-        $filters     = $requestData['filters'];
+        $requestData     = $request->all(); //dd($requestData);
+        $data            = [];
+        $skip            = $requestData['start'];
+        $length          = $requestData['length'];
+        $orderValue      = $requestData['order'][0];
+        $filters         = $requestData['filters'];
+        $invest_listings = isset($requestData['invest_listings']) ? $requestData['invest_listings'] : 'no';
 
-        $columnOrder = array(
+        $biz_args['invest_listings'] = $invest_listings;
+        $columnOrder                 = array(
             '1' => 'business_title',
             '2' => 'users.firm.name',
             '3' => 'created_at',
@@ -73,7 +85,7 @@ class BusinessListingController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filter_business_listings = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy);
+        $filter_business_listings = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy, $biz_args);
         $business_listings        = $filter_business_listings['list'];
         $total_business_listings  = $filter_business_listings['total_business_listings'];
 
@@ -142,7 +154,7 @@ class BusinessListingController extends Controller
 
     }
 
-    public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array())
+    public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array(), $biz_args)
     {
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
@@ -163,7 +175,7 @@ class BusinessListingController extends Controller
         $firm_investors_str = implode(',', $firm_investors);
         //print_r($firm_investors_str);
 
-        $wm_associated_firms_query_select_data = "SELECT bp.gi_code as gi_code, firm.name as firm_name, bp.round as round, bp.target_amount as target_amount,bp.created_at as created_at, bp.updated_at as updated_at, bp.business_status as business_status, bp.type as type, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
+        $wm_associated_firms_query_select_data = "SELECT bp.invest_listing as invest_listing, bp.gi_code as gi_code, firm.name as firm_name, bp.round as round, bp.target_amount as target_amount,bp.created_at as created_at, bp.updated_at as updated_at, bp.business_status as business_status, bp.type as type, bp.content AS content,bp.parent AS parent, bp.short_content AS short_content, bp.owner_id AS owner_id,
 
         bp.id AS id,bo_info.id as bo ,bo_info.email as bo_email,  firm.name as firm_name, firm.id as firm_id,bp.title AS business_title,bp.slug AS business_slug, bp.created_at as business_date,bp.updated_at as business_modified,  bp.business_status as proposal_status ,bp.status as post_status,
         SUM(CASE bpi.status WHEN 'watch_list' THEN 1 ELSE 0 END) AS watch_list,
@@ -200,7 +212,8 @@ class BusinessListingController extends Controller
         LEFT OUTER
         JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))";
 
-        $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
+        $sql_business_listings_count       = "SELECT count(*) as count FROM business_listings biz  ";
+        $sql_business_listings_count_where = "";
 
         $wm_associated_where               = "";
         $sql_business_listings_count_where = "";
@@ -218,8 +231,19 @@ class BusinessListingController extends Controller
             $wm_associated_where .= ($wm_associated_where == "" ? " WHERE " : " AND ");
             $wm_associated_where .= "  bp.type ='" . $filters['business_listings_type'] . "'";
 
-            $sql_business_listings_count .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
+            $sql_business_listings_count_where .= " WHERE biz.type ='" . $filters['business_listings_type'] . "'";
         }
+
+        if (isset($filters['invest_listings']) && $filters['invest_listings'] != "") {
+
+            $wm_associated_where .= ($wm_associated_where == "" ? " WHERE " : " AND ");
+            $wm_associated_where .= "  bp.invest_listing " . ($filters['invest_listings'] == "yes" ? " ='yes' " : " != 'yes' ");
+
+            $sql_business_listings_count_where .= ($sql_business_listings_count_where == "" ? " WHERE " : " AND ");
+            $sql_business_listings_count_where .= "  biz.invest_listing  " . ($filters['invest_listings'] == "yes" ? " ='yes' " : " != 'yes' ");
+        }
+
+        $sql_business_listings_count .= $sql_business_listings_count_where;
 
         $wm_associated_group_by = " GROUP BY bp.id ";
 
@@ -243,7 +267,7 @@ class BusinessListingController extends Controller
             $sql_limit = $orderBy_sql . " LIMIT " . $skip . "," . $length;
         }
 
-        /*echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
+        /*   echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
         die();*/
         $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit);
 
@@ -527,9 +551,9 @@ class BusinessListingController extends Controller
 
             if (in_array($business_data['data_key'], $serialized_meta_keys)) {
                 $business_data_ar[$business_data['data_key']] = @unserialize($business_data['data_value']);
-                if($business_data['data_key']=="company_details"){
+                if ($business_data['data_key'] == "company_details") {
                     $business_data_ar[$business_data['data_key']] = @unserialize($business_data_ar[$business_data['data_key']]);
-                    
+
                 }
             } else {
                 $business_data_ar[$business_data['data_key']] = $business_data['data_value'];
@@ -538,7 +562,7 @@ class BusinessListingController extends Controller
         }
 
         //$biz_defaults = $business_listing->getBusinessDefaultsByBizId('',['type'=>'approver']);
-        $biz_defaults = $business_listing->getBusinessDefaultsByBizId();
+        $biz_defaults       = $business_listing->getBusinessDefaultsByBizId();
         $approvers          = $business_listing->getApproversFromDefaultAr($biz_defaults);
         $milestones         = $business_listing->getMilestonesFromDefaultAr($biz_defaults);
         $stages_of_business = $business_listing->getStagesOfBusinessFromDefaultAr($biz_defaults);
@@ -548,10 +572,10 @@ class BusinessListingController extends Controller
         $biz_investments_ar = $biz_investments->toArray();
         $business_ar        = $business_listing->toArray();
 
-        $data = array_merge($business_ar, $business_data_ar);
-        $data['approvers']  = $approvers;
-        $data['milestones']  = $milestones;
-        $data['stages_of_business']  = $stages_of_business;
+        $data                       = array_merge($business_ar, $business_data_ar);
+        $data['approvers']          = $approvers;
+        $data['milestones']         = $milestones;
+        $data['stages_of_business'] = $stages_of_business;
 
         /*echo "<pre>";
         print_r($data);

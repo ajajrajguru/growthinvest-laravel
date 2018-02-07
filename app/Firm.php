@@ -59,12 +59,12 @@ class Firm extends Model
     {
 
         // echo "=====".$firm_id;
-        $addionalData = $this->firmData()->where(['data_key' => 'invite_content', 'firm_id' => $firm_id])->first();
+        $invite_data = $this->firmData()->where(['data_key' => 'invite_content', 'firm_id' => $firm_id])->first();
         /*print_r($this->firmData());
         print_r($addionalData);*/
         /*\DB::enableQueryLog();
         dd(\DB::getQueryLog());*/
-        return $addionalData;
+        return $invite_data;
     }
 
     public function getInviteContent()
@@ -118,6 +118,7 @@ class Firm extends Model
 
         $firm = Firm::find($firm_id)->select(['id', 'name', 'invite_key'])->get()->first();
         $invite_content   = $this->getFirmInviteContent($firm_id);
+        
         $invite_content_data = $invite_content->data_value;
          if($invite_type!=""){
             switch ($invite_type) {
