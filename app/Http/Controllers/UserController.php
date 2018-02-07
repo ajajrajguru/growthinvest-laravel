@@ -242,7 +242,7 @@ class UserController extends Controller
         $data['companyDescription'] = getCompanyDescription();
         $data['firms']              = $firms;
         $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'Add User';
+        $data['pageTitle']          = 'Edit User';
         $data['mode']               = 'view';
         return view('backoffice.user.step-one')->with($data);
 
