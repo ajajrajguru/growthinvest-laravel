@@ -544,6 +544,102 @@ $(document).ready ->
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-perc').attr('readonly',true)
 
+
+  $(document).on 'click', '.reply-comment', ->
+    $(this).closest('.reply-del-action').addClass('d-none')
+    $(this).closest('.media-action').find('.reply-to-comment').removeClass('d-none')
+
+
+  $(document).on 'click', '.submit-query', ->
+    btnObj = $(this)
+    query = $(this).closest('.submit-query-cont').find('textarea').val()
+    parentId = $(this).attr('parent-id')
+    qType = $('#question_type').val()
+    objectType = $('#object_type').val()
+    objectId = $('#object_id').val()
+    $.ajax
+      type: 'post'
+      url: '/backoffice/save-news-update'
+      data:
+        'query': query
+        'parentId': parentId
+        'type': qType
+        'object-type': objectType
+        'object-id': objectId
+      success: (data) ->
+        console.log parentId
+        if parentId != '0'
+          btnObj.closest('.media-body').append(data.comment_html)
+          btnObj.closest('.media-action').find('.reply-del-action').removeClass('d-none')
+          btnObj.closest('.media-action').find('.reply-to-comment').addClass('d-none')
+           
+        else
+          $('.main-media-container').append(data.comment_html)
+          console.log "child"
+
+        btnObj.closest('.submit-query-cont').find('textarea').val ''
+
+        return
+      error: (request, status, error) ->
+        throwError()
+        return
+
+  $(document).on 'click', '.delete-comment', ->
+    if confirm('Are you sure you want to delete this comment?')
+      btnObj = $(this)
+      commentId = $(this).attr('comment-id')
+      $.ajax
+        type: 'post'
+        url: '/backoffice/delete-news-update'
+        data:
+          'commentId': commentId
+        success: (data) ->
+           
+          btnObj.closest('.media').remove()
+
+          return
+        error: (request, status, error) ->
+          throwError()
+          return
+
+
+  investorInvestTable = $('#datatable-investor-invest').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    'aaSorting': [[1,'asc']]
+    'ajax':
+      url: '/backoffice/investor/get-investor-invest'
+      type: 'post'
+      data: (data) ->
+
+        filters = {}
+        
+        data.filters = filters
+        data
+
+      error: ->
+
+
+        return
+
+
+    'columns': [
+      
+    ])
+
+  $('body').on 'click', '.reset-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change')
+    $('select[name="investor_name"]').val('').trigger('change')
+    $('select[name="client_category"]').val('')
+    $('select[name="client_certification"]').val('')
+    $('select[name="investor_nominee"]').val('')
+    $('select[name="idverified"]').val('')
+   
+    investorTable.ajax.reload()
+    return
+
   
 
 

@@ -25,6 +25,8 @@ class CreateBusinessListings extends Migration
             $table->string('type',50);
             $table->integer('round');
             $table->string('invest_listing',5);
+            $table->string('tax_satus',50);            
+            $table->string('manager')->nullable();
             $table->integer('proposal_logo_id');
             $table->integer('background_image_id');
             $table->double('target_amount');
