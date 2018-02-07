@@ -61,7 +61,7 @@ class UserController extends Controller
         }
  
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage Backoffice"];
         $breadcrumbs[] = ['url' => '', 'name' => $userTypeText];
 
