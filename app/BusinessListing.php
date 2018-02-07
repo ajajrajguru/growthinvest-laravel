@@ -13,7 +13,13 @@ class BusinessListing extends Model
 
         if ($args['backoffice'] == true) {
 
-            $business_list = BusinessListing::all();
+            if($args['invest_listings']==true){
+                $business_list = BusinessListing::where('invest_listing','yes')->get();    
+            }
+            else{
+                $business_list = BusinessListing::all();
+            }
+            
 
             /*$business_list = \DB::table('business_listings')
             ->get();*/
