@@ -368,7 +368,9 @@
           data.filters = filters;
           return data;
         },
-        error: function() {}
+        error: function() {
+          console.log("error");
+        }
       },
       'columns': [
         {

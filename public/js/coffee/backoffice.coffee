@@ -156,7 +156,6 @@ $(document).ready ->
 
 	$(document).on 'click', '.delete-all-user', ->
 		userIds = ''
-
 		$('.delete_intm_users').each ->
 			if $(this).is(':checked')
 				userIds += $(this).val()+','
@@ -332,8 +331,7 @@ $(document).ready ->
 				data
 
 			error: ->
-
-
+				console.log "error"
 				return
 
 
