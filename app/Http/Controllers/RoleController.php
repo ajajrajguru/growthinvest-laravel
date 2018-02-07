@@ -68,6 +68,10 @@ class RoleController extends Controller {
             $role->givePermissionTo($p);
         }
 
+         //Update logged in user menu session 
+        $user = $user = Auth::user();
+        storeUserMenus($user);
+        
         return redirect()->route('roles.index')
             ->with('flash_message',
              'Role'. $role->name.' added!'); 
@@ -126,6 +130,10 @@ class RoleController extends Controller {
             $p = Permission::where('id', '=', $permission)->firstOrFail(); //Get corresponding form //permission in db
             $role->givePermissionTo($p);  //Assign permission to role
         }
+
+        //Update logged in user menu session 
+        $user = $user = Auth::user();
+        storeUserMenus($user);
 
         return redirect()->route('roles.index')
             ->with('flash_message',
