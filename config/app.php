@@ -228,4 +228,13 @@ return [
 
     ],
 
+
+
+   'cdn' => [
+             env('CDNPATH', 'assets.seedtwin.ajency.in') => "css|js|eot|woff|ttf,jpg|jpeg|png|gif|svg"          
+
+    ],
+     
+        
+
 ];
