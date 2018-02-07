@@ -33,7 +33,6 @@ class BusinessListingController extends Controller
             $list_args['invest_listings'] = 'yes';
         }
 
-
         $business_listing_data = $business_listing->getBusinessList($list_args);
 
         /*echo "<pre>";
@@ -52,7 +51,7 @@ class BusinessListingController extends Controller
         $data['breadcrumbs']       = $breadcrumbs;
         $data['pageTitle']         = 'Manage Clients : Growthinvest';
         $data['activeMenu']        = 'manage_clients';
-        $data['invest_listings']        = $list_args['invest_listings'] ;
+        $data['invest_listings']   = $list_args['invest_listings'];
 
         return view('backoffice.clients.business_listings')->with($data);
 
@@ -66,10 +65,10 @@ class BusinessListingController extends Controller
         $length          = $requestData['length'];
         $orderValue      = $requestData['order'][0];
         $filters         = $requestData['filters'];
-        $invest_listings = isset($requestData['invest_listings'])?$requestData['invest_listings']:'no';
+        $invest_listings = isset($requestData['invest_listings']) ? $requestData['invest_listings'] : 'no';
 
         $biz_args['invest_listings'] = $invest_listings;
-        $columnOrder = array(
+        $columnOrder                 = array(
             '1' => 'business_title',
             '2' => 'users.firm.name',
             '3' => 'created_at',
@@ -86,7 +85,7 @@ class BusinessListingController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filter_business_listings = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy,$biz_args);
+        $filter_business_listings = $this->getFilteredBusinessListings($filters, $skip, $length, $orderDataBy, $biz_args);
         $business_listings        = $filter_business_listings['list'];
         $total_business_listings  = $filter_business_listings['total_business_listings'];
 
@@ -155,7 +154,7 @@ class BusinessListingController extends Controller
 
     }
 
-    public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array(),$biz_args)
+    public function getFilteredBusinessListings($filters = array(), $skip = 1, $length = 50, $orderDataBy = array(), $biz_args)
     {
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
@@ -213,8 +212,8 @@ class BusinessListingController extends Controller
         LEFT OUTER
         JOIN business_investments my_bpi ON (my_bpi.id = bpi.id AND my_bpi.investor_id IN (" . $firm_investors_str . "))";
 
-        $sql_business_listings_count = "SELECT count(*) as count FROM business_listings biz  ";
-        $sql_business_listings_count_where ="";
+        $sql_business_listings_count       = "SELECT count(*) as count FROM business_listings biz  ";
+        $sql_business_listings_count_where = "";
 
         $wm_associated_where               = "";
         $sql_business_listings_count_where = "";
@@ -238,15 +237,14 @@ class BusinessListingController extends Controller
         if (isset($filters['invest_listings']) && $filters['invest_listings'] != "") {
 
             $wm_associated_where .= ($wm_associated_where == "" ? " WHERE " : " AND ");
-            $wm_associated_where .= "  bp.invest_listing " . ($filters['invest_listings']=="yes"?" ='yes' ": " != 'yes' ")  ;
+            $wm_associated_where .= "  bp.invest_listing " . ($filters['invest_listings'] == "yes" ? " ='yes' " : " != 'yes' ");
 
             $sql_business_listings_count_where .= ($sql_business_listings_count_where == "" ? " WHERE " : " AND ");
-            $sql_business_listings_count_where .= "  biz.invest_listing  " .  ($filters['invest_listings']=="yes"?" ='yes' ": " != 'yes' ") ;
+            $sql_business_listings_count_where .= "  biz.invest_listing  " . ($filters['invest_listings'] == "yes" ? " ='yes' " : " != 'yes' ");
         }
-        
-        $sql_business_listings_count .=     $sql_business_listings_count_where;
 
-        
+        $sql_business_listings_count .= $sql_business_listings_count_where;
+
         $wm_associated_group_by = " GROUP BY bp.id ";
 
         $orderBy_sql = " ORDER BY business_title ASC ";
@@ -269,7 +267,7 @@ class BusinessListingController extends Controller
             $sql_limit = $orderBy_sql . " LIMIT " . $skip . "," . $length;
         }
 
-     /*   echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
+        /*   echo $wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit;
         die();*/
         $business_listings = DB::select($wm_associated_firms_query_select_data . $wm_associated_firms_query . $wm_associated_where . $wm_associated_group_by . $sql_limit);
 
