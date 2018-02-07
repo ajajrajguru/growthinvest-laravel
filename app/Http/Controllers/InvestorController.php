@@ -2186,7 +2186,7 @@ class InvestorController extends Controller
 
                 if (empty($onfidoApplicantId)) {
 
-                    // if ($sendSignature == 'yes') {
+                    if ($sendSignature == 'yes') {
                         $result_onfido = createOnfidoApplicant($investor);
 
                         $applicant_id = $result_onfido['applicant_id'];
@@ -2220,7 +2220,7 @@ class InvestorController extends Controller
 
                         }
 
-                    // }
+                    }
 
                 }
                 else{
