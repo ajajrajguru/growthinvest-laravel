@@ -536,6 +536,10 @@
         }
       });
     });
+    $('body').on('click', '.squareline-tabs .nav-link.active', function(e) {
+      e.preventDefault();
+      return $('.squareline-tabs .nav-item .nav-link').toggleClass('d-none d-block');
+    });
     if ($(window).width() < 767) {
       if ($('.toggle-btn input:checkbox:not(:checked)')) {
         column = 'table .' + $('.toggle-btn input').attr('name');
@@ -553,7 +557,7 @@
     $('.cancel-invite-btn').click(function() {
       return $('#invite_display').addClass('d-none');
     });
-    $('.save-invite-btn').click(function() {
+    return $('.save-invite-btn').click(function() {
       var firmid, invite_type;
       invite_type = $(this).attr('invite-type');
       firmid = $('#invite_firm_name').val();
@@ -562,9 +566,6 @@
         return;
       }
       return $('form[name="form-invite-firm"]').submit();
-    });
-    $('.squareline-tabs .nav-link.active').click(function() {
-      return $('.squareline-tabs .nav-item .nav-link').toggleClass('d-none d-block');
     });
   });
 
