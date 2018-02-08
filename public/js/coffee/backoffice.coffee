@@ -58,8 +58,8 @@ $(document).ready ->
 				return
 			if $(window).width() < 767
 				if $('.toggle-btn input:checkbox:not(:checked)')
-				  column = 'table .' + $('.toggle-btn input').attr('name')
-				  $(column).hide()
+					column = 'table .' + $('.toggle-btn input').attr('name')
+					$(column).hide()
 			return
 		return
 
@@ -172,7 +172,7 @@ $(document).ready ->
 				if data.status
 					$('.delete_intm_users').each ->
 						if $(this).is(':checked')
-							 IntermediaryTable.row($(this).closest('tr')).remove()
+							IntermediaryTable.row($(this).closest('tr')).remove()
 
 					$('.gi-success').removeClass('d-none')
 					$('.gi-danger').addClass('d-none')
@@ -471,15 +471,15 @@ $(document).ready ->
 
 	# toggle columns
 	if $(window).width() < 767
-	  if $('.toggle-btn input:checkbox:not(:checked)')
-	    column = 'table .' + $('.toggle-btn input').attr('name')
-	    $(column).hide()
+		if $('.toggle-btn input:checkbox:not(:checked)')
+			column = 'table .' + $('.toggle-btn input').attr('name')
+			$(column).hide()
 
-	  $('body').on 'click', '.toggle-btn', ->
-	    column = 'table .' + $(this).find('input[type="checkbox"]').attr('name')
-	    $(column).toggle()
-	    return
-	  return
+		$('body').on 'click', '.toggle-btn', ->
+			column = 'table .' + $(this).find('input[type="checkbox"]').attr('name')
+			$(column).toggle()
+			return
+		return
 
 
 	$('select[name="invite_firm_name"]').change ->

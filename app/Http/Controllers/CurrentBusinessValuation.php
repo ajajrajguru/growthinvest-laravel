@@ -68,6 +68,7 @@ class CurrentBusinessValuation extends Controller
         $orderDataBy = [$columnName => $orderBy];
 
         $filter_business_listings = $this->getFilteredCurrentValuations($filters, $skip, $length, $orderDataBy);
+        dd($filter_business_listings);
         $business_listings        = $filter_business_listings['list'];
         $total_business_listings  = $filter_business_listings['total_business_listings'];
 
