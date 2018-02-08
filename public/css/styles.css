@@ -522,12 +522,21 @@ label.required:after {
 .table-solid-bg thead:last-of-type tr.filters td {
   border-top: none;
   padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #00a9ee;
 }
 .table-solid-bg thead:last-of-type tr.filters td .form-control {
   border-color: transparent;
 }
 .table-solid-bg thead tr.filters {
   background: #fff;
+}
+@media (min-width: 768px) {
+  .table-solid-bg thead tr.filters .clear-input {
+    opacity: 0;
+  }
+  .table-solid-bg thead tr.filters input:hover + .input-group-append .clear-input {
+    opacity: 1;
+  }
 }
 .table thead th {
   font-size: 0.8rem;
@@ -540,6 +549,10 @@ label.required:after {
 .table td,
 .table th {
   padding: .75rem 0.5rem;
+}
+.table td {
+  border-top: 0;
+  border-bottom: 1px solid #dddddd;
 }
 .table-no-padding td {
   padding: 0;
