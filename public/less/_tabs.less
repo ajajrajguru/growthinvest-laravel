@@ -60,9 +60,19 @@
             background: #eee;
             &:not(:last-child) {
                 border-right: 1px solid #ccc;
+                @media (max-width: 767px) {
+                    border-right: none;
+                }
             }
             @media (max-width: 767px) {
                 width: 100%;
+            }
+            &:last-child {
+                @media (max-width: 767px) {
+                    .nav-link {
+                        border-bottom: none;
+                    }
+                }
             }
             .nav-link {
                 border: 1px solid transparent;
@@ -74,11 +84,15 @@
                 @media (max-width: 767px) {
                     text-align: left;
                     // display: none;
+                    border-bottom: 1px solid #ccc;
                 }
                 &.active {
                     display: block !important;
                     color: @brand-primary;
                     background: #fff;
+                    @media (max-width: 767px) {
+                        border-bottom: none;
+                    }
                     &:after {
                         width: 100%;
                     }
