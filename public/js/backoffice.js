@@ -478,13 +478,11 @@
       'bAutoWidth': false,
       'aaSorting': [[1, 'asc']],
       'ajax': {
-        url: '/backoffice/business-listings/get-businesslistings',
+        url: '/backoffice/business-listings/get-current-valuation-listings',
         type: 'post',
         data: function(data) {
           var filters;
-          filters = {};
-          filters.firm_name = $('select[name="firm_name"]').val();
-          filters.business_listings_type = $('select[name="business_listings_type"]').val();
+          filters = {}; 
           data.filters = filters;
           return data;
         },

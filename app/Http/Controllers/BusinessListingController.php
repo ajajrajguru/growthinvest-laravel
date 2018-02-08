@@ -598,6 +598,42 @@ class BusinessListingController extends Controller
 
     }
 
+
+
+
+
+
+
+
+    public function currentBusinessValuations()
+    {
+
+        /*$current_business_valuation = new BusinessValuation;
+
+        $current_business_valuation_data = $current_business_valuation->getCurrentBusinessList($list_args);*/
+        $current_business_valuation_data = "";
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Current Business Valuation'];
+
+        $data['firms']                           = $firms;
+        $data['current_business_valuation_list'] = $current_business_valuation_data;
+        $data['breadcrumbs']                     = $breadcrumbs;
+        $data['pageTitle']                       = 'Manage Clients : Growthinvest';
+        $data['activeMenu']                      = 'manage_clients';
+
+        return view('backoffice.clients.current_business_valuation')->with($data);
+
+    }
+
+
+    
+
 /**
  * Show the form for creating a new resource.
  *
