@@ -77,6 +77,7 @@
       firmsTable = $('#datatable-firms').DataTable({
         "paging": false,
         "info": true,
+        "dom": '<"top"i>t<"bottom"i>',
         'aaSorting': [[1, 'asc']],
         'columns': [
           {
@@ -120,6 +121,7 @@
       usersTable = $('#datatable-users').DataTable({
         "paging": false,
         "info": true,
+        "dom": '<"top"i>t<"bottom"i>',
         'aaSorting': [[0, 'asc']],
         'columns': [
           {
@@ -144,6 +146,7 @@
       intermediaryTable = $('#datatable-Intermediary').DataTable({
         "paging": false,
         "info": true,
+        "dom": '<"top"i>t<"bottom"i>',
         'aaSorting': [[1, 'asc']],
         'columns': [
           {
