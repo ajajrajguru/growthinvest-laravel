@@ -92,13 +92,13 @@ class CurrentBusinessValuation extends Controller
 
             $shareprice     = isset($proposal_valuation->shareprice) ? $proposal_valuation->shareprice : '';
             $totalvaluation = isset($proposal_valuation->totalvaluation) ? $proposal_valuation->totalvaluation : '';
-            $actionHtml     = '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="'.$business_listing->business_id.'" share-price="' . $shareprice . '" total-valuation="' . $totalvaluation . '" >Edit</button>';
+            $actionHtml     = '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="' . $business_listing->business_id . '" share-price="' . $shareprice . '" total-valuation="' . $totalvaluation . '" >Edit</button>';
 
             $business_listings_data[] = [
                 'name'            => $name_html,
                 'created_date'    => date('d/m/Y', strtotime($business_listing->created_at)),
-                'total_valuation' => "<span class='spn_totalvaluation_".$business_listing->business_id."' >".$totalvaluation."</span>",
-                'share_price'     => "<span class='spn_shareprice_".$business_listing->business_id."' >".$shareprice."<span>",
+                'total_valuation' => "<span class='spn_totalvaluation_" . $business_listing->business_id . "' >" . $totalvaluation . "</span>",
+                'share_price'     => "<span class='spn_shareprice_" . $business_listing->business_id . "' >" . $shareprice . "<span>",
                 'action'          => $actionHtml,
 
             ];
@@ -278,23 +278,78 @@ class CurrentBusinessValuation extends Controller
     public function saveCurrentValuation(Request $request)
     {
         $requestData = $request->all();
-       
 
         $current_valuation = [
             'totalvaluation' => $requestData['total_valuation'],
             'shareprice'     => $requestData['share_price'],
         ];
         $current_valuation = json_encode($current_valuation);
-       // dd($requestData);
+        // dd($requestData);
 
         $result = BusinessListing::where('id', $requestData['business_id'])
             ->update(['valuation' => $current_valuation]);
 
-         $json_data = array(
-            "status"            => $result,
-            
+        $json_data = array(
+            "status" => $result,
+
         );
         return response()->json($json_data);
+
+    }
+
+
+
+
+    public function exportCurentValuations(Request $request)
+    {
+
+        $data    = [];
+        $filters = $request->all();
+
+        $columnName = 'business_listings.title';
+        $orderBy    = 'asc';
+
+        $orderDataBy = [$columnName => $orderBy];
+
+        $filter_business_listings = $this->getFilteredBusinessListings($filters, 0, 0, $orderDataBy);
+        $business_listings        = $filter_business_listings['list'];
+
+        $fileName = 'all_current_business_valuations_as_on_' . date('d-m-Y');
+        //  $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm', 'Business Proposals', 'Registered Date', 'Source'];
+        $header = ['Platform GI Code', 'Proposal/Fund Name', 'Due Diligence', 'Round', 'Type', 'Entrepreneur Email ID',
+            'Firm Name', 'To Raise', 'Site Wide Funded Amount', 'Site Wide Added to Watchlist', 'Site Wide Pledged Amount',
+            'Firm Wide Funded Amount', 'Firm Wide Added to Watchlist', 'Firm Wide Pledged Amount', 'Status'];
+        $userData = [];
+
+        foreach ($business_listings as $business_listing) {
+
+            $round_ordinal      = get_ordinal_number($business_listing->round);
+            $display_round      = ($round_ordinal != '') ? $round_ordinal . " Round" : "";
+            $biz_status_display = $this->getDisplayBusinessStatus($business_listing->business_status);
+
+            $userData[] = [$business_listing->gi_code,
+                title_case($business_listing->business_title),
+                $business_listing->approver,
+                $display_round,
+                $business_listing->type,
+                $business_listing->bo_email,
+                $business_listing->firm_name,
+                $business_listing->target_amount,
+                $business_listing->bi_invested,
+                $business_listing->watch_list,
+                $business_listing->bi_pledged,
+                $business_listing->bi_invested_in_firm,
+                $business_listing->my_watch_list,
+                $business_listing->bi_pledged_in_firm,
+                $biz_status_display,
+
+            ];
+
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
 
     }
 
