@@ -266,7 +266,7 @@ class User extends Authenticatable
         if (!empty($nomineeApplication)) {
             $investorFai = $nomineeApplication->chargesfinancial_advisor_details;
         } else {
-            $investorFai = $investor->userFinancialAdvisorInfo();
+            $investorFai = $this->userFinancialAdvisorInfo();
             $investorFai = (!empty($investorFai)) ? $investorFai->data_value : [];
 
         }
