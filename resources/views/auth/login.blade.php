@@ -106,6 +106,10 @@
     </div>
 </div>
 
+<!-- footer -->
+<div></div>
+<!-- /footer -->
+
 <!-- forgot password -->
 <!-- Button trigger modal -->
 <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#forgotPassword">
@@ -138,4 +142,6 @@
         display: none;
     }
 </style>
+@include('includes.footer')
 @endsection
+
