@@ -539,7 +539,7 @@ label.required:after {
   .table-solid-bg thead tr.filters .clear-input {
     opacity: 0;
   }
-  .table-solid-bg thead tr.filters input:hover + .input-group-append .clear-input {
+  .table-solid-bg thead tr.filters .input-group:hover .input-group-append .clear-input {
     opacity: 1;
   }
 }
