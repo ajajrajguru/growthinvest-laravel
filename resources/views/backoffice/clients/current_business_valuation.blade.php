@@ -55,13 +55,10 @@
 
 
                         <h1 class="section-title font-weight-medium text-primary mb-0">Current Business Valuation</h1>
-                        <p class="text-muted">View All Business Proposals/Funds on your Site</p>
+                        <p class="text-muted"></p>
 
                         <h5 class="mt-2 mb-0"></h5>
-                        <div class="p-3 bg-gray">
-                             
-                             
-                        </div>
+                       
 
                         <div class="d-flex justify-content-end">
                             <div class="mt-3">
@@ -107,6 +104,48 @@
 
 </div>
 
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="currentValuationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{ csrf_field() }}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Current Proposal Valuation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="gi-danger text-danger"></div>
+        <div class="gi-success text-success"></div>
+       <div class="row">
+        <input type="hidden" name="editing_business_id" id="editing_business_id" value=""  />
+            <div class="col-sm-6">
+                <div class="">
+                    <label>Total Valuation  </label>
+                    <input type="text" class="form-control" name="inp_totalvaluation" id="inp_totalvaluation"/>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                 <div class="">
+                    <label>Share Price  </label>
+                    <input type="text" class="form-control" name="inp_shareprice"  id="inp_shareprice"/>
+                </div>                
+            </div>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="current_valuation_save">Save<div class="ld ld-ring ld-spin d-none"></div></button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
     <style type="text/css">

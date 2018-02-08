@@ -75,7 +75,8 @@ class UserPermission
                 'backoffice/business-listings/get-businesslistings'           => ['view_backoffice_proposals', 'view_firm_business_proposals'],
                 'backoffice/business-listing/export-business-listings'        => ['view_backoffice_proposals', 'view_firm_business_proposals'],
 
-                'backoffice/current-business-valuations'                      => ['view_current_business_valuation'],
+                'backoffice/current-business-valuation'                       => ['view_current_business_valuation'],
+                'backoffice/save-current-business-valuation'                  => ['view_current_business_valuation'],
                 'backoffice/business-listings/get-current-valuation-listings' => ['view_current_business_valuation'],
                 'backoffice/entrepreneur/registration'                        => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
                 'backoffice/entrepreneur/save-registration'                   => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
