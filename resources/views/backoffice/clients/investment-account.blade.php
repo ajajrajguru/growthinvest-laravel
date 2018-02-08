@@ -138,8 +138,8 @@
                      </span>
                     </h5>
                     @if($investor->id)
-                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
-                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
+                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn  @if($mode=='edit') d-none  @endif">Edit Details</a>
+                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none @endif">Cancel Updates</a>
                                     @endif
                     <hr class="my-3">
 
@@ -320,8 +320,8 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Telephone <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif">
-                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif</div>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone_no }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone_no }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
@@ -431,7 +431,7 @@
                                     <p class="mb-1 @if($mode=='view') d-none @endif">* Will be correspondence address if filled out</p>
                                     <p class="@if($mode=='view') d-none @endif">** If you have indicated that you would like your Accountant or Financial Adviser to receive your EIS Certificates please provide their details below:</p>
 
-                                    <div class="row sendtaxcertificateto-yourself @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') d-none  @endif @if(empty($nomineeDetails)) d-none  @endif">
+                                    <div class="row sendtaxcertificateto-yourself @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') d-none  @endif ">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Firm Name <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
@@ -1179,8 +1179,9 @@
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                         </div>
                         <div>
-                            
+                            @if($isUsPerson !="")
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}" target="_blank"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+                            @endif
 
                             @php
                             

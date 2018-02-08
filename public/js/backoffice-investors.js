@@ -669,28 +669,65 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
-      'aaSorting': [[1, 'asc']],
+      'aaSorting': [[0, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investor-invest',
         type: 'post',
         data: function(data) {
-          var filters;
+          var filters, status;
           filters = {};
+          filters.company = $('select[name="company"]').val();
+          filters.sector = $('select[name="sector"]').val();
+          filters.type = $('select[name="type"]').val();
+          filters.manager = $('select[name="manager"]').val();
+          status = '';
+          $('input[name="tax_status[]"]').each(function() {
+            if ($(this).is(':checked')) {
+              return status += $(this).val() + ',';
+            }
+          });
+          filters.tax_status = status;
           data.filters = filters;
           return data;
         },
         error: function() {}
       },
-      'columns': []
+      'columns': [
+        {
+          'data': 'offer'
+        }, {
+          'data': 'manager'
+        }, {
+          'data': 'tax_status'
+        }, {
+          'data': 'type'
+        }, {
+          'data': 'focus'
+        }, {
+          'data': 'taget_raise'
+        }, {
+          'data': 'min_inv'
+        }, {
+          'data': 'amt_raised'
+        }, {
+          'data': 'invest',
+          "orderable": false
+        }, {
+          'data': 'download',
+          "orderable": false
+        }
+      ]
     });
-    return $('body').on('click', '.reset-filters', function() {
-      $('select[name="firm_name"]').val('').trigger('change');
-      $('select[name="investor_name"]').val('').trigger('change');
-      $('select[name="client_category"]').val('');
-      $('select[name="client_certification"]').val('');
-      $('select[name="investor_nominee"]').val('');
-      $('select[name="idverified"]').val('');
-      investorTable.ajax.reload();
+    $('body').on('click', '.apply-invest-filters', function() {
+      return investorInvestTable.ajax.reload();
+    });
+    return $('body').on('click', '.reset-invest-filters', function() {
+      $('select[name="company"]').val('');
+      $('select[name="sector"]').val('');
+      $('select[name="type"]').val('');
+      $('select[name="manager"]').val('');
+      $('input[name="tax_status[]"]').prop('checked', false);
+      investorInvestTable.ajax.reload();
     });
   });
 

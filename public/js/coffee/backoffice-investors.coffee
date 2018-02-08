@@ -608,14 +608,25 @@ $(document).ready ->
     'processing': false
     'serverSide': true
     'bAutoWidth': false
-    'aaSorting': [[1,'asc']]
+    'aaSorting': [[0,'asc']]
     'ajax':
       url: '/backoffice/investor/get-investor-invest'
       type: 'post'
       data: (data) ->
 
         filters = {}
-        
+        filters.company = $('select[name="company"]').val()
+        filters.sector = $('select[name="sector"]').val()
+        filters.type = $('select[name="type"]').val()
+        filters.manager = $('select[name="manager"]').val()
+
+        status = ''
+        $('input[name="tax_status[]"]').each ->
+          if $(this).is(':checked')
+            status += $(this).val()+','
+
+        filters.tax_status = status
+ 
         data.filters = filters
         data
 
@@ -626,19 +637,33 @@ $(document).ready ->
 
 
     'columns': [
-      
+      { 'data': 'offer' }
+      { 'data': 'manager' }
+      { 'data': 'tax_status'}
+      { 'data': 'type' }
+      { 'data': 'focus' }
+      { 'data': 'taget_raise' }
+      { 'data': 'min_inv' }
+      { 'data': 'amt_raised' }
+      { 'data': 'invest' , "orderable": false}
+      { 'data': 'download' , "orderable": false}
+
     ])
 
-  $('body').on 'click', '.reset-filters', ->
-    $('select[name="firm_name"]').val('').trigger('change')
-    $('select[name="investor_name"]').val('').trigger('change')
-    $('select[name="client_category"]').val('')
-    $('select[name="client_certification"]').val('')
-    $('select[name="investor_nominee"]').val('')
-    $('select[name="idverified"]').val('')
+  $('body').on 'click', '.apply-invest-filters', ->
+    investorInvestTable.ajax.reload()
+
+  $('body').on 'click', '.reset-invest-filters', ->
+    $('select[name="company"]').val('')
+    $('select[name="sector"]').val('')
+    $('select[name="type"]').val('')
+    $('select[name="manager"]').val('')
+    $('input[name="tax_status[]"]').prop('checked',false)
    
-    investorTable.ajax.reload()
+    investorInvestTable.ajax.reload()
     return
+
+ 
 
   
 

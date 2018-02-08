@@ -58,8 +58,8 @@ $(document).ready ->
 				return
 			if $(window).width() < 767
 				if $('.toggle-btn input:checkbox:not(:checked)')
-				  column = 'table .' + $('.toggle-btn input').attr('name')
-				  $(column).hide()
+					column = 'table .' + $('.toggle-btn input').attr('name')
+					$(column).hide()
 			return
 		return
 
@@ -68,6 +68,7 @@ $(document).ready ->
 		firmsTable = $('#datatable-firms').DataTable(
 			"paging": false
 			"info": true
+			"dom": '<"top"i>t<"bottom"i>'
 			'aaSorting': [[1,'asc']]
 			'columns': [
 				{ 'data': 'logo' , "orderable": false}
@@ -81,12 +82,14 @@ $(document).ready ->
 		)
 
 		initSerachForTable(firmsTable)
+		updateSerachinput(firmsTable)
+		clearInput(firmsTable)
 
 
 
-	$(document).on 'keyup change', '.user-search-input .datatable-search', ->
+	$(document).on 'keyup change', '.data-search-input .datatable-search', ->
 		urlParams = ''
-		$('.user-search-input .datatable-search').each ->
+		$('.data-search-input .datatable-search').each ->
 			textVal = $(this).val()
 			dataType = $(this).closest('td').attr 'data-search'
 
@@ -102,6 +105,7 @@ $(document).ready ->
 		usersTable = $('#datatable-users').DataTable(
 			"paging": false
 			"info": true
+			"dom": '<"top"i>t<"bottom"i>'
 			'aaSorting': [[0,'asc']]
 			'columns': [
 				{ 'data': 'name' }
@@ -117,9 +121,10 @@ $(document).ready ->
 		clearInput(usersTable)
 
 	if $('#datatable-Intermediary').length
-		IntermediaryTable = $('#datatable-Intermediary').DataTable(
+		intermediaryTable = $('#datatable-Intermediary').DataTable(
 			"paging": false
 			"info": true
+			"dom": '<"top"i>t<"bottom"i>'
 			'aaSorting': [[1,'asc']]
 			'columns': [
 				{ 'data': 'ckbox'  , "orderable": false}
@@ -132,7 +137,9 @@ $(document).ready ->
 			]
 
 		)
-		initSerachForTable(IntermediaryTable)
+		initSerachForTable(intermediaryTable)
+		updateSerachinput(intermediaryTable)
+		clearInput(intermediaryTable)
 
 	$(document).on 'change', '.delete_intm_users', ->
 		if($('input[name="intermediary_user_delete[]"]:checked').length > 0)
@@ -156,7 +163,6 @@ $(document).ready ->
 
 	$(document).on 'click', '.delete-all-user', ->
 		userIds = ''
-
 		$('.delete_intm_users').each ->
 			if $(this).is(':checked')
 				userIds += $(this).val()+','
@@ -172,13 +178,13 @@ $(document).ready ->
 				if data.status
 					$('.delete_intm_users').each ->
 						if $(this).is(':checked')
-							 IntermediaryTable.row($(this).closest('tr')).remove()
+							intermediaryTable.row($(this).closest('tr')).remove()
 
 					$('.gi-success').removeClass('d-none')
 					$('.gi-danger').addClass('d-none')
 					$('.gi-success #message').html "Intermediaries Deleted Successfully."
 
-					IntermediaryTable.draw()
+					intermediaryTable.draw()
 				else
 					$('.gi-success').addClass('d-none')
 					$('.gi-danger').removeClass('d-none')
@@ -332,8 +338,7 @@ $(document).ready ->
 				data
 
 			error: ->
-
-
+				console.log "error"
 				return
 
 
@@ -421,7 +426,7 @@ $(document).ready ->
 		return
 
 
-	  
+
 
 	businesslistingsTable = $('#datatable-currentbusinessvaluations').DataTable(
 		'pageLength': 50
@@ -430,30 +435,17 @@ $(document).ready ->
 		'bAutoWidth': false
 		'aaSorting': [[1,'asc']]
 		'ajax':
-			url: '/backoffice/business-listings/get-businesslistings'
+			url: '/backoffice/business-listings/get-current-valuation-listings'
 			type: 'post'
 			data: (data) ->
-				filters = {}
-				filters.firm_name = $('select[name="firm_name"]').val()
-				filters.business_listings_type = $('select[name="business_listings_type"]').val()				
-				data.filters = filters				
 				data
-
 			error: ->
-
-
 				return
-
-
 		'columns': [
-			{ 'data': 'logo' , "orderable": false}
 			{ 'data': 'name' }
-			{ 'data': 'duediligence' }
-			{ 'data': 'created_date', "orderable": false}
-			{ 'data': 'modified_date', "orderable": false}
-			{ 'data': 'firmtoraise'}
-			{ 'data': 'activity_sitewide', "orderable": false}
-			{ 'data': 'activity_firmwide', "orderable": false}
+			{ 'data': 'created_date'}
+			{ 'data': 'total_valuation', "orderable": false}
+			{ 'data': 'share_price', "orderable": false}
 			{ 'data': 'action' , "orderable": false}
 		])
 
@@ -484,20 +476,20 @@ $(document).ready ->
 
 	# toggle columns
 	if $(window).width() < 767
-	  if $('.toggle-btn input:checkbox:not(:checked)')
-	    column = 'table .' + $('.toggle-btn input').attr('name')
-	    $(column).hide()
+		if $('.toggle-btn input:checkbox:not(:checked)')
+			column = 'table .' + $('.toggle-btn input').attr('name')
+			$(column).hide()
 
-	  $('body').on 'click', '.toggle-btn', ->
-	    column = 'table .' + $(this).find('input[type="checkbox"]').attr('name')
-	    $(column).toggle()
-	    return
-	  return
+		$('body').on 'click', '.toggle-btn', ->
+			column = 'table .' + $(this).find('input[type="checkbox"]').attr('name')
+			$(column).toggle()
+			return
+		return
 
 
 	$('select[name="invite_firm_name"]').change ->
 		$('#invite_display').addClass('d-none')
-		
+
 	$('.cancel-invite-btn').click ->
 		$('#invite_display').addClass('d-none')
 
@@ -507,5 +499,45 @@ $(document).ready ->
 		firmid = $('#invite_firm_name').val()
 		if firmid==""
 			alert "Please select firm"
-			return  
+			return
 		$('form[name="form-invite-firm"]').submit();
+
+	$('body').on 'click', '.edit_valuation', ->
+		business_id = $(this).attr('proposal-id')
+		share_price = $(this).attr('share-price')
+		total_valuation = $(this).attr('total-valuation')
+		$('#editing_business_id').val(business_id)
+		$('#inp_shareprice').val(share_price)
+		$('#inp_totalvaluation').val(total_valuation)
+		$('#currentValuationModal').modal('show')
+		return 
+
+	$('body').on 'click', '#current_valuation_save', ->
+		total_valuation = $('#inp_totalvaluation').val()
+		share_price = $('#inp_shareprice').val()
+		business_id = $('#editing_business_id').val()
+		$.ajax
+			type: 'post'
+			url: '/backoffice/save-current-business-valuation'
+			headers:
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			data:
+				'business_id': business_id
+				'share_price': share_price
+				'total_valuation': total_valuation
+			success: (data) ->
+				$('.spn_totalvaluation_'+business_id).html(total_valuation)
+				$('.spn_shareprice_'+business_id).html(share_price)
+				if data.status 					 
+					$('.gi-danger').addClass('d-none')
+					$('.gi-danger').html ""
+					$('.gi-success').html "Valuation Saved Successfully."
+					$('.spn_totalvaluation_'+business_id).html(total_valuation)
+					$('.spn_shareprice_'+business_id).html(share_price)					 
+				else					 
+					$('.gi-danger').html "Failed to Save Valuation."
+					$('.gi-success').html ""
+				 
+	 		 
+
+
