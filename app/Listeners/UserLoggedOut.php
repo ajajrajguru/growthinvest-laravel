@@ -31,5 +31,6 @@ class UserLoggedOut
     public function handle(Logout $event)
     {
         Session::flush();
+        return redirect(url('/login'));
     }
 }

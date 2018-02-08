@@ -776,10 +776,10 @@ class InvestorController extends Controller
 
         $html = '';
 
-        $sophisticated_option0_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_0', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
-        $sophisticated_option1_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_1', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
-        $sophisticated_option2_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_2', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
-        $sophisticated_option3_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_3', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+        $sophisticated_option0_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_0', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
+        $sophisticated_option1_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_1', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
+        $sophisticated_option2_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_2', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
+        $sophisticated_option3_checked = (isset($sophisticatedData['terms']) && in_array('sic_option_3', $sophisticatedData['terms'])) ? '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
 
         $html .= '<table cellpadding="0" cellspacing="10" border="0"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
 
@@ -793,7 +793,7 @@ class InvestorController extends Controller
                   <tr style="margin-bottom: 0; padding-bottom: 0;">
                     <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                            <img class="bg-background" src="' . url("img/pdf/05-kaka.png") . '"  style="max-width:100%; height:auto; width: 60px;" /><br>
+                            <img class="bg-background" src="' . public_path("img/pdf/05-kaka.png") . '"  style="max-width:100%; height:auto; width: 60px;" /><br>
 
                                 SOPHISTICATED INVESTOR
 
@@ -949,9 +949,9 @@ class InvestorController extends Controller
                  <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($sophisticatedData['conditions']) && in_array('si_check_0', $sophisticatedData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '     </td>
@@ -964,9 +964,9 @@ class InvestorController extends Controller
                  <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($sophisticatedData['conditions']) && in_array('si_check_1', $sophisticatedData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '    </td>
@@ -979,9 +979,9 @@ class InvestorController extends Controller
                  <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($sophisticatedData['conditions']) && in_array('si_check_2', $sophisticatedData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
         $html .= '     </td>
                  <td style="Width: 95%;  vertical-align: top;"><p style="font-size: 14px; margin-top: 0; padding-top:0; font-weight: bold;">I have read and understand the risk warning.</p></td>
@@ -1022,7 +1022,7 @@ class InvestorController extends Controller
               <tr style="margin-bottom: 0; padding-bottom: 0;">
                 <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                        <img class="bg-background" src="' . url("img/pdf/03-money-hand.png") . '" style="max-width:100%; height:auto; width: 60px;"><br>
+                        <img class="bg-background" src="' . public_path("img/pdf/03-money-hand.png") . '" style="max-width:100%; height:auto; width: 60px;"><br>
 
                             RETAIL (RESTRICTED) INVESTOR
 
@@ -1121,9 +1121,9 @@ class InvestorController extends Controller
 
             foreach ($getQuestion->options as $option) {
 
-                $quiz_option_selected = '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+                $quiz_option_selected = '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
                 if ($option->correct) {
-                    $quiz_option_selected = ' <img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+                    $quiz_option_selected = ' <img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
                 }
                 $html .= '<tr style="margin-bottom: 0; padding-bottom: 0;">
             <td width="3%"></td>
@@ -1159,9 +1159,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($retailData['conditions']) && in_array('ri_check_1', $retailData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
         $html .= '
                          </td>
@@ -1174,9 +1174,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($retailData['conditions']) && in_array('ri_check_2', $retailData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '
@@ -1190,9 +1190,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($retailData['conditions']) && in_array('ri_check_3', $retailData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
         $html .= '
                          </td>
@@ -1216,8 +1216,8 @@ class InvestorController extends Controller
     public function highNetWorthHtml($highNetData, $investor)
     {
 
-        $highnetworth_option0_checked = (isset($highNetData['terms']) && in_array('sic_option_0', $highNetData['terms'])) ? '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
-        $highnetworth_option1_checked = (isset($highNetData['terms']) && in_array('sic_option_1', $highNetData['terms'])) ? '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+        $highnetworth_option0_checked = (isset($highNetData['terms']) && in_array('sic_option_0', $highNetData['terms'])) ? '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
+        $highnetworth_option1_checked = (isset($highNetData['terms']) && in_array('sic_option_1', $highNetData['terms'])) ? '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>' : '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
 
         $html = '';
 
@@ -1234,7 +1234,7 @@ class InvestorController extends Controller
                   <tr style="margin-bottom: 0; padding-bottom: 0;">
                     <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                            <img class="bg-background" src="' . url("img/pdf/01-piggybank.png") . '"  style="max-width:100%; height:auto; width: 60px;" /><br>
+                            <img class="bg-background" src="' . public_path("img/pdf/01-piggybank.png") . '"  style="max-width:100%; height:auto; width: 60px;" /><br>
 
                                 HIGH NET WORTH INDIVIDUALS
 
@@ -1354,9 +1354,9 @@ class InvestorController extends Controller
                              <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($highNetData['conditions']) && in_array('hi_check_0', $highNetData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '
@@ -1370,9 +1370,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($highNetData['conditions']) && in_array('hi_check_1', $highNetData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '</td>
@@ -1385,9 +1385,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($highNetData['conditions']) && in_array('hi_check_2', $highNetData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= ' </td>
@@ -1424,7 +1424,7 @@ class InvestorController extends Controller
                   <tr style="margin-bottom: 0; padding-bottom: 0;">
                     <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                            <img class="bg-background" src="' . url("img/pdf/02-people.png") . '"  style="max-width:100%; height:auto; width: 60px; "  /><br>
+                            <img class="bg-background" src="' . public_path("img/pdf/02-people.png") . '"  style="max-width:100%; height:auto; width: 60px; "  /><br>
 
                                 PROFESSIONAL INVESTOR
 
@@ -1477,9 +1477,9 @@ class InvestorController extends Controller
                              <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($professionInvData['conditions']) && in_array('pi_check_1', $professionInvData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
         $html .= '
                             </td>
@@ -1492,9 +1492,9 @@ class InvestorController extends Controller
                              <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($professionInvData['conditions']) && in_array('pi_check_1', $professionInvData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '
@@ -1508,9 +1508,9 @@ class InvestorController extends Controller
                              <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($professionInvData['conditions']) && in_array('pi_check_2', $professionInvData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '
@@ -1550,7 +1550,7 @@ class InvestorController extends Controller
                       <tr style="margin-bottom: 0; padding-bottom: 0;">
                         <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                                <img class="bg-background " src="' . url("img/pdf/06-ppl-circle.png") . '"  style="max-width:100%; height:auto; width: 60px; " /><br>
+                                <img class="bg-background " src="' . public_path("img/pdf/06-ppl-circle.png") . '"  style="max-width:100%; height:auto; width: 60px; " /><br>
 
                                     ADVISED INVESTOR
 
@@ -1693,9 +1693,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;">';
 
         if (isset($adviceInvData['conditions']) && in_array('ai_check_0', $adviceInvData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
         $html .= '
                          </td>
@@ -1706,9 +1706,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;"> ';
 
         if (isset($adviceInvData['conditions']) && in_array('ai_check_1', $adviceInvData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
         $html .= '        </td>
 
@@ -1718,9 +1718,9 @@ class InvestorController extends Controller
                          <td style="Width: 5%; vertical-align: top;"> ';
 
         if (isset($adviceInvData['conditions']) && in_array('ai_check_2', $adviceInvData['conditions'])) {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
-            $html .= '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+            $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
         }
 
         $html .= '
@@ -1767,7 +1767,7 @@ class InvestorController extends Controller
           <tr style="margin-bottom: 0; padding-bottom: 0;">
             <td style="width: 30%; background-color: #1C719C; vertical-align: middle; border: none; text-align: center; color: #fff;">
 
-                    <img class="bg-background" src="' . url("img/pdf/04-money-bag.png") . '"  style="max-width:100%; height:auto; width: 60px; " /><br>
+                    <img class="bg-background" src="' . public_path("img/pdf/04-money-bag.png") . '"  style="max-width:100%; height:auto; width: 60px; " /><br>
 
                         ELECTIVE PROFESSIONAL INVESTOR
 
@@ -1825,9 +1825,9 @@ class InvestorController extends Controller
         </tr>';
 
             foreach ($getQuestion->options as $option) {
-                $quiz_option_selected = '<img class="bg-background" src="' . url("img/pdf/cert-untick.jpg") . '"/>';
+                $quiz_option_selected = '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
                 if ($option->correct) {
-                    $quiz_option_selected = ' <img class="bg-background" src="' . url("img/pdf/cert-tick.jpg") . '"/>';
+                    $quiz_option_selected = ' <img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
                 }
                 $html .= '<tr>
             <td width="3%"></td>

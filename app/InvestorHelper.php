@@ -22,7 +22,7 @@ function getHeaderPageMarkup($args)
     <table style="border: none; background-color:#FFF; margin:0;"  class="w100per"  >
         <tr>
             <td style="text-align: left;"  class="w100per">
-              <img src="' . url("img/pdf/header-edge-main-cert.png") . '" class="w100per"   />
+              <img src="' . public_path("img/pdf/header-edge-main-cert.png") . '" class="w100per"   />
             </td>
         </tr>
     </table>
@@ -31,7 +31,7 @@ function getHeaderPageMarkup($args)
     <table style="border: none; background-color:#FFF; width: 100%;  "  >
         <tr>
             <td style="text-align:center;"  class="w100per" >
-              <img src="' . url("img/pdf/footer_ta_pdf-min.png") . '" class="w70per"  style="width: 90%;"/>
+              <img src="' . public_path("img/pdf/footer_ta_pdf-min.png") . '" class="w70per"  style="width: 90%;"/>
             </td>
         </tr>
         <tr>
@@ -49,7 +49,7 @@ function get_checkbox_html($checboxes_data)
 
     $checkbox_html = "<table style='margin-bottom:0; padding-bottom: 0;' class='no-spacing'><tr class=''>";
 
-    $checked_image = '<img src="' . url('img/pdf/check_mark.png') . '" width="10" height="10"/>';
+    $checked_image = '<img src="' . public_path('img/pdf/check_mark.png') . '" width="10" height="10"/>';
 
     foreach ($checboxes_data as $key => $value) {
 
@@ -201,19 +201,19 @@ function getHtmlForNominationApplicationformPdf($firmStats, $statsPage, $firmId 
     $pg_header_args['hidefooter'] = "1";
     $header_footer_start_html     = getHeaderPageMarkup($pg_header_args);
 
-    $default_logo_url   = url("img/pdf/pdfheader.jpg");
-    $default_footer_url = url("img/pdf/pdf_footer3.png");
+    $default_logo_url   = public_path("img/pdf/pdfheader.jpg");
+    $default_footer_url = public_path("img/pdf/pdf_footer3.png");
 
-    $default_header1_bg_url = url("img/pdf/pdfheader1.png");
-    $default_box_url        = url("img/pdf/box.png");
+    $default_header1_bg_url = public_path("img/pdf/pdfheader1.png");
+    $default_box_url        = public_path("img/pdf/box.png");
     $box_img                = '<img src="' . $default_box_url . '"><br>';
-    $nomination_first_page  = url("img/pdf/general_pdf_header.png");
-    $subheaders_topbgimg    = url("img/pdf/new_pdf_headerbg.png");
+    $nomination_first_page  = public_path("img/pdf/general_pdf_header.png");
+    $subheaders_topbgimg    = public_path("img/pdf/new_pdf_headerbg.png");
 
-    $lastpage_image = url('img/pdf/nominee_needhelp.jpg');
+    $lastpage_image = public_path('img/pdf/nominee_needhelp.jpg');
 
     //$page1_image = K_PATH_IMAGES.'offline-app-form.jpg';
-    if ($additionalArgs['pdfaction'] == "esign") { /*Image for online pdf */$page1_image = url('img/pdf/online-nom-pdf.jpg');} else { $page1_image = url('img/pdf/offline-nom-pdf.jpg');}
+    if ($additionalArgs['pdfaction'] == "esign") { /*Image for online pdf */$page1_image = public_path('img/pdf/online-nom-pdf.jpg');} else { $page1_image = public_path('img/pdf/offline-nom-pdf.jpg');}
 
     //Start Page 1 SEction 1
 
@@ -1512,7 +1512,7 @@ function getHtmlForNominationApplicationformPdf($firmStats, $statsPage, $firmId 
 
                         <tr style="margin-bottom: 0; padding-bottom: 0;">
                             <td style="width: 100%; vertical-align: top; background: #fff;">
-                                 <img src="' . url("img/pdf/nominee-hcomb.jpg") . '" style=" width: 110%; ">
+                                 <img src="' . public_path("img/pdf/nominee-hcomb.jpg") . '" style=" width: 110%; ">
                              </td>
                         </tr>
 

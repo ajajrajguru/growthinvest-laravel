@@ -501,3 +501,16 @@ $(document).ready ->
 			alert "Please select firm"
 			return
 		$('form[name="form-invite-firm"]').submit();
+
+	$('body').on 'click', '.edit_valuation', ->
+		business_id = $(this).attr('proposal-id')
+		share_price = $(this).attr('share-price')
+		total_valuation = $(this).attr('total-valuation')
+		$('#inp_shareprice').val(share_price)
+		$('#inp_totalvaluation').val(total_valuation)
+		$('#currentValuationModal').modal('show')
+		return 
+
+	 
+
+
