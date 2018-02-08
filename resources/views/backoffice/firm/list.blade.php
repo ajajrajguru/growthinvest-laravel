@@ -2,27 +2,27 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
   <script type="text/javascript">
-    
+
     $(document).ready(function() {
         $( ".firm_actions" ).change(function() {
 
             var gi_code = $(this).attr('gi_code')
             var sel_val = $(this).val();
             switch(sel_val){
-                case 'edit' : 
+                case 'edit' :
                             var action_url = '/backoffice/firms/'+gi_code;
                             window.open(action_url);
                 break;
             }
-           
+
         });
     });
 </script>
 
- 
+
 @endsection
 @section('backoffice-content')
 <div class="container">
@@ -42,17 +42,17 @@
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
- 
+
                         <a href="{{ url('/backoffice/firms/add')}}" class="btn btn-primary">Add Firm</a>
                         <a href="{{ url('backoffice/firm/export-firm')}}" class="btn btn-link">Download CSV</a>
-                
- 
+
+
                     </div>
                 </div>
             </div>
 
             <div class="table-responsive mt-3">
-                <table id="datatable-firms" class="table dataFilterTable table-hover table-striped-bg">
+                <table id="datatable-firms" class="table dataFilterTable table-hover table-solid-bg">
                     <thead>
                         <tr>
                             <th >Logo</th>
@@ -103,5 +103,5 @@
             display: none;
         }
     </style>
- 
+
 @endsection

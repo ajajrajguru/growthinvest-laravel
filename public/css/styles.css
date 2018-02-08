@@ -331,6 +331,11 @@ fieldset legend {
   background-color: #00a9ee;
   border-color: #00a9ee;
 }
+.custom-checkbox .custom-control-input:disabled ~ .custom-control-label::before,
+.custom-radio .custom-control-input:disabled ~ .custom-control-label::before {
+  background-color: #dddddd;
+  border-color: #dddddd;
+}
 .custom-checkbox .custom-control-label::before {
   -moz-border-radius: 0;
        border-radius: 0;
