@@ -38,9 +38,9 @@
                     <div class="float-right ">
                        <!--  <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
                         <button type="button" class="btn btn-link">Download CSV</button> -->
-                        <button type="button" class="btn btn-primary mt-3 select-all-user">Select All</button>
-                        <button type="button" class="btn btn-primary mt-3 select-none-user d-none">Select None</button>
-                        <button type="button" class="btn btn-primary mt-3 delete-all-user d-none">Delete Selected Entries</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-3 select-all-user">Select All</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-3 select-none-user d-none">Select None</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm mt-3 delete-all-user d-none">Delete Selected Entries</button>
 
 
                     </div>
@@ -78,7 +78,12 @@
                             $compInfo = (!empty($user->userAdditionalInfo())) ? $user->userAdditionalInfo()->data_value : [];
                             @endphp
                             <tr >
-                                <td><input type="checkbox" class="form-control delete_intm_users" name="intermediary_user_delete[]" id="" value="{{ $user->id }}"></td>
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                      <input type="checkbox" class="custom-control-input delete_intm_users" name="intermediary_user_delete[]" id="{{ $user->id }}_check" value="{{ $user->id }}">
+                                      <label class="custom-control-label" for="{{ $user->id }}_check"></label>
+                                    </div>
+                                </td>
                                 <td><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}"><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br>{{  $user->email }}</a></td>
 
                                 <td>{{ (isset($compInfo['company'])) ? title_case($compInfo['company']) : ''}} </td>

@@ -44,7 +44,7 @@
                     <div class="float-right">
 
                         <a href="{{ url('/backoffice/firms/add')}}" class="btn btn-primary">Add Firm</a>
-                        <a href="{{ url('backoffice/firm/export-firm')}}" class="btn btn-link">Download CSV</a>
+                        <a href="{{ url('backoffice/firm/export-firm')}}" class="btn btn-outline-primary">Download CSV</a>
 
 
                     </div>
@@ -82,7 +82,7 @@
                                     <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>
                                     <td>
-                                        <select data-id="78523" class="firm_actions" gi_code="{{ $firm->gi_code }}">
+                                        <select class="form-control" data-id="78523" class="firm_actions" gi_code="{{ $firm->gi_code }}">
                                         <option>--select--</option>
                                         <option value="edit">View Firm Details</option>
                                         <option value="view_wm_commissions">View Investment Clients</option>
