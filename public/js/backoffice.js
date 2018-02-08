@@ -550,7 +550,7 @@
     $('.cancel-invite-btn').click(function() {
       return $('#invite_display').addClass('d-none');
     });
-    return $('.save-invite-btn').click(function() {
+    $('.save-invite-btn').click(function() {
       var firmid, invite_type;
       invite_type = $(this).attr('invite-type');
       firmid = $('#invite_firm_name').val();
@@ -559,6 +559,15 @@
         return;
       }
       return $('form[name="form-invite-firm"]').submit();
+    });
+    return $('body').on('click', '.edit_valuation', function() {
+      var business_id, share_price, total_valuation;
+      business_id = $(this).attr('proposal-id');
+      share_price = $(this).attr('share-price');
+      total_valuation = $(this).attr('total-valuation');
+      $('#inp_shareprice').val(share_price);
+      $('#inp_totalvaluation').val(total_valuation);
+      $('#currentValuationModal').modal('show');
     });
   });
 

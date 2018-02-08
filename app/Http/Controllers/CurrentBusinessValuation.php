@@ -68,7 +68,7 @@ class CurrentBusinessValuation extends Controller
         $orderDataBy = [$columnName => $orderBy];
 
         $filter_business_listings = $this->getFilteredCurrentValuations($filters, $skip, $length, $orderDataBy);
-        dd($filter_business_listings);
+        //dd($filter_business_listings);
         $business_listings        = $filter_business_listings['list'];
         $total_business_listings  = $filter_business_listings['total_business_listings'];
 
@@ -84,20 +84,25 @@ class CurrentBusinessValuation extends Controller
                 $business_link = url("investment-opportunities/single-company/" . $business_listing->business_slug);
             }
 
-            $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->business_title) . "</a></b><span class='text-muted'>" . get_ordinal_number($business_listing->round) . " Round</span><br/>(" . $business_listing->type . ")
+            $name_html = "<b><a href='" . $business_link . "' target='_blank' > " . title_case($business_listing->business_title) . "</a></b><span class='text-muted'>" . get_ordinal_number($business_listing->round) . " Round</span>
                                                 <br/>
-                                                <span class='text-muted'>" . $this->getDisplayBusinessStatus($business_listing->business_status) . "<span>";
+                                                <span class='text-warning'>" . $this->getDisplayBusinessStatus($business_listing->business_status) . "<span>";
 
-            $actionHtml =   '<br/><select data-id="" class="firm_actions" edit-url="#">
-                                                <option>--select--</option>
-                                                <option value="edit">View</option>
-                                                </select>';
+
+
+            
+           
+            $proposal_valuation = json_decode($business_listing->proposal_valuation);
+
+            $shareprice= isset($proposal_valuation->shareprice)?$proposal_valuation->shareprice:'';
+            $totalvaluation= isset($proposal_valuation->totalvaluation)?$proposal_valuation->totalvaluation:'';
+            $actionHtml =   '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="65516" share-price="'.$shareprice.'" total-valuation="'.$totalvaluation.'" >Edit</button>';
 
             $business_listings_data[] = [
                 'name'            => $name_html,
                 'created_date'    => date('d/m/Y', strtotime($business_listing->created_at)),
-                'total_valuation' => "",
-                'share_price'     => "",
+                'total_valuation' => $totalvaluation,
+                'share_price'     => $shareprice,
                 'action'          => $actionHtml,
 
             ];
@@ -138,9 +143,7 @@ class CurrentBusinessValuation extends Controller
         $firm_investors_str = implode(',', $firm_investors);
         //print_r($firm_investors_str);
 
-        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish', 'round' => '1'])->leftJoin('business_listing_datas', function ($join) {
-            $join->on('business_listings.id', '=', 'business_listing_datas.business_id')->where('business_listing_datas.data_key', 'proposal-valuation');
-        });
+        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish', 'round' => '1']);
 
         $cap_proposalstatus = [];
         if (!$logged_in_user->can('manage_options')) {
@@ -192,7 +195,7 @@ class CurrentBusinessValuation extends Controller
         $business_listings_query->groupBy('business_listings.id')->select('business_listings.*');
         //$entrepreneurQuery->select(\DB::raw("GROUP_CONCAT(business_listings.title ) as business, users.*"));*/
 
-        $business_listings_query->select(\DB::raw("business_listings.title as business_title, business_listings.slug as business_slug,business_listings.id as business_id, business_listings.round as round, business_listings.business_status as business_status, business_listings.gi_code as gi_code, business_listings.created_at as created_at, business_listing_datas.data_value as proposal_valuation"));
+        $business_listings_query->select(\DB::raw("business_listings.title as business_title, business_listings.slug as business_slug,business_listings.id as business_id, business_listings.round as round, business_listings.business_status as business_status, business_listings.gi_code as gi_code, business_listings.created_at as created_at, business_listings.valuation as proposal_valuation"));
         foreach ($orderDataBy as $columnName => $orderBy) {
             $business_listings_query->orderBy($columnName, $orderBy);
         }
