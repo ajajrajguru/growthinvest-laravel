@@ -46,6 +46,7 @@ class UserPermission
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-invest'                => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/get-investor-invest'                => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-news-update'           => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/save-news-update'                                 => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/delete-news-update'                               => ['view_all_investors', 'investors', 'view_investors'],
