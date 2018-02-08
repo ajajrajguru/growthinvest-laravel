@@ -1627,9 +1627,11 @@ function cdn($asset)
 
     //Check if we added cdn's to the config file
 
-    if (!Config::get('app.cdn')) {
+    if (!Config::get('app.cdn') || Config::get('app.cdn')=="") {
         return asset($asset);
     }
+
+
 
     //Get file name & cdn's
 
