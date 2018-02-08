@@ -52,3 +52,82 @@
 .tab-content{
 	width: 100%;
 }
+
+// squareline-tabs
+.squareline-tabs {
+    .nav-tabs {
+        .nav-item {
+            background: #eee;
+            &:not(:last-child) {
+                border-right: 1px solid #ccc;
+                @media (max-width: 767px) {
+                    border-right: none;
+                }
+            }
+            @media (max-width: 767px) {
+                width: 100%;
+            }
+            &:last-child {
+                @media (max-width: 767px) {
+                    .nav-link {
+                        border-bottom: none;
+                    }
+                }
+            }
+            .nav-link {
+                border: 1px solid transparent;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                color: #333;
+                position: relative;
+                text-align: center;
+                @media (max-width: 767px) {
+                    text-align: left;
+                    // display: none;
+                    border-bottom: 1px solid #ccc;
+                }
+                &.active {
+                    display: block !important;
+                    color: @brand-primary;
+                    background: #fff;
+                    @media (max-width: 767px) {
+                        border-bottom: none;
+                    }
+                    &:after {
+                        width: 100%;
+                    }
+                    @media (max-width: 767px) {
+                        &:before {
+                            content: "\f0c9";
+                            font-family: 'FontAwesome';
+                            position: absolute;
+                            right: 15px;
+                        }   
+                    }
+                }
+                &:after {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    display: block;
+                    width: 0;
+                    height: 3px;
+                    background-color: @brand-primary;
+                    
+                    margin: auto;
+                    content: '';
+                    transition: width 0.4s;
+                }
+                
+            }
+        }   
+    }
+    &.full-width {
+        .nav-tabs {
+            .nav-item {
+                flex: 1;
+            }
+        }
+    }
+}

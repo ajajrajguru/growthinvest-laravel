@@ -15,12 +15,12 @@ ul.statistics {
 	}
 }
 
-.tag {
-	padding: .2rem .4rem;
-    font-size: 87.5%;
-    color: #fff;
-    border-radius: .2rem;
-}
+// .tag {
+// 	padding: .2rem .4rem;
+//     font-size: 87.5%;
+//     color: #fff;
+//     border-radius: .2rem;
+// }
 
 .proposal-info-card {
 	margin-top: -140px;
@@ -101,31 +101,6 @@ ul.statistics {
 	}
 }
 
-// management team
-.management-individual {
-	@media (max-width: 767px) {
-		flex-wrap: wrap;
-	}
-	.avatar {
-		width: 150px;
-		height: 150px;
-		@media (max-width: 767px) {
-			flex-basis: 100%;
-		}
-		img {
-			max-width: 150px;
-			height: auto;
-		}
-	}
-}
-
-// modal fix (modal hiding behind overlay)
-.modal-open {
-	.mm-slideout {
-		z-index: initial;
-	}
-}
-
 .social-icons {
 	li {
 		a {
@@ -151,42 +126,4 @@ ul.statistics {
 	}
 }
 
-#management-team {
-    .carousel-indicators {
-        display: none;
-    }
-    .carousel-control-prev,
-    .carousel-control-next {
-        background-image: initial;
-        opacity: 1;
-        @media screen and (max-width: 767px) {
-            opacity: 0.3;
-        }
-        .fa {
-            position: absolute;
-            top: 50%;
-            // left: 50%;
-            color: @brand-primary;
-            z-index: 5;
-            display: inline-block;
-            &.fa-chevron-left {
-                // left: -15%;
-            }
-            &.fa-chevron-right {
-                // right: -15%;
-            }
-        }
-    }
-    .carousel-control-prev {
-        left: -12%;
-        @media screen and (max-width: 767px) {
-            left: 0;
-        }
-    }
-    .carousel-control-next {
-        right: -12%;
-        @media screen and (max-width: 767px) {
-            right: 0;
-        }
-    }
-}
+

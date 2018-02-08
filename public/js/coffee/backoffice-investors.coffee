@@ -629,16 +629,7 @@ $(document).ready ->
       
     ])
 
-  $('body').on 'click', '.reset-filters', ->
-    $('select[name="firm_name"]').val('').trigger('change')
-    $('select[name="investor_name"]').val('').trigger('change')
-    $('select[name="client_category"]').val('')
-    $('select[name="client_certification"]').val('')
-    $('select[name="investor_nominee"]').val('')
-    $('select[name="idverified"]').val('')
-   
-    investorTable.ajax.reload()
-    return
+ 
 
   
 

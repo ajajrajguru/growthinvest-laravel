@@ -664,7 +664,7 @@
         });
       }
     });
-    investorInvestTable = $('#datatable-investor-invest').DataTable({
+    return investorInvestTable = $('#datatable-investor-invest').DataTable({
       'pageLength': 50,
       'processing': false,
       'serverSide': true,
@@ -682,15 +682,6 @@
         error: function() {}
       },
       'columns': []
-    });
-    return $('body').on('click', '.reset-filters', function() {
-      $('select[name="firm_name"]').val('').trigger('change');
-      $('select[name="investor_name"]').val('').trigger('change');
-      $('select[name="client_category"]').val('');
-      $('select[name="client_certification"]').val('');
-      $('select[name="investor_nominee"]').val('');
-      $('select[name="idverified"]').val('');
-      investorTable.ajax.reload();
     });
   });
 
