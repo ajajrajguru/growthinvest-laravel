@@ -55,7 +55,7 @@
                 <table id="datatable-firms" class="table dataFilterTable table-hover table-solid-bg">
                     <thead>
                         <tr>
-                            <th class="w-search">Logo</th>
+                            <th >Logo</th>
                             <th class="w-search">Firm Name</th>
                             <th class="w-search">Firm Type</th>
                             <th class="w-search">Parent Firm</th>
@@ -66,10 +66,10 @@
                     <thead>
                         <tr class="filters">
                             <td></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
+                            <td class="data-search-input" data-search="name"></td>
+                            <td class="data-search-input" data-search="type"></td>
+                            <td class="data-search-input" data-search="parent-firm"></td>
+                            <td class="data-search-input" data-search="gi-code"></td>
                             <td></td>
                         </tr>
                     </thead>

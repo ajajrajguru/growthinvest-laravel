@@ -69,10 +69,10 @@
                     </thead>
                     <thead>
                         <tr class="filters">
-                            <td class="user-search-input" data-search="name"></td>
-                            <td class="user-search-input toggle-mob" data-search="email"></td>
-                            <td class="user-search-input toggle-mob" data-search="role"></td>
-                            <td class="user-search-input" data-search="firm"></td>
+                            <td class="data-search-input" data-search="name"></td>
+                            <td class="data-search-input toggle-mob" data-search="email"></td>
+                            <td class="data-search-input toggle-mob" data-search="role"></td>
+                            <td class="data-search-input" data-search="firm"></td>
                             <td class="toggle-mob"></td>
                         </tr>
                     </thead>

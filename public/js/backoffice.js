@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var IntermediaryTable, api, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, updateSerachinput, usersTable;
+    var api, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -98,11 +98,13 @@
         ]
       });
       initSerachForTable(firmsTable);
+      updateSerachinput(firmsTable);
+      clearInput(firmsTable);
     }
-    $(document).on('keyup change', '.user-search-input .datatable-search', function() {
+    $(document).on('keyup change', '.data-search-input .datatable-search', function() {
       var urlParams;
       urlParams = '';
-      $('.user-search-input .datatable-search').each(function() {
+      $('.data-search-input .datatable-search').each(function() {
         var dataType, textVal;
         textVal = $(this).val();
         dataType = $(this).closest('td').attr('data-search');
@@ -141,7 +143,7 @@
       clearInput(usersTable);
     }
     if ($('#datatable-Intermediary').length) {
-      IntermediaryTable = $('#datatable-Intermediary').DataTable({
+      intermediaryTable = $('#datatable-Intermediary').DataTable({
         "paging": false,
         "info": true,
         "dom": '<"top"i>t<"bottom"i>',
@@ -167,7 +169,9 @@
           }
         ]
       });
-      initSerachForTable(IntermediaryTable);
+      initSerachForTable(intermediaryTable);
+      updateSerachinput(intermediaryTable);
+      clearInput(intermediaryTable);
     }
     $(document).on('change', '.delete_intm_users', function() {
       if ($('input[name="intermediary_user_delete[]"]:checked').length > 0) {
@@ -209,13 +213,13 @@
           if (data.status) {
             $('.delete_intm_users').each(function() {
               if ($(this).is(':checked')) {
-                return IntermediaryTable.row($(this).closest('tr')).remove();
+                return intermediaryTable.row($(this).closest('tr')).remove();
               }
             });
             $('.gi-success').removeClass('d-none');
             $('.gi-danger').addClass('d-none');
             $('.gi-success #message').html("Intermediaries Deleted Successfully.");
-            return IntermediaryTable.draw();
+            return intermediaryTable.draw();
           } else {
             $('.gi-success').addClass('d-none');
             $('.gi-danger').removeClass('d-none');
