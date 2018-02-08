@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\AdobeSignature;
+use App\BusinessListing;
+use App\Comment;
 use App\Defaults;
 use App\DocumentFile;
 use App\NomineeApplication;
 use App\User;
 use App\UserData;
-use App\Comment;
-use App\BusinessListing;
 use App\UserHasCertification;
 use Auth;
-use View;
 use Illuminate\Http\Request;
-use App\AdobeSignature;
+use Illuminate\Support\Facades\Hash;
 
 //Importing laravel-permission models
-use Illuminate\Support\Facades\Hash;
 use Session;
 use Spipu\Html2Pdf\Html2Pdf;
+use View;
 
 //Enables us to output flash messaging
 
@@ -109,9 +109,9 @@ class InvestorController extends Controller
                 $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
             }
 
-            $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
+            $nameHtml = '<b><a href="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="'.url('backoffice/investor/'.$investor->gi_code.'/investor-profile').'">
+            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">
             <option id="select" value="">-Select-</option>
             <option value="edit_profile">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
@@ -1997,6 +1997,7 @@ class InvestorController extends Controller
             abort(404);
         }
 
+  
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
@@ -2020,8 +2021,8 @@ class InvestorController extends Controller
         $data['idVerificationStatus'] = (!empty($nomineeApplication)) ? $nomineeApplication->id_verification_status : '';
         $data['isUsPerson']           = (!empty($nomineeApplication)) ? $nomineeApplication->is_us_person : '';
         $data['nomineeDetails']       = (!empty($nomineeApplication)) ? $nomineeApplication->details : [];
-        $data['adobeDocKey']       = (!empty($nomineeApplication)) ? $nomineeApplication->adobe_doc_key : '';
-        $data['signedUrl']       = (!empty($nomineeApplication)) ? $nomineeApplication->signed_url : '';
+        $data['adobeDocKey']          = (!empty($nomineeApplication)) ? $nomineeApplication->adobe_doc_key : '';
+        $data['signedUrl']            = (!empty($nomineeApplication)) ? $nomineeApplication->signed_url : '';
         $data['investorFai']          = $investorFai;
         $data['breadcrumbs']          = $breadcrumbs;
         $data['pageTitle']            = 'Add Investor : Client Investment Account';
@@ -2113,10 +2114,8 @@ class InvestorController extends Controller
         $nomineeDetails['subscriptionaccountno']              = $requestData['subscriptionaccountno'];
         $nomineeDetails['subscriptionreffnamelname']          = $requestData['subscriptionreffnamelname'];
         $nomineeDetails['section_status']                     = $requestData['section_status'];
-        
-        $sendSignature                     = $requestData['send_signature'];
 
-
+        $sendSignature = $requestData['send_signature'];
 
         $nomineeApplication = $investor->investorNomineeApplication();
         if (empty($nomineeApplication)) {
@@ -2131,8 +2130,9 @@ class InvestorController extends Controller
         $nomineeApplication->chargesfinancial_advisor_details = $investorFai;
         $nomineeApplication->save();
 
+        $this->onfidoRequest($investor, $sendSignature, $nomineeverification);
+        if ($nomineeApplication->adobe_doc_key == '' && $sendSignature == 'yes') {
 
-        if($nomineeApplication->adobe_doc_key == '' && $sendSignature=='yes'){
             $this->adobeSignataureEmail($investor);
         }
 
@@ -2174,6 +2174,77 @@ class InvestorController extends Controller
 
     }
 
+    public function onfidoRequest($investor, $sendSignature, $nomineeverification)
+    {
+        $curInvOnfidoReports = $investor->userOnfidoApplicationReports();
+
+        if (empty($curInvOnfidoReports)) {
+
+            if ((Auth::user()->id == $investor->id && ($nomineeverification == 'yes' || $nomineeverification == "requested")) || (Auth::user()->id != $investor->id && $nomineeverification == "requested")) {
+
+                $onfidoApplicantId = $investor->userOnfidoApplicationId();
+
+                if (empty($onfidoApplicantId)) {
+
+                    if ($sendSignature == 'yes') {
+                        $result_onfido = createOnfidoApplicant($investor);
+
+                        $applicant_id = $result_onfido['applicant_id'];
+
+                        if ($applicant_id == '' || $applicant_id == false || is_null($applicant_id)) {
+                            $success = false;
+                            return $result_onfido;
+                        } else {
+                             
+                            $onfidoApplicantId = $investor->userOnfidoApplicationId();
+
+                            if (empty($onfidoApplicantId)) {
+                                $onfidoApplicantId           = new \App\UserData;
+                                $onfidoApplicantId->user_id  = $investor->id;
+                                $onfidoApplicantId->data_key = 'onfido_applicant_id';
+                            }
+
+                            $onfidoApplicantId->data_value = $applicant_id;
+                            $onfidoApplicantId->save();
+
+                            $success = true;
+
+                            //add and update report details for the onfido applicant check
+                            $check_report_result = $result_onfido['result']['create_checkreports_result'];
+                             
+                            add_update_onfido_reports_meta($applicant_id, $investor, $check_report_result);
+                            if ($result_onfido['onfido_error'] == "yes") {
+                                $success = false;
+                                return $result_onfido;
+                            }
+
+                        }
+
+                    }
+
+                }
+                else{
+                    $report_args = array('identity_report_status'=> $nomineeverification,
+                                          'aml_report_status'     => $nomineeverification
+                                         );
+
+                    update_onfido_reports_status($investor,$report_args);
+                }
+
+            }
+
+        } else if($nomineeverification=="completed"  ||  $nomineeverification=="pending_evidence"  || $nomineeverification=="manual_kyc" ){
+
+                    $report_args = array('identity_report_status'=> $nomineeverification,
+                                          'aml_report_status'     => $nomineeverification
+                                         );
+
+                    update_onfido_reports_status($user_id,$report_args);
+
+                }
+
+    }
+
     public function adobeSignataureEmail($investor)
     {
         $nomineeApplication = $investor->investorNomineeApplication();
@@ -2205,13 +2276,12 @@ class InvestorController extends Controller
             }
 
             $output_link       = $destination_dir . '/nominee_application_pdf_' . $now_date . '.pdf';
-            $callbackurl       = url('investor/adobe/'.$investor->gi_code.'/signed-doc-callback') . '?type=nominee_application';
+            $callbackurl       = url('investor/adobe/' . $investor->gi_code . '/signed-doc-callback') . '?type=nominee_application';
             $adobesign_message = "Please sign GrownthInvest application form document";
             $adobesign_name    = "GrownthInvest Application Form";
 
             $html2pdf->Output($output_link, 'F');
 
-   
             $adobe_sign_args = array(
                 'pdf_url'         => $output_link,
                 'name'            => $adobesign_name,
@@ -2245,21 +2315,19 @@ class InvestorController extends Controller
 
             $type          = 'nominee';
             $adobeechosign = new AdobeSignature();
-        
-            $nomineeData = NomineeApplication::where('adobe_doc_key',$dockey)->first();
-            
-            if(!empty($nomineeData)){
-                $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey); 
-                $nomineeData->signed_url = $dockeyUrl ;
-                $nomineeData->doc_signed_date = date('Y-m-d H:i:s') ;
+
+            $nomineeData = NomineeApplication::where('adobe_doc_key', $dockey)->first();
+
+            if (!empty($nomineeData)) {
+                $dockeyUrl                    = $adobeechosign->getAdobeDocUrlByDocKey($dockey);
+                $nomineeData->signed_url      = $dockeyUrl;
+                $nomineeData->doc_signed_date = date('Y-m-d H:i:s');
                 $nomineeData->save();
             }
-  
 
         }
- 
-    }
 
+    }
 
     public function investorProfile($giCode)
     {
@@ -2270,17 +2338,17 @@ class InvestorController extends Controller
 
         $investorCertification = $investor->getActiveCertification();
 
-        $breadcrumbs   = [];  
+        $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
-        $data['investor']          = $investor;
-        $data['investorCertification']          =  (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'View Profile';
-        $data['activeMenu']         = 'manage_clients';
+        $data['investor']              = $investor;
+        $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['breadcrumbs']           = $breadcrumbs;
+        $data['pageTitle']             = 'View Profile';
+        $data['activeMenu']            = 'manage_clients';
 
         return view('backoffice.clients.investor-profile')->with($data);
 
@@ -2295,17 +2363,17 @@ class InvestorController extends Controller
 
         $investorCertification = $investor->getActiveCertification();
 
-        $breadcrumbs   = [];  
+        $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
-        $data['investor']          = $investor;
-        $data['investorCertification']          =  (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'View Profile';
-        $data['activeMenu']         = 'manage_clients';
+        $data['investor']              = $investor;
+        $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['breadcrumbs']           = $breadcrumbs;
+        $data['pageTitle']             = 'View Profile';
+        $data['activeMenu']            = 'manage_clients';
 
         return view('backoffice.clients.investor-invest')->with($data);
 
@@ -2362,7 +2430,7 @@ class InvestorController extends Controller
 
             $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="'.url('backoffice/investor/'.$investor->gi_code.'/investor-profile').'">
+            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">
             <option id="select" value="">-Select-</option>
             <option value="edit_profile">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
@@ -2398,11 +2466,10 @@ class InvestorController extends Controller
 
     }
 
-
     public function getFilteredInvestorInvest($filters, $skip, $length, $orderDataBy)
     {
 
-        $investorQuery = BusinessListing::where('','yes')->where('status','publish');
+        $investorQuery = BusinessListing::where('', 'yes')->where('status', 'publish');
 
         // if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
         //     $investorQuery->where('users.firm_id', $filters['firm_name']);
@@ -2487,81 +2554,79 @@ class InvestorController extends Controller
 
     }
 
-
     public function investorNewsUpdate($giCode)
     {
         $investor = User::where('gi_code', $giCode)->first();
         if (empty($investor)) {
             abort(404);
         }
- 
-        $breadcrumbs   = [];  
-        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
-        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
-        $data['comments']          = getObjectComments("App\User",$investor->id,0); 
-        $data['investor']          = $investor;
-        $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'View Profile';
-        $data['activeMenu']         = 'manage_clients';
+
+        $breadcrumbs         = [];
+        $breadcrumbs[]       = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[]       = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[]       = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[]       = ['url' => '', 'name' => 'View Profile'];
+        $data['comments']    = getObjectComments("App\User", $investor->id, 0);
+        $data['investor']    = $investor;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'View Profile';
+        $data['activeMenu']  = 'manage_clients';
 
         return view('backoffice.clients.investor-news-update')->with($data);
 
     }
 
-    public function saveInvestorNewsUpdate(Request $request){
+    public function saveInvestorNewsUpdate(Request $request)
+    {
         $requestData = $request->all();
-        $query = $requestData['query'];
-        $parentId = $requestData['parentId'];
-        $type = $requestData['type'];
-        $objectType = $requestData['object-type'];
-        $objectId = $requestData['object-id'];
+        $query       = $requestData['query'];
+        $parentId    = $requestData['parentId'];
+        $type        = $requestData['type'];
+        $objectType  = $requestData['object-type'];
+        $objectId    = $requestData['object-id'];
 
         $user = Auth::user();
 
-        $comment = new Comment;
-        $comment->data = $query;
-        $comment->author_name = $user->first_name.''.$user->last_name;
+        $comment               = new Comment;
+        $comment->data         = $query;
+        $comment->author_name  = $user->first_name . '' . $user->last_name;
         $comment->author_email = $user->email;
-        $comment->user_id = $user->id;
-        $comment->object_id = $objectId;
-        $comment->object_type = $objectType;
-        $comment->type = $type;
-        $comment->parent = $parentId;
-        $comment->approved = 1;
-        $comment->save(); 
+        $comment->user_id      = $user->id;
+        $comment->object_id    = $objectId;
+        $comment->object_type  = $objectType;
+        $comment->type         = $type;
+        $comment->parent       = $parentId;
+        $comment->approved     = 1;
+        $comment->save();
 
         $commentView = View::make('backoffice.clients.news-update-content', compact('comment'))->render();
-        $json_data = array(
-            'status' => true,
-            'comment_html' => $commentView
-            
+        $json_data   = array(
+            'status'       => true,
+            'comment_html' => $commentView,
+
         );
 
         return response()->json($json_data);
     }
 
-    public function deleteInvestorNewsUpdate(Request $request){
+    public function deleteInvestorNewsUpdate(Request $request)
+    {
         $requestData = $request->all();
 
         $commentId = $requestData['commentId'];
-         
+
         $comment = Comment::find($commentId);
 
-        if(!empty($comment)){
+        if (!empty($comment)) {
             $comment->delete();
             $success = true;
-        }
-        else{
+        } else {
             $success = false;
         }
-         
 
-       
         $json_data = array(
             'status' => $success,
-           
+
         );
 
         return response()->json($json_data);

@@ -88,6 +88,24 @@ class User extends Authenticatable
         return $userData;
     }
 
+    public function userOnfidoApplicationId()
+    {
+        $userData = $this->userData()->where('data_key','onfido_applicant_id')->first();
+        return $userData;
+    }
+
+    public function userOnfidoSubmissionStatus()
+    {
+        $userData = $this->userData()->where('data_key','onfido_submitted')->first();
+        return $userData;
+    }
+
+    public function userOnfidoApplicationReports()
+    {
+        $userData = $this->userData()->where('data_key','onfido_reports')->first();
+        return $userData;
+    }
+
     public function investorNomineeApplication()
     {
         $userData = $this->nomineeApplication()->first();
@@ -296,7 +314,7 @@ class User extends Authenticatable
 
         $user_info['organization_info'] = [];
 
-        $user_info['additional_info'] = $this->userAdditionalInfo()->data_value;
+        $user_info['additional_info'] = (!empty($this->userAdditionalInfo())) ? $this->userAdditionalInfo()->data_value :[];
 
         $user_info["ID"] = $this->id;
 
