@@ -63,11 +63,11 @@
                     <thead>
                         <tr class="filters">
                             <td></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
+                            <td class="data-search-input" data-search="detail"></td>
+                            <td class="data-search-input" data-search="company-name"></td>
+                            <td class="data-search-input" data-search="description"></td>
+                            <td class="data-search-input" data-search="submitted-on"></td>
+                            <td class="data-search-input" data-search="lgbr"></td>
                             <td></td>
                         </tr>
                     </thead>

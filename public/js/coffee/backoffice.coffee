@@ -81,12 +81,14 @@ $(document).ready ->
 		)
 
 		initSerachForTable(firmsTable)
+		updateSerachinput(firmsTable)
+		clearInput(firmsTable)
 
 
 
-	$(document).on 'keyup change', '.user-search-input .datatable-search', ->
+	$(document).on 'keyup change', '.data-search-input .datatable-search', ->
 		urlParams = ''
-		$('.user-search-input .datatable-search').each ->
+		$('.data-search-input .datatable-search').each ->
 			textVal = $(this).val()
 			dataType = $(this).closest('td').attr 'data-search'
 
@@ -117,7 +119,7 @@ $(document).ready ->
 		clearInput(usersTable)
 
 	if $('#datatable-Intermediary').length
-		IntermediaryTable = $('#datatable-Intermediary').DataTable(
+		intermediaryTable = $('#datatable-Intermediary').DataTable(
 			"paging": false
 			"info": true
 			'aaSorting': [[1,'asc']]
@@ -132,7 +134,9 @@ $(document).ready ->
 			]
 
 		)
-		initSerachForTable(IntermediaryTable)
+		initSerachForTable(intermediaryTable)
+		updateSerachinput(intermediaryTable)
+		clearInput(intermediaryTable)
 
 	$(document).on 'change', '.delete_intm_users', ->
 		if($('input[name="intermediary_user_delete[]"]:checked').length > 0)
@@ -171,13 +175,13 @@ $(document).ready ->
 				if data.status
 					$('.delete_intm_users').each ->
 						if $(this).is(':checked')
-							IntermediaryTable.row($(this).closest('tr')).remove()
+							intermediaryTable.row($(this).closest('tr')).remove()
 
 					$('.gi-success').removeClass('d-none')
 					$('.gi-danger').addClass('d-none')
 					$('.gi-success #message').html "Intermediaries Deleted Successfully."
 
-					IntermediaryTable.draw()
+					intermediaryTable.draw()
 				else
 					$('.gi-success').addClass('d-none')
 					$('.gi-danger').removeClass('d-none')
