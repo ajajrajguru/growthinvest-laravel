@@ -68,6 +68,7 @@ $(document).ready ->
 		firmsTable = $('#datatable-firms').DataTable(
 			"paging": false
 			"info": true
+			"dom": '<"top"i>t<"bottom"i>'
 			'aaSorting': [[1,'asc']]
 			'columns': [
 				{ 'data': 'logo' , "orderable": false}
@@ -81,12 +82,14 @@ $(document).ready ->
 		)
 
 		initSerachForTable(firmsTable)
+		updateSerachinput(firmsTable)
+		clearInput(firmsTable)
 
 
 
-	$(document).on 'keyup change', '.user-search-input .datatable-search', ->
+	$(document).on 'keyup change', '.data-search-input .datatable-search', ->
 		urlParams = ''
-		$('.user-search-input .datatable-search').each ->
+		$('.data-search-input .datatable-search').each ->
 			textVal = $(this).val()
 			dataType = $(this).closest('td').attr 'data-search'
 
@@ -102,6 +105,7 @@ $(document).ready ->
 		usersTable = $('#datatable-users').DataTable(
 			"paging": false
 			"info": true
+			"dom": '<"top"i>t<"bottom"i>'
 			'aaSorting': [[0,'asc']]
 			'columns': [
 				{ 'data': 'name' }
@@ -117,9 +121,10 @@ $(document).ready ->
 		clearInput(usersTable)
 
 	if $('#datatable-Intermediary').length
-		IntermediaryTable = $('#datatable-Intermediary').DataTable(
+		intermediaryTable = $('#datatable-Intermediary').DataTable(
 			"paging": false
 			"info": true
+			"dom": '<"top"i>t<"bottom"i>'
 			'aaSorting': [[1,'asc']]
 			'columns': [
 				{ 'data': 'ckbox'  , "orderable": false}
@@ -132,7 +137,9 @@ $(document).ready ->
 			]
 
 		)
-		initSerachForTable(IntermediaryTable)
+		initSerachForTable(intermediaryTable)
+		updateSerachinput(intermediaryTable)
+		clearInput(intermediaryTable)
 
 	$(document).on 'change', '.delete_intm_users', ->
 		if($('input[name="intermediary_user_delete[]"]:checked').length > 0)
@@ -171,13 +178,13 @@ $(document).ready ->
 				if data.status
 					$('.delete_intm_users').each ->
 						if $(this).is(':checked')
-							IntermediaryTable.row($(this).closest('tr')).remove()
+							intermediaryTable.row($(this).closest('tr')).remove()
 
 					$('.gi-success').removeClass('d-none')
 					$('.gi-danger').addClass('d-none')
 					$('.gi-success #message').html "Intermediaries Deleted Successfully."
 
-					IntermediaryTable.draw()
+					intermediaryTable.draw()
 				else
 					$('.gi-success').addClass('d-none')
 					$('.gi-danger').removeClass('d-none')
@@ -419,7 +426,7 @@ $(document).ready ->
 		return
 
 
-	  
+
 
 	businesslistingsTable = $('#datatable-currentbusinessvaluations').DataTable(
 		'pageLength': 50
@@ -430,15 +437,15 @@ $(document).ready ->
 		'ajax':
 			url: '/backoffice/business-listings/get-current-valuation-listings'
 			type: 'post'
-			data: (data) ->							
+			data: (data) ->
 				data
 			error: ->
 				return
-		'columns': [		 
-			{ 'data': 'name' }		 
+		'columns': [
+			{ 'data': 'name' }
 			{ 'data': 'created_date'}
 			{ 'data': 'total_valuation', "orderable": false}
-			{ 'data': 'share_price', "orderable": false}			 
+			{ 'data': 'share_price', "orderable": false}
 			{ 'data': 'action' , "orderable": false}
 		])
 
@@ -482,7 +489,7 @@ $(document).ready ->
 
 	$('select[name="invite_firm_name"]').change ->
 		$('#invite_display').addClass('d-none')
-		
+
 	$('.cancel-invite-btn').click ->
 		$('#invite_display').addClass('d-none')
 
@@ -492,5 +499,18 @@ $(document).ready ->
 		firmid = $('#invite_firm_name').val()
 		if firmid==""
 			alert "Please select firm"
-			return  
+			return
 		$('form[name="form-invite-firm"]').submit();
+
+	$('body').on 'click', '.edit_valuation', ->
+		business_id = $(this).attr('proposal-id')
+		share_price = $(this).attr('share-price')
+		total_valuation = $(this).attr('total-valuation')
+		$('#inp_shareprice').val(share_price)
+		$('#inp_totalvaluation').val(total_valuation)
+		$('#currentValuationModal').modal('show')
+		return 
+
+	 
+
+

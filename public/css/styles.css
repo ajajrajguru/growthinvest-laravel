@@ -331,6 +331,11 @@ fieldset legend {
   background-color: #00a9ee;
   border-color: #00a9ee;
 }
+.custom-checkbox .custom-control-input:disabled ~ .custom-control-label::before,
+.custom-radio .custom-control-input:disabled ~ .custom-control-label::before {
+  background-color: #dddddd;
+  border-color: #dddddd;
+}
 .custom-checkbox .custom-control-label::before {
   -moz-border-radius: 0;
        border-radius: 0;
@@ -522,12 +527,21 @@ label.required:after {
 .table-solid-bg thead:last-of-type tr.filters td {
   border-top: none;
   padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #00a9ee;
 }
 .table-solid-bg thead:last-of-type tr.filters td .form-control {
   border-color: transparent;
 }
 .table-solid-bg thead tr.filters {
   background: #fff;
+}
+@media (min-width: 768px) {
+  .table-solid-bg thead tr.filters .clear-input {
+    opacity: 0;
+  }
+  .table-solid-bg thead tr.filters .input-group:hover .input-group-append .clear-input {
+    opacity: 1;
+  }
 }
 .table thead th {
   font-size: 0.8rem;
@@ -540,6 +554,10 @@ label.required:after {
 .table td,
 .table th {
   padding: .75rem 0.5rem;
+}
+.table td {
+  border-top: 0;
+  border-bottom: 1px solid #dddddd;
 }
 .table-no-padding td {
   padding: 0;

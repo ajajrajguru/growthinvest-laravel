@@ -2,27 +2,27 @@
 
 @section('js')
   @parent
- 
+
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
   <script type="text/javascript">
-    
+
     $(document).ready(function() {
         $( ".firm_actions" ).change(function() {
 
             var gi_code = $(this).attr('gi_code')
             var sel_val = $(this).val();
             switch(sel_val){
-                case 'edit' : 
+                case 'edit' :
                             var action_url = '/backoffice/firms/'+gi_code;
                             window.open(action_url);
                 break;
             }
-           
+
         });
     });
 </script>
 
- 
+
 @endsection
 @section('backoffice-content')
 <div class="container">
@@ -42,20 +42,20 @@
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
- 
+
                         <a href="{{ url('/backoffice/firms/add')}}" class="btn btn-primary">Add Firm</a>
-                        <a href="{{ url('backoffice/firm/export-firm')}}" class="btn btn-link">Download CSV</a>
-                
- 
+                        <a href="{{ url('backoffice/firm/export-firm')}}" class="btn btn-outline-primary">Download CSV</a>
+
+
                     </div>
                 </div>
             </div>
 
             <div class="table-responsive mt-3">
-                <table id="datatable-firms" class="table dataFilterTable table-hover table-striped-bg">
+                <table id="datatable-firms" class="table dataFilterTable table-hover table-solid-bg">
                     <thead>
                         <tr>
-                            <th class="w-search">Logo</th>
+                            <th >Logo</th>
                             <th class="w-search">Firm Name</th>
                             <th class="w-search">Firm Type</th>
                             <th class="w-search">Parent Firm</th>
@@ -66,10 +66,10 @@
                     <thead>
                         <tr class="filters">
                             <td></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
-                            <td class=""></td>
+                            <td class="data-search-input" data-search="name"></td>
+                            <td class="data-search-input" data-search="type"></td>
+                            <td class="data-search-input" data-search="parent-firm"></td>
+                            <td class="data-search-input" data-search="gi-code"></td>
                             <td></td>
                         </tr>
                     </thead>
@@ -82,7 +82,7 @@
                                     <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>
                                     <td>
-                                        <select data-id="78523" class="firm_actions" gi_code="{{ $firm->gi_code }}">
+                                        <select class="form-control" data-id="78523" class="firm_actions" gi_code="{{ $firm->gi_code }}">
                                         <option>--select--</option>
                                         <option value="edit">View Firm Details</option>
                                         <option value="view_wm_commissions">View Investment Clients</option>
@@ -103,5 +103,5 @@
             display: none;
         }
     </style>
- 
+
 @endsection

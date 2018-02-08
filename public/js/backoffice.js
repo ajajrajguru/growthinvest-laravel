@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var IntermediaryTable, api, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, updateSerachinput, usersTable;
+    var api, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -77,6 +77,7 @@
       firmsTable = $('#datatable-firms').DataTable({
         "paging": false,
         "info": true,
+        "dom": '<"top"i>t<"bottom"i>',
         'aaSorting': [[1, 'asc']],
         'columns': [
           {
@@ -97,11 +98,13 @@
         ]
       });
       initSerachForTable(firmsTable);
+      updateSerachinput(firmsTable);
+      clearInput(firmsTable);
     }
-    $(document).on('keyup change', '.user-search-input .datatable-search', function() {
+    $(document).on('keyup change', '.data-search-input .datatable-search', function() {
       var urlParams;
       urlParams = '';
-      $('.user-search-input .datatable-search').each(function() {
+      $('.data-search-input .datatable-search').each(function() {
         var dataType, textVal;
         textVal = $(this).val();
         dataType = $(this).closest('td').attr('data-search');
@@ -118,6 +121,7 @@
       usersTable = $('#datatable-users').DataTable({
         "paging": false,
         "info": true,
+        "dom": '<"top"i>t<"bottom"i>',
         'aaSorting': [[0, 'asc']],
         'columns': [
           {
@@ -139,9 +143,10 @@
       clearInput(usersTable);
     }
     if ($('#datatable-Intermediary').length) {
-      IntermediaryTable = $('#datatable-Intermediary').DataTable({
+      intermediaryTable = $('#datatable-Intermediary').DataTable({
         "paging": false,
         "info": true,
+        "dom": '<"top"i>t<"bottom"i>',
         'aaSorting': [[1, 'asc']],
         'columns': [
           {
@@ -164,7 +169,9 @@
           }
         ]
       });
-      initSerachForTable(IntermediaryTable);
+      initSerachForTable(intermediaryTable);
+      updateSerachinput(intermediaryTable);
+      clearInput(intermediaryTable);
     }
     $(document).on('change', '.delete_intm_users', function() {
       if ($('input[name="intermediary_user_delete[]"]:checked').length > 0) {
@@ -206,13 +213,13 @@
           if (data.status) {
             $('.delete_intm_users').each(function() {
               if ($(this).is(':checked')) {
-                return IntermediaryTable.row($(this).closest('tr')).remove();
+                return intermediaryTable.row($(this).closest('tr')).remove();
               }
             });
             $('.gi-success').removeClass('d-none');
             $('.gi-danger').addClass('d-none');
             $('.gi-success #message').html("Intermediaries Deleted Successfully.");
-            return IntermediaryTable.draw();
+            return intermediaryTable.draw();
           } else {
             $('.gi-success').addClass('d-none');
             $('.gi-danger').removeClass('d-none');
@@ -543,7 +550,7 @@
     $('.cancel-invite-btn').click(function() {
       return $('#invite_display').addClass('d-none');
     });
-    return $('.save-invite-btn').click(function() {
+    $('.save-invite-btn').click(function() {
       var firmid, invite_type;
       invite_type = $(this).attr('invite-type');
       firmid = $('#invite_firm_name').val();
@@ -552,6 +559,15 @@
         return;
       }
       return $('form[name="form-invite-firm"]').submit();
+    });
+    return $('body').on('click', '.edit_valuation', function() {
+      var business_id, share_price, total_valuation;
+      business_id = $(this).attr('proposal-id');
+      share_price = $(this).attr('share-price');
+      total_valuation = $(this).attr('total-valuation');
+      $('#inp_shareprice').val(share_price);
+      $('#inp_totalvaluation').val(total_valuation);
+      $('#currentValuationModal').modal('show');
     });
   });
 
