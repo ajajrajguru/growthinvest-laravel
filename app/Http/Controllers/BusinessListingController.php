@@ -551,7 +551,7 @@ class BusinessListingController extends Controller
 
             if (in_array($business_data['data_key'], $serialized_meta_keys)) {
                 $business_data_ar[$business_data['data_key']] = @unserialize($business_data['data_value']);
-                if ($business_data['data_key'] == "company_details") {
+                if (in_array($business_data['data_key'],['proposal_desc_details',"company_details"])) {
                     $business_data_ar[$business_data['data_key']] = @unserialize($business_data_ar[$business_data['data_key']]);
 
                 }
@@ -573,6 +573,19 @@ class BusinessListingController extends Controller
         $business_ar        = $business_listing->toArray();
 
         $data                       = array_merge($business_ar, $business_data_ar);
+        $team_members = [];
+
+        
+        foreach ($data['management_team'] as $member_ar) {
+
+            foreach ($member_ar as $member) {
+                 $team[$member['key']] = $member['value'];
+            }
+            $team_members [] = $team;
+            
+        }
+
+        $data['management_team']    = $team_members;
         $data['approvers']          = $approvers;
         $data['milestones']         = $milestones;
         $data['stages_of_business'] = $stages_of_business;
@@ -584,6 +597,42 @@ class BusinessListingController extends Controller
         return view('frontend.single-business-view', $data);
 
     }
+
+
+
+
+
+
+
+
+    public function currentBusinessValuations()
+    {
+
+        /*$current_business_valuation = new BusinessValuation;
+
+        $current_business_valuation_data = $current_business_valuation->getCurrentBusinessList($list_args);*/
+        $current_business_valuation_data = "";
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Current Business Valuation'];
+
+        $data['firms']                           = $firms;
+        $data['current_business_valuation_list'] = $current_business_valuation_data;
+        $data['breadcrumbs']                     = $breadcrumbs;
+        $data['pageTitle']                       = 'Manage Clients : Growthinvest';
+        $data['activeMenu']                      = 'manage_clients';
+
+        return view('backoffice.clients.current_business_valuation')->with($data);
+
+    }
+
+
+    
 
 /**
  * Show the form for creating a new resource.

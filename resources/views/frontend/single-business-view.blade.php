@@ -76,7 +76,7 @@
 	</div>
 	<div class="row border">
 		<div class="col-sm-8 bg-white">
-			<p class="mt-3">{{{$proposal_details['business_proposal_details']}}}</p>
+			<p class="mt-3">{{$proposal_details['business_proposal_details']}}</p>
 			<hr>
 
 			<div class="row">
@@ -132,84 +132,7 @@
 
 
 		</div>
-		<div class="col-sm-4 mt-3 mt-sm-0 bg-dark text-white">
-
-			<!-- canvas -->
-			<!-- http://www.tothenew.com/blog/tutorial-to-create-a-circular-progress-bar-with-canvas/ -->
-			<canvas id="myCanvas" width="150" height="150" class="m-auto d-block"></canvas>
-			<script>
-			var canvas = document.getElementById('myCanvas');
-			var context = canvas.getContext('2d');
-			var al=0;
-			var start=4.72;
-			var cw=context.canvas.width/2;
-			var ch=context.canvas.height/2;
-			var diff;
-			 
-			function progressBar(){
-			diff=(al/100)*Math.PI*2;
-			context.clearRect(0,0,400,200);
-			context.beginPath();
-			context.arc(cw,ch,50,0,2*Math.PI,false);
-			context.fillStyle='transparent';
-			context.fill();
-			context.strokeStyle='#FFF';
-			context.stroke();
-			context.fillStyle='#FFF';
-			context.strokeStyle='#00A9EE';
-			context.textAlign='center';
-			context.lineWidth=15;
-			context.font = '10pt Open Sans';
-			context.beginPath();
-			context.arc(cw,ch,50,start,diff+start,false);
-			context.stroke();
-			context.fillText(al+'%',cw+2,ch+6);
-			if(al>=56){
-			clearTimeout(bar);
-			}
-			 
-			al++;
-			}
-			 
-			var bar=setInterval(progressBar,50);
-			</script>
-			<!-- /canvas -->
-			<ul class="p-0 statistics">
-				<li class="d-flex justify-content-between">
-					<div><strong>Investment Sought</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Minimum Investment</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Funded</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Funds Pledged</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Remaining</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Equity Offer</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Pre Money Valuation</strong> <a href=""><i class="fa fa-info-circle"></i></a></div>
-					<div>&pound; 15,000</div>
-				</li>
-				<li class="d-flex justify-content-between">
-					<div><strong>Post Money Valuation</strong></div>
-					<div>&pound; 15,000</div>
-				</li>
-				
-			</ul>
-		</div>
+		@include('frontend.single-business.investment-card')
 	</div>
 </div> <!-- /container -->
 
@@ -267,7 +190,7 @@
 
 					    <div id="collapse1" class="collapse show" role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{isset($proposal_desc_details['aboutbusiness'])$proposal_desc_details['aboutbusiness']:''}} */ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['aboutbusiness'])?$proposal_desc_details['aboutbusiness']:''}}</p>
 					    	</div>
 					    </div>
 					</div>
@@ -283,7 +206,7 @@
 
 					    <div id="collapse2" class="collapse " role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{isset($proposal_desc_details['businessstage'])$proposal_desc_details['businessstage']:''}}*/ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['businessstage'])?$proposal_desc_details['businessstage']:''}} </p>
 					    	</div>
 					    </div>
 					</div>
@@ -299,7 +222,7 @@
 
 					    <div id="collapse3" class="collapse " role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{$proposal_desc_details['businessfunded']}}*/ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['businessfunded'])?$proposal_desc_details['businessfunded']:''}}</p>
 					    	</div>
 					    </div>
 					</div>
@@ -315,7 +238,7 @@
 
 					    <div id="collapse4" class="collapse " role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{$proposal_desc_details['incomegenerated']}}*/ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['incomegenerated'])?$proposal_desc_details['incomegenerated']:''}}</p>
 					    	</div>
 					    </div>
 					</div>
@@ -331,7 +254,7 @@
 
 					    <div id="collapse5" class="collapse " role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{$proposal_desc_details['aboutteam']}}*/ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['aboutteam'])?$proposal_desc_details['aboutteam']:''}}</p>
 					    	</div>
 					    </div>
 					</div>
@@ -347,7 +270,7 @@
 
 					    <div id="collapse6" class="collapse " role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{$proposal_desc_details['marketscope']}}*/ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['marketscope'])?$proposal_desc_details['marketscope']:''}}</p>
 					    	</div>
 					    </div>
 					</div>
@@ -363,7 +286,7 @@
 
 					    <div id="collapse7" class="collapse " role="tabpanel" >
 					    	<div class="card-body">
-					    		<p>@php /* {{$exit_strategy}}*/ @endphp </p>
+					    		<p>{{isset($proposal_desc_details['exit_strategy'])?$proposal_desc_details['exit_strategy']:''}}</p>
 					    	</div>
 					    </div>
 					</div>
@@ -660,64 +583,69 @@
 		<!-- carousel -->
 		<div id="management-team" class="carousel slide mt-3" data-ride="carousel">
 		  	<div class="carousel-inner">
-		    	<div class="carousel-item active">
-		     		<!-- content -->
-		     		<div class="media management-individual">
-		     			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0">
-		     				<img class="img-fluid" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
-		     			</div>
-		     			<div class="media-body">
-		     		    	<h5 class="mt-0">John Doe <small class="designation">(CEO)</small></h5>
-		     		    	<p class="bio">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, voluptates corrupti velit. Ducimus voluptates cupiditate beatae, voluptate aliquid facilis repellat nobis, assumenda aut ex quas quod ab architecto incidunt eveniet.</p>
-		     		    	<hr>
-		     		    	<div class="row">
-		     		    		<div class="col-sm-6">
-		     		    			<div class="form-group">
-		     		    				<label for="">Employment Status:</label>
-		     		    				<div>Pre-Investment: <span>Full Time</span></div>
-		     		    				<div>Post-Investment: <span>Full Time</span></div>
-		     		    			</div>
-		     		    		</div>
-		     		    		<div class="col-sm-6">
-		     		    			<div class="form-group">
-		     		    				<label for="">Equity holding(Pre-Investment):</label>
-		     		    				<div>12%</div>
-		     		    			</div>
-		     		    		</div>
-		     		    	</div>
-		     			</div>
-		     		</div>
-		     		<!-- /content -->
-		    	</div>
-		    	<div class="carousel-item">
-		      		<!-- content -->
-		     		<div class="media management-individual">
-		     			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0">
-		     				<img class="img-fluid" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
-		     			</div>
-		     			<div class="media-body">
-		     		    	<h5 class="mt-0">Jane Doe <small class="designation">(CTO)</small></h5>
-		     		    	<p class="bio">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, voluptates corrupti velit. Ducimus voluptates cupiditate beatae, voluptate aliquid facilis repellat nobis, assumenda aut ex quas quod ab architecto incidunt eveniet.</p>
-		     		    	<hr>
-		     		    	<div class="row">
-		     		    		<div class="col-sm-6">
-		     		    			<div class="form-group">
-		     		    				<label for="">Employment Status:</label>
-		     		    				<div>Pre-Investment: <span>Full Time</span></div>
-		     		    				<div>Post-Investment: <span>Full Time</span></div>
-		     		    			</div>
-		     		    		</div>
-		     		    		<div class="col-sm-6">
-		     		    			<div class="form-group">
-		     		    				<label for="">Equity holding(Pre-Investment):</label>
-		     		    				<div>12%</div>
-		     		    			</div>
-		     		    		</div>
-		     		    	</div>
-		     			</div>
-		     		</div>
-		     		<!-- /content -->
-		    	</div>
+
+		  					@php
+							$cnt_management_team = 0;
+							@endphp
+							@foreach($management_team as $member) 
+
+									<div class="carousel-item @if($cnt_management_team==0) active @endif">
+								 		<!-- content -->
+								 		<div class="media management-individual">
+								 			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0">
+								 				<img class="img-fluid" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
+								 			</div>
+								 			<div class="media-body">
+								 		    	<h5 class="mt-0">{{$member['name']}} <small class="designation">({{$member['position']}})</small></h5>
+								 		    	<p class="bio">@if($member['bio']=="")  <p  class="bio text-danger" >No Information Provided</p>  @endif 
+								 		    	@if($member['bio']!="")
+								 		    	{{$member['bio']}}
+								 		    	@endif
+								 		     	
+								 		     	@if($type=="fund")
+								 		     		<hr>
+									 		     	@if($member['preinvestment']!="" || $member['postinvestment']!='')									 		    	
+									 		    	<div class="row">
+									 		    		<div class="col-sm-6">
+									 		    			<div class="form-group">
+									 		    				<label for="">Employment Status:</label>
+									 		    				<div>Pre-Investment: <span>{{$member['preinvestment']}}</span></div>
+									 		    				<div>Post-Investment: <span>{{$member['postinvestment']}}</span></div>
+									 		    			</div>
+									 		    		</div>
+									 		    		<div class="col-sm-6">
+									 		    			@if($member['equitypreinvestment']!="" )	
+									 		    			<div class="form-group">
+									 		    				<label for="">Equity holding(Pre-Investment):</label>
+									 		    				<div>12%</div>
+									 		    			</div>
+									 		    			@else
+									 		    			<div class="form-group">
+									 		    				<p class="text-danger">No Information Provided</p>
+									 		    			</div>
+									 		    			@endif
+									 		    		</div>
+									 		    	</div>
+									 		    	@else
+									 		    	<div class="row text-danger">No Information Provided
+									 		    	</div >
+									 		    	@endif	
+								 		    	</div>
+								 		    	@endif
+
+								 			</div>
+								 		</div>
+								 		<!-- /content -->
+									</div>
+									@php
+									$cnt_management_team++;
+									@endphp
+
+							@endforeach
+
+
+
+		    	 
 		  	</div>
 		  	<a class="carousel-control-prev" href="#management-team" role="button" data-slide="prev">
 		    	<span class="fa fa-chevron-left" aria-hidden="true"></span>

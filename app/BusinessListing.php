@@ -123,4 +123,39 @@ class BusinessListing extends Model
 
     }
 
+
+    public function getDisplayBusinessStatus($business_status)
+    {
+
+        switch ($business_status) {
+            case 'awaiting_inputs':
+                $display_business_status = "Awaiting Business Owner Inputs";
+                break;
+            case 'early_stage':
+                $display_business_status = "Marked as Incubator";
+                break;
+            case 'listed':
+                $display_business_status = "Listed on Platform";
+                break;
+            case 'fund_raised':
+                $display_business_status = "Fund Raised";
+                break;
+            case 'pending_review':
+                $display_business_status = "Pending Review";
+                break;
+            case 'reject':
+                $display_business_status = "Rejected";
+                break;
+            case 'archive':
+                $display_business_status = "Archived";
+                break;
+            default:
+                $display_business_status = "Pending Review";
+                break;
+
+        }
+        return $display_business_status;
+
+    }
+
 }

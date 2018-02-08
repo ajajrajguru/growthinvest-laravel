@@ -58,8 +58,8 @@ $(document).ready ->
 				return
 			if $(window).width() < 767
 				if $('.toggle-btn input:checkbox:not(:checked)')
-				  column = 'table .' + $('.toggle-btn input').attr('name')
-				  $(column).hide()
+					column = 'table .' + $('.toggle-btn input').attr('name')
+					$(column).hide()
 			return
 		return
 
@@ -171,7 +171,7 @@ $(document).ready ->
 				if data.status
 					$('.delete_intm_users').each ->
 						if $(this).is(':checked')
-							 IntermediaryTable.row($(this).closest('tr')).remove()
+							IntermediaryTable.row($(this).closest('tr')).remove()
 
 					$('.gi-success').removeClass('d-none')
 					$('.gi-danger').addClass('d-none')
@@ -428,30 +428,17 @@ $(document).ready ->
 		'bAutoWidth': false
 		'aaSorting': [[1,'asc']]
 		'ajax':
-			url: '/backoffice/business-listings/get-businesslistings'
+			url: '/backoffice/business-listings/get-current-valuation-listings'
 			type: 'post'
-			data: (data) ->
-				filters = {}
-				filters.firm_name = $('select[name="firm_name"]').val()
-				filters.business_listings_type = $('select[name="business_listings_type"]').val()				
-				data.filters = filters				
+			data: (data) ->							
 				data
-
 			error: ->
-
-
 				return
-
-
-		'columns': [
-			{ 'data': 'logo' , "orderable": false}
-			{ 'data': 'name' }
-			{ 'data': 'duediligence' }
-			{ 'data': 'created_date', "orderable": false}
-			{ 'data': 'modified_date', "orderable": false}
-			{ 'data': 'firmtoraise'}
-			{ 'data': 'activity_sitewide', "orderable": false}
-			{ 'data': 'activity_firmwide', "orderable": false}
+		'columns': [		 
+			{ 'data': 'name' }		 
+			{ 'data': 'created_date'}
+			{ 'data': 'total_valuation', "orderable": false}
+			{ 'data': 'share_price', "orderable": false}			 
 			{ 'data': 'action' , "orderable": false}
 		])
 
@@ -482,15 +469,15 @@ $(document).ready ->
 
 	# toggle columns
 	if $(window).width() < 767
-	  if $('.toggle-btn input:checkbox:not(:checked)')
-	    column = 'table .' + $('.toggle-btn input').attr('name')
-	    $(column).hide()
+		if $('.toggle-btn input:checkbox:not(:checked)')
+			column = 'table .' + $('.toggle-btn input').attr('name')
+			$(column).hide()
 
-	  $('body').on 'click', '.toggle-btn', ->
-	    column = 'table .' + $(this).find('input[type="checkbox"]').attr('name')
-	    $(column).toggle()
-	    return
-	  return
+		$('body').on 'click', '.toggle-btn', ->
+			column = 'table .' + $(this).find('input[type="checkbox"]').attr('name')
+			$(column).toggle()
+			return
+		return
 
 
 	$('select[name="invite_firm_name"]').change ->
