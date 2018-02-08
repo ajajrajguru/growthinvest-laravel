@@ -506,11 +506,38 @@ $(document).ready ->
 		business_id = $(this).attr('proposal-id')
 		share_price = $(this).attr('share-price')
 		total_valuation = $(this).attr('total-valuation')
+		$('#editing_business_id').val(business_id)
 		$('#inp_shareprice').val(share_price)
 		$('#inp_totalvaluation').val(total_valuation)
 		$('#currentValuationModal').modal('show')
 		return 
 
-	 
+	$('body').on 'click', '#current_valuation_save', ->
+		total_valuation = $('#inp_totalvaluation').val()
+		share_price = $('#inp_shareprice').val()
+		business_id = $('#editing_business_id').val()
+		$.ajax
+			type: 'post'
+			url: '/backoffice/save-current-business-valuation'
+			headers:
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			data:
+				'business_id': business_id
+				'share_price': share_price
+				'total_valuation': total_valuation
+			success: (data) ->
+				$('.spn_totalvaluation_'+business_id).html(total_valuation)
+				$('.spn_shareprice_'+business_id).html(share_price)
+				if data.status 					 
+					$('.gi-danger').addClass('d-none')
+					$('.gi-danger').html ""
+					$('.gi-success').html "Valuation Saved Successfully."
+					$('.spn_totalvaluation_'+business_id).html(total_valuation)
+					$('.spn_shareprice_'+business_id).html(share_price)					 
+				else					 
+					$('.gi-danger').html "Failed to Save Valuation."
+					$('.gi-success').html ""
+				 
+	 		 
 
 

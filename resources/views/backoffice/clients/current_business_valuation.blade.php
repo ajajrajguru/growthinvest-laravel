@@ -111,6 +111,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="currentValuationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{ csrf_field() }}
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -120,7 +121,10 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="gi-danger text-danger"></div>
+        <div class="gi-success text-success"></div>
        <div class="row">
+        <input type="hidden" name="editing_business_id" id="editing_business_id" value=""  />
             <div class="col-sm-6">
                 <div class="">
                     <label>Total Valuation  </label>

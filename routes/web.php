@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('business-listings/get-businesslistings', 'BusinessListingController@getBusinessListings');    
     Route::get('business-listing/export-business-listings', 'BusinessListingController@exportBusinessListings');
     Route::resource('current-business-valuation', 'CurrentBusinessValuation');
+    Route::post('save-current-business-valuation', 'CurrentBusinessValuation@saveCurrentValuation');
     Route::post('business-listings/get-current-valuation-listings', 'CurrentBusinessValuation@getCurrentValuationListings');
     Route::get('entrepreneur/registration', 'EntrepreneurController@registration');
     Route::post('entrepreneur/save-registration', 'EntrepreneurController@saveRegistration');

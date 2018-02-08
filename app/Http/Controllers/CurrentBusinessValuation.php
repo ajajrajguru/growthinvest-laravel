@@ -69,8 +69,8 @@ class CurrentBusinessValuation extends Controller
 
         $filter_business_listings = $this->getFilteredCurrentValuations($filters, $skip, $length, $orderDataBy);
         //dd($filter_business_listings);
-        $business_listings        = $filter_business_listings['list'];
-        $total_business_listings  = $filter_business_listings['total_business_listings'];
+        $business_listings       = $filter_business_listings['list'];
+        $total_business_listings = $filter_business_listings['total_business_listings'];
 
         $business_listings_data = [];
 
@@ -88,21 +88,17 @@ class CurrentBusinessValuation extends Controller
                                                 <br/>
                                                 <span class='text-warning'>" . $this->getDisplayBusinessStatus($business_listing->business_status) . "<span>";
 
-
-
-            
-           
             $proposal_valuation = json_decode($business_listing->proposal_valuation);
 
-            $shareprice= isset($proposal_valuation->shareprice)?$proposal_valuation->shareprice:'';
-            $totalvaluation= isset($proposal_valuation->totalvaluation)?$proposal_valuation->totalvaluation:'';
-            $actionHtml =   '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="65516" share-price="'.$shareprice.'" total-valuation="'.$totalvaluation.'" >Edit</button>';
+            $shareprice     = isset($proposal_valuation->shareprice) ? $proposal_valuation->shareprice : '';
+            $totalvaluation = isset($proposal_valuation->totalvaluation) ? $proposal_valuation->totalvaluation : '';
+            $actionHtml     = '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="'.$business_listing->business_id.'" share-price="' . $shareprice . '" total-valuation="' . $totalvaluation . '" >Edit</button>';
 
             $business_listings_data[] = [
                 'name'            => $name_html,
                 'created_date'    => date('d/m/Y', strtotime($business_listing->created_at)),
-                'total_valuation' => $totalvaluation,
-                'share_price'     => $shareprice,
+                'total_valuation' => "<span class='spn_totalvaluation_".$business_listing->business_id."' >".$totalvaluation."</span>",
+                'share_price'     => "<span class='spn_shareprice_".$business_listing->business_id."' >".$shareprice."<span>",
                 'action'          => $actionHtml,
 
             ];
@@ -276,6 +272,29 @@ class CurrentBusinessValuation extends Controller
 
         }
         return $display_business_status;
+
+    }
+
+    public function saveCurrentValuation(Request $request)
+    {
+        $requestData = $request->all();
+       
+
+        $current_valuation = [
+            'totalvaluation' => $requestData['total_valuation'],
+            'shareprice'     => $requestData['share_price'],
+        ];
+        $current_valuation = json_encode($current_valuation);
+       // dd($requestData);
+
+        $result = BusinessListing::where('id', $requestData['business_id'])
+            ->update(['valuation' => $current_valuation]);
+
+         $json_data = array(
+            "status"            => $result,
+            
+        );
+        return response()->json($json_data);
 
     }
 
