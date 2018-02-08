@@ -8,6 +8,18 @@ class BusinessListing extends Model
 {
     protected $table = 'business_listings';
 
+    public function getTaxStatusAttribute( $value ) { 
+        $value = json_decode( $value );
+         
+        return $value;
+    }
+
+    public function setTaxStatusAttribute( $value ) { 
+        $this->attributes['tax_status'] = json_encode( $value );
+
+    }
+
+
     public function getBusinessList($args)
     {
 
@@ -156,6 +168,13 @@ class BusinessListing extends Model
         }
         return $display_business_status;
 
+    }
+
+    public function getCompanyNames(){
+        $businessListingQuery = BusinessListing::where('invest_listing', 'yes')->where('status', 'publish')->get();
+
+
+        return $businessListingQuery;
     }
 
 }
