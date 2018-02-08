@@ -135,8 +135,8 @@
 
                        
                         @if($investor->id)
-                             <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
-                            <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
+                             <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn @if($mode=='edit') d-none  @endif">Edit Details</a>
+                            <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none  @endif">Cancel Updates</a>
                         @endif
                     </h5>
                     <hr class="my-3">
@@ -322,11 +322,13 @@
                                         <div class="row ml-2 mr-2 mb-2">
                                             <div class="col-sm-12">
                                                 <div class="form-group">
+                                                @if($mode=='edit')
                                                     @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
                                                     <label>Is your client looking to invest and actively engage with the company as an Angel?</label>
                                                     @else
                                                     <label class="">Are you looking to invest and actively engage with the company as an Angel?</label>
                                                     @endif
+                                                @endif
 
                                                     <div class="editmode @if($mode=='view') d-none @endif">
                                                         <div class="custom-control custom-radio">
@@ -693,13 +695,15 @@
                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> {{ (!empty($additionalInfo) && isset($additionalInfo['plansforusingsite'])) ? $additionalInfo['plansforusingsite']:'' }}</div>
                             </div>
 
-                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
-                            <i class="text-muted"><small>Tell us how you intend to use the GrowthInvest.com website. It will help us provide better service to your client. </small></i><br/>
-                            <i class="text-muted"><small>Eg: Interested in investing in online business. </small></i>
-                            @else
+                            @if($mode=='edit') 
+                                @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
+                                <i class="text-muted "><small>Tell us how you intend to use the GrowthInvest.com website. It will help us provide better service to your client. </small></i><br/>
+                                <i class="text-muted"><small>Eg: Interested in investing in online business. </small></i>
+                                @else
 
-                            <i class="text-muted"><small>Tell us how you intend to use the GrowthInvest.com website. It will help us provide the best services to you. </small></i><br/>
-                            <i class="text-muted"><small>Eg: I am interested in investing in online business</small></i>
+                                <i class="text-muted"><small>Tell us how you intend to use the GrowthInvest.com website. It will help us provide the best services to you. </small></i><br/>
+                                <i class="text-muted"><small>Eg: I am interested in investing in online business</small></i>
+                                @endif
                             @endif
                             
                         </div>
@@ -707,7 +711,7 @@
                             <div class="">
                                 <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                             </div>
-                            <button class="btn btn-primary mt-4" type="submit">Save</button>
+                            <button class="btn btn-primary mt-4 @if($mode=='view') d-none @endif"  type="submit">Save</button>
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
                             <div class="">

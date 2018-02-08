@@ -138,8 +138,8 @@
                      </span>
                     </h5>
                     @if($investor->id)
-                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn">Edit Details</a>
-                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
+                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn  @if($mode=='edit') d-none  @endif">Edit Details</a>
+                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none @endif">Cancel Updates</a>
                                     @endif
                     <hr class="my-3">
 
@@ -320,8 +320,8 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Telephone <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif">
-                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone }}@endif</div>
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="account_telephone" placeholder="" data-parsley-required data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone_no }}@endif">
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['telephone'])){{ $nomineeDetails['telephone'] }}@else{{ $investor->telephone_no }}@endif</div>
                                             </div>
 
                                             <div class="form-group">

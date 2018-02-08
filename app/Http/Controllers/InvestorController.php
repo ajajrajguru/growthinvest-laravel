@@ -109,7 +109,7 @@ class InvestorController extends Controller
                 $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
             }
 
-            $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
+            $nameHtml = '<b><a href="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
             $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">
             <option id="select" value="">-Select-</option>
