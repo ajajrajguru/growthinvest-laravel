@@ -625,7 +625,7 @@ function getObjectComments($objectType, $objectId, $parent)
 /**
  * Store logged in user menu in session
  */
-/
+
 function storeUserMenus($user)
 {
 
