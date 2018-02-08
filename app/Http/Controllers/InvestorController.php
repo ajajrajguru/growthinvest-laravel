@@ -2474,12 +2474,15 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
+            
             $taxStatus = $filters['tax_status'];
             $taxStatus = explode(',', $taxStatus);
             $taxStatus = array_filter($taxStatus); 
             $taxStatus = json_encode($taxStatus);
             // echo "JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )";
             $businessListingQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )");   
+            // 
+            // $businessListingQuery->whereIn("business_listings.tax_status->status", $taxStatus);   
         }
       
         foreach ($orderDataBy as $columnName => $orderBy) {
