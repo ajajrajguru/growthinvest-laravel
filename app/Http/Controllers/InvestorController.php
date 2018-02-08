@@ -2360,7 +2360,7 @@ class InvestorController extends Controller
         }
         $businessListings = new BusinessListing;
         $companyNames     = $businessListings->getCompanyNames();
-        $sectors          = getSectors();
+        $sectors          = getBusinessSectors();
         $managers         = [];
         if (!empty($companyNames)) {
             $compManagers = collect($companyNames->toArray());
@@ -2400,7 +2400,9 @@ class InvestorController extends Controller
             '0' => 'business_listings.title',
             '1' => 'business_listings.manager',
             '3' => 'business_listings.type',
+            '4' => 'business_listings.investment_objective',
             '5' => 'business_listings.target_amount',
+            '6' => 'business_listings.minimum_investment',
             '7' => 'amount_raised',
         );
 
@@ -2427,9 +2429,9 @@ class InvestorController extends Controller
                 'manager'     => ucfirst($businessListing->manager),
                 'tax_status'  => $businessListing->tax_status,
                 'type'        => ucfirst($businessListing->type),
-                'focus'       => '',
+                'focus'       => $businessListing->investment_objective,
                 'taget_raise' => $businessListing->target_amount,
-                'min_inv'     => '',
+                'min_inv'     => $businessListing->minimum_investment,
                 'amt_raised'  => $businessListing->amount_raised,
                 'invest'      => '<a href="#" class="btn btn-primary">Invest</a>',
                 'download'    => '<a href="#" class="btn btn-link">Download</a>',
@@ -2462,7 +2464,7 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['sector']) && $filters['sector'] != "") {
-             
+             $businessListingQuery->where('business_listings.investment_objective', $filters['sector']);
         }
 
         if (isset($filters['type']) && $filters['type'] != "") {
@@ -2474,15 +2476,29 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
-            
+            // dd(json_encode(['status'=>['seis','eis','tier1']]));
             $taxStatus = $filters['tax_status'];
             $taxStatus = explode(',', $taxStatus);
             $taxStatus = array_filter($taxStatus); 
-            $taxStatus = json_encode($taxStatus);
+            // $taxStatus = json_encode($taxStatus);
             // echo "JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )";
-            $businessListingQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )");   
+            // $businessListingQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status->status, '".$taxStatus."' )");   
             // 
             // $businessListingQuery->whereIn("business_listings.tax_status->status", $taxStatus);   
+            // 
+            $businessListingQuery->where(function($bQuery)use($taxStatus)
+            {
+                foreach ($taxStatus as $key => $status) {
+                    $statusArr = [];
+                    $statusArr[] = $status;
+                    $taxStatus = json_encode($statusArr);
+                    if($key==0)
+                        $bQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )");
+                    else
+                        $bQuery->orWhereRaw("JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )");   
+                }
+                
+            });
         }
       
         foreach ($orderDataBy as $columnName => $orderBy) {

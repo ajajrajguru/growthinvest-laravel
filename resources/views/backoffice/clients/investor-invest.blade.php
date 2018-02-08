@@ -69,7 +69,7 @@
                                 <select name="sector" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($sectors as $sector)
-                                    <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
+                                    <option value="{{ $sector->name }}">{{ ucfirst($sector->name) }}</option>
                                   @endforeach
                                 </select>
                             </div>
