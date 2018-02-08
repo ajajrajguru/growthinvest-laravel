@@ -2168,7 +2168,7 @@ class InvestorController extends Controller
 
         $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
         $html2pdf->pdf->SetDisplayMode('fullpage');
-        $html = '<img src="'.url('img/pdf/offline-nom-pdf.jpg').'">';
+        $html = '<img src="/img/pdf/offline-nom-pdf.jpg">';
         $html2pdf->writeHTML($html, isset($_GET['vuehtml']));
 
         $html2pdf->Output($file_name);
