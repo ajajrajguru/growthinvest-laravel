@@ -439,28 +439,28 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Firm Name <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatefirmname" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif   data-parsley-required-message="Please enter the firm name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif">
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatefirmname" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif @if(empty($nomineeDetails)) data-parsley-required  @endif   data-parsley-required-message="Please enter the firm name." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif">
 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatefirmname'])){{ $nomineeDetails['txcertificatefirmname'] }} @endif</div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Contact <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatecontact" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the conatct." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif">
+                                                <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatecontact" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif @if(empty($nomineeDetails)) data-parsley-required  @endif data-parsley-required-message="Please enter the conatct." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif">
 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatecontact'])){{ $nomineeDetails['txcertificatecontact'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Telephone <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="tel" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatetelephone" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif">
+                                                <input type="tel" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificatetelephone" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif @if(empty($nomineeDetails)) data-parsley-required  @endif data-parsley-required-message="Please enter the telephone." data-parsley-type="number" data-parsley-minlength="10" data-parsley-minlength-message="The telephone number must be atleast 10 characters long!" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif">
 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificatetelephone'])){{ $nomineeDetails['txcertificatetelephone'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Email Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="email" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificateemail" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the email." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif">
+                                                <input type="email" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="txcertificateemail" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif @if(empty($nomineeDetails)) data-parsley-required  @endif data-parsley-required-message="Please enter the email." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif">
 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateemail'])){{ $nomineeDetails['txcertificateemail'] }}@endif</div>
                                             </div>
@@ -468,7 +468,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <textarea id="" cols="30" rows="3" name="txcertificateaddress" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</textarea>
+                                                <textarea id="" cols="30" rows="3" name="txcertificateaddress" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" @if(!empty($nomineeDetails) && $taxCertificateSentTo !='yourself') data-parsley-required  @endif @if(empty($nomineeDetails)) data-parsley-required  @endif data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</textarea>
 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['txcertificateaddress'])){{ $nomineeDetails['txcertificateaddress'] }}@endif</div>
                                             </div>
@@ -1042,9 +1042,14 @@
                                                     @php
                                                     $dataParsley = '';
                                                     $completionClasses = '';
+                                                    $readonlyInp = '';
                                                     if(!empty($nomineeDetails) && (isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no')){
                                                         $dataParsley = 'data-parsley-required';
                                                         $completionClasses = 'completion_status text-input-status';
+                                                    }
+
+                                                    if(!empty($nomineeDetails) && (isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='yes')){
+                                                        $readonlyInp = 'readonly';
                                                     }
 
                                                     if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!=''){
@@ -1055,7 +1060,7 @@
                                                     @endphp
 
                                                     <label for="">Deposit Amount</label>
-                                                    <input type="text" class="form-control bank-input {{ $completionClasses }} editmode @if($mode=='view') d-none @endif" id="" name="subscriptioninvamntbank" placeholder="" {{ $dataParsley }} data-parsley-required-message="Please enter the deposite amount." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!='') readonly @endif>
+                                                    <input type="text" {{ $readonlyInp }} class="form-control bank-input  {{ $completionClasses }} editmode @if($mode=='view') d-none @endif" id="" name="subscriptioninvamntbank" placeholder="" {{ $dataParsley }} data-parsley-required-message="Please enter the deposite amount." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq']) && $nomineeDetails['subscriptioninvamntcheq']!='') readonly @endif>
                                                     <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank'])){{ $nomineeDetails['subscriptioninvamntbank'] }}@endif</div>
                                                 </div>
                                             </div>
@@ -1063,7 +1068,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Expected Date of Bank Transfer</label>
-                                                <input type="text" class="form-control datepicker bank-input text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
+                                                <input type="text" {{ $readonlyInp }} class="form-control datepicker bank-input text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="subscriptiontransferdate" placeholder="" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif">
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptiontransferdate'])){{ $nomineeDetails['subscriptiontransferdate'] }}@endif</div>
                                             </div>
                                         </div>
@@ -1087,8 +1092,10 @@
                                                         $completionClasses = '';
                                                     }
 
+                                                    
+
                                                     @endphp
-                                                    <input type="number" name="subscriptioninvamntcheq" class="form-control bank-input {{ $completionClasses }} editmode @if($mode=='view') d-none @endif" id="" placeholder=""  {{ $dataParsley }} data-parsley-required-message="Please enter the cheque." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank']) && $nomineeDetails['subscriptioninvamntbank']!='') readonly @endif>
+                                                    <input type="number" {{ $readonlyInp }} name="subscriptioninvamntcheq" class="form-control bank-input {{ $completionClasses }} editmode @if($mode=='view') d-none @endif" id="" placeholder=""  {{ $dataParsley }} data-parsley-required-message="Please enter the cheque." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntbank']) && $nomineeDetails['subscriptioninvamntbank']!='') readonly @endif>
                                                     <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptioninvamntcheq'])){{ $nomineeDetails['subscriptioninvamntcheq'] }}@endif</div>
                                                 </div>
                                             </div>
@@ -1143,7 +1150,7 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Reference: <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control completion_status text-input-status bank-input editmode @if($mode=='view') d-none @endif" id="" name="subscriptionreffnamelname" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the reference." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif">
+                                                    <input type="text" {{ $readonlyInp }} class="form-control completion_status text-input-status bank-input editmode @if($mode=='view') d-none @endif" id="" name="subscriptionreffnamelname" placeholder="" @if(!empty($nomineeDetails) && isset($nomineeDetails['transfer_at_later_stage']) && $nomineeDetails['transfer_at_later_stage'] =='no') data-parsley-required @endif data-parsley-required-message="Please enter the reference." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif">
                                                     
                                                     <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['subscriptionreffnamelname'])){{ $nomineeDetails['subscriptionreffnamelname'] }}@endif</div>
                                                     <small class="form-text text-muted">First and Last Name</small>

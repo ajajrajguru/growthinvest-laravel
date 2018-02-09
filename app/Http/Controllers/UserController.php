@@ -208,7 +208,7 @@ class UserController extends Controller
         }
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
-        return redirect(url('backoffice/user/' . $giCode . '/step-one'));
+        return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));
 
     }
 
@@ -243,7 +243,7 @@ class UserController extends Controller
         $data['companyDescription'] = getCompanyDescription();
         $data['firms']              = $firms;
         $data['breadcrumbs']        = $breadcrumbs;
-        $data['pageTitle']          = 'Add User';
+        $data['pageTitle']          = 'Edit User';
         $data['mode']               = 'view';
         return view('backoffice.user.step-one')->with($data);
 
@@ -277,7 +277,7 @@ class UserController extends Controller
         $data['sources']            = getSource();
 
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'Add User';
+        $data['pageTitle']   = 'Edit User';
         $data['mode']        = 'view';
         return view('backoffice.user.step-two')->with($data);
 
@@ -291,7 +291,7 @@ class UserController extends Controller
         $giCode = $requestData['gi_code'];
         if ($giCode == '') {
             Session::flash('error_message', 'Intermediary Registration Has Been Successfully Updated.');
-            return redirect(url('backoffice/user/add/step-one'));
+            return redirect(url('backoffice/user/add/intermediary-registration'));
         } else {
             $user = User::where('gi_code', $giCode)->first();
         }
@@ -346,7 +346,7 @@ class UserController extends Controller
         $userData->save();
 
         Session::flash('success_message', 'User details saved successfully.');
-        return redirect(url('backoffice/user/' . $giCode . '/step-two'));
+        return redirect(url('backoffice/user/' . $giCode . '/intermediary-profile'));
     }
 
     public function exportUsers()

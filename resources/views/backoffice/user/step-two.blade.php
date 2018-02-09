@@ -24,7 +24,7 @@
 
         <ul class="progress-indicator my-5">
             <li class="completed">
-                <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">Intermediary Registration</a>
+                <a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}">Intermediary Registration</a>
                 <span class="bubble"></span>
             </li>
             <li class="active">
@@ -36,7 +36,7 @@
         <div class="profile-content px-md-4 px-sm-0">
 
 
-        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
+        <a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
 
 
             <div class="d-flex justify-content-between">
@@ -441,7 +441,7 @@
 
                 <div class="d-flex justify-content-between">
                     <div class="">
-                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-outline-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
+                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}" class="btn btn-outline-primary mt-3"><i class="fa fa-angle-double-left"></i>Prev</a>
                     </div>
                     <div class="">
                         <button type="submit" class="btn btn-primary mt-3 editmode @if($mode=='view') d-none @endif">Save</button>

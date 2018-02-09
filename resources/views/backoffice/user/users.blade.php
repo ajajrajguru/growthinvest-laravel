@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="float-right">
-                        <a href="{{ url('backoffice/user/add/step-one')}}" class="btn btn-primary">Add User</a>
+                        <a href="{{ url('backoffice/user/add/intermediary-registration')}}" class="btn btn-primary">Add User</a>
                         <a href="{{ url('backoffice/user/export-users')}}" class="btn btn-outline-primary">Download CSV</a>
 
                     </div>
@@ -80,7 +80,7 @@
                         @foreach($users as $user)
                             <tr >
 
-                                <td><b><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">{{  title_case($user->first_name.' '.$user->last_name) }}</a></b></td>
+                                <td><b><a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}">{{  title_case($user->first_name.' '.$user->last_name) }}</a></b></td>
                                 <td class="toggle-mob">{{  $user->email }}</td>
                                 <td class="toggle-mob">{{ title_case($user->roles()->pluck('display_name')->implode(' ')) }} </td>
                                 <td>@if(!empty($user->firm)) <a href="{{ url('backoffice/firms/'.$user->firm->gi_code.'/')}}" target="_blank">{{  $user->firm->name  }}</a> @endif</td>
@@ -89,7 +89,7 @@
                                     <option>--select--</option>
                                     <option value="edit-intermediary">Edit Profile</option>
                                     </select> -->
-                                    <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">View Profile</a>
+                                    <a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}">View Profile</a>
                                 </td>
 
                             </tr>

@@ -25,10 +25,10 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::resource('firm', 'FirmController');
 
     //users
-    Route::get('user/add/step-one', 'UserController@addUserStepOne');
-    Route::get('user/{giCode}/step-one', 'UserController@userStepOneData');
+    Route::get('user/add/intermediary-registration', 'UserController@addUserStepOne');
+    Route::get('user/{giCode}/intermediary-registration', 'UserController@userStepOneData');
     Route::post('user/save-step-one', 'UserController@saveUserStepOne');
-    Route::get('user/{giCode}/step-two', 'UserController@userStepTwoData');
+    Route::get('user/{giCode}/intermediary-profile', 'UserController@userStepTwoData');
     Route::post('user/save-step-two', 'UserController@saveUserStepTwo');
     Route::get('user/export-users', 'UserController@exportUsers');
     Route::get('user/{usertype}', 'UserController@getUsers');

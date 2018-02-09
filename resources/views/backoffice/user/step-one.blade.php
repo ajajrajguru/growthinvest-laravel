@@ -37,7 +37,7 @@
                 <span class="bubble"></span>
             </li>
             <li>
-                <a href="{{ ($user->id) ? url('backoffice/user/'.$user->gi_code.'/step-two'): 'javascript:void(0)'}}">Intermediary Profile</a>
+                <a href="{{ ($user->id) ? url('backoffice/user/'.$user->gi_code.'/intermediary-profile'): 'javascript:void(0)'}}">Intermediary Profile</a>
                 <span class="bubble"></span>
             </li>
         </ul>
@@ -623,7 +623,7 @@
                         </button>
                     </div>
                     @if($user->id)
-                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-two')}}" class="btn btn-outline-primary mt-2 ">Next <i class="fa fa-angle-double-right"></i></a>
+                        <a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-profile')}}" class="btn btn-outline-primary mt-2 ">Next <i class="fa fa-angle-double-right"></i></a>
                     @endif
                 </div>
 
