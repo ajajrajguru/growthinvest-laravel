@@ -51,7 +51,8 @@
             </div>
 
             <div class="col-sm-9 p-4 border border-gray">
-            <div class="card-header text-white bg-primary font-weight-medium mb-3">Contact Information</div>
+            <!-- <div class="card-header text-white bg-primary font-weight-medium mb-3">Contact Information</div> -->
+            <div><h5 class="text-primary">Contact Information</h5></div><hr class="mt-0">
                 <div class="row">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Profile Picture</label>
@@ -92,8 +93,8 @@
 
                 <div class="row align-items-end">
                     <div class="col-sm-6 mb-4">
+                        <div><span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='yes')? 'Yes' :'No' }}</span></div>
                         <label class="font-weight-medium">Are you a UK FCA regulated individual?</label>
-                        <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='yes')? 'Yes' :'No' }}</span>
                     </div>
                     <div class="col-sm-6 mb-4">
                         <div class="word-break text-large text-dark"> @if ($user->contact_registration_number) {{ $user->contact_registration_number}} @else <span class="text-muted text-small">N/A</span> @endif</div>
@@ -114,7 +115,8 @@
                 @endif
                 
                 @if($user->isCompanyWealthManager())
-                <div class="card-header text-white bg-primary font-weight-medium mb-3">Company Information</div>
+                <!-- <div class="card-header text-white bg-primary font-weight-medium mb-3">Company Information</div> -->
+                <div class="mt-3"><h5 class="text-primary">Company Information</h5></div><hr class="mt-0">
 
                 <div class="row mb-4">
                     <div class="col-sm-4 text-center">
