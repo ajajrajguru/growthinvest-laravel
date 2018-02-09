@@ -266,7 +266,7 @@ class User extends Authenticatable
         if (!empty($nomineeApplication)) {
             $investorFai = $nomineeApplication->chargesfinancial_advisor_details;
         } else {
-            $investorFai = $investor->userFinancialAdvisorInfo();
+            $investorFai = $this->userFinancialAdvisorInfo();
             $investorFai = (!empty($investorFai)) ? $investorFai->data_value : [];
 
         }
@@ -286,10 +286,10 @@ class User extends Authenticatable
 
         $user_info['avatar_id']               = '';
         $user_info['avatar']                  = '';
-        $user_info['nomineeapplication_info'] = $nomineeApplication->details;
-        $user_info['nomineeapplication_info']['areuspersonal'] = $nomineeApplication->is_us_person;
-        $user_info['nomineeapplication_info']['verified'] = $nomineeApplication->id_verification_status;
-        $user_info['nomineeapplication_info']['sendtaxcertificateto'] = $nomineeApplication->tax_certificate_sent_to;
+        $user_info['nomineeapplication_info'] = (!empty($nomineeApplication)) ? $nomineeApplication->details : [];
+        $user_info['nomineeapplication_info']['areuspersonal'] = (!empty($nomineeApplication)) ?  $nomineeApplication->is_us_person : '';
+        $user_info['nomineeapplication_info']['verified'] =(!empty($nomineeApplication)) ?   $nomineeApplication->id_verification_status : '';
+        $user_info['nomineeapplication_info']['sendtaxcertificateto'] = (!empty($nomineeApplication)) ?  $nomineeApplication->tax_certificate_sent_to : '';
 
         // //get the signature attachment id and url
         // if (isset($user_info['nomineeapplication_info']['signatureimgid'])) {
@@ -306,7 +306,7 @@ class User extends Authenticatable
         // }
 
 
-        $user_info["chargesfinancial_advisor_info"] = $nomineeApplication->chargesfinancial_advisor_details;
+        $user_info["chargesfinancial_advisor_info"] = (!empty($nomineeApplication)) ? $nomineeApplication->chargesfinancial_advisor_details:[];
 
         $user_info["financial_advisor_info"] = [];
 

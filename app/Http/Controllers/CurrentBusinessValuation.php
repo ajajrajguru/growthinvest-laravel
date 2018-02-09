@@ -139,7 +139,7 @@ class CurrentBusinessValuation extends Controller
         $firm_investors_str = implode(',', $firm_investors);
         //print_r($firm_investors_str);
 
-        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish', 'round' => '1']);
+        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish', 'round' => '1','type'=>'proposal']);
 
         $cap_proposalstatus = [];
         if (!$logged_in_user->can('manage_options')) {
@@ -297,9 +297,6 @@ class CurrentBusinessValuation extends Controller
 
     }
 
-
-
-
     public function exportCurentValuations(Request $request)
     {
 
@@ -311,38 +308,33 @@ class CurrentBusinessValuation extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filter_business_listings = $this->getFilteredBusinessListings($filters, 0, 0, $orderDataBy);
-        $business_listings        = $filter_business_listings['list'];
+        $filter_current_valuations = $this->getFilteredCurrentValuations($filters, 0, 0, $orderDataBy);
+        $current_valuations        = $filter_current_valuations['list'];
 
         $fileName = 'all_current_business_valuations_as_on_' . date('d-m-Y');
         //  $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm', 'Business Proposals', 'Registered Date', 'Source'];
-        $header = ['Platform GI Code', 'Proposal/Fund Name', 'Due Diligence', 'Round', 'Type', 'Entrepreneur Email ID',
-            'Firm Name', 'To Raise', 'Site Wide Funded Amount', 'Site Wide Added to Watchlist', 'Site Wide Pledged Amount',
-            'Firm Wide Funded Amount', 'Firm Wide Added to Watchlist', 'Firm Wide Pledged Amount', 'Status'];
+        $header = ['Platform GI Code', 'Proposal Name', 'Proposal Round', 'Status', 'Created Date',
+            'Total Valuation', 'Share Price'];
         $userData = [];
 
-        foreach ($business_listings as $business_listing) {
+        foreach ($current_valuations as $current_valuation) {
 
-            $round_ordinal      = get_ordinal_number($business_listing->round);
+            $round_ordinal      = get_ordinal_number($current_valuation->round);
             $display_round      = ($round_ordinal != '') ? $round_ordinal . " Round" : "";
-            $biz_status_display = $this->getDisplayBusinessStatus($business_listing->business_status);
+            $biz_status_display = $this->getDisplayBusinessStatus($current_valuation->business_status);
+            $proposal_valuation = json_decode($current_valuation->proposal_valuation);
 
-            $userData[] = [$business_listing->gi_code,
-                title_case($business_listing->business_title),
-                $business_listing->approver,
+            $shareprice     = isset($proposal_valuation->shareprice) ? $proposal_valuation->shareprice : '';
+            $totalvaluation = isset($proposal_valuation->totalvaluation) ? $proposal_valuation->totalvaluation : '';
+
+            $userData[] = [$current_valuation->gi_code,
+                title_case($current_valuation->business_title),
+
                 $display_round,
-                $business_listing->type,
-                $business_listing->bo_email,
-                $business_listing->firm_name,
-                $business_listing->target_amount,
-                $business_listing->bi_invested,
-                $business_listing->watch_list,
-                $business_listing->bi_pledged,
-                $business_listing->bi_invested_in_firm,
-                $business_listing->my_watch_list,
-                $business_listing->bi_pledged_in_firm,
                 $biz_status_display,
-
+                $current_valuation->created_at,
+                $totalvaluation,
+                $shareprice
             ];
 
         }

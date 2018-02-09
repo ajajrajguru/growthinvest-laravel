@@ -55,36 +55,43 @@
                         <div class="col-md-3">
                             <div>
                                 <label for="">Company</label>
-                                <input type="text" class="form-control">
+                                <select name="company" class="form-control">
+                                  <option value="">All</option>
+                                  @foreach($companyNames as $companyName)
+                                    <option value="{{ $companyName->id }}">{{ ucfirst($companyName->title) }}</option>
+                                  @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
                                 <label for="">Sector</label>
-                                <select name="" id="" class="form-control">
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                                    <option value="">3</option>
+                                <select name="sector" id="" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach($sectors as $sector)
+                                    <option value="{{ $sector->name }}">{{ ucfirst($sector->name) }}</option>
+                                  @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
                                 <label for="">Type</label>
-                                <select name="" id="" class="form-control">
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                                    <option value="">3</option>
+                                <select name="type" id="" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="proposal">Single Company</option>
+                                    <option value="fund">Fund</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
                                 <label for="">Manager</label>
-                                <select name="" id="" class="form-control">
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                                    <option value="">3</option>
+                                <select name="manager" id="" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach($managers as $manager)
+                                    <option value="{{ $manager }}">{{ ucfirst($manager) }}</option>
+                                  @endforeach
                                 </select>
                             </div>
                         </div>
@@ -93,34 +100,34 @@
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
                         <div>
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" class="custom-control-input" id="ch3">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="eis" id="ch3">
                               <label class="custom-control-label" for="ch3">EIS</label>
                             </div>
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" class="custom-control-input" id="ch4">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="seis" id="ch4">
                               <label class="custom-control-label" for="ch4">SEIS</label>
                             </div>
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" class="custom-control-input" id="ch5">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="vct" id="ch5">
                               <label class="custom-control-label" for="ch5">VCT</label>
                             </div>
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" class="custom-control-input" id="ch6">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="iht" id="ch6">
                               <label class="custom-control-label" for="ch6">BR</label>
                             </div>
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" class="custom-control-input" id="ch7">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="sitr" id="ch7">
                               <label class="custom-control-label" for="ch7">SITR</label>
                             </div>
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" class="custom-control-input" id="ch8">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="all" id="ch8">
                               <label class="custom-control-label" for="ch8">ALL</label>
                             </div>
                         </div>
 
                         <div class="mt-3 mt-sm-0">
-                            <a href="" class="btn btn-primary mr-3">Save</a>
-                            <a href="" class="btnb btn-default">Reset</a>
+                            <button class="btn btn-primary mr-3 apply-invest-filters">Apply</button>
+                            <button class="btnb btn-default reset-invest-filters">Reset</button>
                         </div>
                     </div>
                 </div>
@@ -229,7 +236,7 @@
 </div>
  
     <style type="text/css">
-        #datatable-investors_filter{
+        #datatable-investor-invest_filter{
             visibility: hidden;
         }
     </style>

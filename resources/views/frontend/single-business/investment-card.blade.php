@@ -37,10 +37,12 @@
 			al++;
 			}
 			 
-			var bar=setInterval(progressBar,50);
+			var bar=setInterval(progressBar,{{$bi_fund_raised_percentage}});
 			</script>
 			<!-- /canvas -->
+
 			<ul class="list-unstyled">
+				@if($type=="proposal")
 				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Investment Sought</strong></div>
 					<div>{{format_amount($bi_investment_sought, 0, true, true)}}</div>
@@ -73,6 +75,46 @@
 					<div><strong>Post Money Valuation</strong></div>
 					<div>{{$proposal_details['post-money-valuation']==""?"-":format_amount($proposal_details['post-money-valuation'], 0, true, true) }}</div>
 				</li>
+				@elseif($type=="fund")
+
+				<li class="d-flex justify-content-between">
+					<div><strong>Fund Name</strong></div>
+					<div>{{$title}}</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Investment Focus</strong></div>
+					<div>{{$investment_objective}}</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Fund Tax Status</strong></div>
+					<div>
+						@foreach($tax_status as $t_status)
+							{{$t_status}},
+						@endforeach
+					</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Fund Status</strong></div>
+					<div>{{format_amount($bi_pledged, 0, true, true)}}</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Minimum Investment</strong></div>
+					<div>{{format_amount($minimum_investment, 0, true, true)}}</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Initial Charge</strong></div>
+					<div>-</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Annual Management Charge</strong> <a href=""><i class="fa fa-info-circle"></i></a></div>
+					<div>-</div>
+				</li>
+				<li class="d-flex justify-content-between">
+					<div><strong>Maximum Fund Size</strong></div>
+					<div>{{format_amount($maximum_investment, 0, true, true)}}</div>
+				</li>
+
+				@endif
 				
 			</ul>
 		</div>
