@@ -32,8 +32,8 @@
     <hr> -->
 
     
-    <div class="por">
-    <a href="{{ route('users.create') }}" class="btn btn-primary poa" style="top: 0; right: 0;">Add User</a>
+    <div class="position-relative">
+    <a href="{{ route('users.create') }}" class="btn btn-primary position-absolute" style="top: 0; right: 0;">Add User</a>
     <div class="table-responsive">
         <table id="userAdmin" class="table table-hover table-solid-bg">
 
