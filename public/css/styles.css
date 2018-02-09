@@ -160,6 +160,9 @@ header.sticky {
 .poa {
   position: absolute !important;
 }
+.col-xs-12 {
+  width: 100%;
+}
 body {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 0.9rem;
