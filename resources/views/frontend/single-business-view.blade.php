@@ -480,11 +480,13 @@
 
 			<div class="tab-pane p-3" id="other-rounds" role="tabpanel">
 				<!-- test -->
-				<div class="row border proposal_horizontal-card">
-					<div class="col-sm-8 proposal-details">
-						<div class="media h-100">
-							<div class="proposal-logo align-self-center mr-3 text-center text-sm-left mt-3 mt-sm-0">
-								<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+				<div class="row border proposal_horizontal-car">
+					<div class="col-sm-8 proposal-details border-sm-right border-right-0">
+						<div class="media h-100 flex-wrap flex-sm-nowrap">
+							<div class="proposal-logo align-self-center mr-sm-3 mt-3 mt-sm-0 width-xs-100">
+								<div class="mw-60 mh-60 m-auto">
+									<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+								</div>
 							</div>
 							<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
 						    	<div class="w-100">
@@ -492,15 +494,15 @@
 						    			<a href="">lorem ipsum dollar crudeo</a>
 						    		</p>
 						    		<div class="row additional-info">
-						    			<div class="col-sm-4 text-center">
+						    			<div class="col-sm-4 text-center border-sm-right border-right-0 py-3 py-sm-0">
 						    				<strong class="text-primary">7</strong>
 						    				<div>Added to watchlist</div>
 						    			</div>
-						    			<div class="col-sm-4 text-center">
+						    			<div class="col-sm-4 text-center border-sm-right border-right-0">
 						    				<strong class="text-primary">0</strong>
 						    				<div>Pledgers</div>
 						    			</div>
-						    			<div class="col-sm-4 text-center">
+						    			<div class="col-sm-4 text-center pt-3 pt-sm-0">
 						    				<strong class="text-primary">4</strong>
 						    				<div>Investors</div>
 						    			</div>
@@ -519,44 +521,7 @@
 					</div>
 				</div>
 
-				<div class="row border proposal_horizontal-card">
-					<div class="col-sm-8 proposal-details">
-						<div class="media h-100">
-							<div class="proposal-logo align-self-center mr-3 text-center text-sm-left mt-3 mt-sm-0">
-								<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
-							</div>
-							<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
-						    	<div class="w-100">
-						    		<p class="text-center text-sm-left">
-						    			<a href="">lorem ipsum dollar crudeo</a>
-						    		</p>
-						    		<div class="row additional-info">
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">7</strong>
-						    				<div>Added to watchlist</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">0</strong>
-						    				<div>Pledgers</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">4</strong>
-						    				<div>Investors</div>
-						    			</div>
-						    		</div>
-						    	</div>
-						  </div>
-						</div>
-					</div>
-					<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
-						<div class="view-proposal">
-							<p class="mb-1">1st Round</p>
-							<p class="mb-1">Total Investment: <span class="text-primary">&pound; 998</span></p>
-							<p>Number of Questions: <span class="text-primary">0</span></p>
-							<a href="" class="btn btn-primary">View Proposal</a>
-						</div>
-					</div>
-				</div>
+				
 				<!-- /test -->
 			</div>
 
@@ -624,7 +589,7 @@
 								 			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0 mw-150 mh-150">
 								 				<img class="img-fluid m-sm-auto m-sm-block" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
 								 			</div>
-								 			<div class="media-body flex-basis-100">
+								 			<div class="media-body flex-basis-xs-100">
 								 		    	<h5 class="mt-0">{{$member['name']}} <small class="designation">({{$member['position']}})</small></h5>
 								 		    	<p class="bio">@if($member['bio']=="")  <p  class="bio text-danger" >No Information Provided</p>  @endif 
 								 		    	@if($member['bio']!="")

@@ -77,15 +77,22 @@
 }
 
 @media (max-width: 767px) {
-	.width-sm-100 {
+	.width-xs-100 {
 		width: 100%;
 	}
 
-	.flex-basis-100 {
-		width: 100%;
+	.flex-basis-xs-100 {
+		flex-basis: 100%;
 	}
 }
 
 .col-xs-12 {
 	width: 100%;
+}
+
+
+@media (min-width: 576px) {
+	.border-sm-right {
+		border-right: 1px solid #dee2e6 !important;
+	}
 }
