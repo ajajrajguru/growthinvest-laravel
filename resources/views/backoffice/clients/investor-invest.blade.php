@@ -69,7 +69,7 @@
                                 <select name="sector" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($sectors as $sector)
-                                    <option value="{{ $sector->name }}">{{ ucfirst($sector->name) }}</option>
+                                    <option value="{{ $sector->id }}">{{ ucfirst($sector->name) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -79,8 +79,9 @@
                                 <label for="">Type</label>
                                 <select name="type" id="" class="form-control">
                                     <option value="">All</option>
-                                    <option value="proposal">Single Company</option>
-                                    <option value="fund">Fund</option>
+                                    @foreach($investmentOfferType as $typeKey => $type)
+                                    <option value="{{ $typeKey }}">{{ $type }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -99,29 +100,15 @@
 
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
                         <div>
+                          @foreach(investmentTaxStatus() as $taxStatus => $taxStatusVal)
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="eis" id="ch3">
-                              <label class="custom-control-label" for="ch3">EIS</label>
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="{{ $taxStatus }}" id="che{{ $taxStatus }}">
+                              <label class="custom-control-label" for="che{{ $taxStatus }}">{{ $taxStatusVal }}</label>
                             </div>
+                          @endforeach
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="seis" id="ch4">
-                              <label class="custom-control-label" for="ch4">SEIS</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="vct" id="ch5">
-                              <label class="custom-control-label" for="ch5">VCT</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="iht" id="ch6">
-                              <label class="custom-control-label" for="ch6">BR</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="sitr" id="ch7">
-                              <label class="custom-control-label" for="ch7">SITR</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="all" id="ch8">
-                              <label class="custom-control-label" for="ch8">ALL</label>
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input checked-all" value="all" id="chall">
+                              <label class="custom-control-label" for="chall">ALL</label>
                             </div>
                         </div>
 

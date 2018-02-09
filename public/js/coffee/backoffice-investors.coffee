@@ -650,6 +650,18 @@ $(document).ready ->
 
     ])
 
+
+  
+  $('body').on 'change', 'input[name="tax_status[]"]', ->
+    if $(this).is(':checked') && $(this).val()=='all'
+      $('input[name="tax_status[]"]').prop('checked',false).attr('disabled',true)
+      $(this).prop('checked',true).attr('disabled',false)
+    else
+      $('input[name="tax_status[]"]').attr('disabled',false)
+
+
+
+
   $('body').on 'click', '.alter-table', ->
     $('.invest-cols').each ->
       colIndex = $(this).val()

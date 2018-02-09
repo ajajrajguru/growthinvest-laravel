@@ -2376,6 +2376,7 @@ class InvestorController extends Controller
 
         $data['investor']         = $investor;
         $data['companyNames'] = (!empty($companyNames)) ? $companyNames : [];
+        $data['investmentOfferType'] = investmentOfferType();
         $data['sectors']          = $sectors;
         $data['managers']         = $managers;
         $data['breadcrumbs']      = $breadcrumbs;
@@ -2419,6 +2420,7 @@ class InvestorController extends Controller
         $filterBusinessListing = $this->getFilteredBusinessListing($filters, $skip, $length, $orderDataBy);
         $businessListings      = $filterBusinessListing['list'];
         $totalBusinessListings = $filterBusinessListing['totalBusinessListings'];
+        $investmentOfferType = investmentOfferType();
 
         $businessListingData = [];
 
@@ -2428,7 +2430,7 @@ class InvestorController extends Controller
                 'offer'       => '<a href="">' . ucfirst($businessListing->title) . '</a>',
                 'manager'     => ucfirst($businessListing->manager),
                 'tax_status'  => $businessListing->tax_status,
-                'type'        => ucfirst($businessListing->type),
+                'type'        => (isset($investmentOfferType[$businessListing->type])) ? ucfirst($investmentOfferType[$businessListing->type]) : '',
                 'focus'       => $businessListing->investment_objective,
                 'taget_raise' => $businessListing->target_amount,
                 'min_inv'     => $businessListing->minimum_investment,
@@ -2456,7 +2458,7 @@ class InvestorController extends Controller
 
         $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->where('business_listings.invest_listing', 'yes')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id');
-        })->whereIn('business_investments.status', ['pledged', 'funded'])->groupBy('business_listings.id');
+        })->whereIn('business_investments.status', ['pledged', 'funded']);
 
  
         if (isset($filters['company']) && $filters['company'] != "") {
@@ -2464,7 +2466,9 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['sector']) && $filters['sector'] != "") {
-             $businessListingQuery->where('business_listings.investment_objective', $filters['sector']);
+             $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
+                $join->on('business_listings.id', 'business_has_defaults.business_id');
+            })->where('business_has_defaults.default_id', $filters['sector']);
         }
 
         if (isset($filters['type']) && $filters['type'] != "") {
@@ -2476,10 +2480,15 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
-          
             $taxStatus = $filters['tax_status'];
             $taxStatus = explode(',', $taxStatus);
             $taxStatus = array_filter($taxStatus); 
+            
+            if(in_array('all', $taxStatus))
+            {
+                $taxStatus = array_keys(investmentTaxStatus()); 
+            }
+     
             // $taxStatus = json_encode($taxStatus);
             // echo "JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )";
             // $businessListingQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status->status, '".$taxStatus."' )");   
@@ -2500,7 +2509,9 @@ class InvestorController extends Controller
                 
             });
         }
-      
+        
+        $businessListingQuery->groupBy('business_listings.id');
+
         foreach ($orderDataBy as $columnName => $orderBy) {
             $businessListingQuery->orderBy($columnName, $orderBy);
         }
