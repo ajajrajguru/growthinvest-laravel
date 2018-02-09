@@ -35,8 +35,8 @@
     <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h3>
     <hr> -->
 
-    <div class="por">
-    <a href="{{ URL::to('roles/create') }}" class="btn btn-primary poa" style="top: 0; right: 0;">Add Role</a>
+    <div class="position-relative">
+    <a href="{{ URL::to('roles/create') }}" class="btn btn-primary position-absolute" style="top: 0; right: 0;">Add Role</a>
     <div class="table-responsive">
         <table id="rolesTable" class="table table-hover table-solid-bg" style="word-break: break-all;">
             <thead>
