@@ -319,6 +319,9 @@ a:hover {
   -webkit-transition: width 0.4s;
           transition: width 0.4s;
 }
+.squareline-tabs .nav-tabs .nav-item .nav-link:hover:after {
+  width: 100%;
+}
 .squareline-tabs.full-width .nav-tabs .nav-item {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
