@@ -159,30 +159,32 @@
 <div class="pt-4 pb-4">
 	<div class="container">
 		<!-- tabs -->
-		<ul class="nav nav-tabs">
-			@if($type=="proposal")
-			<li class="nav-item">
-		   		<a class="nav-link active" data-toggle="tab" href="#business-idea">Business Idea</a>
-			</li>
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#financial-projections">Financial Projections</a>
-			</li>
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#company-details">Company Details</a>
-			</li>
-			@elseif($type=="fund")			
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#manageroverview">Manager Overview</a>
-			</li>
-			<li class="nav-item">
-		   		<a class="nav-link active" data-toggle="tab" href="#productoverview">Product Overview</a>
-			</li>
-			@endif
-			
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#other-rounds">Other Rounds</a>
-			</li>
-		</ul>
+		<div class="squareline-tabs">
+			<ul class="nav nav-tabs">
+				@if($type=="proposal")
+				<li class="nav-item">
+			   		<a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#business-idea">Business Idea</a>
+				</li>
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#financial-projections">Financial Projections</a>
+				</li>
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#company-details">Company Details</a>
+				</li>
+				@elseif($type=="fund")			
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#manageroverview">Manager Overview</a>
+				</li>
+				<li class="nav-item">
+			   		<a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#productoverview">Product Overview</a>
+				</li>
+				@endif
+				
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#other-rounds">Other Rounds</a>
+				</li>
+			</ul>
+		</div>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
