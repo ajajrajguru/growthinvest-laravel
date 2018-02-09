@@ -140,7 +140,7 @@ $(document).ready ->
 				{ 'data': 'comp_name' }
 				{ 'data': 'comp_desc'}
 				{ 'data': 'submitted_on' }
-				{ 'data': 'lbgr'  , "orderable": false}
+				{ 'data': 'lbgr' }
 				{ 'data': 'action' , "orderable": false}
 			]
 
