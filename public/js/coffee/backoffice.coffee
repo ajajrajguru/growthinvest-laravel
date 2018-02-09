@@ -120,6 +120,14 @@ $(document).ready ->
 		updateSerachinput(usersTable)
 		clearInput(usersTable)
 
+	if $('#userAdmin').length
+		userAdminTable = $('#userAdmin').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+		)
+
+
 	if $('#datatable-Intermediary').length
 		intermediaryTable = $('#datatable-Intermediary').DataTable(
 			"paging": false

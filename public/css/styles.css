@@ -154,6 +154,12 @@ header.sticky {
     width: 100%;
   }
 }
+.por {
+  position: relative;
+}
+.poa {
+  position: absolute !important;
+}
 body {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 0.9rem;
