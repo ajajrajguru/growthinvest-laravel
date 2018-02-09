@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
+    var addrolesTable, api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -34,7 +34,7 @@
         });
         searchField += '</select>';
       } else {
-        searchField = '<div class="input-group"> <div class="input-group-prepend pr-2"><i class="fa fa-search text-muted"></i></div> <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-secondary"></i></button>  </div> </div>';
+        searchField = '<div class="input-group"> <div class="input-group-prepend pt-2 pr-2"><i class="fa fa-search text-muted"></i></div> <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-secondary"></i></button>  </div> </div>';
       }
       $(this).closest('table').find('tr.filters td').eq($(this).index()).html(searchField);
     });
@@ -152,6 +152,14 @@
     }
     if ($('#availablePermissions').length) {
       availablePermissionstable = $('#availablePermissions').DataTable({
+        "paging": true,
+        "info": true,
+        "searching": false,
+        "ordering": false
+      });
+    }
+    if ($('#rolesTable').length) {
+      addrolesTable = $('#rolesTable').DataTable({
         "paging": true,
         "info": true,
         "searching": false,
