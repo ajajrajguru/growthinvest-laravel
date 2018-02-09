@@ -1111,6 +1111,9 @@ div.dataTables_wrapper div.dataTables_info {
 .message-board a:focus {
   outline: 0;
 }
+.carousel-with-card {
+  position: relative;
+}
 .carousel-with-card .carousel-indicators {
   display: none;
 }
