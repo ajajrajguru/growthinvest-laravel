@@ -56,7 +56,7 @@
                 <div class="row">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Profile Picture</label>
-                        <div><img src="{{ url('img/dummy/avatar.png')}}'" alt="..." class="img-thumbnail"></div>
+                        <div><img src="{{ url('img/dummy/avatar.png')}}" alt="..." class="img-thumbnail"></div>
                     </div>
                     <div class="col-sm-8">
                         <div class="row align-items-end">
@@ -84,7 +84,7 @@
                 </div>
                 
                 @if($user->isCompanyWealthManager())
-                <div class="row align-items-end">
+                <div class="row align-items-end mt-4">
                     <div class="col-sm-6">
                         <div class="word-break text-large text-dark"> @if ($user->contact_job_title) {{ $user->contact_job_title}} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">Job Title</label>
@@ -121,7 +121,7 @@
                 <div class="row mb-4">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Logo</label>
-                        <div><img src="{{ url('img/dummy/avatar.png') }}" alt="..." class="img-thumbnail"></div>
+                        <div><img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail"></div>
                     </div>
                     <div class="col-sm-8">
                         <div class="row align-items-end">
@@ -313,7 +313,7 @@
                     <div class="row">
                         <div class="col-md-3 text-center">
                             <label class="d-block">Profile Picture</label>
-                            <img src="{{ url('img/dummy/avatar.png')}}'" alt="..." class="img-thumbnail">
+                            <img src="{{ url('img/dummy/avatar.png')}}" alt="..." class="img-thumbnail">
                             @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
                             @endif
@@ -419,7 +419,7 @@
                     <div class="row">
                         <div class="col-md-3 text-center">
                             <label class="d-block">Logo</label>
-                            <img src="{{ url('img/dummy/avatar.png') }}" alt="..." class="img-thumbnail">
+                            <img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail">
                             @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
                             @endif
