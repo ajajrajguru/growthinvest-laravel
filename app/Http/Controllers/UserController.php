@@ -62,7 +62,7 @@ class UserController extends Controller
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage Backoffice"];
+        $breadcrumbs[] = ['url' => url('/backoffice/manage/manage-backoffice'), 'name' => "Manage Backoffice"];
         $breadcrumbs[] = ['url' => '', 'name' => $userTypeText];
 
         $data['roles']       = Role::where('type', 'backoffice')->pluck('display_name');

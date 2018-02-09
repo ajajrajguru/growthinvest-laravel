@@ -177,8 +177,7 @@
           }, {
             'data': 'submitted_on'
           }, {
-            'data': 'lbgr',
-            "orderable": false
+            'data': 'lbgr'
           }, {
             'data': 'action',
             "orderable": false

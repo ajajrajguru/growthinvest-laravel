@@ -69,7 +69,7 @@
                                 <select name="sector" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($sectors as $sector)
-                                    <option value="{{ $sector->name }}">{{ ucfirst($sector->name) }}</option>
+                                    <option value="{{ $sector->id }}">{{ ucfirst($sector->name) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -79,8 +79,9 @@
                                 <label for="">Type</label>
                                 <select name="type" id="" class="form-control">
                                     <option value="">All</option>
-                                    <option value="proposal">Single Company</option>
-                                    <option value="fund">Fund</option>
+                                    @foreach($investmentOfferType as $typeKey => $type)
+                                    <option value="{{ $typeKey }}">{{ $type }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -99,29 +100,15 @@
 
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
                         <div>
+                          @foreach(investmentTaxStatus() as $taxStatus => $taxStatusVal)
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="eis" id="ch3">
-                              <label class="custom-control-label" for="ch3">EIS</label>
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="{{ $taxStatus }}" id="che{{ $taxStatus }}">
+                              <label class="custom-control-label" for="che{{ $taxStatus }}">{{ $taxStatusVal }}</label>
                             </div>
+                          @endforeach
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="seis" id="ch4">
-                              <label class="custom-control-label" for="ch4">SEIS</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="vct" id="ch5">
-                              <label class="custom-control-label" for="ch5">VCT</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="iht" id="ch6">
-                              <label class="custom-control-label" for="ch6">BR</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="sitr" id="ch7">
-                              <label class="custom-control-label" for="ch7">SITR</label>
-                            </div>
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="all" id="ch8">
-                              <label class="custom-control-label" for="ch8">ALL</label>
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input checked-all" value="all" id="chall">
+                              <label class="custom-control-label" for="chall">ALL</label>
                             </div>
                         </div>
 
@@ -184,50 +171,50 @@
           <div class="modal-body m-auto d-block">
             <div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch1">
-                  <label class="custom-control-label" for="ch1">Investment Offer</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="0" id="ch_io" checked>
+                  <label class="custom-control-label" for="ch_io">Investment Offer</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch2">
-                  <label class="custom-control-label" for="ch2">Manager</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="1" id="ch_mgr" checked>
+                  <label class="custom-control-label" for="ch_mgr">Manager</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch3">
-                  <label class="custom-control-label" for="ch3">Tax Status</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="2" id="ch_ts" checked>
+                  <label class="custom-control-label" for="ch_ts">Tax Status</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch4">
-                  <label class="custom-control-label" for="ch4">Investment Type</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="3" id="ch_it" checked>
+                  <label class="custom-control-label" for="ch_it">Investment Type</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch51">
-                  <label class="custom-control-label" for="ch51">Investment Focus</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="4" id="ch_if" checked>
+                  <label class="custom-control-label" for="ch_if">Investment Focus</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch61">
-                  <label class="custom-control-label" for="ch61">Target Raise</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="5" id="ch_tr" checked>
+                  <label class="custom-control-label" for="ch_tr">Target Raise</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch71">
-                  <label class="custom-control-label" for="ch71">Min Investment</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="6" id="ch_mi" checked>
+                  <label class="custom-control-label" for="ch_mi">Min Investment</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch81">
-                  <label class="custom-control-label" for="ch81">Amount Raised (&poundl M)</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="7" id="ch_amtr" checked>
+                  <label class="custom-control-label" for="ch_amtr">Amount Raised (&poundl M)</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch91">
-                  <label class="custom-control-label" for="ch91">Invest</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="8" id="ch_inv" checked>
+                  <label class="custom-control-label" for="ch_inv">Invest</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="ch10">
-                  <label class="custom-control-label" for="ch10">Downloads</label>
+                  <input type="checkbox" class="custom-control-input invest-cols" value="9" id="ch_dwn" checked>
+                  <label class="custom-control-label" for="ch_dwn">Downloads</label>
                 </div>
             </div>
           </div>
           <div class="modal-footer">
             <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary alter-table">Save changes</button>
           </div>
         </div>
       </div>
