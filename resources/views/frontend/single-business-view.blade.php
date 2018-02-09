@@ -85,14 +85,14 @@
 						<label>BUSINESS SECTOR</label>
 						<div> 
 							@php
-							$cnt_stages_of_business = 0;
+							$cnt_business_sectors = 0;
 							@endphp
-							@foreach($stages_of_business as $stage)
-								@if($cnt_stages_of_business>0)									,
+							@foreach($business_sectors as $biz_sector)
+								@if($cnt_business_sectors>0)									,
 								@endif
-								{{$stage['name']}}
+								{{$biz_sector['name']}}
 								@php
-								$cnt_stages_of_business++;
+								$cnt_business_sectors++;
 								@endphp
 							@endforeach
 						</div>
@@ -160,6 +160,7 @@
 	<div class="container">
 		<!-- tabs -->
 		<ul class="nav nav-tabs">
+			@if($type=="proposal")
 			<li class="nav-item">
 		   		<a class="nav-link active" data-toggle="tab" href="#business-idea">Business Idea</a>
 			</li>
@@ -169,6 +170,15 @@
 			<li class="nav-item">
 		    	<a class="nav-link" data-toggle="tab" href="#company-details">Company Details</a>
 			</li>
+			@elseif($type=="fund")			
+			<li class="nav-item">
+		    	<a class="nav-link" data-toggle="tab" href="#manageroverview">Manager Overview</a>
+			</li>
+			<li class="nav-item">
+		   		<a class="nav-link active" data-toggle="tab" href="#productoverview">Product Overview</a>
+			</li>
+			@endif
+			
 			<li class="nav-item">
 		    	<a class="nav-link" data-toggle="tab" href="#other-rounds">Other Rounds</a>
 			</li>
@@ -176,8 +186,24 @@
 
 		<!-- Tab panes -->
 		<div class="tab-content">
+			<div class="tab-pane active p-3" id="productoverview" role="tabpanel">
+				<p class-"text-primary">Product Overview</p>
+				<p>{{isset($fund_productoverview)?$fund_productoverview:''}}</p>
+				<p class-"text-primary">Exit Strategy</p>
+				<p>{{isset($fundexitstrategy)?$fundexitstrategy:''}}</p>
+			</div>
+			<div class="tab-pane active p-3" id="manageroverview" role="tabpanel">
+				
+				<p>{{isset($fund_manageroverview)?$fund_manageroverview:''}}</p>
+				
+			</div>
+
+
+
+			@if($type=="proposal")
 			<div class="tab-pane active p-3" id="business-idea" role="tabpanel">
 				<!-- accordions -->
+
 				<div id="" role="tablist" class="gi-collapse">
 				  	<div class="card">
 					    <div class="card-header" role="tab" id="headingOne">
@@ -349,7 +375,7 @@
 					
 				</ol>
 			</div>
-
+			
 			<div class="tab-pane p-3" id="company-details" role="tabpanel">
 				<div class="row">
 					<div class="col-sm-4">
@@ -448,6 +474,7 @@
 					</div>
 				</div>
 			</div>
+			@endif
 
 			<div class="tab-pane p-3" id="other-rounds" role="tabpanel">
 				<!-- test -->
@@ -544,11 +571,10 @@
 			<div class="col-sm-6 col-12">
 				<div>
 					<div class="d-flex justify-content-between mb-2">
-						<p class="mb-0">Proposal Video</p>
-						<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal">link</a>
+						<p class="mb-0">Proposal Video</p>						
 					</div>
 					<video autobuffer controls class="w-100 d-block">
-					  <source id="mp4" src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">
+					  <source id="mp4" src="{{$proposal_details['video']['embed_code']}}" type="video/mp4">
 					</video>
 				</div>
 			</div>
@@ -556,10 +582,10 @@
 				<div>
 					<div class="d-flex justify-content-between mb-2">
 						<p class="mb-0">Pitch Event Video</p>
-						<a href="">link</a>
+						<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal">Your Feedback</a>
 					</div>
 					<video autobuffer controls class="w-100 d-block">
-					  <source id="mp4" src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">
+					  <source id="mp4" src="{{$proposal_details['pitch_event_video']['embed_code']}}" type="video/mp4">
 					</video>
 				</div>
 			</div>
