@@ -33,7 +33,262 @@
             </li>
         </ul>
 
-        <div class="profile-content px-md-4 px-sm-0">
+        
+
+        @if($mode=='view')
+        <div class="row no-gutters viewmode @if($mode=='edit') d-none @endif">
+            <div class="col-sm-3 p-1 p-md-4 bg-primary">
+                <div class="d-flex flex-column justify-content-between p-4">
+                    <div class="">
+                        <h4 class="mt-0 mb-4 text-white">Step 2<br> <span class="font-weight-medium">Intermediary Profile</span></h4>
+                    </div>
+                    <div class="">
+                    @if($user->id)
+                        <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm editUserBtn">Edit Details</a>
+                    @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-9 p-4 border border-gray">
+            <!-- <div class="card-header text-white bg-primary font-weight-medium mb-3">Contact Information</div> -->
+            <div><h5 class="text-primary">Contact Information</h5></div><hr class="mt-0">
+                <div class="row">
+                    <div class="col-sm-4 text-center">
+                        <label class="font-weight-medium">Profile Picture</label>
+                        <div><img src="{{ url('img/dummy/avatar.png')}}" alt="..." class="img-thumbnail"></div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="row align-items-end">
+                            <div class="col-sm-6 mb-4">
+                                <div class="word-break text-large text-dark"> @if ($user->contact_skype_id) {{ $user->contact_skype_id}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <label class="font-weight-medium">Skype ID</label>
+                            </div>
+                            <div class="col-sm-6 mb-4">
+                                <div class="word-break text-large text-dark"> @if ($user->contact_linked_in) {{ $user->contact_linked_in}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <label class="font-weight-medium">LinkedIn</label>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-end">
+                            <div class="col-sm-6 mb-4">
+                                <div class="word-break text-large text-dark"> @if ($user->contact_facebook) {{ $user->contact_facebook}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <label class="font-weight-medium">Facebook</label>
+                            </div>
+                            <div class="col-sm-6 mb-4">
+                                <div class="word-break text-large text-dark"> @if ($user->contact_twitter) {{ $user->contact_twitter}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <label class="font-weight-medium">Twitter</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                @if($user->isCompanyWealthManager())
+                <div class="row align-items-end mt-4">
+                    <div class="col-sm-6">
+                        <div class="word-break text-large text-dark"> @if ($user->contact_job_title) {{ $user->contact_job_title}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">Job Title</label>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-6 mb-4">
+                        <div><span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($intermidiatData['fca_approved']) && $intermidiatData['fca_approved']=='yes')? 'Yes' :'No' }}</span></div>
+                        <label class="font-weight-medium">Are you a UK FCA regulated individual?</label>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->contact_registration_number) {{ $user->contact_registration_number}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">If you are a regulated individual, please enter your registration number</label>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-6 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->contact_telephone) {{ $user->contact_telephone}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">Telephone - Direct Dial</label>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->contact_mobile) {{ $user->contact_mobile}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">Telephone - Mobile</label>
+                    </div>
+                </div>
+                @endif
+                
+                @if($user->isCompanyWealthManager())
+                <!-- <div class="card-header text-white bg-primary font-weight-medium mb-3">Company Information</div> -->
+                <div class="mt-3"><h5 class="text-primary">Company Information</h5></div><hr class="mt-0">
+
+                <div class="row mb-4">
+                    <div class="col-sm-4 text-center">
+                        <label class="font-weight-medium">Logo</label>
+                        <div><img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail"></div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="row align-items-end">
+                            <div class="col-sm-6">
+                                <div class="mb-4">
+                                    <div class="word-break text-large text-dark"> @if ($user->company_linkedin) {{ $user->company_linkedin}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                    <label class="font-weight-medium">LinkedIn</label>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="word-break text-large text-dark"> @if ($user->company_facebook) {{ $user->company_facebook}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                    <label class="font-weight-medium">Facebook</label>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="word-break text-large text-dark"> @if ($user->company_twitter) {{ $user->company_twitter}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                    <label class="font-weight-medium">Twitter</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-6 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->company_regulation_type) {{ $user->company_regulation_type}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">Please select your regulation type</label>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->company_reg_ind) {{ $user->company_reg_ind}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">How many Registered individuals are employed at the company ?</label>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-12 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->company_estimate_asset_under_mgt) {{ $user->company_estimate_asset_under_mgt}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">What are your current estimated Assets Under Management ?</label>
+                    </div>
+                </div>
+                
+                @php
+                if(isset($intermidiatData['interested_tax_struct'])  && !empty($intermidiatData['interested_tax_struct']))
+                    $taxStructure = explode(',',$intermidiatData['interested_tax_struct']);
+                else
+                    $taxStructure = [];
+                @endphp
+                <div class="row align-items-end">
+                    <div class="col-sm-12 mb-4">
+                        <label class="font-weight-medium">Please indicate which of the following tax structures you or your clients are interested in. (Tick all that apply)?</label>
+                        <span class="">@if(isset($intermidiatData['interested_tax_struct']) && !empty($intermidiatData['interested_tax_struct'])) {{  $intermidiatData['interested_tax_struct']  }} @endif</span>
+                    </div>
+                </div>
+
+                <div class="table-responsive my-4">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Expected number of clients this financial year (2017/18)</th>
+                                <th>Expected total value invested this financial year (2017/18)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SEIS</td>
+                                <td>
+                                <input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['seis_clients'])) ? $taxstructureInfo['seis_clients'] :'' }}" name="taxstructure[seis_clients]">
+                                <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['seis_clients'])) ? $taxstructureInfo['seis_clients'] :'' }}</span>
+                                </td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['seis_valueinvested'])) ? $taxstructureInfo['seis_valueinvested'] :'' }}" name="taxstructure[seis_valueinvested]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['seis_valueinvested'])) ? $taxstructureInfo['seis_valueinvested'] :'' }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EIS</td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['eis_clients'])) ? $taxstructureInfo['eis_clients'] :'' }}" name="taxstructure[eis_clients]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['eis_clients'])) ? $taxstructureInfo['eis_clients'] :'' }}</span>
+                                    </td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['eis_valueinvested'])) ? $taxstructureInfo['eis_valueinvested'] :'' }}" name="taxstructure[eis_valueinvested]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['eis_valueinvested'])) ? $taxstructureInfo['eis_valueinvested'] :'' }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>VCT</td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['vct_clients'])) ? $taxstructureInfo['vct_clients'] :'' }}" name="taxstructure[vct_clients]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['vct_clients'])) ? $taxstructureInfo['vct_clients'] :'' }}</span>
+                                </td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['vct_valueinvested'])) ? $taxstructureInfo['vct_valueinvested'] :'' }}" name="taxstructure[vct_valueinvested]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['vct_valueinvested'])) ? $taxstructureInfo['vct_valueinvested'] :'' }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>IHT</td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['bpr_clients'])) ? $taxstructureInfo['bpr_clients'] :'' }}" name="taxstructure[bpr_clients]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['bpr_clients'])) ? $taxstructureInfo['bpr_clients'] :'' }}</span>
+                                </td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['bpr_valueinvested'])) ? $taxstructureInfo['bpr_valueinvested'] :'' }}" name="taxstructure[bpr_valueinvested]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['bpr_valueinvested'])) ? $taxstructureInfo['bpr_valueinvested'] :'' }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>SITR</td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['sitr_clients'])) ? $taxstructureInfo['sitr_clients'] :'' }}" name="taxstructure[sitr_clients]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['sitr_clients'])) ? $taxstructureInfo['sitr_clients'] :'' }} </span>
+                                </td>
+                                <td><input type="number" class="form-control editmode @if($mode=='view') d-none @endif" value="{{ (isset($taxstructureInfo['sitr_valueinvested'])) ? $taxstructureInfo['sitr_valueinvested'] :'' }}" name="taxstructure[sitr_valueinvested]">
+                                    <span class="viewmode @if($mode=='edit') d-none @endif">{{ (isset($taxstructureInfo['seis_clients'])) ? $taxstructureInfo['sitr_valueinvested'] :'' }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-6 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->about_platform) {{ $user->about_platform}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">How did you hear about the Platform?</label>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-12 mb-4">
+                        <div class="word-break text-large text-dark"> @if ($user->additional_comments) {{ $user->additional_comments}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <label class="font-weight-medium">Additional Comments</label>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-12 mb-4 d-sm-flex">
+                        <div class="mr-0 mr-sm-3 align-self-flex-end">
+                            <label class="mb-0 d-block">Contact Preferences</label>
+                            <label class="font-weight-medium mb-0">I am happy to be contacted by:</label>
+                        </div>
+                        <div>
+                            <div class="d-inline-block mr-3">
+                                <div class="word-break text-large text-dark">{{ ($user->connect_email) ?  'Yes' : 'No' }} </div>
+                                <label class="font-weight-medium">Email</label>
+                            </div>
+                            
+                            <div class="d-inline-block mr-3">
+                                <div class="word-break text-large text-dark">{{ ($user->connect_mobile) ?  'Yes' : 'No' }} </div>
+                                <label class="font-weight-medium">Phone</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-sm-12 mb-4">
+                        <div class="form-group">
+                            <div class="word-break text-large text-dark">{{ ($user->marketing_email) ?  'Yes' : 'No' }} </div>
+                            <label class="font-weight-medium">Yes, I am happy to receive marketing emails from the platform</label>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="word-break text-large text-dark">{{ ($user->marketing_mails_partners) ?  'Yes' : 'No' }} </div>
+                            <label class="font-weight-medium">Yes, I am happy to receive marketing emails from the platform from selected partners of the platform</label>
+                        </div>
+
+                    </div>
+                </div>
+                @endif
+                
+            </div>
+        </div>
+        @endif
+
+        <div class="profile-content px-md-4 px-sm-0 editmode @if($mode=='view') d-none @endif">
 
 
         <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}" class="btn btn-outline-primary mb-4"><i class="fa fa-angle-double-left"></i> Prev</a>
@@ -44,7 +299,7 @@
                     <h5 class="mt-0">Step 2: <span class="text-primary">Intermediary Profile</span></h5>
                 </div>
                 <div class="">
-                    <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm editUserBtn">Edit Details</a>
+                    <!-- <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm editUserBtn">Edit Details</a> -->
                     <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm d-none cancelUpdateBtn">Cancel Updates</a>
                 </div>
             </div>
@@ -58,7 +313,7 @@
                     <div class="row">
                         <div class="col-md-3 text-center">
                             <label class="d-block">Profile Picture</label>
-                            <img src="{{ url('img/dummy/avatar.png')}}'" alt="..." class="img-thumbnail">
+                            <img src="{{ url('img/dummy/avatar.png')}}" alt="..." class="img-thumbnail">
                             @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
                             @endif
@@ -164,7 +419,7 @@
                     <div class="row">
                         <div class="col-md-3 text-center">
                             <label class="d-block">Logo</label>
-                            <img src="{{ url('img/dummy/avatar.png') }}" alt="..." class="img-thumbnail">
+                            <img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail">
                             @if($mode=='edit')
                             <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
                             @endif
