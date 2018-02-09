@@ -12,14 +12,28 @@
 </script>
 @endsection
 
-@section('content')
+@section('backoffice-content')
 
-<div class="container mt-5">
-    <h3><i class="fa fa-key"></i>Available Permissions
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1 class="section-title font-weight-medium text-primary mb-0">
+                <i class="fa fa-key"></i> Available Permissions
+            </h1>
+        </div>
+        <div class="col-sm-6">
+            <div class="float-right">
+                <a href="{{ route('users.index') }}" class="btn btn-link">Users</a>
+                <a href="{{ route('roles.index') }}" class="btn btn-link pull-right">Roles</a></h3>
+            </div>
+        </div>
+    </div><hr>
+
+    <!-- <h3><i class="fa fa-key"></i>Available Permissions
 
     <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
     <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a></h3>
-    <hr>
+    <hr> -->
     
     <div class="por">
     <a href="{{ URL::to('permissions/create') }}" class="btn btn-primary poa" style="top: 0; right: 0;">Add Permission</a>
