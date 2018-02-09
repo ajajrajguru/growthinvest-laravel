@@ -120,6 +120,23 @@ $(document).ready ->
 		updateSerachinput(usersTable)
 		clearInput(usersTable)
 
+	if $('#userAdmin').length
+		userAdminTable = $('#userAdmin').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+			"ordering": false
+		)
+
+	if $('#availablePermissions').length
+		availablePermissionstable = $('#availablePermissions').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+			"ordering": false
+		)
+
+
 	if $('#datatable-Intermediary').length
 		intermediaryTable = $('#datatable-Intermediary').DataTable(
 			"paging": false
@@ -132,7 +149,7 @@ $(document).ready ->
 				{ 'data': 'comp_name' }
 				{ 'data': 'comp_desc'}
 				{ 'data': 'submitted_on' }
-				{ 'data': 'lbgr'  , "orderable": false}
+				{ 'data': 'lbgr' }
 				{ 'data': 'action' , "orderable": false}
 			]
 
@@ -537,6 +554,11 @@ $(document).ready ->
 				else
 					$('.gi-danger').html "Failed to Save Valuation."
 					$('.gi-success').html ""
+
+	$('.download-current-business-valuation-csv').click ->		 
+		window.open("/backoffice/current-valuations/export-current-valuations");
+				 
+	 		 
 
 
 

@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var api, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, usersTable;
+    var api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -142,6 +142,22 @@
       updateSerachinput(usersTable);
       clearInput(usersTable);
     }
+    if ($('#userAdmin').length) {
+      userAdminTable = $('#userAdmin').DataTable({
+        "paging": true,
+        "info": true,
+        "searching": false,
+        "ordering": false
+      });
+    }
+    if ($('#availablePermissions').length) {
+      availablePermissionstable = $('#availablePermissions').DataTable({
+        "paging": true,
+        "info": true,
+        "searching": false,
+        "ordering": false
+      });
+    }
     if ($('#datatable-Intermediary').length) {
       intermediaryTable = $('#datatable-Intermediary').DataTable({
         "paging": false,
@@ -161,8 +177,7 @@
           }, {
             'data': 'submitted_on'
           }, {
-            'data': 'lbgr',
-            "orderable": false
+            'data': 'lbgr'
           }, {
             'data': 'action',
             "orderable": false
@@ -570,7 +585,7 @@
       $('#inp_totalvaluation').val(total_valuation);
       $('#currentValuationModal').modal('show');
     });
-    return $('body').on('click', '#current_valuation_save', function() {
+    $('body').on('click', '#current_valuation_save', function() {
       var business_id, share_price, total_valuation;
       total_valuation = $('#inp_totalvaluation').val();
       share_price = $('#inp_shareprice').val();
@@ -601,6 +616,9 @@
           }
         }
       });
+    });
+    return $('.download-current-business-valuation-csv').click(function() {
+      return window.open("/backoffice/current-valuations/export-current-valuations");
     });
   });
 

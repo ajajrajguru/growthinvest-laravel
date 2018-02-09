@@ -92,13 +92,13 @@ class CurrentBusinessValuation extends Controller
 
             $shareprice     = isset($proposal_valuation->shareprice) ? $proposal_valuation->shareprice : '';
             $totalvaluation = isset($proposal_valuation->totalvaluation) ? $proposal_valuation->totalvaluation : '';
-            $actionHtml     = '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="'.$business_listing->business_id.'" share-price="' . $shareprice . '" total-valuation="' . $totalvaluation . '" >Edit</button>';
+            $actionHtml     = '<button type="button" class="btn btn-primary edit_valuation" data-toggle="modal"   proposal-id="' . $business_listing->business_id . '" share-price="' . $shareprice . '" total-valuation="' . $totalvaluation . '" >Edit</button>';
 
             $business_listings_data[] = [
                 'name'            => $name_html,
                 'created_date'    => date('d/m/Y', strtotime($business_listing->created_at)),
-                'total_valuation' => "<span class='spn_totalvaluation_".$business_listing->business_id."' >".$totalvaluation."</span>",
-                'share_price'     => "<span class='spn_shareprice_".$business_listing->business_id."' >".$shareprice."<span>",
+                'total_valuation' => "<span class='spn_totalvaluation_" . $business_listing->business_id . "' >" . $totalvaluation . "</span>",
+                'share_price'     => "<span class='spn_shareprice_" . $business_listing->business_id . "' >" . $shareprice . "<span>",
                 'action'          => $actionHtml,
 
             ];
@@ -139,7 +139,7 @@ class CurrentBusinessValuation extends Controller
         $firm_investors_str = implode(',', $firm_investors);
         //print_r($firm_investors_str);
 
-        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish', 'round' => '1']);
+        $business_listings_query = BusinessListing::where(['business_listings.status' => 'publish', 'round' => '1','type'=>'proposal']);
 
         $cap_proposalstatus = [];
         if (!$logged_in_user->can('manage_options')) {
@@ -278,23 +278,70 @@ class CurrentBusinessValuation extends Controller
     public function saveCurrentValuation(Request $request)
     {
         $requestData = $request->all();
-       
 
         $current_valuation = [
             'totalvaluation' => $requestData['total_valuation'],
             'shareprice'     => $requestData['share_price'],
         ];
         $current_valuation = json_encode($current_valuation);
-       // dd($requestData);
+        // dd($requestData);
 
         $result = BusinessListing::where('id', $requestData['business_id'])
             ->update(['valuation' => $current_valuation]);
 
-         $json_data = array(
-            "status"            => $result,
-            
+        $json_data = array(
+            "status" => $result,
+
         );
         return response()->json($json_data);
+
+    }
+
+    public function exportCurentValuations(Request $request)
+    {
+
+        $data    = [];
+        $filters = $request->all();
+
+        $columnName = 'business_listings.title';
+        $orderBy    = 'asc';
+
+        $orderDataBy = [$columnName => $orderBy];
+
+        $filter_current_valuations = $this->getFilteredCurrentValuations($filters, 0, 0, $orderDataBy);
+        $current_valuations        = $filter_current_valuations['list'];
+
+        $fileName = 'all_current_business_valuations_as_on_' . date('d-m-Y');
+        //  $header   = ['Platform GI Code', 'Entrepreneur Name', 'Email ID', 'Firm', 'Business Proposals', 'Registered Date', 'Source'];
+        $header = ['Platform GI Code', 'Proposal Name', 'Proposal Round', 'Status', 'Created Date',
+            'Total Valuation', 'Share Price'];
+        $userData = [];
+
+        foreach ($current_valuations as $current_valuation) {
+
+            $round_ordinal      = get_ordinal_number($current_valuation->round);
+            $display_round      = ($round_ordinal != '') ? $round_ordinal . " Round" : "";
+            $biz_status_display = $this->getDisplayBusinessStatus($current_valuation->business_status);
+            $proposal_valuation = json_decode($current_valuation->proposal_valuation);
+
+            $shareprice     = isset($proposal_valuation->shareprice) ? $proposal_valuation->shareprice : '';
+            $totalvaluation = isset($proposal_valuation->totalvaluation) ? $proposal_valuation->totalvaluation : '';
+
+            $userData[] = [$current_valuation->gi_code,
+                title_case($current_valuation->business_title),
+
+                $display_round,
+                $biz_status_display,
+                $current_valuation->created_at,
+                $totalvaluation,
+                $shareprice
+            ];
+
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
 
     }
 

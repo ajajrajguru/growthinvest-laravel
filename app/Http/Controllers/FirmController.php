@@ -21,6 +21,7 @@ class FirmController extends Controller
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/manage/manage-backoffice'), 'name' => "Manage Backoffice"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Firm'];
 
         $data['firms']       = $firms;

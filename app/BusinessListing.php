@@ -135,6 +135,13 @@ class BusinessListing extends Model
 
     }
 
+    public function getBusinessSectorsFromDefaultAr($business_default_ar)
+    {
+        $business_sectors = $this->getDefaultFromDefaultsArByType($business_default_ar, 'business-sector');
+        return $business_sectors;
+
+    }
+
 
     public function getDisplayBusinessStatus($business_status)
     {
@@ -176,5 +183,27 @@ class BusinessListing extends Model
 
         return $businessListingQuery;
     }
+
+   /* public function getAllNextProposalRounds($firm_id)
+    {
+
+        $first             = Firm::where(['parent_id' => $firm_id])->pluck('id')->all();
+        $this->next_business_rounds = array_merge($this->next_business_rounds, $first);
+
+        if (count($first > 0)) {
+            foreach ($first as $value) {
+
+                $this->getAllNextProposalRounds($value);
+            }
+        }
+
+        /*DB::table('users')
+        ->whereIn('parent_id');
+
+        $parent_firms = Firm::where(['parent_id' => $firm_id])->orderBy('name', 'asc')->get()* /;
+        return $this->next_business_rounds;
+    }*/
+
+
 
 }

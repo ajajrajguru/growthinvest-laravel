@@ -718,6 +718,25 @@
         }
       ]
     });
+    $('body').on('change', 'input[name="tax_status[]"]', function() {
+      if ($(this).is(':checked') && $(this).val() === 'all') {
+        $('input[name="tax_status[]"]').prop('checked', false).attr('disabled', true);
+        return $(this).prop('checked', true).attr('disabled', false);
+      } else {
+        return $('input[name="tax_status[]"]').attr('disabled', false);
+      }
+    });
+    $('body').on('click', '.alter-table', function() {
+      return $('.invest-cols').each(function() {
+        var colIndex;
+        colIndex = $(this).val();
+        if ($(this).is(':checked')) {
+          return investorInvestTable.column(colIndex).visible(true);
+        } else {
+          return investorInvestTable.column(colIndex).visible(false);
+        }
+      });
+    });
     $('body').on('click', '.apply-invest-filters', function() {
       return investorInvestTable.ajax.reload();
     });
