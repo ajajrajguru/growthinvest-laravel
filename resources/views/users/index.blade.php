@@ -1,7 +1,15 @@
-{{-- \resources\views\users\index.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.backoffice')
 
 @section('title', '| Users')
+
+@section('js')
+ @parent
+
+<script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+
+<script type="text/javascript">
+</script>
+@endsection
 
 @section('content')
 
@@ -9,8 +17,12 @@
     <h3><i class="fa fa-users"></i> User Administration <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
     <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h3>
     <hr>
+
+    
+    <div class="por">
+    <a href="{{ route('users.create') }}" class="btn btn-primary poa" style="top: 0; right: 0;">Add User</a>
     <div class="table-responsive">
-        <table class="table table-hover table-striped-bg">
+        <table id="userAdmin" class="table table-hover table-striped-bg">
 
             <thead>
                 <tr>
@@ -44,8 +56,9 @@
 
         </table>
     </div>
+    </div>
 
-    <a href="{{ route('users.create') }}" class="btn btn-success">Add User</a>
+    
 
 </div>
 
