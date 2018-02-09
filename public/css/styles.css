@@ -288,6 +288,18 @@ a:hover {
   -moz-transition: width 0.4s;
   transition: width 0.4s;
 }
+.squareline-tabs .nav-tabs .nav-item .nav-link.coming-soon:before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -5px;
+  margin: auto;
+  content: '\f05e';
+  font-family: FontAwesome;
+  opacity: 0.2;
+  color: #e40000;
+  font-size: 32px;
+}
 .squareline-tabs.full-width .nav-tabs .nav-item {
   -moz-box-flex: 1;
        flex: 1;

@@ -35,7 +35,7 @@
 
                             <div class="">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-                                
+
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -80,7 +80,7 @@
                         <hr>
 
                         <h5 class="text-center">Not a GrowthInvest Client?</h5>
-                        <a href="{{ url('/register') }}" class="btn btn-primary btn-block text-uppercase">
+                        <a href="{{ url('/register') }}" class="btn btn-outline-primary btn-block text-uppercase">
                             register now!
                         </a>
 
@@ -96,7 +96,7 @@
                             </div>
                         </div> -->
 
-                        
+
                     </form>
                   </div>
                 </div>

@@ -102,7 +102,7 @@
                             font-family: 'FontAwesome';
                             position: absolute;
                             right: 15px;
-                        }   
+                        }
                     }
                 }
                 &:after {
@@ -114,14 +114,28 @@
                     width: 0;
                     height: 3px;
                     background-color: @brand-primary;
-                    
+
                     margin: auto;
                     content: '';
                     transition: width 0.4s;
                 }
-                
+
+                &.coming-soon{
+	                &:before{
+	                	position: absolute;
+	                	left: 0;
+	                	right: 0;
+	                	top: -5px;
+	                	margin: auto;
+	                	content: '\f05e';
+	                	font-family: FontAwesome;
+	                	opacity: 0.2;
+	                	color: @danger;
+	                	font-size: 32px;
+	                }
+                }
             }
-        }   
+        }
     }
     &.full-width {
         .nav-tabs {
