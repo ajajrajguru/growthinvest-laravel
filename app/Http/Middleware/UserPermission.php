@@ -46,6 +46,7 @@ class UserPermission
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-invest'                => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/get-investor-invest'                => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-news-update'           => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/save-news-update'                                 => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/delete-news-update'                               => ['view_all_investors', 'investors', 'view_investors'],
@@ -75,6 +76,7 @@ class UserPermission
                 'backoffice/business-listing/export-business-listings'        => ['view_backoffice_proposals', 'view_firm_business_proposals'],
 
                 'backoffice/current-business-valuation'                       => ['view_current_business_valuation'],
+                'backoffice/save-current-business-valuation'                  => ['view_current_business_valuation'],
                 'backoffice/business-listings/get-current-valuation-listings' => ['view_current_business_valuation'],
                 'backoffice/entrepreneur/registration'                        => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],
                 'backoffice/entrepreneur/save-registration'                   => ['introduce_business_owners_in_any_firm', 'introduce_business_owners_in_my_firm'],

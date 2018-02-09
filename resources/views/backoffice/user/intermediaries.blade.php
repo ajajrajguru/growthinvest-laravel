@@ -74,7 +74,6 @@
                     <tbody>
                         @foreach($users as $user)
                             @php
-
                             $compInfo = (!empty($user->userAdditionalInfo())) ? $user->userAdditionalInfo()->data_value : [];
                             @endphp
                             <tr >
@@ -88,8 +87,8 @@
 
                                 <td>{{ (isset($compInfo['company'])) ? title_case($compInfo['company']) : ''}} </td>
                                 <td>{{ (isset($compInfo['typeaccount']) && $compInfo['typeaccount']) ? title_case($compInfo['typeaccount']) : ''}}</td>
-                                <td>{{   date('d/m/Y', strtotime($user->created_at)) }}</td>
-                                <td>-</td>
+                                <td>{{ date('d/m/Y', strtotime($user->created_at)) }}</td>
+                                <td>{{  $user->lgbr }}</td>
                                     <td>
                                     <!-- <select data-id="78523" class="firm_actions" edit-url="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">
                                     <option>--select--</option>

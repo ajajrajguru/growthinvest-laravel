@@ -431,7 +431,7 @@
                                     <p class="mb-1 @if($mode=='view') d-none @endif">* Will be correspondence address if filled out</p>
                                     <p class="@if($mode=='view') d-none @endif">** If you have indicated that you would like your Accountant or Financial Adviser to receive your EIS Certificates please provide their details below:</p>
 
-                                    <div class="row sendtaxcertificateto-yourself @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') d-none  @endif @if(empty($nomineeDetails)) d-none  @endif">
+                                    <div class="row sendtaxcertificateto-yourself @if(!empty($nomineeDetails) && $taxCertificateSentTo =='yourself') d-none  @endif ">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Firm Name <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
@@ -1179,8 +1179,9 @@
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                         </div>
                         <div>
-                            
+                            @if($isUsPerson !="")
                             <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/download-investor-nominee')}}" target="_blank"  class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+                            @endif
 
                             @php
                             

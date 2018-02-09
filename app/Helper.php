@@ -806,6 +806,11 @@ function getSectors()
     return ['Transport', 'Technology ( Social )', 'Technology ( Platform )', 'Technology ( App )', 'Bloodstock', 'Research', 'Publishing', 'Music', 'Film', 'Exports', 'Nutrition', 'Estate Agency', 'Marketing', 'Financial', 'Home Improvement', 'Dentistry', 'Advertising', 'Security', 'Environmental', 'Fashion'];
 }
 
+function getBusinessSectors()
+{
+    return \App\Defaults::where('type','business-sector')->get();
+}
+
 /**
  * Gets the ordinal number. used for business round display
  *
@@ -1627,9 +1632,11 @@ function cdn($asset)
 
     //Check if we added cdn's to the config file
 
-    if (!Config::get('app.cdn')) {
+    if (!Config::get('app.cdn') || Config::get('app.cdn')=="") {
         return asset($asset);
     }
+
+
 
     //Get file name & cdn's
 

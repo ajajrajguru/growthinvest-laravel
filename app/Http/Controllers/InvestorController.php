@@ -1997,7 +1997,6 @@ class InvestorController extends Controller
             abort(404);
         }
 
-  
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
@@ -2195,7 +2194,7 @@ class InvestorController extends Controller
                             $success = false;
                             return $result_onfido;
                         } else {
-                             
+
                             $onfidoApplicantId = $investor->userOnfidoApplicationId();
 
                             if (empty($onfidoApplicantId)) {
@@ -2211,7 +2210,7 @@ class InvestorController extends Controller
 
                             //add and update report details for the onfido applicant check
                             $check_report_result = $result_onfido['result']['create_checkreports_result'];
-                             
+
                             add_update_onfido_reports_meta($applicant_id, $investor, $check_report_result);
                             if ($result_onfido['onfido_error'] == "yes") {
                                 $success = false;
@@ -2222,26 +2221,25 @@ class InvestorController extends Controller
 
                     }
 
-                }
-                else{
-                    $report_args = array('identity_report_status'=> $nomineeverification,
-                                          'aml_report_status'     => $nomineeverification
-                                         );
+                } else {
+                    $report_args = array('identity_report_status' => $nomineeverification,
+                        'aml_report_status'                           => $nomineeverification,
+                    );
 
-                    update_onfido_reports_status($investor,$report_args);
+                    update_onfido_reports_status($investor, $report_args);
                 }
 
             }
 
-        } else if($nomineeverification=="completed"  ||  $nomineeverification=="pending_evidence"  || $nomineeverification=="manual_kyc" ){
+        } else if ($nomineeverification == "completed" || $nomineeverification == "pending_evidence" || $nomineeverification == "manual_kyc") {
 
-                    $report_args = array('identity_report_status'=> $nomineeverification,
-                                          'aml_report_status'     => $nomineeverification
-                                         );
+            $report_args = array('identity_report_status' => $nomineeverification,
+                'aml_report_status'                           => $nomineeverification,
+            );
 
-                    update_onfido_reports_status($user_id,$report_args);
+            update_onfido_reports_status($user_id, $report_args);
 
-                }
+        }
 
     }
 
@@ -2360,8 +2358,15 @@ class InvestorController extends Controller
         if (empty($investor)) {
             abort(404);
         }
-
-        $investorCertification = $investor->getActiveCertification();
+        $businessListings = new BusinessListing;
+        $companyNames     = $businessListings->getCompanyNames();
+        $sectors          = getBusinessSectors();
+        $managers         = [];
+        if (!empty($companyNames)) {
+            $compManagers = collect($companyNames->toArray());
+            $managers     = $compManagers->pluck('manager')->unique();
+            $managers     = array_filter($managers->toArray());
+        }
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
@@ -2369,11 +2374,13 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
-        $data['investor']              = $investor;
-        $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['breadcrumbs']           = $breadcrumbs;
-        $data['pageTitle']             = 'View Profile';
-        $data['activeMenu']            = 'manage_clients';
+        $data['investor']         = $investor;
+        $data['companyNames'] = (!empty($companyNames)) ? $companyNames : [];
+        $data['sectors']          = $sectors;
+        $data['managers']         = $managers;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'View Profile';
+        $data['activeMenu']       = 'manage_clients';
 
         return view('backoffice.clients.investor-invest')->with($data);
 
@@ -2387,10 +2394,16 @@ class InvestorController extends Controller
         $skip        = $requestData['start'];
         $length      = $requestData['length'];
         $orderValue  = $requestData['order'][0];
-        $filters     = $requestData['filters'];
+        $filters     = $requestData['filters']; 
 
         $columnOrder = array(
-            '1' => 'business_listings.title',
+            '0' => 'business_listings.title',
+            '1' => 'business_listings.manager',
+            '3' => 'business_listings.type',
+            '4' => 'business_listings.investment_objective',
+            '5' => 'business_listings.target_amount',
+            '6' => 'business_listings.minimum_investment',
+            '7' => 'amount_raised',
         );
 
         $columnName = 'business_listings.title';
@@ -2403,53 +2416,25 @@ class InvestorController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterInvestors = $this->getFilteredInvestorInvest($filters, $skip, $length, $orderDataBy);
-        $investors       = $filterInvestors['list'];
-        $totalInvestors  = $filterInvestors['totalInvestors'];
+        $filterBusinessListing = $this->getFilteredBusinessListing($filters, $skip, $length, $orderDataBy);
+        $businessListings      = $filterBusinessListing['list'];
+        $totalBusinessListings = $filterBusinessListing['totalBusinessListings'];
 
-        $investorsData = [];
-        $certification = [];
-        foreach ($investors as $key => $investor) {
+        $businessListingData = [];
 
-            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->orderBy('active', 'desc')->first();
+        foreach ($businessListings as $key => $businessListing) {
 
-            $certificationName = 'Uncertified Investors';
-            $certificationDate = '-';
-
-            if (!empty($userCertification)) {
-
-                if (isset($certification[$userCertification->certification_default_id])) {
-                    $certificationName = $certification[$userCertification->certification_default_id];
-                } else {
-                    $certificationName                                           = Defaults::find($userCertification->certification_default_id)->name;
-                    $certification[$userCertification->certification_default_id] = $certificationName;
-                }
-
-                $certificationDate = date('d/m/Y', strtotime($userCertification->created_at));
-            }
-
-            $nameHtml = '<b><a href=="">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
-
-            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">
-            <option id="select" value="">-Select-</option>
-            <option value="edit_profile">View Profile</option>
-            <option value="view_portfolio">View Portfolio</option>
-            <option value="manage_documents">View Investor Documents</option>
-            <option value="message_board">View Message Board</option>
-            <option value="nominee_application">Investment Account</option>
-            <option value="investoffers">Investment Offers</option>
-            </select>';
-
-            $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
-
-            $investorsData[] = [
-                '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investor->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $investor->id . '"><label class="custom-control-label" for="ch' . $investor->id . '"></label></div> ',
-                'name'                  => $nameHtml,
-                'certification_date'    => $certificationDate,
-                'client_categorisation' => $active,
-                'parent_firm'           => (!empty($investor->firm)) ? $investor->firm->name : '',
-                'registered_date'       => date('d/m/Y', strtotime($investor->created_at)),
-                'action'                => $actionHtml,
+            $businessListingData[] = [
+                'offer'       => '<a href="">' . ucfirst($businessListing->title) . '</a>',
+                'manager'     => ucfirst($businessListing->manager),
+                'tax_status'  => $businessListing->tax_status,
+                'type'        => ucfirst($businessListing->type),
+                'focus'       => $businessListing->investment_objective,
+                'taget_raise' => $businessListing->target_amount,
+                'min_inv'     => $businessListing->minimum_investment,
+                'amt_raised'  => $businessListing->amount_raised,
+                'invest'      => '<a href="#" class="btn btn-primary">Invest</a>',
+                'download'    => '<a href="#" class="btn btn-link">Download</a>',
 
             ];
 
@@ -2457,100 +2442,79 @@ class InvestorController extends Controller
 
         $json_data = array(
             "draw"            => intval($requestData['draw']),
-            "recordsTotal"    => intval($totalInvestors),
-            "recordsFiltered" => intval($totalInvestors),
-            "data"            => $investorsData,
+            "recordsTotal"    => intval($totalBusinessListings),
+            "recordsFiltered" => intval($totalBusinessListings),
+            "data"            => $businessListingData,
         );
 
         return response()->json($json_data);
 
     }
 
-    public function getFilteredInvestorInvest($filters, $skip, $length, $orderDataBy)
+    public function getFilteredBusinessListing($filters, $skip, $length, $orderDataBy)
     {
 
-        $investorQuery = BusinessListing::where('', 'yes')->where('status', 'publish');
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->where('business_listings.invest_listing', 'yes')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id');
+        })->whereIn('business_investments.status', ['pledged', 'funded'])->groupBy('business_listings.id');
 
-        // if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
-        //     $investorQuery->where('users.firm_id', $filters['firm_name']);
-        // }
+ 
+        if (isset($filters['company']) && $filters['company'] != "") {
+            $businessListingQuery->where('business_listings.id', $filters['company']);
+        }
 
-        // if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
-        //     $userIds = explode(',', $filters['user_ids']);
-        //     $userIds = array_filter($userIds);
+        if (isset($filters['sector']) && $filters['sector'] != "") {
+             $businessListingQuery->where('business_listings.investment_objective', $filters['sector']);
+        }
 
-        //     $investorQuery->whereIn('users.id', $userIds);
-        // }
+        if (isset($filters['type']) && $filters['type'] != "") {
+             $businessListingQuery->where('business_listings.type', $filters['type']);
+        }
 
-        // if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
-        //     $investorQuery->where('users.id', $filters['investor_name']);
-        // }
+        if (isset($filters['manager']) && $filters['manager'] != "") {
+             $businessListingQuery->where('business_listings.manager', $filters['manager']);
+        }
 
-        // if (isset($filters['client_category']) && $filters['client_category'] != "") {
-        //     // $investorQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
-
-        //     $investorQuery->whereIn('users.id', function ($query) use ($filters) {
-        //         $query->select('user_id')
-        //             ->from(with(new UserHasCertification)->getTable())
-        //             ->where('certification_default_id', $filters['client_category'])
-        //             ->orderBy('created_at', 'desc')
-        //             ->groupBy('user_id');
-        //     });
-
-        // }
-
-        // if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
-        //     if ($filters['client_certification'] == 'uncertified') {
-        //         // $investorQuery->whereNull('user_has_certifications.created_at');
-        //         $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
-        //     } else {
-        //         $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
-        //     }
-
-        // }
-
-        // $nomineeJoin = false;
-        // if (isset($filters['investor_nominee']) && $filters['investor_nominee'] != "") {
-        //     $investorQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
-        //     $nomineeJoin = true;
-        //     if ($filters['investor_nominee'] == 'nominee') {
-        //         $investorQuery->whereNotNull('nominee_applications.user_id');
-        //     } else {
-        //         $investorQuery->whereNull('nominee_applications.user_id');
-        //     }
-
-        // }
-
-        // if (isset($filters['idverified']) && $filters['idverified'] != "") {
-        //     if (!$nomineeJoin) {
-        //         $investorQuery->leftjoin('nominee_applications', 'users.id', '=', 'nominee_applications.user_id');
-        //     }
-
-        //     if ($filters['idverified'] == 'no') {
-        //         $verificationStatus = ['no', 'progress', 'requested', 'not_yet_requested'];
-        //     } else {
-        //         $verificationStatus = ['yes', 'completed'];
-        //     }
-
-        //     $investorQuery->whereIn('nominee_applications.id_verification_status', $verificationStatus);
-        // }
-
-        // $investorQuery->groupBy('users.id')->select('users.*');
-        // foreach ($orderDataBy as $columnName => $orderBy) {
-        //     $investorQuery->orderBy($columnName, $orderBy);
-        // }
-        // $investorQuery->orderBy('user_has_certifications.created_at', 'desc');
+        if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
+            // dd(json_encode(['status'=>['seis','eis','tier1']]));
+            $taxStatus = $filters['tax_status'];
+            $taxStatus = explode(',', $taxStatus);
+            $taxStatus = array_filter($taxStatus); 
+            // $taxStatus = json_encode($taxStatus);
+            // echo "JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )";
+            // $businessListingQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status->status, '".$taxStatus."' )");   
+            // 
+            // $businessListingQuery->whereIn("business_listings.tax_status->status", $taxStatus);   
+            // 
+            $businessListingQuery->where(function($bQuery)use($taxStatus)
+            {
+                foreach ($taxStatus as $key => $status) {
+                    $statusArr = [];
+                    $statusArr[] = $status;
+                    $taxStatus = json_encode($statusArr);
+                    if($key==0)
+                        $bQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )");
+                    else
+                        $bQuery->orWhereRaw("JSON_CONTAINS(business_listings.tax_status, '".$taxStatus."' )");   
+                }
+                
+            });
+        }
+      
+        foreach ($orderDataBy as $columnName => $orderBy) {
+            $businessListingQuery->orderBy($columnName, $orderBy);
+        }
 
         if ($length > 1) {
 
-            $totalInvestors = $investorQuery->get()->count();
-            $investors      = $investorQuery->skip($skip)->take($length)->get();
+            $totalBusinessListings = $businessListingQuery->get()->count();
+            $businessListing       = $businessListingQuery->skip($skip)->take($length)->get();
         } else {
-            $investors      = $investorQuery->get();
-            $totalInvestors = $investorQuery->count();
+            $businessListing       = $businessListingQuery->get();
+            $totalBusinessListings = $businessListingQuery->count();
         }
 
-        return ['totalInvestors' => $totalInvestors, 'list' => $investors];
+        return ['totalBusinessListings' => $totalBusinessListings, 'list' => $businessListing];
 
     }
 
