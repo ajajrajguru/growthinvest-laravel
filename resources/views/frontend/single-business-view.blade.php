@@ -130,6 +130,109 @@
 				</div>
 			</div>
 
+			<!-- funds -->
+			<h4>Fund Information</h4>
+			<div class="row">
+				<div class="col-sm-3"><label for="">Fund Name</label></div>
+				<div class="col-sm-9">The Velocity SEIS Consumer Technology Fund</div>
+			</div><hr>
+			<div class="row">
+				<div class="col-sm-3"><label for="">Fund Summary:</label></div>
+				<div class="col-sm-9">The Fund will invest in SEIS qualifying businesses within the consumer technology sector. Velocity Capital Advisors Limited (the “Investment Consultant”) will provide comprehensive investment consultancy services to Thompson Taraz Managers Limited (the “Investment Manager”), including identifying, monitoring and seeking exit opportunities in respect of Investee companies.</div>
+			</div><hr>
+			<div class="row">
+				<div class="col-sm-3"><label for="">Fund Manager:</label></div>
+				<div class="col-sm-9">J J Thompson</div>
+			</div><hr>
+			<div class="row">
+				<div class="col-sm-3"><label for="">Company Website:</label></div>
+				<div class="col-sm-9"><a href="">www.google.com</a></div>
+			</div><hr>
+			<div class="row">
+				<div class="col-sm-3"><label for="">Nominee & Custody:</label></div>
+				<div class="col-sm-9">Sun Microsoft</div>
+			</div>
+			
+			<div class="row mt-3 border-top border-bottom">
+				<div class="col-sm-6 border-sm-right border-right-0 py-3">
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Fund Tax Status:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Investment Sector:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Target Return:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Investment Focus:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+				</div>
+				<div class="col-sm-6 py-3">
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Fund Status:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Launch Date:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Close Date:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-6 border-sm-right border-right-0 pt-3">
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Maximum Fund Size::</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Minimum Fund Size:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Maximum Investment:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Minimum Investment:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Funds Raised:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+				</div>
+				<div class="col-sm-6 pt-3">
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Initial Charge:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Annual Management Charge:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Performance Fee:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-sm-6"><label for="">Performance Hurdle:</label></div>
+						<div class="col-sm-6">lroem</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- /funds -->
+
 
 		</div>
 		@include('frontend.single-business.investment-card')
