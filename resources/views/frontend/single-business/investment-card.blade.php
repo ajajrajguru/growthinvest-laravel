@@ -40,36 +40,36 @@
 			var bar=setInterval(progressBar,50);
 			</script>
 			<!-- /canvas -->
-			<ul class="p-0 statistics">
-				<li class="d-flex justify-content-between">
+			<ul class="list-unstyled">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Investment Sought</strong></div>
 					<div>{{format_amount($bi_investment_sought, 0, true, true)}}</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Minimum Investment</strong></div>
 					<div>{{format_amount($bi_minimum_investment, 0, true, true)}}</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Funded</strong></div>
 					<div>{{format_amount($bi_fund_raised, 0, true, true)}}</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Funds Pledged</strong></div>
 					<div>{{format_amount($bi_pledged, 0, true, true)}}</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Remaining</strong></div>
 					<div>{{format_amount($bi_funds_yet_to_raise, 0, true, true)}}</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Equity Offer</strong></div>
 					<div>{{$proposal_details['percentage-giveaway']==""?"0":format_amount($proposal_details['percentage-giveaway'], 0, false, false) }}%</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
 					<div><strong>Pre Money Valuation</strong> <a href=""><i class="fa fa-info-circle"></i></a></div>
 					<div>{{$proposal_details['pre-money-valuation']==""?"-":format_amount($proposal_details['pre-money-valuation'], 0, true, true) }}</div>
 				</li>
-				<li class="d-flex justify-content-between">
+				<li class="d-flex justify-content-between pt-2 pb-2">
 					<div><strong>Post Money Valuation</strong></div>
 					<div>{{$proposal_details['post-money-valuation']==""?"-":format_amount($proposal_details['post-money-valuation'], 0, true, true) }}</div>
 				</li>

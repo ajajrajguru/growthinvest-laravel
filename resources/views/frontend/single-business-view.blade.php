@@ -114,7 +114,7 @@
 			<div>
 				<label>MILESTONES</label>
 				@foreach($milestones as $milestone)
-					<div><span class="tag bg-dark">{{$milestone['name']}}</span></div>	
+					<div><span class="badge badge-dark p-1">{{$milestone['name']}}</span></div>	
 				@endforeach
 				
 			</div>
