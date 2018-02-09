@@ -711,7 +711,7 @@
                             <div class="">
                                 <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}"  class="btn btn-outline-primary mt-4"><i class="fa fa-angle-double-left"></i> Prev</a>
                             </div>
-                            <button class="btn btn-primary mt-4 @if($mode=='view') d-none @endif"  type="submit">Save</button>
+                            <button class="btn btn-primary mt-4 editmode @if($mode=='view') d-none @endif"  type="submit">Save</button>
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
                             <div class="">
