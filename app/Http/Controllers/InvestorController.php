@@ -93,7 +93,7 @@ class InvestorController extends Controller
         $certification = [];
         foreach ($investors as $key => $investor) {
 
-            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->orderBy('active', 'desc')->first();
+            $userCertification = $investor->userCertification()->orderBy('updated_at', 'desc')->orderBy('active', 'desc')->first();
 
             $certificationName = 'Uncertified Investors';
             $certificationDate = '-';
@@ -183,7 +183,7 @@ class InvestorController extends Controller
                 $query->select('user_id')
                     ->from(with(new UserHasCertification)->getTable())
                     ->where('certification_default_id', $filters['client_category'])
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('updated_at', 'desc')
                     ->groupBy('user_id');
             });
 
@@ -191,8 +191,8 @@ class InvestorController extends Controller
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
-                // $investorQuery->whereNull('user_has_certifications.created_at');
-                $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+                $investorQuery->whereNull('user_has_certifications.created_at');
+                // $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
             } else {
                 $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
@@ -229,7 +229,7 @@ class InvestorController extends Controller
         foreach ($orderDataBy as $columnName => $orderBy) {
             $investorQuery->orderBy($columnName, $orderBy);
         }
-        $investorQuery->orderBy('user_has_certifications.created_at', 'desc');
+        $investorQuery->orderBy('user_has_certifications.updated_at', 'desc');
 
         if ($length > 1) {
 
