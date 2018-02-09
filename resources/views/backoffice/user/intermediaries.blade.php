@@ -83,7 +83,7 @@
                                       <label class="custom-control-label" for="{{ $user->id }}_check"></label>
                                     </div>
                                 </td>
-                                <td><a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}"><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br>{{  $user->email }}</a></td>
+                                <td><a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}"><b>{{  title_case($user->first_name.' '.$user->last_name) }}</b> <br>{{  $user->email }}</a></td>
 
                                 <td>{{ (isset($compInfo['company'])) ? title_case($compInfo['company']) : ''}} </td>
                                 <td>{{ (isset($compInfo['typeaccount']) && $compInfo['typeaccount']) ? title_case($compInfo['typeaccount']) : ''}}</td>
@@ -94,7 +94,7 @@
                                     <option>--select--</option>
                                     <option value="edit-intermediary">Edit Profile</option>
                                     </select> -->
-                                    <a href="{{ url('backoffice/user/'.$user->gi_code.'/step-one')}}">View Profile</a>
+                                    <a href="{{ url('backoffice/user/'.$user->gi_code.'/intermediary-registration')}}">View Profile</a>
                                 </td>
 
                             </tr>
