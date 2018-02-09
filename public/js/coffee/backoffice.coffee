@@ -26,7 +26,7 @@ $(document).ready ->
 				searchField += '<option value="'+value+'">' + value + '</option>'
 			searchField += '</select>'
 		else
-			searchField = '<div class="input-group"> <div class="input-group-prepend pr-2"><i class="fa fa-search text-muted"></i></div> <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-secondary"></i></button>  </div> </div>'
+			searchField = '<div class="input-group"> <div class="input-group-prepend pt-2 pr-2"><i class="fa fa-search text-muted"></i></div> <input type="text" class="form-control datatable-search" placeholder="Search ' + title + '" />   <div class="input-group-append">    <button class="btn btn-sm btn-link clear-input" type="button"><i class="fa fa-times text-secondary"></i></button>  </div> </div>'
 
 		$(this).closest('table').find('tr.filters td').eq($(this).index()).html searchField
 		return
@@ -125,6 +125,23 @@ $(document).ready ->
 			"paging": true
 			"info": true
 			"searching": false
+			"ordering": false
+		)
+
+	if $('#availablePermissions').length
+		availablePermissionstable = $('#availablePermissions').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+			"ordering": false
+		)
+
+	if $('#rolesTable').length
+		addrolesTable = $('#rolesTable').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+			"ordering": false
 		)
 
 
@@ -140,7 +157,7 @@ $(document).ready ->
 				{ 'data': 'comp_name' }
 				{ 'data': 'comp_desc'}
 				{ 'data': 'submitted_on' }
-				{ 'data': 'lbgr'  , "orderable": false}
+				{ 'data': 'lbgr' }
 				{ 'data': 'action' , "orderable": false}
 			]
 
@@ -518,7 +535,7 @@ $(document).ready ->
 		$('#inp_shareprice').val(share_price)
 		$('#inp_totalvaluation').val(total_valuation)
 		$('#currentValuationModal').modal('show')
-		return 
+		return
 
 	$('body').on 'click', '#current_valuation_save', ->
 		total_valuation = $('#inp_totalvaluation').val()
@@ -536,13 +553,13 @@ $(document).ready ->
 			success: (data) ->
 				$('.spn_totalvaluation_'+business_id).html(total_valuation)
 				$('.spn_shareprice_'+business_id).html(share_price)
-				if data.status 					 
+				if data.status
 					$('.gi-danger').addClass('d-none')
 					$('.gi-danger').html ""
 					$('.gi-success').html "Valuation Saved Successfully."
 					$('.spn_totalvaluation_'+business_id).html(total_valuation)
-					$('.spn_shareprice_'+business_id).html(share_price)					 
-				else					 
+					$('.spn_shareprice_'+business_id).html(share_price)
+				else
 					$('.gi-danger').html "Failed to Save Valuation."
 					$('.gi-success').html ""
 
@@ -550,5 +567,7 @@ $(document).ready ->
 		window.open("/backoffice/current-valuations/export-current-valuations");
 				 
 	 		 
+
+
 
 
