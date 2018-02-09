@@ -10,15 +10,15 @@
     <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h3>
     <hr>
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table class="table table-hover table-striped-bg">
 
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Date/Time Added</th>
-                    <th>User Roles</th>
-                    <th>Operations</th>
+                    <th width="20%">Name</th>
+                    <th width="20%">Email</th>
+                    <th width="20%">Date/Time Added</th>
+                    <th width="20%">User Roles</th>
+                    <th width="20%">Operations</th>
                 </tr>
             </thead>
 
@@ -31,10 +31,10 @@
                     <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
                     <td>{{  $user->roles()->pluck('name')->implode(' ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
                     <td>
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm btn-outline-primary pull-left" style="margin-right: 3px;">Edit</a>
 
                     {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                    {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm btn-outline-danger']) !!}
                     {!! Form::close() !!}
 
                     </td>
