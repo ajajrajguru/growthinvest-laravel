@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
+    var api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, updateURL, userAdminTable, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -65,6 +65,7 @@
           colVal = $('input', $('.filters td')[colIdx]).val();
           tableObj.columns(colIdx).search(colVal).draw();
         });
+        updateURL();
         if ($(window).width() < 767) {
           if ($('.toggle-btn input:checkbox:not(:checked)')) {
             column = 'table .' + $('.toggle-btn input').attr('name');
@@ -102,6 +103,9 @@
       clearInput(firmsTable);
     }
     $(document).on('keyup change', '.data-search-input .datatable-search', function() {
+      return updateURL();
+    });
+    updateURL = function() {
       var urlParams;
       urlParams = '';
       $('.data-search-input .datatable-search').each(function() {
@@ -116,7 +120,7 @@
         }
       });
       return window.history.pushState("", "", "?" + urlParams);
-    });
+    };
     if ($('#datatable-users').length) {
       usersTable = $('#datatable-users').DataTable({
         "paging": false,

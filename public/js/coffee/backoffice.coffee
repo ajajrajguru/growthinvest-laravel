@@ -56,6 +56,7 @@ $(document).ready ->
 				colVal = $('input', $('.filters td')[colIdx]).val()
 				tableObj.columns(colIdx).search(colVal).draw()
 				return
+			updateURL()
 			if $(window).width() < 767
 				if $('.toggle-btn input:checkbox:not(:checked)')
 					column = 'table .' + $('.toggle-btn input').attr('name')
@@ -88,6 +89,9 @@ $(document).ready ->
 
 
 	$(document).on 'keyup change', '.data-search-input .datatable-search', ->
+		updateURL()
+
+	updateURL = () ->
 		urlParams = ''
 		$('.data-search-input .datatable-search').each ->
 			textVal = $(this).val()
@@ -555,10 +559,10 @@ $(document).ready ->
 					$('.gi-danger').html "Failed to Save Valuation."
 					$('.gi-success').html ""
 
-	$('.download-current-business-valuation-csv').click ->		 
+	$('.download-current-business-valuation-csv').click ->
 		window.open("/backoffice/current-valuations/export-current-valuations");
-				 
-	 		 
+
+
 
 
 
