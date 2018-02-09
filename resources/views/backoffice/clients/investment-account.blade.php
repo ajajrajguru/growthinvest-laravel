@@ -170,10 +170,13 @@
                                 <a data-toggle="collapse" href="#collapse1" role="button">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 1: CLIENT ACCOUNT DETAILS
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
+
 
                                     
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
+
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? ucfirst($nomineeDetails['section_status'][1]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
@@ -223,7 +226,7 @@
 
                                             <div class="form-group">
                                                 <label>Date of Birth <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control datepicker text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the sate of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
+                                                <input type="text" class="form-control datepicker text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="dateofbirth" placeholder="" data-parsley-required data-parsley-required-message="Please enter the date of birth." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif">
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['dateofbirth'])){{ $nomineeDetails['dateofbirth'] }}@endif</div>
                                             </div>
 
@@ -388,6 +391,7 @@
                                 <a data-toggle="collapse" href="#collapse2" role="button" class="collapsed">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 2: TAX CERTIFICATES
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
@@ -480,6 +484,7 @@
                                 <a data-toggle="collapse" href="#collapse3" role="button" class="collapsed">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 3: CLIENT BANK ACCOUNT DETAILS
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
@@ -564,6 +569,7 @@
                                 <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 4: FEES & CHARGES
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
@@ -799,6 +805,7 @@
                                 <a data-toggle="collapse" href="#collapse5" role="button" class="collapsed">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 5: CLIENT DECLARATION & DATA PROTECTION
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
@@ -907,6 +914,7 @@
                                 <a data-toggle="collapse" href="#collapse6" role="button" class="collapsed">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 6: CONFIRMATION OF VERIFICATION OF IDENTITY
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
@@ -996,6 +1004,7 @@
                                 <a data-toggle="collapse" href="#collapse7" role="button" class="collapsed">
                                     <span class="px-0 col-md-10 col-8">
                                         SECTION 7: TRANSFER DETAILS
+                                        <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
                                     </span>
 
                                     <span class="text-md-right text-center px-0 col-md-2 col-4">
@@ -1162,7 +1171,7 @@
                         If you need to return to the Investment Account form at a later stage   
                     @endif
                     , please use the Save button  to save all current details until you are ready to submit for online signature or download the form.</p>
-                        <button type="submit" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-nominee" >Save</button>
+                        <button type="submit" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-nominee validate-nominee-data" >Save</button>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="send_signature">
                 <input type="hidden" name="gi_code" value="{{ $investor->gi_code }}">
@@ -1195,7 +1204,7 @@
                                 $disableSubmit = 'disabled';
                             }
                             @endphp
-                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature" {{ $disableSubmit }}  @if($adobeDocKey != '') data-toggle="tooltip"  title="Nominee Application is already sent for signature" data-original-title="Nominee Application is already sent for signature" @endif ><i class="fa fa-send"></i> Submit</button>
+                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature validate-nominee-data" {{ $disableSubmit }}  @if($adobeDocKey != '') data-toggle="tooltip"  title="Nominee Application is already sent for signature" data-original-title="Nominee Application is already sent for signature" @endif ><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>
 

@@ -401,6 +401,29 @@ $(document).ready ->
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
+
+  $(document).on 'click', '.validate-nominee-data', ->
+    $('.parent-tabpanel').each ->
+      hrefId = $(this).attr('id')
+       
+      isValidTab = 0
+      invalidTabHeadObj = $('a[href="#'+hrefId+'"]').closest('.card-header')  
+
+      invalidTabHeadObj.removeClass('border border-danger')
+      invalidTabHeadObj.find('.has-invalid-data').addClass('d-none')
+
+      $(this).find('.completion_status').each ->
+        if(!$(this).parsley().isValid())
+          isValidTab++
+          if(isValidTab>0)
+            invalidTabHeadObj.addClass('border border-danger')
+            invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none')
+        
+    return
+
+    
+
+
   $(document).on 'click', '.submit-signature', ->
     $('input[name="send_signature"]').val 'yes'
     $('form[name="add-investor-ia"]').submit()
@@ -434,7 +457,11 @@ $(document).ready ->
       $('.bank-input').each ->
         if($(this).val() != '')
           $(this).attr('data-parsley-required',true).attr('readonly',false).addClass('text-input-status').addClass('completion_status') 
-         
+      
+      # check if any input is filled   #
+      if($('input[name="subscriptioninvamntbank"]').val()=='' && $('input[name="subscriptioninvamntcheq"]').val()=='') 
+         $('.bank-input').attr('data-parsley-required',true).attr('readonly',false).addClass('text-input-status').addClass('completion_status') 
+
       $('input[name="subscriptiontransferdate"]').attr('data-parsley-required',false).attr('readonly',false).addClass('text-input-status').addClass('completion_status')   
     else
       $('.bank-input').attr('data-parsley-required',false).attr('readonly',true).removeClass('text-input-status').removeClass('completion_status')    
