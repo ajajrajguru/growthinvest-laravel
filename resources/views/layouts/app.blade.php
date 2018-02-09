@@ -19,7 +19,8 @@
 
             ]) !!};
         </script>
-        <title>{{ (isset($pageTitle)) ? $pageTitle : config('app.name', 'Growthinvest') }}</title>
+         <link rel="shortcut icon" href="{{ asset('img/gi_favicon.png') }}">
+        <title>Growth Invest | {{ (isset($pageTitle)) ? $pageTitle : config('app.name', 'Growthinvest') }}</title>
     </head>
     <body>
         @php
