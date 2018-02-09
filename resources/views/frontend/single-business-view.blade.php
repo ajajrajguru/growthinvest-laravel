@@ -607,7 +607,8 @@
 		<h4>Management Team</h4>
 
 		<!-- carousel -->
-		<div id="management-team" class="carousel slide mt-3" data-ride="carousel">
+		<div class="carousel-with-card">
+		<div id="carousel-controls" class="carousel slide mt-3" data-ride="carousel">
 		  	<div class="carousel-inner">
 
 		  					@php
@@ -617,11 +618,11 @@
 
 									<div class="carousel-item @if($cnt_management_team==0) active @endif">
 								 		<!-- content -->
-								 		<div class="media management-individual">
-								 			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0">
-								 				<img class="img-fluid" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
+								 		<div class="media flex-wrap flex-sm-wrap">
+								 			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0 mw-150 mh-150">
+								 				<img class="img-fluid m-sm-auto m-sm-block" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
 								 			</div>
-								 			<div class="media-body">
+								 			<div class="media-body flex-basis-100">
 								 		    	<h5 class="mt-0">{{$member['name']}} <small class="designation">({{$member['position']}})</small></h5>
 								 		    	<p class="bio">@if($member['bio']=="")  <p  class="bio text-danger" >No Information Provided</p>  @endif 
 								 		    	@if($member['bio']!="")
@@ -668,16 +669,14 @@
 									@endphp
 
 							@endforeach
-
-
-
-		    	 
 		  	</div>
-		  	<a class="carousel-control-prev" href="#management-team" role="button" data-slide="prev">
+		  	</div><!--/carousel-with-card-->
+
+		  	<a class="carousel-control-prev" href="#carousel-controls" role="button" data-slide="prev">
 		    	<span class="fa fa-chevron-left" aria-hidden="true"></span>
 		    	<span class="sr-only">Previous</span>
 		  	</a>
-		  	<a class="carousel-control-next" href="#management-team" role="button" data-slide="next">
+		  	<a class="carousel-control-next" href="#carousel-controls" role="button" data-slide="next">
 		    	<span class="fa fa-chevron-right" aria-hidden="true"></span>
 		    	<span class="sr-only">Next</span>
 		  	</a>
