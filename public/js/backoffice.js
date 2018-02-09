@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
+    var addrolesTable, api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -152,6 +152,14 @@
     }
     if ($('#availablePermissions').length) {
       availablePermissionstable = $('#availablePermissions').DataTable({
+        "paging": true,
+        "info": true,
+        "searching": false,
+        "ordering": false
+      });
+    }
+    if ($('#rolesTable').length) {
+      addrolesTable = $('#rolesTable').DataTable({
         "paging": true,
         "info": true,
         "searching": false,

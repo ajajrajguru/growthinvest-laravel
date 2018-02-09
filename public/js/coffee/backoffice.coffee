@@ -136,6 +136,14 @@ $(document).ready ->
 			"ordering": false
 		)
 
+	if $('#rolesTable').length
+		addrolesTable = $('#rolesTable').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+			"ordering": false
+		)
+
 
 	if $('#datatable-Intermediary').length
 		intermediaryTable = $('#datatable-Intermediary').DataTable(

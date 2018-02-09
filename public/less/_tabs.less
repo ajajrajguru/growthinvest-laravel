@@ -119,7 +119,11 @@
                     content: '';
                     transition: width 0.4s;
                 }
-
+                &:hover {
+                    &:after {
+                        width: 100%;
+                    }
+                }
                 &.coming-soon{
 	                &:before{
 	                	position: absolute;
