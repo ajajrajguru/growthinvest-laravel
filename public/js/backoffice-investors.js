@@ -718,6 +718,17 @@
         }
       ]
     });
+    $('body').on('click', '.alter-table', function() {
+      return $('.invest-cols').each(function() {
+        var colIndex;
+        colIndex = $(this).val();
+        if ($(this).is(':checked')) {
+          return investorInvestTable.column(colIndex).visible(true);
+        } else {
+          return investorInvestTable.column(colIndex).visible(false);
+        }
+      });
+    });
     $('body').on('click', '.apply-invest-filters', function() {
       return investorInvestTable.ajax.reload();
     });

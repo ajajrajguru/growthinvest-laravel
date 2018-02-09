@@ -650,6 +650,15 @@ $(document).ready ->
 
     ])
 
+  $('body').on 'click', '.alter-table', ->
+    $('.invest-cols').each ->
+      colIndex = $(this).val()
+      if $(this).is(':checked')
+        investorInvestTable.column( colIndex ).visible( true );
+      else
+        investorInvestTable.column( colIndex ).visible( false );
+    # investorInvestTable.draw()
+
   $('body').on 'click', '.apply-invest-filters', ->
     investorInvestTable.ajax.reload()
 

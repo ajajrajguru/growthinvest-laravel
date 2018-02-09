@@ -2476,7 +2476,7 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
-            // dd(json_encode(['status'=>['seis','eis','tier1']]));
+          
             $taxStatus = $filters['tax_status'];
             $taxStatus = explode(',', $taxStatus);
             $taxStatus = array_filter($taxStatus); 
