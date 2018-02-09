@@ -2432,9 +2432,9 @@ class InvestorController extends Controller
                 'tax_status'  => $businessListing->tax_status,
                 'type'        => (isset($investmentOfferType[$businessListing->type])) ? ucfirst($investmentOfferType[$businessListing->type]) : '',
                 'focus'       => $businessListing->investment_objective,
-                'taget_raise' => $businessListing->target_amount,
-                'min_inv'     => $businessListing->minimum_investment,
-                'amt_raised'  => $businessListing->amount_raised,
+                'taget_raise' => format_amount($businessListing->target_amount,0,true),
+                'min_inv'     => format_amount($businessListing->minimum_investment,0,true),
+                'amt_raised'  => format_amount($businessListing->amount_raised,0,true),
                 'invest'      => '<a href="#" class="btn btn-primary">Invest</a>',
                 'download'    => '<a href="#" class="btn btn-link">Download</a>',
 
