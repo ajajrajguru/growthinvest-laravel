@@ -22,7 +22,7 @@
     <div class="por">
     <a href="{{ route('users.create') }}" class="btn btn-primary poa" style="top: 0; right: 0;">Add User</a>
     <div class="table-responsive">
-        <table id="userAdmin" class="table table-hover table-striped-bg">
+        <table id="userAdmin" class="table table-hover table-solid-bg">
 
             <thead>
                 <tr>
@@ -43,10 +43,10 @@
                     <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
                     <td>{{  $user->roles()->pluck('name')->implode(' ') }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
                     <td>
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm btn-outline-primary pull-left" style="margin-right: 3px;">Edit</a>
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-primary pull-left" style="margin-right: 3px;">Edit</a>
 
                     {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm btn-outline-danger']) !!}
+                    {!! Form::submit('Delete', ['class' => 'btn btn-sm btn-outline-danger']) !!}
                     {!! Form::close() !!}
 
                     </td>

@@ -125,6 +125,15 @@ $(document).ready ->
 			"paging": true
 			"info": true
 			"searching": false
+			"ordering": false
+		)
+
+	if $('#availablePermissions').length
+		availablePermissionstable = $('#availablePermissions').DataTable(
+			"paging": true
+			"info": true
+			"searching": false
+			"ordering": false
 		)
 
 
