@@ -32,17 +32,19 @@
     @endphp
    <div class="container mt-3">
     <!-- tabs -->
+      <div class="squareline-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#invest">Invest</a>
+                <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#invest">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
+                <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
+                <a class="nav-link d-none d-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
             </li>
         </ul>
+      </div>
 
         <!-- Tab panes -->
         <div class="tab-content">
@@ -50,7 +52,7 @@
                 <h4 class="mb-1">Investment Offers</h4>
                 <p>In the table below we list all current offers available for Investment. There is some basic product information available on the table below, and more on the individual offer page, and in the available downloads. Please use the filters below to refine your search. If you have any questions on any of the available offers, or the investment process, please do not hesitate to contact our client services team on <a href="mailto:support@GrowthInvest.com">support@GrowthInvest.com</a> or call us on 020 7071 3945</p>
                 
-                <div class="gray-section border bg-light p-3">
+                <div class="gray-section border bg-gray p-3">
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <div>
@@ -113,8 +115,8 @@
                         </div>
 
                         <div class="mt-3 mt-sm-0">
-                            <button class="btn btn-primary mr-3 apply-invest-filters">Apply</button>
-                            <button class="btnb btn-default reset-invest-filters">Reset</button>
+                            <button class="btn btn-primary mr-1 apply-invest-filters">Apply</button>
+                            <button class="btn btn-default reset-invest-filters">Reset</button>
                         </div>
                     </div>
                 </div>
