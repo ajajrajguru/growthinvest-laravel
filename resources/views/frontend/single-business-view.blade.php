@@ -13,6 +13,29 @@
 @section('js')
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script> -->
 <script src="{{ asset('/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
+
+<script>
+	$( document ).ready(function() {
+	    $('.knob').each(function() {
+        	var $this = $(this);
+           	var myVal = $this.attr("rel");
+           	$this.knob({
+           	});
+           	$({
+            	value: 0
+           	}).animate({
+            	value: myVal
+           	}, {
+            	duration: 1000,
+            	easing: 'swing',
+            	step: function() {
+                	$this.val(Math.ceil(this.value)).trigger('change');
+              	}
+           });
+	    });
+	});
+	
+</script>
 @endsection
 
 <div class="container pb-5">

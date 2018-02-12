@@ -1,47 +1,48 @@
 <div class="col-sm-4 mt-3 mt-sm-0 bg-dark text-white">
-	<div class="text-center">
-		<input type="text" class="dial animated" data-width="120" data-cursor="true" data-thickness=".2" data-displayPrevious="true" data-fgColor="#00A9EE" data-step=".1" value="{{$bi_fund_raised_percentage}}">
-	</div>
+	
 	
 			<!-- canvas -->
 			<!-- http://www.tothenew.com/blog/tutorial-to-create-a-circular-progress-bar-with-canvas/ -->
 			@if(!in_array('vct',$tax_status))
-			<canvas id="myCanvas" width="150" height="150" class="m-auto d-block"></canvas>
+			<!-- <canvas id="myCanvas" width="150" height="150" class="m-auto d-block"></canvas> -->
+			<div class="text-center mt-3">
+				<input type="text" class="knob animated" data-width="120" data-height="120" data-cursor="false" data-thickness=".2" rel="{{$bi_fund_raised_percentage}}" value="0">
+			</div>
 			<script>
-			var canvas = document.getElementById('myCanvas');
-			var context = canvas.getContext('2d');
-			var al=0;
-			var start=4.72;
-			var cw=context.canvas.width/2;
-			var ch=context.canvas.height/2;
-			var diff;
+			// var canvas = document.getElementById('myCanvas');
+			// var context = canvas.getContext('2d');
+			// var al=0;
+			// var start=4.72;
+			// var cw=context.canvas.width/2;
+			// var ch=context.canvas.height/2;
+			// var diff;
 			 
-			function progressBar(){
-			diff=(al/100)*Math.PI*2;
-			context.clearRect(0,0,400,200);
-			context.beginPath();
-			context.arc(cw,ch,50,0,2*Math.PI,false);
-			context.fillStyle='transparent';
-			context.fill();
-			context.strokeStyle='#FFF';
-			context.stroke();
-			context.fillStyle='#FFF';
-			context.strokeStyle='#00A9EE';
-			context.textAlign='center';
-			context.lineWidth=15;
-			context.font = '10pt Open Sans';
-			context.beginPath();
-			context.arc(cw,ch,50,start,diff+start,false);
-			context.stroke();
-			context.fillText(al+'%',cw+2,ch+6);
-			if(al>=56){
-			clearTimeout(bar);
-			}
+			// function progressBar(){
+			// diff=(al/100)*Math.PI*2;
+			// context.clearRect(0,0,400,200);
+			// context.beginPath();
+			// context.arc(cw,ch,50,0,2*Math.PI,false);
+			// context.fillStyle='transparent';
+			// context.fill();
+			// context.strokeStyle='#FFF';
+			// context.stroke();
+			// context.fillStyle='#FFF';
+			// context.strokeStyle='#00A9EE';
+			// context.textAlign='center';
+			// context.lineWidth=15;
+			// context.font = '10pt Open Sans';
+			// context.beginPath();
+			// context.arc(cw,ch,50,start,diff+start,false);
+			// context.stroke();
+			// context.fillText(al+'%',cw+2,ch+6);
+			// if(al>=56){
+			// clearTimeout(bar);
+			// }
 			 
-			al++;
-			}
+			// al++;
+			// }
 			 
-			var bar=setInterval(progressBar,{{$bi_fund_raised_percentage}});
+			// var bar=setInterval(progressBar,{{$bi_fund_raised_percentage}});
 			</script>
 			@endif
 			<!-- /canvas -->
