@@ -418,13 +418,13 @@
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div class="tab-pane active p-3" id="productoverview" role="tabpanel">
+			<div class="tab-pane p-3" id="productoverview" role="tabpanel">
 				<p class-"text-primary">Product Overview</p>
 				<p>{{isset($fund_productoverview)?$fund_productoverview:''}}</p>
 				<p class-"text-primary">Exit Strategy</p>
 				<p>{{isset($fundexitstrategy)?$fundexitstrategy:''}}</p>
 			</div>
-			<div class="tab-pane active p-3" id="manageroverview" role="tabpanel">
+			<div class="tab-pane p-3" id="manageroverview" role="tabpanel">
 				
 				<p>{{isset($fund_manageroverview)?$fund_manageroverview:''}}</p>
 				
