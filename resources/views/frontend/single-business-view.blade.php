@@ -5,13 +5,14 @@
 
  @section('css')
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css" />
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css" /> -->
 @endsection
 
 
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script> -->
+<script src="{{ asset('/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
 @endsection
 
 <div class="container pb-5">
@@ -129,7 +130,7 @@
 			
 			@elseif($type=="fund")
 				<!-- funds -->
-				<h4>Fund Information</h4>
+				<h5 class="section-title font-weight-medium text-primary mt-3 mb-3">Fund Information</h5>
 				<div class="row">
 					<div class="col-sm-3"><label for="">Fund Name</label></div>
 					<div class="col-sm-9">{{$title}}</div>
@@ -276,7 +277,7 @@
 					</div>
 				</div>
 				
-				<div class="row">
+				<div class="row border-bottom mb-3">
 					<div class="col-sm-6 border-sm-right border-right-0 pt-3">
 						@if(!in_array('vct',$tax_status))
 							<!-- Non VCT Fund -->
@@ -349,7 +350,7 @@
 				<!-- /funds -->
 			@endif
 
-			<hr>
+			
 			
 			<div class="mb-3">
 				<label>DOWNLOADS</label>
