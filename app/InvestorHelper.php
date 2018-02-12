@@ -452,6 +452,7 @@ function onfidoApplicantionApi($applicantDetails = array(), $reports = array())
     $result                  = curl_exec($ch);
     $create_applicant_result = json_decode($result);
 
+    $create_check_report_result = [];
     if (!isset($create_applicant_result->error)) {
 
         if (count($reports) > 0) {

@@ -93,7 +93,7 @@ class InvestorController extends Controller
         $certification = [];
         foreach ($investors as $key => $investor) {
 
-            $userCertification = $investor->userCertification()->orderBy('created_at', 'desc')->orderBy('active', 'desc')->first();
+            $userCertification = $investor->userCertification()->orderBy('updated_at', 'desc')->orderBy('active', 'desc')->first();
 
             $certificationName = 'Uncertified Investors';
             $certificationDate = '-';
@@ -161,6 +161,8 @@ class InvestorController extends Controller
             $join->on('users.id', 'user_has_certifications.user_id');
         });
 
+        
+
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investorQuery->where('users.firm_id', $filters['firm_name']);
         }
@@ -177,22 +179,22 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
-            // $investorQuery->where('user_has_certifications.certification_default_id', $filters['client_category']);
-
-            $investorQuery->whereIn('users.id', function ($query) use ($filters) {
-                $query->select('user_id')
-                    ->from(with(new UserHasCertification)->getTable())
-                    ->where('certification_default_id', $filters['client_category'])
-                    ->orderBy('created_at', 'desc')
-                    ->groupBy('user_id');
-            });
+            $investorQuery->where('users.current_certification', $filters['client_category']);
+             
+            // $investorQuery->whereIn('users.id', function ($query) use ($filters) {
+            //     $query->select('user_id')
+            //         ->from(with(new UserHasCertification)->getTable())
+            //         ->where('certification_default_id', $filters['client_category'])
+            //         ->orderBy('updated_at', 'desc')
+            //         ->groupBy('user_id');
+            // });
 
         }
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
-                // $investorQuery->whereNull('user_has_certifications.created_at');
-                $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+                $investorQuery->whereNull('users.current_certification');
+                // $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
             } else {
                 $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
@@ -229,7 +231,7 @@ class InvestorController extends Controller
         foreach ($orderDataBy as $columnName => $orderBy) {
             $investorQuery->orderBy($columnName, $orderBy);
         }
-        $investorQuery->orderBy('user_has_certifications.created_at', 'desc');
+        // $investorQuery->orderBy('user_has_certifications.updated_at', 'desc');
 
         if ($length > 1) {
 
