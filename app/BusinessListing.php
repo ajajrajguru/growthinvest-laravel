@@ -50,6 +50,10 @@ class BusinessListing extends Model
     {
         return $this->hasMany('App\BusinessListingData', 'business_id');
     }
+    public function businessInvestmentsData()
+    {
+        return $this->hasMany('App\BusinessInvestment', 'business_id');
+    }
 
     public function businessDefaults()
     {
@@ -184,25 +188,35 @@ class BusinessListing extends Model
         return $businessListingQuery;
     }
 
-   /* public function getAllNextProposalRounds($firm_id)
+   public function getAllNextProposalRounds($business_id,$parent_id)
     {
+        //\DB::enableQueryLog();        
+        //->where('business_listings.id','!=',$parent_id)
+        $business_rounds = BusinessListing::where(['business_listings.parent' => $parent_id])->leftJoin('business_investments as bi1', function ($join) use($parent_id) {
+        $join->on('business_listings.id', '=', 'bi1.business_id')->where('bi1.status','pledged')->groupBy('bi1.business_id');
+        })
+        ->leftJoin('business_investments as bi2', function ($join) use($parent_id) {
+        $join->on('business_listings.id', '=', 'bi2.business_id')->where('bi2.status','funded')->groupBy('bi1.business_id');
+        })
+        ->leftJoin('business_investments as bi3', function ($join) use($parent_id) {
+        $join->on('business_listings.id', '=', 'bi3.business_id')->where('bi3.status','watchlist')->groupBy('bi1.business_id');
+        })
+        ->leftJoin('business_investments as bi4', function ($join) use($parent_id) {
+        $join->on('business_listings.id', '=', 'bi4.business_id')->whereIn('bi4.status',['funded','pledged'])->groupBy('bi1.business_id');
+        })
+        ->leftJoin('comments as comments', function ($join) use($parent_id) {
+        $join->on('business_listings.id', '=', 'comments.object_id')->where('comments.object_type','App/BusinessListing')->groupBy('comments.object_id','comments.object_type');
+        })->select(\DB::raw("count(bi1.id) as pledge_count, count(bi2.id) as funded_count, count(bi3.id) as watchlist_count, count(comments.id) as comments_count, SUM(bi4.amount) as fund_raised, business_listings.id as business_id, business_listings.title as business_title, business_listings.slug as business_slug, business_listings.round as biz_round, business_listings.type as type"))->get();
+        ;
 
-        $first             = Firm::where(['parent_id' => $firm_id])->pluck('id')->all();
-        $this->next_business_rounds = array_merge($this->next_business_rounds, $first);
 
-        if (count($first > 0)) {
-            foreach ($first as $value) {
 
-                $this->getAllNextProposalRounds($value);
-            }
-        }
-
-        /*DB::table('users')
-        ->whereIn('parent_id');
-
-        $parent_firms = Firm::where(['parent_id' => $firm_id])->orderBy('name', 'asc')->get()* /;
-        return $this->next_business_rounds;
-    }*/
+        /*$business_rounds = BusinessListing::where(['business_listings.parent' => $parent_id])->select(\DB::raw(" business_listings.id as business_id, business_listings.title as business_title, business_listings.slug as business_slug"))->get();
+                ;
+        /*dd(\DB::getQueryLog());*/
+       // dd($business_rounds);
+        return $business_rounds;
+    } 
 
 
 
