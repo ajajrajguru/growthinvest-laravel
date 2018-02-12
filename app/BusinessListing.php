@@ -192,7 +192,7 @@ class BusinessListing extends Model
     {
         //\DB::enableQueryLog();        
         //->where('business_listings.id','!=',$parent_id)
-        $business_rounds = BusinessListing::where(['business_listings.parent' => $parent_id])->leftJoin('business_investments as bi1', function ($join) use($parent_id) {
+        $business_rounds = BusinessListing::where(['business_listings.parent' => $parent_id,'business_listings.status'=>'publish'])->leftJoin('business_investments as bi1', function ($join) use($parent_id) {
         $join->on('business_listings.id', '=', 'bi1.business_id')->where('bi1.status','pledged')->groupBy('bi1.business_id');
         })
         ->leftJoin('business_investments as bi2', function ($join) use($parent_id) {

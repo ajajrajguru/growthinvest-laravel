@@ -710,57 +710,58 @@
 
 			<div class="tab-pane p-3" id="other-rounds" role="tabpanel">
 				<!-- test -->
-
-				@foreach($business_rounds as $business_round) 
-				@php
-				$business_round_link = url("/investment-opportunities/fund/" . $business_round['business_slug']);
-				if ($business_round['type'] == "proposal") {
-				    $business_round_link = url("investment-opportunities/single-company/" . $business_round['business_slug']);
-				}
-				@endphp
-				<div class="row border proposal_horizontal-car">
-					<div class="col-sm-8 proposal-details border-sm-right border-right-0">
-						<div class="media h-100 flex-wrap flex-sm-nowrap">
-							<div class="proposal-logo align-self-center mr-sm-3 mt-3 mt-sm-0 width-xs-100">
-								<div class="mw-60 mh-60 m-auto">
-									<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+				@if(count($business_rounds)>0)
+					@foreach($business_rounds as $business_round) 
+					@php
+					$business_round_link = url("/investment-opportunities/fund/" . $business_round['business_slug']);
+					if ($business_round['type'] == "proposal") {
+					    $business_round_link = url("investment-opportunities/single-company/" . $business_round['business_slug']);
+					}
+					@endphp
+					<div class="row border proposal_horizontal-car">
+						<div class="col-sm-8 proposal-details border-sm-right border-right-0">
+							<div class="media h-100 flex-wrap flex-sm-nowrap">
+								<div class="proposal-logo align-self-center mr-sm-3 mt-3 mt-sm-0 width-xs-100">
+									<div class="mw-60 mh-60 m-auto">
+										<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+									</div>
 								</div>
+								<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
+							    	<div class="w-100">
+							    		<p class="text-center text-sm-left">
+							    			<a href="{{$business_round_link}}">{{$business_round['business_title']}}</a>
+							    		</p>
+							    		<div class="row additional-info">
+							    			<div class="col-sm-4 text-center border-sm-right border-right-0 py-3 py-sm-0">
+							    				<strong class="text-primary">{{$business_round['watchlist_count']}}</strong>
+							    				<div>Added to watchlist</div>
+							    			</div>
+							    			<div class="col-sm-4 text-center border-sm-right border-right-0">
+							    				<strong class="text-primary">{{$business_round['pledge_count']}}</strong>
+							    				<div>Pledgers</div>
+							    			</div>
+							    			<div class="col-sm-4 text-center pt-3 pt-sm-0">
+							    				<strong class="text-primary">{{$business_round['funded_count']}}</strong>
+							    				<div>Investors</div>
+							    			</div>
+							    		</div>
+							    	</div>
+							  </div>
 							</div>
-							<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
-						    	<div class="w-100">
-						    		<p class="text-center text-sm-left">
-						    			<a href="{{$business_round_link}}">{{$business_round['business_title']}}</a>
-						    		</p>
-						    		<div class="row additional-info">
-						    			<div class="col-sm-4 text-center border-sm-right border-right-0 py-3 py-sm-0">
-						    				<strong class="text-primary">{{$business_round['watchlist_count']}}</strong>
-						    				<div>Added to watchlist</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center border-sm-right border-right-0">
-						    				<strong class="text-primary">0</strong>
-						    				<div>{{$business_round['pledge_count']}}</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center pt-3 pt-sm-0">
-						    				<strong class="text-primary">{{$business_round['funded_count']}}</strong>
-						    				<div>Investors</div>
-						    			</div>
-						    		</div>
-						    	</div>
-						  </div>
+						</div>
+						<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
+							<div class="view-proposal">
+								<p class="mb-1">@if($round!='')
+									{{get_ordinal_number($business_round['biz_round'])}} round
+								@endif</p>
+								<p class="mb-1">Total Investment: <span class="text-primary">{{format_amount($business_round['fund_raised'], 0, true, true)}}</span></p>
+								<p>Number of Questions: <span class="text-primary">{{$business_round['comments_count']}}</span></p>
+								<a href="{{$business_round_link}}" class="btn btn-primary">View Proposal</a>
+							</div>
 						</div>
 					</div>
-					<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
-						<div class="view-proposal">
-							<p class="mb-1">@if($round!='')
-								{{get_ordinal_number($business_round['biz_round'])}} round
-							@endif</p>
-							<p class="mb-1">Total Investment: <span class="text-primary">{{format_amount($business_round['fund_raised'], 0, true, true)}}</span></p>
-							<p>Number of Questions: <span class="text-primary">{{$business_round['comments_count']}}</span></p>
-							<a href="{{$business_round_link}}" class="btn btn-primary">View Proposal</a>
-						</div>
-					</div>
-				</div>
-				@endforeach
+					@endforeach
+				@endif
 				
 				<!-- /test -->
 			</div>
