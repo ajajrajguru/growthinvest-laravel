@@ -403,10 +403,10 @@
 				</li>
 				@elseif($type=="fund")			
 				<li class="nav-item">
-			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#manageroverview">Manager Overview</a>
+			    	<a class="nav-link d-none d-sm-block active" data-toggle="tab" href="#manageroverview">Manager Overview</a>
 				</li>
 				<li class="nav-item">
-			   		<a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#productoverview">Product Overview</a>
+			   		<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#productoverview">Product Overview</a>
 				</li>
 				@endif
 				
@@ -424,9 +424,9 @@
 				<p class-"text-primary">Exit Strategy</p>
 				<p>{{isset($fundexitstrategy)?$fundexitstrategy:''}}</p>
 			</div>
-			<div class="tab-pane p-3" id="manageroverview" role="tabpanel">
+			<div class="tab-pane p-3 active" id="manageroverview" role="tabpanel">
 				
-				<p>{{isset($fund_manageroverview)?$fund_manageroverview:''}}</p>
+				<p>{!!isset($fund_manageroverview)?($fund_manageroverview==""?'<p class="text-center"> No data</p>':$fund_manageroverview):''!!}</p>
 				
 			</div>
 
@@ -710,6 +710,9 @@
 
 			<div class="tab-pane p-3" id="other-rounds" role="tabpanel">
 				<!-- test -->
+				<!-- NO ACCESS 
+				<h3>Unauthorized Content</h3><p>You do not have enough permission to view this section. Please contact administrator.</p>
+				/NO ACCESS -->
 				@if(count($business_rounds)>0)
 					@foreach($business_rounds as $business_round) 
 					@php
