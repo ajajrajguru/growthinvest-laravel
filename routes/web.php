@@ -106,6 +106,8 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
 Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'], function () {
 
     Route::get('single-company/{slug}', 'BusinessListingController@getBusinessDetails');
+    Route::get('fund/{slug}', 'BusinessListingController@getBusinessDetails');
+    Route::get('fund/{slug}', 'BusinessListingController@getBusinessDetails');
 
 });
 
