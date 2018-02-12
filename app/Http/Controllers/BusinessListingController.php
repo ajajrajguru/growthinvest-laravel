@@ -551,7 +551,7 @@ class BusinessListingController extends Controller
 
             if (in_array($business_data['data_key'], $serialized_meta_keys)) {
                 $business_data_ar[$business_data['data_key']] = @unserialize($business_data['data_value']);
-                if (in_array($business_data['data_key'], ['proposal_desc_details', "company_details"])) {
+                if (in_array($business_data['data_key'], ['proposal_desc_details', 'company_details','fundvct_details','fundcharges_details'])) {
                     $business_data_ar[$business_data['data_key']] = @unserialize($business_data_ar[$business_data['data_key']]);
 
                 }
@@ -584,6 +584,9 @@ class BusinessListingController extends Controller
             $team_members[] = $team;
 
         }
+
+        $round_parent = ($business_listing->parent==0)?$business_listing->id:$business_listing->parent;
+        $data['business_rounds'] = $business_listing->getAllNextProposalRounds($business_listing->id,$round_parent);
 
         $data['management_team']    = $team_members;
         $data['approvers']          = $approvers;

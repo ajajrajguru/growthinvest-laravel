@@ -32,11 +32,15 @@
 					<ul class="mb-0 pl-0">
 						<li class="list-inline-item">
 							<span class="tag bg-primary">
-								EIS
+								@foreach($tax_status as $t_status)
+									{{strtoupper($t_status)}},
+								@endforeach
 							</span>
 						</li>
 						<li class="list-inline-item">
-							2nd round
+							@if($round!='')
+								{{get_ordinal_number($round)}} round
+							@endif
 						</li>
 					</ul>
 					<h3 class="">{{$title}}</h3>
@@ -76,48 +80,275 @@
 	</div>
 	<div class="row border">
 		<div class="col-sm-8 bg-white">
-			<p class="mt-3">{{$proposal_details['business_proposal_details']}}</p>
-			<hr>
+			@if($type=="proposal")
+				<!-- Proposal -->
+				<p class="mt-3">{{$proposal_details['business_proposal_details']}}</p>
+				<hr>
 
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="">
-						<label>BUSINESS SECTOR</label>
-						<div> 
-							@php
-							$cnt_business_sectors = 0;
-							@endphp
-							@foreach($business_sectors as $biz_sector)
-								@if($cnt_business_sectors>0)									,
-								@endif
-								{{$biz_sector['name']}}
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="">
+							<label>BUSINESS SECTOR</label>
+							<div> 
 								@php
-								$cnt_business_sectors++;
+								$cnt_business_sectors = 0;
 								@endphp
-							@endforeach
+								@foreach($business_sectors as $biz_sector)
+									@if($cnt_business_sectors>0)									,
+									@endif
+									{{$biz_sector['name']}}
+									@php
+									$cnt_business_sectors++;
+									@endphp
+								@endforeach
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="mt-3 mt-sm-0">
+							<label>STAGE OF BUSINESS</label>
+							 
+								@foreach($stages_of_business as $stage)								 
+									<div>{{$stage['name']}}</div>
+								@endforeach
+							
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-6">
-					<div class="mt-3 mt-sm-0">
-						<label>STAGE OF BUSINESS</label>
-						 
-							@foreach($stages_of_business as $stage)								 
-								<div>{{$stage['name']}}</div>
-							@endforeach
-						
+				<hr>
+
+				<div>
+					<label>MILESTONES</label>
+					@foreach($milestones as $milestone)
+						<div><span class="badge badge-dark p-1">{{$milestone['name']}}</span></div>	
+					@endforeach
+					
+				</div>
+			<!-- /Proposal-->
+
+			
+			@elseif($type=="fund")
+				<!-- funds -->
+				<h4>Fund Information</h4>
+				<div class="row">
+					<div class="col-sm-3"><label for="">Fund Name</label></div>
+					<div class="col-sm-9">{{$title}}</div>
+				</div><hr>
+				<div class="row">
+					<div class="col-sm-3"><label for="">Fund Summary:</label></div>
+					<div class="col-sm-9">{{$proposal_details['business_proposal_details']}}</div>
+				</div><hr>
+				<div class="row">
+					<div class="col-sm-3"><label for="">Fund Manager:</label></div>
+					<div class="col-sm-9">{{$manager}}</div>
+				</div><hr>
+				<div class="row">
+					<div class="col-sm-3"><label for="">Company Website:</label></div>
+					<div class="col-sm-9"><a href="">{{$proposal_details['website']}}</a></div>
+				</div><hr>
+				<div class="row">
+					<div class="col-sm-3"><label for="">Nominee & Custody:</label></div>
+					<div class="col-sm-9">{{$fund_nominee_custody}}</div>
+				</div>
+				
+				<div class="row mt-3 border-top border-bottom">
+					<div class="col-sm-6 border-sm-right border-right-0 py-3">
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Fund Tax Status:</label></div>
+							<div class="col-sm-6">
+								@foreach($tax_status as $t_status)
+									{{strtoupper($t_status)}},
+								@endforeach
+							</div>
+						</div>
+						@if(in_array('vct',$tax_status))
+							<!--VCT funds -->
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">VCT Type:</label></div>
+								<div class="col-sm-6">
+									{{str_replace('_',' ',ucfirst($fundvct_details['vcttype']))}}
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Investment Strategy:</label></div>
+								<div class="col-sm-6">
+									@if(is_null($fundvct_details['investmentstrategy'] || $fundvct_details['investmentstrategy']==''))
+									 	- 
+									@elseif($fundvct_details['investmentstrategy']=='aim') 
+										AIM
+									@elseif($fundvct_details['investmentstrategy']!='')
+										{{str_replace('_',' ',ucfirst($fundvct_details['investmentstrategy']))}}
+									@endif
+
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">AIC Sector:</label></div>
+								<div class="col-sm-6">
+									@if(is_null($fundvct_details['aicsector'] || $fundvct_details['aicsector']==''))
+										- 
+									@elseif($fundvct_details['aicsector']!='')
+										{{str_replace('_',' ',ucfirst($fundvct_details['aicsector']))}}
+									@endif
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Target Dividend:</label></div>
+								<div class="col-sm-6">
+									{{str_replace('_',' ',ucfirst($fundvct_details['targetdividend']))}}
+								</div>
+							</div>
+							<!-- /VCT funds -->
+
+						@else
+							<!-- Non VCT funds -->
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Investment Sector:</label></div>
+								<div class="col-sm-6">
+									@php
+									$cnt_business_sectors = 0;
+									@endphp
+									@foreach($business_sectors as $biz_sector)
+										@if($cnt_business_sectors>0)									,
+										@endif
+										{{$biz_sector['name']}}
+										@php
+										$cnt_business_sectors++;
+										@endphp
+									@endforeach								
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Target Return:</label></div>
+								<div class="col-sm-6">{{$fund_targetreturn}}</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Investment Focus:</label></div>
+								<div class="col-sm-6">{{$investment_objective}}</div>
+							</div>
+							<!-- /Non VCT funds -->
+						@endif
+					</div>
+					<div class="col-sm-6 py-3">
+						<div class="row mb-3">
+							@if(!in_array('vct',$tax_status))
+								<!-- Non VCT Funds -->
+								<div class="col-sm-6"><label for="">Fund Status:</label></div>
+								<div class="col-sm-6">
+									@php
+										$display_fund_status ="";
+										if(isset($fund_openclosed)){
+											switch($fund_openclosed){
+												case 'open' :
+													$display_fund_status ="Open";
+		                                        	break;
+		                          				case 'closed':
+		                          					$display_fund_status ="Closed Fund";
+		                                        	break;
+		                          				case 'evergreen':
+		                          					$display_fund_status ="Evergreen";
+		                                        	break;
+		                                     }
+										}   
+										 
+									@endphp	
+									{{$display_fund_status}}							
+								</div>
+								<!-- /Non VCT Funds -->
+							@endif
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Launch Date:</label></div>
+							<div class="col-sm-6">{{$fund_launchdate}}</div>
+						</div>
+						@if(!in_array('vct',$tax_status) && $fund_openclosed!='evergreen')
+								<div class="row mb-3">
+									<div class="col-sm-6"><label for="">Close Date:</label></div>
+									<div class="col-sm-6">{{$fund_closedate}}</div>
+								</div>							 
+						@endif
+						@if(in_array('vct',$tax_status))
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Deadline Date:</label></div>
+								<div class="col-sm-6">{{$fundvct_details['deadlinedate']}}</div>
+							</div>
+						@endif
 					</div>
 				</div>
-			</div>
-			<hr>
-
-			<div>
-				<label>MILESTONES</label>
-				@foreach($milestones as $milestone)
-					<div><span class="badge badge-dark p-1">{{$milestone['name']}}</span></div>	
-				@endforeach
 				
-			</div>
+				<div class="row">
+					<div class="col-sm-6 border-sm-right border-right-0 pt-3">
+						@if(!in_array('vct',$tax_status))
+							<!-- Non VCT Fund -->
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Maximum Fund Size::</label></div>
+								<div class="col-sm-6">{{format_amount($target_amount, 0, true, true)}}</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Minimum Fund Size:</label></div>
+								<div class="col-sm-6">{{format_amount($proposal_details['minimum-raise'], 0, true, true)}}</div>
+							</div>
+							<!-- /Non VCT Fund -->
+						@endif	
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Maximum Investment:</label></div>
+							<div class="col-sm-6">{{format_amount($maximum_investment, 0, true, true)}}</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Minimum Investment:</label></div>
+							<div class="col-sm-6">{{format_amount($minimum_investment, 0, true, true)}}</div>
+						</div>
+						@if(!in_array('vct',$tax_status))
+							<!-- Non VCT Funds -->
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Funds Raised:</label></div>
+								<div class="col-sm-6">{{$proposal_details['fund_fundraisedstatic']}}</div>
+							</div>
+							<!-- /Non VCT Funds -->
+						@elseif(in_array('vct',$tax_status))
+							<!-- VCT Funds -->
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Overall Offer Size:</label></div>
+								<div class="col-sm-6">{{isset($fundvct_details['vcttype'])?$fundvct_details['overalloffersize']:'-'}}</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Funds Raised to date:</label></div>
+								<div class="col-sm-6">{{$fundvct_details['fundstaisedtodate']}}</div>
+							</div>
+							<!-- /VCT Funds -->
+						@endif
+					</div>
+					<div class="col-sm-6 pt-3">
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Initial Charge:</label></div>
+							<div class="col-sm-6">{{$fundcharges_details['initialcharge']!=''?$fundcharges_details['initialcharge']."%":"-"}}</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Annual Management Charge:</label></div>
+							<div class="col-sm-6">{{$fundcharges_details['annualmanagementfee']!=''?$fundcharges_details['annualmanagementfee']."%":"-"}}</div>
+						</div>
+						@if(in_array('vct',$tax_status))
+							<!-- VCT Type Fund -->
+							<div class="row mb-3">
+								<div class="col-sm-6"><label for="">Growthinvest Discount:</label></div>
+								<div class="col-sm-6">{{$fundvct_details['growthinvestdiscount']!=''?$fundvct_details['growthinvestdiscount']:"-"}}</div>
+							</div>
+							<!-- /VCT Type Fund -->
+						@endif
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Performance Fee:</label></div>
+							<div class="col-sm-6">{{$fundcharges_details['performancefee']!=''?$fundcharges_details['performancefee']."%":"-"}}</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-6"><label for="">Performance Hurdle:</label></div>
+							<div class="col-sm-6">{{$fundcharges_details['performancehurdle']}}</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- /funds -->
+			@endif
+
 			<hr>
 			
 			<div class="mb-3">
@@ -129,7 +360,6 @@
 					<a href="" class="btn btn-primary mb-2 mb-sm-0"><i class="fa fa-download"></i> APPLICATION FORM</a>
 				</div>
 			</div>
-
 
 		</div>
 		@include('frontend.single-business.investment-card')
@@ -159,40 +389,42 @@
 <div class="pt-4 pb-4">
 	<div class="container">
 		<!-- tabs -->
-		<ul class="nav nav-tabs">
-			@if($type=="proposal")
-			<li class="nav-item">
-		   		<a class="nav-link active" data-toggle="tab" href="#business-idea">Business Idea</a>
-			</li>
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#financial-projections">Financial Projections</a>
-			</li>
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#company-details">Company Details</a>
-			</li>
-			@elseif($type=="fund")			
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#manageroverview">Manager Overview</a>
-			</li>
-			<li class="nav-item">
-		   		<a class="nav-link active" data-toggle="tab" href="#productoverview">Product Overview</a>
-			</li>
-			@endif
-			
-			<li class="nav-item">
-		    	<a class="nav-link" data-toggle="tab" href="#other-rounds">Other Rounds</a>
-			</li>
-		</ul>
+		<div class="squareline-tabs">
+			<ul class="nav nav-tabs">
+				@if($type=="proposal")
+				<li class="nav-item">
+			   		<a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#business-idea">Business Idea</a>
+				</li>
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#financial-projections">Financial Projections</a>
+				</li>
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#company-details">Company Details</a>
+				</li>
+				@elseif($type=="fund")			
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#manageroverview">Manager Overview</a>
+				</li>
+				<li class="nav-item">
+			   		<a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#productoverview">Product Overview</a>
+				</li>
+				@endif
+				
+				<li class="nav-item">
+			    	<a class="nav-link d-none d-sm-block" data-toggle="tab" href="#other-rounds">Other Rounds</a>
+				</li>
+			</ul>
+		</div>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div class="tab-pane active p-3" id="productoverview" role="tabpanel">
+			<div class="tab-pane p-3" id="productoverview" role="tabpanel">
 				<p class-"text-primary">Product Overview</p>
 				<p>{{isset($fund_productoverview)?$fund_productoverview:''}}</p>
 				<p class-"text-primary">Exit Strategy</p>
 				<p>{{isset($fundexitstrategy)?$fundexitstrategy:''}}</p>
 			</div>
-			<div class="tab-pane active p-3" id="manageroverview" role="tabpanel">
+			<div class="tab-pane p-3" id="manageroverview" role="tabpanel">
 				
 				<p>{{isset($fund_manageroverview)?$fund_manageroverview:''}}</p>
 				
@@ -478,83 +710,59 @@
 
 			<div class="tab-pane p-3" id="other-rounds" role="tabpanel">
 				<!-- test -->
-				<div class="row border proposal_horizontal-card">
-					<div class="col-sm-8 proposal-details">
-						<div class="media h-100">
-							<div class="proposal-logo align-self-center mr-3 text-center text-sm-left mt-3 mt-sm-0">
-								<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+				@if(count($business_rounds)>0)
+					@foreach($business_rounds as $business_round) 
+					@php
+					$business_round_link = url("/investment-opportunities/fund/" . $business_round['business_slug']);
+					if ($business_round['type'] == "proposal") {
+					    $business_round_link = url("investment-opportunities/single-company/" . $business_round['business_slug']);
+					}
+					@endphp
+					<div class="row border proposal_horizontal-car">
+						<div class="col-sm-8 proposal-details border-sm-right border-right-0">
+							<div class="media h-100 flex-wrap flex-sm-nowrap">
+								<div class="proposal-logo align-self-center mr-sm-3 mt-3 mt-sm-0 width-xs-100">
+									<div class="mw-60 mh-60 m-auto">
+										<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+									</div>
+								</div>
+								<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
+							    	<div class="w-100">
+							    		<p class="text-center text-sm-left">
+							    			<a href="{{$business_round_link}}">{{$business_round['business_title']}}</a>
+							    		</p>
+							    		<div class="row additional-info">
+							    			<div class="col-sm-4 text-center border-sm-right border-right-0 py-3 py-sm-0">
+							    				<strong class="text-primary">{{$business_round['watchlist_count']}}</strong>
+							    				<div>Added to watchlist</div>
+							    			</div>
+							    			<div class="col-sm-4 text-center border-sm-right border-right-0">
+							    				<strong class="text-primary">{{$business_round['pledge_count']}}</strong>
+							    				<div>Pledgers</div>
+							    			</div>
+							    			<div class="col-sm-4 text-center pt-3 pt-sm-0">
+							    				<strong class="text-primary">{{$business_round['funded_count']}}</strong>
+							    				<div>Investors</div>
+							    			</div>
+							    		</div>
+							    	</div>
+							  </div>
 							</div>
-							<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
-						    	<div class="w-100">
-						    		<p class="text-center text-sm-left">
-						    			<a href="">lorem ipsum dollar crudeo</a>
-						    		</p>
-						    		<div class="row additional-info">
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">7</strong>
-						    				<div>Added to watchlist</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">0</strong>
-						    				<div>Pledgers</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">4</strong>
-						    				<div>Investors</div>
-						    			</div>
-						    		</div>
-						    	</div>
-						  </div>
 						</div>
-					</div>
-					<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
-						<div class="view-proposal">
-							<p class="mb-1">1st Round</p>
-							<p class="mb-1">Total Investment: <span class="text-primary">&pound; 998</span></p>
-							<p>Number of Questions: <span class="text-primary">0</span></p>
-							<a href="" class="btn btn-primary">View Proposal</a>
-						</div>
-					</div>
-				</div>
-
-				<div class="row border proposal_horizontal-card">
-					<div class="col-sm-8 proposal-details">
-						<div class="media h-100">
-							<div class="proposal-logo align-self-center mr-3 text-center text-sm-left mt-3 mt-sm-0">
-								<img src="https://dummyimage.com/100x100" alt="" class="img-fluid">
+						<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
+							<div class="view-proposal">
+								<p class="mb-1">@if($round!='')
+									{{get_ordinal_number($business_round['biz_round'])}} round
+								@endif</p>
+								<p class="mb-1">Total Investment: <span class="text-primary">{{format_amount($business_round['fund_raised'], 0, true, true)}}</span></p>
+								<p>Number of Questions: <span class="text-primary">{{$business_round['comments_count']}}</span></p>
+								<a href="{{$business_round_link}}" class="btn btn-primary">View Proposal</a>
 							</div>
-							<div class="media-body d-sm-flex align-items-sm-center py-3 h-100">
-						    	<div class="w-100">
-						    		<p class="text-center text-sm-left">
-						    			<a href="">lorem ipsum dollar crudeo</a>
-						    		</p>
-						    		<div class="row additional-info">
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">7</strong>
-						    				<div>Added to watchlist</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">0</strong>
-						    				<div>Pledgers</div>
-						    			</div>
-						    			<div class="col-sm-4 text-center">
-						    				<strong class="text-primary">4</strong>
-						    				<div>Investors</div>
-						    			</div>
-						    		</div>
-						    	</div>
-						  </div>
 						</div>
 					</div>
-					<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
-						<div class="view-proposal">
-							<p class="mb-1">1st Round</p>
-							<p class="mb-1">Total Investment: <span class="text-primary">&pound; 998</span></p>
-							<p>Number of Questions: <span class="text-primary">0</span></p>
-							<a href="" class="btn btn-primary">View Proposal</a>
-						</div>
-					</div>
-				</div>
+					@endforeach
+				@endif
+				
 				<!-- /test -->
 			</div>
 
@@ -622,7 +830,7 @@
 								 			<div class="avatar align-self-start mr-3 mb-3 mb-sm-0 mw-150 mh-150">
 								 				<img class="img-fluid m-sm-auto m-sm-block" src="https://dummyimage.com/150x150" alt="Generic placeholder image">
 								 			</div>
-								 			<div class="media-body flex-basis-100">
+								 			<div class="media-body flex-basis-xs-100">
 								 		    	<h5 class="mt-0">{{$member['name']}} <small class="designation">({{$member['position']}})</small></h5>
 								 		    	<p class="bio">@if($member['bio']=="")  <p  class="bio text-danger" >No Information Provided</p>  @endif 
 								 		    	@if($member['bio']!="")
