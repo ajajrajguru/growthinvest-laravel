@@ -29,9 +29,9 @@ class UserPermission
 
                 'backoffice/user/{usertype}'                                  => ['users'],
                 'backoffice/user/export-users'                                => ['users'],
-                'backoffice/user/add/step-one'                                => ['add_user'],
-                'backoffice/user/{giCode}/step-one'                           => ['add_user'],
-                'backoffice/user/{giCode}/step-two'                           => ['add_user'],
+                'backoffice/user/add/intermediary-registration'               => ['add_user'],
+                'backoffice/user/{giCode}/intermediary-registration'          => ['add_user'],
+                'backoffice/user/{giCode}/intermediary-profile'               => ['add_user'],
                 'backoffice/user/save-step-one'                               => ['add_user'],
                 'backoffice/user/save-step-two'                               => ['add_user'],
                 'backoffice/user/delete-user'                                 => ['remove_users', 'delete_users', 'delete_user'],

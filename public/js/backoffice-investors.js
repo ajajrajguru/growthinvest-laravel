@@ -447,6 +447,25 @@
         });
       }
     });
+    $(document).on('click', '.validate-nominee-data', function() {
+      $('.parent-tabpanel').each(function() {
+        var hrefId, invalidTabHeadObj, isValidTab;
+        hrefId = $(this).attr('id');
+        isValidTab = 0;
+        invalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
+        invalidTabHeadObj.removeClass('border border-danger');
+        invalidTabHeadObj.find('.has-invalid-data').addClass('d-none');
+        return $(this).find('.completion_status').each(function() {
+          if (!$(this).parsley().isValid()) {
+            isValidTab++;
+            if (isValidTab > 0) {
+              invalidTabHeadObj.addClass('border border-danger');
+              return invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none');
+            }
+          }
+        });
+      });
+    });
     $(document).on('click', '.submit-signature', function() {
       $('input[name="send_signature"]').val('yes');
       return $('form[name="add-investor-ia"]').submit();
@@ -485,6 +504,9 @@
             return $(this).attr('data-parsley-required', true).attr('readonly', false).addClass('text-input-status').addClass('completion_status');
           }
         });
+        if ($('input[name="subscriptioninvamntbank"]').val() === '' && $('input[name="subscriptioninvamntcheq"]').val() === '') {
+          $('.bank-input').attr('data-parsley-required', true).attr('readonly', false).addClass('text-input-status').addClass('completion_status');
+        }
         return $('input[name="subscriptiontransferdate"]').attr('data-parsley-required', false).attr('readonly', false).addClass('text-input-status').addClass('completion_status');
       } else {
         return $('.bank-input').attr('data-parsley-required', false).attr('readonly', true).removeClass('text-input-status').removeClass('completion_status');
