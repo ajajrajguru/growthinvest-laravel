@@ -34,6 +34,9 @@ class CreateUsersTable extends Migration
             $table->integer('firm_id')->unsigned()->nullable(); 
             $table->string('gi_code');
             $table->timestamp('terms_n_condi_date')->nullable(); 
+            $table->string('lgbr',10)->nullable(); 
+            $table->integer('current_certification')->nullable(); 
+            $table->string('invite_key')->nullable(); 
             $table->integer('deleted')->nullable(); 
             $table->rememberToken();
             $table->timestamps();
