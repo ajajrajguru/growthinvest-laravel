@@ -32,17 +32,19 @@
     @endphp
    <div class="container mt-3">
     <!-- tabs -->
+    <div class="squareline-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
+                <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
+                <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#news-updates">News/Updates</a>
+                <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#news-updates">News/Updates</a>
             </li>
         </ul>
+    </div>
 
         <!-- Tab panes -->
         <div class="tab-content">
@@ -71,7 +73,7 @@
                 <div class="submit-query-cont">
                     <div class="form-group">
                         <label>Post your question</label>
-                        <textarea name="" id="" cols="" rows="3" class="form-control"></textarea>
+                        <textarea name="" id="" cols="" rows="3" class="form-control" placeholder="what is your question?"></textarea>
                     </div>
 
                     <div class="form-group">
