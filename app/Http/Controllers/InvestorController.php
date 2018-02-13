@@ -115,14 +115,14 @@ class InvestorController extends Controller
 
             $nameHtml = '<b><a href="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">
+            $actionHtml = '<select class="form-control investor_actions form-control-sm" >
             <option id="select" value="">-Select-</option>
-            <option value="edit_profile">View Profile</option>
+            <option value="edit_profile" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-profile') .'">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
             <option value="manage_documents">View Investor Documents</option>
-            <option value="message_board">View Message Board</option>
+            <option value="message_board" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-news-update') .'">View Message Board</option>
             <option value="nominee_application">Investment Account</option>
-            <option value="investoffers">Investment Offers</option>
+            <option value="investoffers" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-invest') .'">Investment Offers</option>
             </select>';
 
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';

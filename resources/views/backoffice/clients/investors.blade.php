@@ -18,8 +18,11 @@
         });
 
         $(document).on('change', '.investor_actions', function() {
-           var editUrl = $(this).attr('edit-url')
-           window.open(editUrl);
+           var editUrl = $('option:selected', this).attr('edit-url');
+           if(editUrl!=''){
+            window.open(editUrl);
+           }
+           
         });
     });
 
