@@ -155,11 +155,11 @@ class InvestorController extends Controller
             $join->on('users.id', '=', 'model_has_roles.model_id')
                 ->where('model_has_roles.model_type', 'App\User');
         })->join('roles', function ($join) {
-            $join->on('model_has_roles.role_id', '=', 'roles.id')
-                ->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
+            $join->on('model_has_roles.role_id', '=', 'roles.id');
+               
         })->leftjoin('user_has_certifications', function ($join) {
             $join->on('users.id', 'user_has_certifications.user_id');
-        });
+        })->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
 
         
 
@@ -193,8 +193,12 @@ class InvestorController extends Controller
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
-                $investorQuery->whereNull('users.current_certification');
-                // $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+                $investorQuery->where(function($query)
+                {
+                    $query->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', ''); 
+                });
+                // $investorQuery->whereNull('users.current_certification');
+                
             } else {
                 $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
