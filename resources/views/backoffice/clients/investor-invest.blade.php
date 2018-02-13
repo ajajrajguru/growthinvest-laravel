@@ -60,7 +60,7 @@
                                 <select name="company" class="form-control">
                                   <option value="">All</option>
                                   @foreach($companyNames as $companyName)
-                                    <option value="{{ $companyName->id }}">{{ ucfirst($companyName->title) }}</option>
+                                    <option @if(isset($requestFilters['company']) && $requestFilters['company'] == $companyName->id) selected @endif value="{{ $companyName->id }}">{{ ucfirst($companyName->title) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -71,7 +71,7 @@
                                 <select name="sector" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($sectors as $sector)
-                                    <option value="{{ $sector->id }}">{{ ucfirst($sector->name) }}</option>
+                                    <option @if(isset($requestFilters['sector']) && $requestFilters['sector'] == $sector->id) selected @endif value="{{ $sector->id }}">{{ ucfirst($sector->name) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -82,7 +82,7 @@
                                 <select name="type" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($investmentOfferType as $typeKey => $type)
-                                    <option value="{{ $typeKey }}">{{ $type }}</option>
+                                    <option @if(isset($requestFilters['type']) && $requestFilters['type'] == $typeKey) selected @endif value="{{ $typeKey }}">{{ $type }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -93,7 +93,7 @@
                                 <select name="manager" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($managers as $manager)
-                                    <option value="{{ $manager }}">{{ ucfirst($manager) }}</option>
+                                    <option  @if(isset($requestFilters['manager']) && $requestFilters['manager'] == $manager) selected @endif value="{{ $manager }}">{{ ucfirst($manager) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -104,12 +104,12 @@
                         <div>
                           @foreach(investmentTaxStatus() as $taxStatus => $taxStatusVal)
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="{{ $taxStatus }}" id="che{{ $taxStatus }}">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="{{ $taxStatus }}" id="che{{ $taxStatus }}" @if(isset($requestFilters['status']) &&  in_array($taxStatus,$requestFilters['status'])) checked @endif @if(isset($requestFilters['status']) &&  in_array('all',$requestFilters['status'])) disabled @endif>
                               <label class="custom-control-label" for="che{{ $taxStatus }}">{{ $taxStatusVal }}</label>
                             </div>
                           @endforeach
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input checked-all" value="all" id="chall">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input checked-all" value="all" id="chall" @if(isset($requestFilters['status']) &&  in_array('all',$requestFilters['status'])) checked @endif>
                               <label class="custom-control-label" for="chall">ALL</label>
                             </div>
                         </div>

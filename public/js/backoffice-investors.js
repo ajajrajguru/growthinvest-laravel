@@ -800,6 +800,30 @@
       });
     });
     $('body').on('click', '.apply-invest-filters', function() {
+      var status, urlParams;
+      urlParams = '';
+      if ($('select[name="company"]').val() !== "") {
+        urlParams += 'company=' + $('select[name="company"]').val();
+      }
+      if ($('select[name="sector"]').val() !== "") {
+        urlParams += '&sector=' + $('select[name="sector"]').val();
+      }
+      if ($('select[name="type"]').val() !== "") {
+        urlParams += '&type=' + $('select[name="type"]').val();
+      }
+      if ($('select[name="manager"]').val() !== "") {
+        urlParams += '&manager=' + $('select[name="manager"]').val();
+      }
+      status = '';
+      $('input[name="tax_status[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return status += $(this).val() + ',';
+        }
+      });
+      if (status !== "") {
+        urlParams += '&status=' + status;
+      }
+      window.history.pushState("", "", "?" + urlParams);
       return investorInvestTable.ajax.reload();
     });
     return $('body').on('click', '.reset-invest-filters', function() {
@@ -808,6 +832,7 @@
       $('select[name="type"]').val('');
       $('select[name="manager"]').val('');
       $('input[name="tax_status[]"]').prop('checked', false);
+      window.history.pushState("", "", "?");
       investorInvestTable.ajax.reload();
     });
   });

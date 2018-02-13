@@ -195,12 +195,11 @@ class InvestorController extends Controller
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
-                $investorQuery->where(function($query)
-                {
-                    $query->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', ''); 
+                $investorQuery->where(function ($query) {
+                    $query->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
                 });
                 // $investorQuery->whereNull('users.current_certification');
-                
+
             } else {
                 $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
@@ -396,8 +395,8 @@ class InvestorController extends Controller
 
             $userExist = User::where('email', $email)->first();
 
-            if(!empty($userExist)){
-                Session::flash('error_message', 'Investor with '.$email.' already exist.');
+            if (!empty($userExist)) {
+                Session::flash('error_message', 'Investor with ' . $email . ' already exist.');
                 return redirect()->back()->withInput();
             }
 
@@ -1018,12 +1017,13 @@ class InvestorController extends Controller
         $nomineeDetails['clientbankpostcode']                 = $requestData['clientbankpostcode'];
         $nomineeDetails['adviserinitialinvestpercent']        = $requestData['adviserinitialinvestpercent'];
         $nomineeDetails['adviserinitialinvestfixedamnt']      = $requestData['adviserinitialinvestfixedamnt'];
+        $nomineeDetails['adviservattobeapplied']            = (isset($requestData['adviservattobeapplied'])) ? $requestData['adviservattobeapplied'] : '';
         $nomineeDetails['advdetailsnotapplicable']            = (isset($requestData['advdetailsnotapplicable'])) ? $requestData['advdetailsnotapplicable'] : '';
         $nomineeDetails['ongoingadvinitialinvestpercent']     = $requestData['ongoingadvinitialinvestpercent'];
         $nomineeDetails['ongoingadvinitialinvestfixedamnt']   = $requestData['ongoingadvinitialinvestfixedamnt'];
-        $nomineeDetails['ongoingadvchargesvatyettobeapplied'] = $requestData['ongoingadvchargesvatyettobeapplied'];
+        $nomineeDetails['ongoingadvchargesvatyettobeapplied'] = (isset($requestData['ongoingadvchargesvatyettobeapplied'])) ? $requestData['ongoingadvchargesvatyettobeapplied'] : '';
         $nomineeDetails['intermediaryinitialinvestpercent']   = $requestData['intermediaryinitialinvestpercent'];
-        $nomineeDetails['intermediaryvattobeapplied']         = $requestData['intermediaryvattobeapplied'];
+        $nomineeDetails['intermediaryvattobeapplied']         = (isset($requestData['intermediaryvattobeapplied'])) ? $requestData['intermediaryvattobeapplied'] : '';
         $nomineeDetails['intermediaryinitialinvestfixedamnt'] = $requestData['intermediaryinitialinvestfixedamnt'];
         $nomineeDetails['agreeclientdeclaration']             = (isset($requestData['agreeclientdeclaration'])) ? $requestData['agreeclientdeclaration'] : '';
         $nomineeDetails['nomverificationwithoutface']         = (isset($requestData['nomverificationwithoutface'])) ? $requestData['nomverificationwithoutface'] : '';
@@ -1282,12 +1282,20 @@ class InvestorController extends Controller
 
     }
 
-    public function investorInvest($giCode)
+    public function investorInvest(Request $request, $giCode)
     {
         $investor = User::where('gi_code', $giCode)->first();
         if (empty($investor)) {
             abort(404);
         }
+
+        $requestFilters = $request->all();
+        if (isset($requestFilters['status'])) {
+            $status                   = explode(',', $requestFilters['status']);
+            $requestFilters['status'] = array_filter($status);
+
+        }
+        //dd($requestFilters);
         $businessListings = new BusinessListing;
         $companyNames     = $businessListings->getCompanyNames();
         $sectors          = getBusinessSectors();
@@ -1310,6 +1318,7 @@ class InvestorController extends Controller
         $data['investmentOfferType'] = investmentOfferType();
         $data['sectors']             = $sectors;
         $data['managers']            = $managers;
+        $data['requestFilters']      = $requestFilters;
         $data['breadcrumbs']         = $breadcrumbs;
         $data['pageTitle']           = 'View Invest Listings';
         $data['activeMenu']          = 'manage_clients';

@@ -23,10 +23,7 @@ $(document).ready ->
         data
 
       error: ->
-
-
         return
-
 
     'columns': [
       { 'data': '#' , "orderable": false}
@@ -700,10 +697,7 @@ $(document).ready ->
         data
 
       error: ->
-
-
         return
-
 
     'columns': [
       { 'data': 'offer' }
@@ -743,6 +737,29 @@ $(document).ready ->
     # investorInvestTable.draw()
 
   $('body').on 'click', '.apply-invest-filters', ->
+    urlParams = ''
+
+    if($('select[name="company"]').val()!="")
+      urlParams +='company='+$('select[name="company"]').val() 
+
+    if($('select[name="sector"]').val()!="")
+      urlParams +='&sector='+$('select[name="sector"]').val()
+
+    if($('select[name="type"]').val()!="")
+      urlParams +='&type='+$('select[name="type"]').val()
+
+    if($('select[name="manager"]').val()!="")
+      urlParams +='&manager='+$('select[name="manager"]').val()
+ 
+    status = ''
+    $('input[name="tax_status[]"]').each ->
+      if $(this).is(':checked')
+        status += $(this).val()+','
+    if(status!="")
+      urlParams +='&status='+status
+
+    window.history.pushState("", "", "?"+urlParams);
+
     investorInvestTable.ajax.reload()
 
   $('body').on 'click', '.reset-invest-filters', ->
@@ -751,7 +768,7 @@ $(document).ready ->
     $('select[name="type"]').val('')
     $('select[name="manager"]').val('')
     $('input[name="tax_status[]"]').prop('checked',false)
-   
+    window.history.pushState("", "", "?");
     investorInvestTable.ajax.reload()
     return
 
