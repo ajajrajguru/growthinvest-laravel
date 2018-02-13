@@ -686,7 +686,7 @@ $(document).ready ->
     'columns': [
       { 'data': 'offer' }
       { 'data': 'manager' }
-      { 'data': 'tax_status'}
+      { 'data': 'tax_status', "orderable": false}
       { 'data': 'type' }
       { 'data': 'focus' }
       { 'data': 'taget_raise' }
@@ -698,6 +698,8 @@ $(document).ready ->
     ])
 
 
+  $('body').on 'click', '.post-your-question', ->
+    $('.post-your-question-cont').removeClass('d-none')
   
   $('body').on 'change', 'input[name="tax_status[]"]', ->
     if $(this).is(':checked') && $(this).val()=='all'

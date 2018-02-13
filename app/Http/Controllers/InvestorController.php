@@ -1290,7 +1290,8 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Invest Listings'];
 
         $data['investor']            = $investor;
         $data['companyNames']        = (!empty($companyNames)) ? $companyNames : [];
@@ -1298,7 +1299,7 @@ class InvestorController extends Controller
         $data['sectors']             = $sectors;
         $data['managers']            = $managers;
         $data['breadcrumbs']         = $breadcrumbs;
-        $data['pageTitle']           = 'View Profile';
+        $data['pageTitle']           = 'View Invest Listings';
         $data['activeMenu']          = 'manage_clients';
 
         return view('backoffice.clients.investor-invest')->with($data);
@@ -1457,11 +1458,13 @@ class InvestorController extends Controller
         $breadcrumbs[]       = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[]       = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[]       = ['url' => '', 'name' => 'Manage Investors'];
-        $breadcrumbs[]       = ['url' => '', 'name' => 'View Profile'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View News/Updates'];
+
         $data['comments']    = getObjectComments("App\User", $investor->id, 0);
         $data['investor']    = $investor;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'View Profile';
+        $data['pageTitle']   = 'View News/Updates';
         $data['activeMenu']  = 'manage_clients';
 
         return view('backoffice.clients.investor-news-update')->with($data);

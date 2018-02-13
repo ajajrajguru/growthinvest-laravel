@@ -733,7 +733,8 @@
         }, {
           'data': 'manager'
         }, {
-          'data': 'tax_status'
+          'data': 'tax_status',
+          "orderable": false
         }, {
           'data': 'type'
         }, {
@@ -752,6 +753,9 @@
           "orderable": false
         }
       ]
+    });
+    $('body').on('click', '.post-your-question', function() {
+      return $('.post-your-question-cont').removeClass('d-none');
     });
     $('body').on('change', 'input[name="tax_status[]"]', function() {
       if ($(this).is(':checked') && $(this).val() === 'all') {
