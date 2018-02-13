@@ -6,6 +6,7 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
+      "dom": '<"top"li>t<"bottom"ip>',
       'aaSorting': [[1, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investors',
@@ -53,6 +54,7 @@
       $('select[name="client_certification"]').val('');
       $('select[name="investor_nominee"]').val('');
       $('select[name="idverified"]').val('');
+      window.history.pushState("", "", "?");
       investorTable.ajax.reload();
     });
     $('.download-investor-csv').click(function() {
@@ -72,6 +74,27 @@
       return window.open("/backoffice/investor/export-investors?firm_name=" + firm_name + "&investor_name=" + investor_name + "&client_category=" + client_category + "&client_certification=" + client_certification + "&investor_nominee=" + investor_nominee + "&idverified=" + idverified + "&user_ids=" + userIds);
     });
     $('.investorSearchinput').change(function() {
+      var urlParams;
+      urlParams = '';
+      if ($('select[name="firm_name"]').val() !== "") {
+        urlParams += 'firm=' + $('select[name="firm_name"]').val();
+      }
+      if ($('select[name="investor_name"]').val() !== "") {
+        urlParams += '&investor=' + $('select[name="investor_name"]').val();
+      }
+      if ($('select[name="client_category"]').val() !== "") {
+        urlParams += '&client-category=' + $('select[name="client_category"]').val();
+      }
+      if ($('select[name="client_certification"]').val() !== "") {
+        urlParams += '&client-certification=' + $('select[name="client_certification"]').val();
+      }
+      if ($('select[name="investor_nominee"]').val() !== "") {
+        urlParams += '&investor-nominee=' + $('select[name="investor_nominee"]').val();
+      }
+      if ($('select[name="idverified"]').val() !== "") {
+        urlParams += '&idverified=' + $('select[name="idverified"]').val();
+      }
+      window.history.pushState("", "", "?" + urlParams);
       investorTable.ajax.reload();
     });
     validateQuiz = function(btnObj) {
@@ -547,7 +570,7 @@
       }
     });
     $(document).on('change', '.completion_status', function() {
-      var cardObj, dataInComp, dataValid, sectionNo;
+      var cardObj, dataInComp, dataValid, isSubIncomp, sectionNo;
       cardObj = $(this).closest('.parent-tabpanel');
       sectionNo = cardObj.attr('data-section');
       dataValid = 0;
@@ -574,11 +597,22 @@
       if (dataInComp === 0 && dataValid === 0) {
         console.log('Complete');
         $('.section' + sectionNo + '-status').text('Complete');
-        return $('.section' + sectionNo + '-status-input').val('complete');
+        $('.section' + sectionNo + '-status-input').val('complete');
       } else {
         console.log('Incomplete');
         $('.section' + sectionNo + '-status').text('Incomplete');
-        return $('.section' + sectionNo + '-status-input').val('incomplete');
+        $('.section' + sectionNo + '-status-input').val('incomplete');
+      }
+      isSubIncomp = 0;
+      $('.sectionstatus-input').each(function() {
+        if ($(this).val() !== "complete") {
+          return isSubIncomp++;
+        }
+      });
+      if (isSubIncomp === 0 && $('.submit-signature').attr('doc-key-exist') === 'no') {
+        return $('.submit-signature').attr('disabled', false);
+      } else {
+        return $('.submit-signature').attr('disabled', true);
       }
     });
     $(document).on('keyup', '.invest-perc', function() {
@@ -693,6 +727,7 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
+      "dom": '<"top"li>t<"bottom"ip>',
       'aaSorting': [[0, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investor-invest',
@@ -722,7 +757,8 @@
         }, {
           'data': 'manager'
         }, {
-          'data': 'tax_status'
+          'data': 'tax_status',
+          "orderable": false
         }, {
           'data': 'type'
         }, {
@@ -741,6 +777,9 @@
           "orderable": false
         }
       ]
+    });
+    $('body').on('click', '.post-your-question', function() {
+      return $('.post-your-question-cont').removeClass('d-none');
     });
     $('body').on('change', 'input[name="tax_status[]"]', function() {
       if ($(this).is(':checked') && $(this).val() === 'all') {
@@ -762,6 +801,30 @@
       });
     });
     $('body').on('click', '.apply-invest-filters', function() {
+      var status, urlParams;
+      urlParams = '';
+      if ($('select[name="company"]').val() !== "") {
+        urlParams += 'company=' + $('select[name="company"]').val();
+      }
+      if ($('select[name="sector"]').val() !== "") {
+        urlParams += '&sector=' + $('select[name="sector"]').val();
+      }
+      if ($('select[name="type"]').val() !== "") {
+        urlParams += '&type=' + $('select[name="type"]').val();
+      }
+      if ($('select[name="manager"]').val() !== "") {
+        urlParams += '&manager=' + $('select[name="manager"]').val();
+      }
+      status = '';
+      $('input[name="tax_status[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return status += $(this).val() + ',';
+        }
+      });
+      if (status !== "") {
+        urlParams += '&status=' + status;
+      }
+      window.history.pushState("", "", "?" + urlParams);
       return investorInvestTable.ajax.reload();
     });
     return $('body').on('click', '.reset-invest-filters', function() {
@@ -770,6 +833,7 @@
       $('select[name="type"]').val('');
       $('select[name="manager"]').val('');
       $('input[name="tax_status[]"]').prop('checked', false);
+      window.history.pushState("", "", "?");
       investorInvestTable.ajax.reload();
     });
   });

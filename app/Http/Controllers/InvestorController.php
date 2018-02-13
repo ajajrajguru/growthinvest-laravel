@@ -30,10 +30,12 @@ class InvestorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user      = new User;
         $investors = $user->getInvestorUsers();
+
+        $requestFilters = $request->all();
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
@@ -50,6 +52,7 @@ class InvestorController extends Controller
 
         $data['certificationTypes'] = $certificationTypes;
         $data['clientCategories']   = $clientCategories;
+        $data['requestFilters']     = $requestFilters;
         $data['firms']              = $firms;
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
@@ -112,14 +115,14 @@ class InvestorController extends Controller
 
             $nameHtml = '<b><a href="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">' . $investor->first_name . ' ' . $investor->last_name . '</a></b><br><a class="investor_email text-small" href="mailto: ' . $investor->email . '">' . $investor->email . '</a><br>' . $certificationName;
 
-            $actionHtml = '<select class="form-control investor_actions form-control-sm" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">
+            $actionHtml = '<select class="form-control investor_actions form-control-sm" >
             <option id="select" value="">-Select-</option>
-            <option value="edit_profile">View Profile</option>
+            <option value="edit_profile" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-profile') .'">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
             <option value="manage_documents">View Investor Documents</option>
-            <option value="message_board">View Message Board</option>
+            <option value="message_board" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-news-update') .'">View Message Board</option>
             <option value="nominee_application">Investment Account</option>
-            <option value="investoffers">Investment Offers</option>
+            <option value="investoffers" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-invest') .'">Investment Offers</option>
             </select>';
 
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
@@ -155,14 +158,13 @@ class InvestorController extends Controller
             $join->on('users.id', '=', 'model_has_roles.model_id')
                 ->where('model_has_roles.model_type', 'App\User');
         })->join('roles', function ($join) {
-            $join->on('model_has_roles.role_id', '=', 'roles.id')
-                ->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
+            $join->on('model_has_roles.role_id', '=', 'roles.id');
+
         })->leftjoin('user_has_certifications', function ($join) {
             $join->on('users.id', 'user_has_certifications.user_id');
-        });
+        })->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
 
-        
-
+        $investorQuery->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investorQuery->where('users.firm_id', $filters['firm_name']);
         }
@@ -180,7 +182,7 @@ class InvestorController extends Controller
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
             $investorQuery->where('users.current_certification', $filters['client_category']);
-             
+
             // $investorQuery->whereIn('users.id', function ($query) use ($filters) {
             //     $query->select('user_id')
             //         ->from(with(new UserHasCertification)->getTable())
@@ -193,8 +195,11 @@ class InvestorController extends Controller
 
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
-                $investorQuery->whereNull('users.current_certification');
-                // $investorQuery->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+                $investorQuery->where(function ($query) {
+                    $query->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+                });
+                // $investorQuery->whereNull('users.current_certification');
+
             } else {
                 $investorQuery->where('user_has_certifications.certification', $filters['client_certification']);
             }
@@ -232,7 +237,7 @@ class InvestorController extends Controller
             $investorQuery->orderBy($columnName, $orderBy);
         }
         // $investorQuery->orderBy('user_has_certifications.updated_at', 'desc');
-
+        // \DB::enableQueryLog();
         if ($length > 1) {
 
             $totalInvestors = $investorQuery->get()->count();
@@ -241,7 +246,7 @@ class InvestorController extends Controller
             $investors      = $investorQuery->get();
             $totalInvestors = $investorQuery->count();
         }
-
+        // dd(\DB::getQueryLog());
         return ['totalInvestors' => $totalInvestors, 'list' => $investors];
 
     }
@@ -387,6 +392,13 @@ class InvestorController extends Controller
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
         if ($giCode == '') {
+
+            $userExist = User::where('email', $email)->first();
+
+            if (!empty($userExist)) {
+                Session::flash('error_message', 'Investor with ' . $email . ' already exist.');
+                return redirect()->back()->withInput();
+            }
 
             if (isset($requestData['g-recaptcha-response'])) {
 
@@ -1005,12 +1017,13 @@ class InvestorController extends Controller
         $nomineeDetails['clientbankpostcode']                 = $requestData['clientbankpostcode'];
         $nomineeDetails['adviserinitialinvestpercent']        = $requestData['adviserinitialinvestpercent'];
         $nomineeDetails['adviserinitialinvestfixedamnt']      = $requestData['adviserinitialinvestfixedamnt'];
+        $nomineeDetails['adviservattobeapplied']            = (isset($requestData['adviservattobeapplied'])) ? $requestData['adviservattobeapplied'] : '';
         $nomineeDetails['advdetailsnotapplicable']            = (isset($requestData['advdetailsnotapplicable'])) ? $requestData['advdetailsnotapplicable'] : '';
         $nomineeDetails['ongoingadvinitialinvestpercent']     = $requestData['ongoingadvinitialinvestpercent'];
         $nomineeDetails['ongoingadvinitialinvestfixedamnt']   = $requestData['ongoingadvinitialinvestfixedamnt'];
-        $nomineeDetails['ongoingadvchargesvatyettobeapplied'] = $requestData['ongoingadvchargesvatyettobeapplied'];
+        $nomineeDetails['ongoingadvchargesvatyettobeapplied'] = (isset($requestData['ongoingadvchargesvatyettobeapplied'])) ? $requestData['ongoingadvchargesvatyettobeapplied'] : '';
         $nomineeDetails['intermediaryinitialinvestpercent']   = $requestData['intermediaryinitialinvestpercent'];
-        $nomineeDetails['intermediaryvattobeapplied']         = $requestData['intermediaryvattobeapplied'];
+        $nomineeDetails['intermediaryvattobeapplied']         = (isset($requestData['intermediaryvattobeapplied'])) ? $requestData['intermediaryvattobeapplied'] : '';
         $nomineeDetails['intermediaryinitialinvestfixedamnt'] = $requestData['intermediaryinitialinvestfixedamnt'];
         $nomineeDetails['agreeclientdeclaration']             = (isset($requestData['agreeclientdeclaration'])) ? $requestData['agreeclientdeclaration'] : '';
         $nomineeDetails['nomverificationwithoutface']         = (isset($requestData['nomverificationwithoutface'])) ? $requestData['nomverificationwithoutface'] : '';
@@ -1041,13 +1054,16 @@ class InvestorController extends Controller
         $nomineeApplication->chargesfinancial_advisor_details = $investorFai;
         $nomineeApplication->save();
 
+        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
+
         $this->onfidoRequest($investor, $sendSignature, $nomineeverification);
         if ($nomineeApplication->adobe_doc_key == '' && $sendSignature == 'yes') {
 
             $this->adobeSignataureEmail($investor);
+
+            $successMessage = 'Thank you for your submission to the Investment Account. One of our client services team will be in touch shortly to confirm any additional information that we require.';
         }
 
-        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
         Session::flash('success_message', $successMessage);
 
         return redirect(url('backoffice/investor/' . $giCode . '/investment-account'));
@@ -1161,7 +1177,7 @@ class InvestorController extends Controller
         if ($nomineeApplication->adobe_doc_key == false || $nomineeApplication->adobe_doc_key == "") {
             $investorPdf                 = new InvestorPdfHtml();
             $dataInvestorNomination      = $investor->getInvestorNomineeData();
-            $additionalArgs['pdfaction'] = '';
+            $additionalArgs['pdfaction'] = 'esign';
             $html                        = $investorPdf->getHtmlForNominationApplicationformPdf($dataInvestorNomination, 'nomination', '', $additionalArgs);
             $now_date                    = date('d-m-Y', time());
 
@@ -1197,8 +1213,8 @@ class InvestorController extends Controller
                 'pdf_url'         => $output_link,
                 'name'            => $adobesign_name,
                 'message'         => $adobesign_message,
-                'recipient_email' => 'prajay@ajency.in',
-                'ccs'             => 'sharang@ajency.in',
+                'recipient_email' => $investor->email,
+                'ccs'             => 'cinthia@ajency.in',
                 'callbackInfo'    => $callbackurl,
             );
 
@@ -1253,6 +1269,7 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
         $data['investor']              = $investor;
@@ -1265,12 +1282,20 @@ class InvestorController extends Controller
 
     }
 
-    public function investorInvest($giCode)
+    public function investorInvest(Request $request, $giCode)
     {
         $investor = User::where('gi_code', $giCode)->first();
         if (empty($investor)) {
             abort(404);
         }
+
+        $requestFilters = $request->all();
+        if (isset($requestFilters['status'])) {
+            $status                   = explode(',', $requestFilters['status']);
+            $requestFilters['status'] = array_filter($status);
+
+        }
+        //dd($requestFilters);
         $businessListings = new BusinessListing;
         $companyNames     = $businessListings->getCompanyNames();
         $sectors          = getBusinessSectors();
@@ -1285,15 +1310,17 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Invest Listings'];
 
         $data['investor']            = $investor;
         $data['companyNames']        = (!empty($companyNames)) ? $companyNames : [];
         $data['investmentOfferType'] = investmentOfferType();
         $data['sectors']             = $sectors;
         $data['managers']            = $managers;
+        $data['requestFilters']      = $requestFilters;
         $data['breadcrumbs']         = $breadcrumbs;
-        $data['pageTitle']           = 'View Profile';
+        $data['pageTitle']           = 'View Invest Listings';
         $data['activeMenu']          = 'manage_clients';
 
         return view('backoffice.clients.investor-invest')->with($data);
@@ -1448,15 +1475,17 @@ class InvestorController extends Controller
             abort(404);
         }
 
-        $breadcrumbs         = [];
-        $breadcrumbs[]       = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
-        $breadcrumbs[]       = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
-        $breadcrumbs[]       = ['url' => '', 'name' => 'Manage Investors'];
-        $breadcrumbs[]       = ['url' => '', 'name' => 'View Profile'];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View News/Updates'];
+
         $data['comments']    = getObjectComments("App\User", $investor->id, 0);
         $data['investor']    = $investor;
         $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'View Profile';
+        $data['pageTitle']   = 'View News/Updates';
         $data['activeMenu']  = 'manage_clients';
 
         return view('backoffice.clients.investor-news-update')->with($data);

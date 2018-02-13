@@ -59,7 +59,7 @@
                 <p>Effectively communicate with your investors by posting and replying to their questions</p>
 
                 <div class="form-group">
-                    <a href="" class="btn btn-primary text-uppercase">post your question</a>
+                    <button class="btn btn-primary text-uppercase post-your-question">post your question</button>
                 </div>
 
                 <!-- post question -->
@@ -70,7 +70,7 @@
                 </div>
                 <!-- /post question -->
                 
-                <div class="submit-query-cont">
+                <div class="submit-query-cont post-your-question-cont d-none">
                     <div class="form-group">
                         <label>Post your question</label>
                         <textarea name="" id="" cols="" rows="3" class="form-control" placeholder="what is your question?"></textarea>
