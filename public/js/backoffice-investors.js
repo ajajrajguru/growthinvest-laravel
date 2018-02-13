@@ -727,6 +727,7 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
+      "dom": '<"top"li>t<"bottom"ip>',
       'aaSorting': [[0, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investor-invest',
