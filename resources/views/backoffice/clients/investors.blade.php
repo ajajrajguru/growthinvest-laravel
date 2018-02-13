@@ -135,7 +135,7 @@
                         </div>
 
                         <div class="table-responsive mt-3">
-                            <table id="datatable-investors" class="table dataFilterTable table-hover table-striped-bg">
+                            <table id="datatable-investors" class="table dataFilterTable table-hover table-solid-bg">
                                 <thead>
                                     <tr>
                                         <th></th>

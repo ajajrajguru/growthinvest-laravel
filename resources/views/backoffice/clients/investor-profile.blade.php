@@ -85,7 +85,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="">
-                            <label for="">Identitiy Report</label>
+                            <label for="">AML Report</label>
                             <input type="text" class="form-control">
                         </div>
                     </div>

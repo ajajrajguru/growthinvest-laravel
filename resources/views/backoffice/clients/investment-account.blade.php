@@ -272,7 +272,7 @@
                                             <p class="mt-3 text-center">EITHER</p>
                                                 
                                             <div class="form-group">
-                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
+                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Tax Identification Number (TIN)" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
                                                 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif</div>
 
