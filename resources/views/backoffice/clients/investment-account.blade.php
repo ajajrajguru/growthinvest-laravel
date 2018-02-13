@@ -734,7 +734,7 @@
                                                               <label class="custom-control-label" for="ongoingadvchargesvatyettobeapplied_yes">Yes</label>
                                                             </div>
                                                             <div class="custom-control custom-radio custom-control-inline">
-                                                              <input type="radio" id="ongoingadvchargesvatyettobeapplied_no" name="ongoingadvchargesvatyettobeapplied" value="no" class="custom-control-input" @if(empty($nomineeDetails)) checked @endif  @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvchargesvatyettobeapplied']) && $nomineeDetails['ongoingadvchargesvatyettobeapplied']=='no') checked  @endif>
+                                                              <input type="radio" id="ongoingadvchargesvatyettobeapplied_no" name="ongoingadvchargesvatyettobeapplied" value="no" class="custom-control-input" @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvchargesvatyettobeapplied']) && $nomineeDetails['ongoingadvchargesvatyettobeapplied']=='no') checked  @endif>
                                                               <label class="custom-control-label" for="ongoingadvchargesvatyettobeapplied_no">No</label>
                                                             </div>
                                                         </div>
@@ -770,7 +770,7 @@
                                                               <label class="custom-control-label" for="intermediaryvattobeapplied_yes">Yes</label>
                                                             </div>
                                                             <div class="custom-control custom-radio custom-control-inline">
-                                                              <input type="radio" id="intermediaryvattobeapplied_no" name="intermediaryvattobeapplied" value="no" class="custom-control-input" @if(empty($nomineeDetails)) checked @endif @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryvattobeapplied']) && $nomineeDetails['intermediaryvattobeapplied']=='no') checked  @endif>
+                                                              <input type="radio" id="intermediaryvattobeapplied_no" name="intermediaryvattobeapplied" value="no" class="custom-control-input" @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryvattobeapplied']) && $nomineeDetails['intermediaryvattobeapplied']=='no') checked  @endif>
                                                               <label class="custom-control-label" for="intermediaryvattobeapplied_no">No</label>
                                                             </div>
                                                         </div>
