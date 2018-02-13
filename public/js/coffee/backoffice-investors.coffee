@@ -534,42 +534,48 @@ $(document).ready ->
     
  
   $(document).on 'keyup', '.invest-perc', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
-    ipEmpty = true
+    ipEmpty = 0
     $('.invest-perc').each ->
-      if($(this).val()!="" && ipEmpty)
-        ipEmpty = false
+      if($(this).val()!="" && ipEmpty==0)
+        ipEmpty++
 
-    if !ipEmpty
+    if ipEmpty > 0
       $('.aic-investment-input').attr('readonly',true)
       $('.invest-amount').attr('readonly',true)
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
+
+    return
 
   $(document).on 'keyup', '.invest-amount', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
-    iaEmpty = true
+    iaEmpty = 0
     $('.invest-amount').each ->
       if($(this).val()!="" && iaEmpty)
-        iaEmpty = false
+        iaEmpty++
 
-    if !iaEmpty
+    if iaEmpty > 0
       $('.aic-investment-input').attr('readonly',true)
       $('.invest-perc').attr('readonly',true)
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
+
+    return
 
   $(document).on 'keyup', '.aic-investment-perc', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
     if($(this).val()!="")
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-amount').attr('readonly',true)
+    else
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
 
   $(document).on 'keyup', '.aic-investment-amount', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
     if($(this).val()!="")
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-perc').attr('readonly',true)
+    else
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
 
 
   $(document).on 'click', '.reply-comment', ->
