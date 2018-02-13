@@ -388,6 +388,13 @@ class InvestorController extends Controller
 
         if ($giCode == '') {
 
+            $userExist = User::where('email', $email)->first();
+
+            if(!empty($userExist)){
+                Session::flash('error_message', 'Investor with '.$email.' already exist.');
+                return redirect()->back()->withInput();
+            }
+
             if (isset($requestData['g-recaptcha-response'])) {
 
                 $jsonResponse = recaptcha_validate($requestData['g-recaptcha-response']);
