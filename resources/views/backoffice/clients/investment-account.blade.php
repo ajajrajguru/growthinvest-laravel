@@ -233,7 +233,7 @@
                                             <div class="form-group">
                                                 <label>National Insurance Number <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
   
-                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif"  name="nationalinsuranceno" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif" data-parsley-maxlength="9">
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif"  name="nationalinsuranceno" data-parsley-trigger="keyup" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif" data-parsley-maxlength="9">
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif</div>
  
  
