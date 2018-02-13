@@ -531,6 +531,20 @@ $(document).ready ->
       console.log 'Incomplete'
       $('.section'+sectionNo+'-status').text('Incomplete') 
       $('.section'+sectionNo+'-status-input').val('incomplete')
+
+    isSubIncomp = 0
+    $('.sectionstatus-input').each ->
+      if($(this).val()!="complete")
+        isSubIncomp++
+
+    if isSubIncomp == 0 && $('.submit-signature').attr('doc-key-exist') == 'no'
+      $('.submit-signature').attr('disabled',false);
+    else
+      $('.submit-signature').attr('disabled',true);
+
+
+
+
     
  
   $(document).on 'keyup', '.invest-perc', ->

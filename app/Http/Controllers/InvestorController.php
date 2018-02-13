@@ -232,7 +232,7 @@ class InvestorController extends Controller
             $investorQuery->orderBy($columnName, $orderBy);
         }
         // $investorQuery->orderBy('user_has_certifications.updated_at', 'desc');
-
+        // \DB::enableQueryLog();
         if ($length > 1) {
 
             $totalInvestors = $investorQuery->get()->count();
@@ -241,7 +241,7 @@ class InvestorController extends Controller
             $investors      = $investorQuery->get();
             $totalInvestors = $investorQuery->count();
         }
-
+        // dd(\DB::getQueryLog());
         return ['totalInvestors' => $totalInvestors, 'list' => $investors];
 
     }
@@ -1041,13 +1041,17 @@ class InvestorController extends Controller
         $nomineeApplication->chargesfinancial_advisor_details = $investorFai;
         $nomineeApplication->save();
 
+        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
+
         $this->onfidoRequest($investor, $sendSignature, $nomineeverification);
         if ($nomineeApplication->adobe_doc_key == '' && $sendSignature == 'yes') {
 
             $this->adobeSignataureEmail($investor);
+
+            $successMessage ='Thank you for your submission to the Investment Account. One of our client services team will be in touch shortly to confirm any additional information that we require.';
         }
 
-        $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client account details have been successfully saved.' : 'Account Details have been successfully saved';
+         
         Session::flash('success_message', $successMessage);
 
         return redirect(url('backoffice/investor/' . $giCode . '/investment-account'));
@@ -1197,8 +1201,8 @@ class InvestorController extends Controller
                 'pdf_url'         => $output_link,
                 'name'            => $adobesign_name,
                 'message'         => $adobesign_message,
-                'recipient_email' => 'prajay@ajency.in',
-                'ccs'             => 'sharang@ajency.in',
+                'recipient_email' => $investor->email,
+                'ccs'             => 'cinthia@ajency.in',
                 'callbackInfo'    => $callbackurl,
             );
 
@@ -1253,6 +1257,7 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
         $data['investor']              = $investor;

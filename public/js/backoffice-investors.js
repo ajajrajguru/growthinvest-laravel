@@ -547,7 +547,7 @@
       }
     });
     $(document).on('change', '.completion_status', function() {
-      var cardObj, dataInComp, dataValid, sectionNo;
+      var cardObj, dataInComp, dataValid, isSubIncomp, sectionNo;
       cardObj = $(this).closest('.parent-tabpanel');
       sectionNo = cardObj.attr('data-section');
       dataValid = 0;
@@ -574,11 +574,22 @@
       if (dataInComp === 0 && dataValid === 0) {
         console.log('Complete');
         $('.section' + sectionNo + '-status').text('Complete');
-        return $('.section' + sectionNo + '-status-input').val('complete');
+        $('.section' + sectionNo + '-status-input').val('complete');
       } else {
         console.log('Incomplete');
         $('.section' + sectionNo + '-status').text('Incomplete');
-        return $('.section' + sectionNo + '-status-input').val('incomplete');
+        $('.section' + sectionNo + '-status-input').val('incomplete');
+      }
+      isSubIncomp = 0;
+      $('.sectionstatus-input').each(function() {
+        if ($(this).val() !== "complete") {
+          return isSubIncomp++;
+        }
+      });
+      if (isSubIncomp === 0 && $('.submit-signature').attr('doc-key-exist') === 'no') {
+        return $('.submit-signature').attr('disabled', false);
+      } else {
+        return $('.submit-signature').attr('disabled', true);
       }
     });
     $(document).on('keyup', '.invest-perc', function() {
