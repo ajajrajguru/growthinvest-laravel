@@ -70,8 +70,9 @@
                                     <select name="firm_name" class="form-control investorSearchinput select2-single" id="investor_nominee">
                                         <option value="">All Firms</option>
                                         @foreach($firms as $firm)
-                                        <option value="{{ $firm->id }}">{{ $firm->name }}</option>
+                                        <option @if(isset($requestFilters['firm']) && $requestFilters['firm'] == $firm->id) selected @endif value="{{ $firm->id }}">{{ $firm->name }}</option>
                                         @endforeach
+
                                     </select>
                                     <em class="small">Select the firm whose investors you need to view</em>
                                     
@@ -81,7 +82,7 @@
                                     <select name="investor_name" class="form-control investorSearchinput select2-single" id="investor_nominee">
                                         <option value="">--</option>
                                         @foreach($investors as $investor)
-                                        <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
+                                        <option @if(isset($requestFilters['investor']) && $requestFilters['investor'] == $investor->id) selected @endif value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -90,7 +91,7 @@
                                     <select name="client_category" class="form-control investorSearchinput" id="investor_nominee">
                                         <option value="">All client categories</option>
                                         @foreach($clientCategories as $clientCategory)
-                                        <option value="{{ $clientCategory->id }}">{{ $clientCategory->name }}</option>
+                                        <option @if(isset($requestFilters['client-category']) && $requestFilters['client-category'] == $clientCategory->id) selected @endif value="{{ $clientCategory->id }}">{{ $clientCategory->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -101,7 +102,7 @@
                                     <select name="client_certification" class="form-control investorSearchinput" id="investor_nominee">
                                         <option value="">All Certifications</option>
                                         @foreach($certificationTypes as $key=>$certificationType)
-                                        <option value="{{ $key }}">{{ $certificationType }}</option>
+                                        <option @if(isset($requestFilters['client-certification']) && $requestFilters['client-certification'] == $key) selected @endif value="{{ $key }}">{{ $certificationType }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -109,16 +110,16 @@
                                     <label for="">Nominee Account</label>
                                     <select name="investor_nominee" class="form-control investorSearchinput" id="investor_nominee">
                                         <option value="">--</option>
-                                        <option value="nominee">Yes</option>
-                                        <option value="non_nominee">No</option>
+                                        <option @if(isset($requestFilters['investor-nominee']) && $requestFilters['investor-nominee'] == "nominee") selected @endif value="nominee">Yes</option>
+                                        <option @if(isset($requestFilters['investor-nominee']) && $requestFilters['investor-nominee'] == "non_nominee") selected @endif value="non_nominee">No</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3 mb-sm-0">
                                     <label for="">ID Verification</label>
                                     <select name="idverified" class="form-control investorSearchinput" id="idverified">
                                         <option value="">--</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option @if(isset($requestFilters['idverified']) && $requestFilters['idverified'] == "yes") selected @endif value="yes">Yes</option>
+                                        <option @if(isset($requestFilters['idverified']) && $requestFilters['idverified'] == "no") selected @endif value="no">No</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 align-self-end text-right">

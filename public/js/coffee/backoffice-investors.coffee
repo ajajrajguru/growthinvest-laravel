@@ -4,6 +4,7 @@ $(document).ready ->
     'processing': false
     'serverSide': true
     'bAutoWidth': false
+    "dom": '<"top"li>t<"bottom"ip>' 
     'aaSorting': [[1,'asc']]
     'ajax':
       url: '/backoffice/investor/get-investors'
@@ -44,7 +45,7 @@ $(document).ready ->
     $('select[name="client_certification"]').val('')
     $('select[name="investor_nominee"]').val('')
     $('select[name="idverified"]').val('')
-   
+    window.history.pushState("", "", "?");
     investorTable.ajax.reload()
     return
 
@@ -66,6 +67,27 @@ $(document).ready ->
     window.open("/backoffice/investor/export-investors?firm_name="+firm_name+"&investor_name="+investor_name+"&client_category="+client_category+"&client_certification="+client_certification+"&investor_nominee="+investor_nominee+"&idverified="+idverified+"&user_ids="+userIds);
 
   $('.investorSearchinput').change ->
+    urlParams = ''
+
+    if($('select[name="firm_name"]').val()!="")
+      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+    if($('select[name="investor_name"]').val()!="")
+      urlParams +='&investor='+$('select[name="investor_name"]').val()
+
+    if($('select[name="client_category"]').val()!="")
+      urlParams +='&client-category='+$('select[name="client_category"]').val()
+
+    if($('select[name="client_certification"]').val()!="")
+      urlParams +='&client-certification='+$('select[name="client_certification"]').val()
+
+    if($('select[name="investor_nominee"]').val()!="")
+      urlParams +='&investor-nominee='+$('select[name="investor_nominee"]').val()
+
+    if($('select[name="idverified"]').val()!="")
+      urlParams +='&idverified='+$('select[name="idverified"]').val()
+
+    window.history.pushState("", "", "?"+urlParams);
     investorTable.ajax.reload()
     return
  

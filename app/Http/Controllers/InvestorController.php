@@ -30,10 +30,12 @@ class InvestorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user      = new User;
         $investors = $user->getInvestorUsers();
+
+        $requestFilters = $request->all();
 
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
@@ -50,6 +52,7 @@ class InvestorController extends Controller
 
         $data['certificationTypes'] = $certificationTypes;
         $data['clientCategories']   = $clientCategories;
+        $data['requestFilters']     = $requestFilters;
         $data['firms']              = $firms;
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
@@ -156,13 +159,12 @@ class InvestorController extends Controller
                 ->where('model_has_roles.model_type', 'App\User');
         })->join('roles', function ($join) {
             $join->on('model_has_roles.role_id', '=', 'roles.id');
-               
+
         })->leftjoin('user_has_certifications', function ($join) {
             $join->on('users.id', 'user_has_certifications.user_id');
         })->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
 
-        
-
+        $investorQuery->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investorQuery->where('users.firm_id', $filters['firm_name']);
         }
@@ -180,7 +182,7 @@ class InvestorController extends Controller
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
             $investorQuery->where('users.current_certification', $filters['client_category']);
-             
+
             // $investorQuery->whereIn('users.id', function ($query) use ($filters) {
             //     $query->select('user_id')
             //         ->from(with(new UserHasCertification)->getTable())
@@ -1059,10 +1061,9 @@ class InvestorController extends Controller
 
             $this->adobeSignataureEmail($investor);
 
-            $successMessage ='Thank you for your submission to the Investment Account. One of our client services team will be in touch shortly to confirm any additional information that we require.';
+            $successMessage = 'Thank you for your submission to the Investment Account. One of our client services team will be in touch shortly to confirm any additional information that we require.';
         }
 
-         
         Session::flash('success_message', $successMessage);
 
         return redirect(url('backoffice/investor/' . $giCode . '/investment-account'));
@@ -1465,10 +1466,10 @@ class InvestorController extends Controller
             abort(404);
         }
 
-        $breadcrumbs         = [];
-        $breadcrumbs[]       = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
-        $breadcrumbs[]       = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
-        $breadcrumbs[]       = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
         $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View News/Updates'];
 
