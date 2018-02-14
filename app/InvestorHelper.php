@@ -1,5 +1,26 @@
 <?php
 
+function investorCertificationExpiry()
+{
+    $date = date('Y-m-d', strtotime('-1 year')); 
+
+    $userCertifications = App\UserHasCertification::where('created_at','<=',$date)->where('active','1')->get();dd($userCertifications);
+
+    foreach ($userCertifications as $key => $userCertification) {
+        $investor = $userCertification->user;
+
+        $userCertification->active = 0;
+        $userCertification->save();
+
+        if ($investor->hasRole('investor')) {
+            $investor->removeRole('investor');
+            $investor->assignRole('yet_to_be_approved_investor');
+        }
+    }
+   
+
+}
+
 function getHeaderPageMarkup($args)
 {
 

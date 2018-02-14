@@ -32,6 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
+        investorCertificationExpiry();
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
