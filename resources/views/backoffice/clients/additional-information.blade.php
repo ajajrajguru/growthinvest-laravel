@@ -128,17 +128,20 @@
                         </div>
                     </div>
 
-                    <h5 class="mt-3 mb-2">
-                       
-                        3: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary">  @if(Auth::user()->hasPermissionTo('is_wealth_manager')) Client Additional Information @else Additional Information @endif</span>
-                        
+                    <div class="d-sm-flex align-items-sm-center justify-content-sm-between mt-3">
+                        <h5 class="mt-0 mb-0">
+                            3: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary">  @if(Auth::user()->hasPermissionTo('is_wealth_manager')) Client Additional Information @else Additional Information @endif</span>
+                        </h5>
 
-                       
-                        @if($investor->id)
-                             <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn @if($mode=='edit') d-none  @endif">Edit Details</a>
-                            <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none  @endif">Cancel Updates</a>
-                        @endif
-                    </h5>
+                        <div>
+                            @if($investor->id)
+                                 <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn @if($mode=='edit') d-none  @endif">Edit Details</a>
+                                <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none  @endif">Cancel Updates</a>
+                            @endif
+                        </div>
+                    </div>
+
+                    
                     <hr class="my-3">
                     <!-- Additional Information Content HERE -->
                     <p>
