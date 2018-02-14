@@ -167,6 +167,8 @@ return [
         /*
          * Package Service Providers...
          */
+        Ajency\Comm\CommServiceProvider::class,
+
 
         /*
          * Application Service Providers...
@@ -225,6 +227,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'AjComm' => Ajency\Comm\CommServiceProvider::class,
 
     ],
 

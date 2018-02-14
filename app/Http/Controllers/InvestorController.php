@@ -32,7 +32,17 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-        investorCertificationExpiry();
+        $data = [];
+        $data['from'] = config('constants.email_from');
+        $data['name'] = config('constants.email_from_name');
+        $data['to'] = ['prajay@ajency.in'];
+        $data['cc'] = [];
+        $data['subject'] = "Welcome to GI";
+        $data['template_data'] = ['name' => 'Prajay'];
+        sendEmail('welcome-user', $data);
+
+        exit;
+
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -390,7 +400,7 @@ class InvestorController extends Controller
         $isSuspended             = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode                  = $requestData['gi_code'];
 
-        $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
+        $giArgs = array('prefix' => "GIIN", 'min' => 10000001, 'max' => 20000000); 
 
         if ($giCode == '') {
 

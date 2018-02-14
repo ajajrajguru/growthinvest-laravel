@@ -418,6 +418,99 @@ function getCaptchaKey()
     return env('captcha_private_key');
 }
 
+
+/**
+* This function is used to send email for each event
+* This function will send an email to given recipients
+* @param data can contain the following extra parameters
+*   @param template_data
+*   @param to 
+*   @param cc
+*   @param bcc
+*   @param from
+*   @param name
+*   @param subject
+*   @param delay  - @var integer
+*   @param priority - @var string -> ['low','default','high']
+*   @param attach - An Array of arrays each containing the following parameters:
+*           @param file - base64 encoded raw file
+*           @param as - filename to be given to the attachment
+*           @param mime - mime of the attachment
+*/
+function sendEmail($event='welcome', $data=[]) {
+    $email = new \Ajency\Comm\Models\EmailRecipient();
+    /* from */
+    $from = (isset($data['from']))? $data['from'] : config('constants.email.defaultID');
+    $name = (isset($data['name']))? $data['name'] : config('constants.email.defaultName');
+    $from = sendEmailTo($from, 'from');
+    $email->setFrom($from, $name);
+    /* to */
+    if(!isset($data['to']))
+        $data['to']= [];
+    else
+        if(!is_array($data['to'])) // If not in array format
+            $data['to'] = [$data['to']];
+    // $to = sendEmailTo($data['to'], 'to');
+    $to = $data['to'];
+    $email->setTo($to);
+    /* cc */
+    $cc = isset($data['cc']) ? sendEmailTo($data['cc'], 'cc') : sendEmailTo([], 'cc');  
+    if(!is_array($cc)) $cc = [$cc];
+    $email->setCc($cc);
+    /* bcc */
+    if(isset($data['bcc'])) {
+        $bcc = sendEmailTo($data['bcc'], 'bcc');
+        $email->setCc($bcc);
+    }
+    
+    $params = (isset($data['template_data']))? $data['template_data']:[];
+    if(!is_array($params)) $params = [$params];
+    $params['email_subject'] = (isset($data['subject']))? $data['subject']:"";
+ 
+    $email->setParams($params);
+    if(isset($data['attach'])) $email->setAttachments($data['attach']);
+    $notify = new \Ajency\Comm\Communication\Notification();
+    $notify->setEvent($event);
+    $notify->setRecipientIds([$email]); 
+    // if(isset($data['delay']))  $data['delay'] = config('constants.send_delay_dev');
+    
+    if (isset($data['delay']) and is_integer($data['delay'])) {
+
+        Illuminate\Support\Facades\Log::info('send email delay: '.$data['delay']);
+        $notify->setDelay($data['delay']);
+    }
+    if (isset($data['priority'])) $notify->setPriority($data['priority']);
+    // dd($notify);
+    // $notify->setRecipientIds([$email,$email1]);
+    AjComm::sendNotification($notify);
+    
+}
+
+
+/**
+* This function is used to determine whether the Server Hosted is in Development or Production Mode
+* @return boolean
+*/
+function in_develop() {
+    if(in_array(env('APP_ENV'), config('constants.app_dev_envs'))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+* This function will return Email IDs based on ENV if it is Development or Production mode
+*/
+function sendEmailTo($emails = [], $type='to') {
+    if(in_develop()) {
+        $emails = config('constants.email_' . $type . '_dev');
+    }
+
+    return $emails;
+}
+    
+
 function recaptcha_validate($recaptcha)
 {
     $captcha    = $recaptcha;

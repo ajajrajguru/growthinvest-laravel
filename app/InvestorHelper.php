@@ -4,7 +4,7 @@ function investorCertificationExpiry()
 {
     $date = date('Y-m-d', strtotime('-1 year')); 
 
-    $userCertifications = App\UserHasCertification::where('created_at','<=',$date)->where('active','1')->get();dd($userCertifications);
+    $userCertifications = App\UserHasCertification::where('created_at','<=',$date)->where('active','1')->get(); 
 
     foreach ($userCertifications as $key => $userCertification) {
         $investor = $userCertification->user;
