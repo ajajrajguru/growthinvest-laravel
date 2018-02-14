@@ -61,9 +61,9 @@
                         <div class="p-3 bg-gray">
                             <div class="m-b-15">            
                                 <ul class="list-inline">
-                                    <li><span class="label bg-primary">FA</span> Funded Amount</li>
-                                    <li><span class="label bg-warning">AW</span> Added To Watch List</li>
-                                    <li><span class="label bg-success">PA</span> Pledged Amount</li>
+                                    <li class="list-inline-item"><span class="badge p-1 bg-primary text-white">FA</span> Funded Amount</li>
+                                    <li class="list-inline-item"><span class="badge p-1 bg-warning text-white">AW</span> Added To Watch List</li>
+                                    <li class="list-inline-item"><span class="badge p-1 bg-success text-white">PA</span> Pledged Amount</li>
                                 </ul>
                             </div>
 
