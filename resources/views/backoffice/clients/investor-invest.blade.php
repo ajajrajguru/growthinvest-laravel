@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="datatable-investor-invest" class="table dataFilterTable table-hover table-striped-bg">
+                    <table id="datatable-investor-invest" class="table dataFilterTable table-hover table-solid-bg">
                         <thead>
                             <tr>
                                 <th>Investment Offer</th>

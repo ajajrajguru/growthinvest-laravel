@@ -104,7 +104,7 @@
                         </div>
 
                         <div class="table-responsive mt-3">
-                            <table id="datatable-businesslistings" class="table dataFilterTable table-hover table-striped-bg">
+                            <table id="datatable-businesslistings" class="table dataFilterTable table-hover table-solid-bg">
                                 <thead>
                                     <tr>
                                         <th class="w-search" style="width: 250px;">Logo</th>    
