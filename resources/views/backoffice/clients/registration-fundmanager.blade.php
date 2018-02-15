@@ -37,8 +37,8 @@
                 <div class="p-2">
                     <div class="row mb-4">
                         <div class="col-md-5">
-                            <h1 class="section-title font-weight-medium text-primary mt-4 mb-0">@if($fundmanager->id) Edit @else Add @endif Fundmanager</h1>
-                            <p class="text-muted">@if($fundmanager->id) Edit @else Add @endif details of Fundmanager.</p>
+                            <h1 class="section-title font-weight-medium text-primary mt-4 mb-0">@if($fundmanager->id) Edit @else Add @endif Fund manager</h1>
+                            <p class="text-muted">@if($fundmanager->id) Edit @else Add @endif details of Fund manager.</p>
                         </div>
                         
                     </div>
@@ -57,8 +57,8 @@
                         </div>
                         <div class="">
                             @if($fundmanager->id)
-                                <a href="javascript:void(0)" class="btn btn-primary mb-4 editUserBtn">Edit Details</a>
-                                <a href="javascript:void(0)" class="btn btn-primary mb-4 d-none cancelUpdateBtn">Cancel Updates</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-primary mb-4 editUserBtn">Edit Details</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger mb-4 d-none cancelUpdateBtn">Cancel Updates</a>
 
                             
                             @endif

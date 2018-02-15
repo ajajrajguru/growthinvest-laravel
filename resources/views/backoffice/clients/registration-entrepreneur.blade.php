@@ -57,8 +57,8 @@
                         </div>
                         <div class="">
                             @if($entrepreneur->id)
-                                <a href="javascript:void(0)" class="btn btn-primary mb-4 editUserBtn">Edit Details</a>
-                                <a href="javascript:void(0)" class="btn btn-primary mb-4 d-none cancelUpdateBtn">Cancel Updates</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-primary mb-4 editUserBtn">Edit Details</a>
+                                <a href="javascript:void(0)" class="btn btn-outline-danger mb-4 d-none cancelUpdateBtn">Cancel Updates</a>
 
                             
                             @endif
