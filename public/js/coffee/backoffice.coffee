@@ -397,6 +397,7 @@ $(document).ready ->
 		'processing': false
 		'serverSide': true
 		'bAutoWidth': false
+		"dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
 		'aaSorting': [[1,'asc']]
 		'ajax':
 			url: '/backoffice/business-listings/get-businesslistings'

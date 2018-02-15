@@ -128,19 +128,24 @@
                 </div>
 
                 <div class="profile-content p-4">
-                    <h5 class="mt-3 mb-2">
-                        4: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary"> 
-                        @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
-                         Client Investment Account 
-                        @else
-                        Investment Account
-                        @endif
-                     </span>
-                    </h5>
-                    @if($investor->id)
-                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn  @if($mode=='edit') d-none  @endif">Edit Details</a>
-                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none @endif">Cancel Updates</a>
-                                    @endif
+                    <div class="d-sm-flex align-items-sm-center justify-content-sm-between mt-3">
+                        <h5 class="mt-3 mb-2">
+                            4: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary"> 
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
+                             Client Investment Account 
+                            @else
+                            Investment Account
+                            @endif
+                         </span>
+                        </h5>
+
+                        <div>
+                            @if($investor->id)
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn  @if($mode=='edit') d-none  @endif">Edit Details</a>
+                                <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none @endif">Cancel Updates</a>
+                            @endif
+                        </div>
+                    </div>
                     <hr class="my-3">
 
                     <!-- Investment Account Content HERE -->
@@ -180,7 +185,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? ucfirst($nomineeDetails['section_status'][1]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[1]" class="section1-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? $nomineeDetails['section_status'][1] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[1]" class="section1-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][1])) ? $nomineeDetails['section_status'][1] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
@@ -233,7 +238,7 @@
                                             <div class="form-group">
                                                 <label>National Insurance Number <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
   
-                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif"  name="nationalinsuranceno" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif">
+                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif"  name="nationalinsuranceno" data-parsley-trigger="keyup" placeholder="" data-parsley-required data-parsley-required-message="Please enter the national insurance number." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif" data-parsley-maxlength="9">
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['nationalinsuranceno'])){{ $nomineeDetails['nationalinsuranceno'] }}@endif</div>
  
  
@@ -255,16 +260,16 @@
                                             </div>
 
 
-                                            <div class="nonationalinsuranceno-container @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='') d-none @endif @if(empty($nomineeDetails)) d-none  @endif">
+                                            <div class="nonationalinsuranceno-container @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='') d-none @endif @if(!empty($nomineeDetails) && !isset($nomineeDetails['nonationalinsuranceno'])) d-none @endif @if(empty($nomineeDetails)) d-none  @endif">
                                             <div class="form-group">
                                                 <label>Nationality <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" placeholder="" name="nationality" placeholder=""   data-parsley-required-message="Please enter the nationality." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <input type="text" class="form-control  @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') text-input-status completion_status @endif editmode @if($mode=='view') d-none @endif" placeholder="" name="nationality" placeholder=""   data-parsley-required-message="Please enter the nationality." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['nationality'])){{ $nomineeDetails['nationality'] }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Domiciled <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" placeholder="" name="domiciled" data-parsley-required-message="Please enter the domiciled." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
+                                                <input type="text" class="form-control  @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') text-input-status completion_status @endif editmode @if($mode=='view') d-none @endif" placeholder="" name="domiciled" data-parsley-required-message="Please enter the domiciled." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif" @if(!empty($nomineeDetails) && isset($nomineeDetails['nonationalinsuranceno']) && $nomineeDetails['nonationalinsuranceno'] =='1') data-parsley-required @endif>
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['domiciled'])){{ $nomineeDetails['domiciled'] }}@endif</div>
                                             </div>
                                             
@@ -272,7 +277,7 @@
                                             <p class="mt-3 text-center">EITHER</p>
                                                 
                                             <div class="form-group">
-                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
+                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Tax Identification Number (TIN)" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
                                                 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif</div>
 
@@ -329,8 +334,8 @@
 
                                             <div class="form-group">
                                                 <label>Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</textarea>
-                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address}}@endif</div>
+                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address_1}}@endif</textarea>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])) {{ $nomineeDetails['address'] }}@else{{ $investor->address_1 }}@endif</div>
                                             </div>
 
                                             <div class="form-group">
@@ -398,7 +403,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section2-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][2])) ? ucfirst($nomineeDetails['section_status'][2]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[2]" class="section2-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][2])) ? $nomineeDetails['section_status'][2] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[2]" class="section2-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][2])) ? $nomineeDetails['section_status'][2] : 'incomplete'  }}">
                                     </span>     
                                   
                                 </a>
@@ -491,7 +496,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section3-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][3])) ? ucfirst($nomineeDetails['section_status'][3]) : 'Not started'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[3]" class="section3-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][3])) ? $nomineeDetails['section_status'][3] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[3]" class="section3-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][3])) ? $nomineeDetails['section_status'][3] : 'incomplete'  }}">
                                     </span>  
                                 </a>
                             </div>
@@ -576,7 +581,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section4-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][4])) ? ucfirst($nomineeDetails['section_status'][4]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[4]" class="section4-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][4])) ? $nomineeDetails['section_status'][4] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[4]" class="section4-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][4])) ? $nomineeDetails['section_status'][4] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
@@ -734,7 +739,7 @@
                                                               <label class="custom-control-label" for="ongoingadvchargesvatyettobeapplied_yes">Yes</label>
                                                             </div>
                                                             <div class="custom-control custom-radio custom-control-inline">
-                                                              <input type="radio" id="ongoingadvchargesvatyettobeapplied_no" name="ongoingadvchargesvatyettobeapplied" value="no" class="custom-control-input" @if(empty($nomineeDetails)) checked @endif  @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvchargesvatyettobeapplied']) && $nomineeDetails['ongoingadvchargesvatyettobeapplied']=='no') checked  @endif>
+                                                              <input type="radio" id="ongoingadvchargesvatyettobeapplied_no" name="ongoingadvchargesvatyettobeapplied" value="no" class="custom-control-input" @if(!empty($nomineeDetails) && isset($nomineeDetails['ongoingadvchargesvatyettobeapplied']) && $nomineeDetails['ongoingadvchargesvatyettobeapplied']=='no') checked  @endif>
                                                               <label class="custom-control-label" for="ongoingadvchargesvatyettobeapplied_no">No</label>
                                                             </div>
                                                         </div>
@@ -770,7 +775,7 @@
                                                               <label class="custom-control-label" for="intermediaryvattobeapplied_yes">Yes</label>
                                                             </div>
                                                             <div class="custom-control custom-radio custom-control-inline">
-                                                              <input type="radio" id="intermediaryvattobeapplied_no" name="intermediaryvattobeapplied" value="no" class="custom-control-input" @if(empty($nomineeDetails)) checked @endif @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryvattobeapplied']) && $nomineeDetails['intermediaryvattobeapplied']=='no') checked  @endif>
+                                                              <input type="radio" id="intermediaryvattobeapplied_no" name="intermediaryvattobeapplied" value="no" class="custom-control-input" @if(!empty($nomineeDetails) && isset($nomineeDetails['intermediaryvattobeapplied']) && $nomineeDetails['intermediaryvattobeapplied']=='no') checked  @endif>
                                                               <label class="custom-control-label" for="intermediaryvattobeapplied_no">No</label>
                                                             </div>
                                                         </div>
@@ -812,7 +817,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section5-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][5])) ? ucfirst($nomineeDetails['section_status'][5]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[5]" class="section5-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][5])) ? $nomineeDetails['section_status'][5] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[5]" class="section5-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][5])) ? $nomineeDetails['section_status'][5] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
@@ -921,7 +926,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section6-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][6])) ? ucfirst($nomineeDetails['section_status'][6]) : 'Not started'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[6]" class="section6-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][6])) ? $nomineeDetails['section_status'][6] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[6]" class="section6-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][6])) ? $nomineeDetails['section_status'][6] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
@@ -1011,7 +1016,7 @@
                                         <small class="mr-sm-3 mr-0 d-block d-md-inline-block section7-status">{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][7])) ? ucfirst($nomineeDetails['section_status'][7]) : 'Incomplete'  }}</small>
                                         <i class="fa fa-lg fa-plus-square-o"></i>
                                         <i class="fa fa-lg fa-minus-square-o"></i>
-                                        <input type="hidden" name="section_status[7]" class="section7-status-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][7])) ? $nomineeDetails['section_status'][7] : 'incomplete'  }}">
+                                        <input type="hidden" name="section_status[7]" class="section7-status-input sectionstatus-input" value="{{ (!empty($nomineeDetails) && isset($nomineeDetails['section_status'][7])) ? $nomineeDetails['section_status'][7] : 'incomplete'  }}">
                                     </span>
                                 </a>
                             </div>
@@ -1210,8 +1215,13 @@
                             {
                                 $disableSubmit = 'disabled';
                             }
+
+                            if(empty($nomineeDetails))
+                            {
+                                $disableSubmit = 'disabled';
+                            }
                             @endphp
-                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature validate-nominee-data" {{ $disableSubmit }}  @if($adobeDocKey != '') data-toggle="tooltip"  title="Nominee Application is already sent for signature" data-original-title="Nominee Application is already sent for signature" @endif ><i class="fa fa-send"></i> Submit</button>
+                            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif submit-signature validate-nominee-data" {{ $disableSubmit }} doc-key-exist="{{ ($adobeDocKey != '')? 'yes' : 'no' }}"  @if($adobeDocKey != '')  data-toggle="tooltip"  title="Nominee Application is already sent for signature" data-original-title="Nominee Application is already sent for signature" @endif ><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </div>
 

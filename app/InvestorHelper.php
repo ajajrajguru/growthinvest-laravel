@@ -307,7 +307,7 @@ function createOnfidoApplicant($investor)
     $check_report_error  = (isset($result_check_report->error)) ? $result_check_report->error : '';
     if ($check_report_error) {
 
-        $error_html .= 'Onfido report creation error: <br/>' . $error->message;
+        $error_html .= 'Onfido report creation error: <br/>' . $check_report_error->message;
 
         if (!isset($cont_error_fields)) {
             $cont_error_fields = 1;
@@ -452,6 +452,7 @@ function onfidoApplicantionApi($applicantDetails = array(), $reports = array())
     $result                  = curl_exec($ch);
     $create_applicant_result = json_decode($result);
 
+    $create_check_report_result = [];
     if (!isset($create_applicant_result->error)) {
 
         if (count($reports) > 0) {

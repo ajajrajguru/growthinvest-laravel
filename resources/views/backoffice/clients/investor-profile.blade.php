@@ -32,17 +32,19 @@
     @endphp
    <div class="container mt-3">
     <!-- tabs -->
+    <div class="squareline-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link"  href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
+                <a class="nav-link d-none d-sm-block"  href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active"   href="#profile">Profile</a>
+                <a class="nav-link active d-none d-sm-block"   href="#profile">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link "  href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
+                <a class="nav-link d-none d-sm-block"  href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
             </li>
         </ul>
+    </div>
 
         <!-- Tab panes -->
         <div class="tab-content">
@@ -51,8 +53,8 @@
 
             <div class="tab-pane p-3 active" id="profile" role="tabpanel">
                 <div class="media investor-info">
-                    <div class="investor-avatar align-self-center mr-3">
-                        <img class="rounded-circle" src="https://dummyimage.com/80x80" alt="Generic placeholder image">
+                    <div class="investor-avatar align-self-center mr-3 mw-80 mh-80">
+                        <img class="rounded-circle img-fluid" src="https://dummyimage.com/80x80" alt="Generic placeholder image">
                     </div>
                     <div class="media-body align-self-center">
                         <div class="">
@@ -68,10 +70,10 @@
                 </div>
 
                 <ul class="mt-3 pl-0 investor-keypoints">
-                    <li class="list-unstyled"><a href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration')}}">Registration: </a> Key contact and registration details including passwords.</li>
-                    <li class="list-unstyled"><a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}">Client Categorisation: </a> Amend current investor classification (eg High Net Worth, Sophisticated)</li>
-                    <li class="list-unstyled"><a href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information') }}">Additoinal Information: </a> Picture, Social Media and Investment Profile</li>
-                    <li class="list-unstyled"><a href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account: </a> Full investment and transactional account details</li>
+                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration')}}">Registration: </a> Key contact and registration details including passwords.</li>
+                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}">Client Categorisation: </a> Amend current investor classification (eg High Net Worth, Sophisticated)</li>
+                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information') }}">Additoinal Information: </a> Picture, Social Media and Investment Profile</li>
+                    <li class="list-unstyled"><a class="font-weight-medium text-decoration-none" href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account: </a> Full investment and transactional account details</li>
                 </ul>
 
                 <div class="row mt-5">
@@ -83,7 +85,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="">
-                            <label for="">Identitiy Report</label>
+                            <label for="">AML Report</label>
                             <input type="text" class="form-control">
                         </div>
                     </div>

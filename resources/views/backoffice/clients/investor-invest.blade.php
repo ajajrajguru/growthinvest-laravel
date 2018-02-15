@@ -32,17 +32,19 @@
     @endphp
    <div class="container mt-3">
     <!-- tabs -->
+      <div class="squareline-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#invest">Invest</a>
+                <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#invest">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
+                <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
+                <a class="nav-link d-none d-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-news-update')}}">News/Updates</a>
             </li>
         </ul>
+      </div>
 
         <!-- Tab panes -->
         <div class="tab-content">
@@ -50,7 +52,7 @@
                 <h4 class="mb-1">Investment Offers</h4>
                 <p>In the table below we list all current offers available for Investment. There is some basic product information available on the table below, and more on the individual offer page, and in the available downloads. Please use the filters below to refine your search. If you have any questions on any of the available offers, or the investment process, please do not hesitate to contact our client services team on <a href="mailto:support@GrowthInvest.com">support@GrowthInvest.com</a> or call us on 020 7071 3945</p>
                 
-                <div class="gray-section border bg-light p-3">
+                <div class="gray-section border bg-gray p-3">
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <div>
@@ -58,7 +60,7 @@
                                 <select name="company" class="form-control">
                                   <option value="">All</option>
                                   @foreach($companyNames as $companyName)
-                                    <option value="{{ $companyName->id }}">{{ ucfirst($companyName->title) }}</option>
+                                    <option @if(isset($requestFilters['company']) && $requestFilters['company'] == $companyName->id) selected @endif value="{{ $companyName->id }}">{{ ucfirst($companyName->title) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -69,7 +71,7 @@
                                 <select name="sector" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($sectors as $sector)
-                                    <option value="{{ $sector->id }}">{{ ucfirst($sector->name) }}</option>
+                                    <option @if(isset($requestFilters['sector']) && $requestFilters['sector'] == $sector->id) selected @endif value="{{ $sector->id }}">{{ ucfirst($sector->name) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -80,7 +82,7 @@
                                 <select name="type" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($investmentOfferType as $typeKey => $type)
-                                    <option value="{{ $typeKey }}">{{ $type }}</option>
+                                    <option @if(isset($requestFilters['type']) && $requestFilters['type'] == $typeKey) selected @endif value="{{ $typeKey }}">{{ $type }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -91,7 +93,7 @@
                                 <select name="manager" id="" class="form-control">
                                     <option value="">All</option>
                                     @foreach($managers as $manager)
-                                    <option value="{{ $manager }}">{{ ucfirst($manager) }}</option>
+                                    <option  @if(isset($requestFilters['manager']) && $requestFilters['manager'] == $manager) selected @endif value="{{ $manager }}">{{ ucfirst($manager) }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -102,19 +104,19 @@
                         <div>
                           @foreach(investmentTaxStatus() as $taxStatus => $taxStatusVal)
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="{{ $taxStatus }}" id="che{{ $taxStatus }}">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input" value="{{ $taxStatus }}" id="che{{ $taxStatus }}" @if(isset($requestFilters['status']) &&  in_array($taxStatus,$requestFilters['status'])) checked @endif @if(isset($requestFilters['status']) &&  in_array('all',$requestFilters['status'])) disabled @endif>
                               <label class="custom-control-label" for="che{{ $taxStatus }}">{{ $taxStatusVal }}</label>
                             </div>
                           @endforeach
                             <div class="custom-control custom-checkbox custom-control-inline">
-                              <input type="checkbox" name="tax_status[]" class="custom-control-input checked-all" value="all" id="chall">
+                              <input type="checkbox" name="tax_status[]" class="custom-control-input checked-all" value="all" id="chall" @if(isset($requestFilters['status']) &&  in_array('all',$requestFilters['status'])) checked @endif>
                               <label class="custom-control-label" for="chall">ALL</label>
                             </div>
                         </div>
 
                         <div class="mt-3 mt-sm-0">
-                            <button class="btn btn-primary mr-3 apply-invest-filters">Apply</button>
-                            <button class="btnb btn-default reset-invest-filters">Reset</button>
+                            <button class="btn btn-primary mr-1 apply-invest-filters">Apply</button>
+                            <button class="btn btn-default reset-invest-filters">Reset</button>
                         </div>
                     </div>
                 </div>
@@ -125,7 +127,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="datatable-investor-invest" class="table dataFilterTable table-hover table-striped-bg">
+                    <table id="datatable-investor-invest" class="table dataFilterTable table-hover table-solid-bg">
                         <thead>
                             <tr>
                                 <th>Investment Offer</th>

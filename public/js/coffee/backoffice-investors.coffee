@@ -4,6 +4,7 @@ $(document).ready ->
     'processing': false
     'serverSide': true
     'bAutoWidth': false
+    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
     'aaSorting': [[1,'asc']]
     'ajax':
       url: '/backoffice/investor/get-investors'
@@ -22,10 +23,7 @@ $(document).ready ->
         data
 
       error: ->
-
-
         return
-
 
     'columns': [
       { 'data': '#' , "orderable": false}
@@ -44,7 +42,7 @@ $(document).ready ->
     $('select[name="client_certification"]').val('')
     $('select[name="investor_nominee"]').val('')
     $('select[name="idverified"]').val('')
-   
+    window.history.pushState("", "", "?");
     investorTable.ajax.reload()
     return
 
@@ -66,6 +64,27 @@ $(document).ready ->
     window.open("/backoffice/investor/export-investors?firm_name="+firm_name+"&investor_name="+investor_name+"&client_category="+client_category+"&client_certification="+client_certification+"&investor_nominee="+investor_nominee+"&idverified="+idverified+"&user_ids="+userIds);
 
   $('.investorSearchinput').change ->
+    urlParams = ''
+
+    if($('select[name="firm_name"]').val()!="")
+      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+    if($('select[name="investor_name"]').val()!="")
+      urlParams +='&investor='+$('select[name="investor_name"]').val()
+
+    if($('select[name="client_category"]').val()!="")
+      urlParams +='&client-category='+$('select[name="client_category"]').val()
+
+    if($('select[name="client_certification"]').val()!="")
+      urlParams +='&client-certification='+$('select[name="client_certification"]').val()
+
+    if($('select[name="investor_nominee"]').val()!="")
+      urlParams +='&investor-nominee='+$('select[name="investor_nominee"]').val()
+
+    if($('select[name="idverified"]').val()!="")
+      urlParams +='&idverified='+$('select[name="idverified"]').val()
+
+    window.history.pushState("", "", "?"+urlParams);
     investorTable.ajax.reload()
     return
  
@@ -531,45 +550,65 @@ $(document).ready ->
       console.log 'Incomplete'
       $('.section'+sectionNo+'-status').text('Incomplete') 
       $('.section'+sectionNo+'-status-input').val('incomplete')
+
+    isSubIncomp = 0
+    $('.sectionstatus-input').each ->
+      if($(this).val()!="complete")
+        isSubIncomp++
+
+    if isSubIncomp == 0 && $('.submit-signature').attr('doc-key-exist') == 'no'
+      $('.submit-signature').attr('disabled',false);
+    else
+      $('.submit-signature').attr('disabled',true);
+
+
+
+
     
  
   $(document).on 'keyup', '.invest-perc', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
-    ipEmpty = true
+    ipEmpty = 0
     $('.invest-perc').each ->
-      if($(this).val()!="" && ipEmpty)
-        ipEmpty = false
+      if($(this).val()!="" && ipEmpty==0)
+        ipEmpty++
 
-    if !ipEmpty
+    if ipEmpty > 0
       $('.aic-investment-input').attr('readonly',true)
       $('.invest-amount').attr('readonly',true)
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
+
+    return
 
   $(document).on 'keyup', '.invest-amount', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
-    iaEmpty = true
+    iaEmpty = 0
     $('.invest-amount').each ->
       if($(this).val()!="" && iaEmpty)
-        iaEmpty = false
+        iaEmpty++
 
-    if !iaEmpty
+    if iaEmpty > 0
       $('.aic-investment-input').attr('readonly',true)
       $('.invest-perc').attr('readonly',true)
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
+
+    return
 
   $(document).on 'keyup', '.aic-investment-perc', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
     if($(this).val()!="")
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-amount').attr('readonly',true)
+    else
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
 
   $(document).on 'keyup', '.aic-investment-amount', ->
-    $('.investment-input').attr('readonly',false)
-    $('.aic-investment-input').attr('readonly',false)
     if($(this).val()!="")
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-perc').attr('readonly',true)
+    else
+      $('.investment-input').attr('readonly',false)
+      $('.aic-investment-input').attr('readonly',false)
 
 
   $(document).on 'click', '.reply-comment', ->
@@ -635,6 +674,7 @@ $(document).ready ->
     'processing': false
     'serverSide': true
     'bAutoWidth': false
+    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>' 
     'aaSorting': [[0,'asc']]
     'ajax':
       url: '/backoffice/investor/get-investor-invest'
@@ -658,15 +698,12 @@ $(document).ready ->
         data
 
       error: ->
-
-
         return
-
 
     'columns': [
       { 'data': 'offer' }
       { 'data': 'manager' }
-      { 'data': 'tax_status'}
+      { 'data': 'tax_status', "orderable": false}
       { 'data': 'type' }
       { 'data': 'focus' }
       { 'data': 'taget_raise' }
@@ -678,6 +715,8 @@ $(document).ready ->
     ])
 
 
+  $('body').on 'click', '.post-your-question', ->
+    $('.post-your-question-cont').removeClass('d-none')
   
   $('body').on 'change', 'input[name="tax_status[]"]', ->
     if $(this).is(':checked') && $(this).val()=='all'
@@ -699,6 +738,29 @@ $(document).ready ->
     # investorInvestTable.draw()
 
   $('body').on 'click', '.apply-invest-filters', ->
+    urlParams = ''
+
+    if($('select[name="company"]').val()!="")
+      urlParams +='company='+$('select[name="company"]').val() 
+
+    if($('select[name="sector"]').val()!="")
+      urlParams +='&sector='+$('select[name="sector"]').val()
+
+    if($('select[name="type"]').val()!="")
+      urlParams +='&type='+$('select[name="type"]').val()
+
+    if($('select[name="manager"]').val()!="")
+      urlParams +='&manager='+$('select[name="manager"]').val()
+ 
+    status = ''
+    $('input[name="tax_status[]"]').each ->
+      if $(this).is(':checked')
+        status += $(this).val()+','
+    if(status!="")
+      urlParams +='&status='+status
+
+    window.history.pushState("", "", "?"+urlParams);
+
     investorInvestTable.ajax.reload()
 
   $('body').on 'click', '.reset-invest-filters', ->
@@ -707,7 +769,7 @@ $(document).ready ->
     $('select[name="type"]').val('')
     $('select[name="manager"]').val('')
     $('input[name="tax_status[]"]').prop('checked',false)
-   
+    window.history.pushState("", "", "?");
     investorInvestTable.ajax.reload()
     return
 

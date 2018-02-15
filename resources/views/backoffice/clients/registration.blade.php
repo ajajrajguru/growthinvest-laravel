@@ -105,23 +105,25 @@
 
 
                 <div class="profile-content p-4">
-                    <div class="d-flex justify-content-between">
-                        <div class="">
-                            
-                        </div>
+                    <div class="text-right">
+                        @if($investor->id)
+                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}" class="btn btn-primary mb-4">Next<i class="fa fa-angle-double-right"></i></a> 
+                        @endif
+                    </div>
+
+                    <div class="d-sm-flex justify-content-sm-between align-items-sm-center mt-3">
+                        <h5 class="mt-0 mb-0">
+                            1: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
+                        </h5>
                         <div class="">
                             @if($investor->id)
-                                <a href="javascript:void(0)" class="btn btn-primary mb-4 editUserBtn">Edit Details</a>
-                                <a href="javascript:void(0)" class="btn btn-primary mb-4 d-none cancelUpdateBtn">Cancel Updates</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-primary editUserBtn">Edit Details</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger d-none cancelUpdateBtn">Cancel Updates</a>
 
-                            <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}" class="btn btn-primary mb-4">Next<i class="fa fa-angle-double-right"></i></a> 
+                            <!-- <a href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}" class="btn btn-primary mb-4">Next<i class="fa fa-angle-double-right"></i></a>  -->
                             @endif
-                             
                         </div>
                     </div>
-                    <h5 class="mt-3 mb-2">
-                        1: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
-                    </h5>
                     <hr class="my-3">
                     
                    

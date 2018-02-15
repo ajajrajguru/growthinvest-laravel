@@ -10,7 +10,7 @@ class BusinessListing extends Model
 
     public function getTaxStatusAttribute( $value ) { 
         $value = json_decode( $value );
-         
+        $value = array_map('strtoupper', $value);
         return $value;
     }
 

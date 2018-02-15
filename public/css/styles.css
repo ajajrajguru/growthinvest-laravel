@@ -140,6 +140,12 @@ header.sticky {
 .mw-150 {
   max-width: 150px;
 }
+.mw-80 {
+  max-width: 80px;
+}
+.mh-80 {
+  min-height: 80px;
+}
 .mw-60 {
   max-width: 60px;
 }
@@ -163,6 +169,9 @@ header.sticky {
   .border-sm-right {
     border-right: 1px solid #dee2e6 !important;
   }
+}
+.text-decoration-none:hover {
+  text-decoration: none;
 }
 body {
   font-family: 'Source Sans Pro', sans-serif;
@@ -1035,40 +1044,6 @@ div.dataTables_wrapper div.dataTables_info {
   .social-icons li a:hover {
     color: #fff;
   }
-}
-.investor-keypoints li {
-  line-height: 24px;
-}
-.investor-keypoints li a {
-  font-weight: 600;
-}
-.investor-keypoints li a:hover {
-  text-decoration: none;
-}
-.investor-info .investor-avatar {
-  height: 80px;
-  width: 80px;
-}
-.investor-info .investor-avatar img {
-  max-width: 80px;
-  height: auto;
-}
-.message-board > .media:not(:last-of-type) {
-  margin-bottom: 15px;
-}
-.message-board .media-avatar {
-  height: 40px;
-  width: 40px;
-}
-.message-board .media-avatar > img {
-  max-width: 40px;
-  height: auto;
-}
-.message-board a:hover {
-  text-decoration: none;
-}
-.message-board a:focus {
-  outline: 0;
 }
 .carousel-with-card {
   position: relative;

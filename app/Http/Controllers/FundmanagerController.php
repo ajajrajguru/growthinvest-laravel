@@ -337,7 +337,7 @@ class FundmanagerController extends Controller
             $fundmanager->assignRole('business_owner');
         }
 
-        Session::flash('success_message', 'Fundmanager registered successfully');
+        Session::flash('success_message', 'Fund manager registered successfully');
         return redirect(url('backoffice/fundmanager/' . $giCode . "/registration"));
     }
 

@@ -32,17 +32,19 @@
     @endphp
    <div class="container mt-3">
     <!-- tabs -->
+    <div class="squareline-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
+                <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
+                <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-profile')}}">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#news-updates">News/Updates</a>
+                <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#news-updates">News/Updates</a>
             </li>
         </ul>
+    </div>
 
         <!-- Tab panes -->
         <div class="tab-content">
@@ -57,7 +59,7 @@
                 <p>Effectively communicate with your investors by posting and replying to their questions</p>
 
                 <div class="form-group">
-                    <a href="" class="btn btn-primary text-uppercase">post your question</a>
+                    <button class="btn btn-primary text-uppercase post-your-question">post your question</button>
                 </div>
 
                 <!-- post question -->
@@ -68,10 +70,10 @@
                 </div>
                 <!-- /post question -->
                 
-                <div class="submit-query-cont">
+                <div class="submit-query-cont post-your-question-cont d-none">
                     <div class="form-group">
                         <label>Post your question</label>
-                        <textarea name="" id="" cols="" rows="3" class="form-control"></textarea>
+                        <textarea name="" id="" cols="" rows="3" class="form-control" placeholder="what is your question?"></textarea>
                     </div>
 
                     <div class="form-group">
