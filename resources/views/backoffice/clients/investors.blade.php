@@ -149,12 +149,12 @@
                                 <div class="d-flex justify-content-end">
                                     <div class="mt-3">
                                         <a href="{{ url('backoffice/investor/registration')}}" class="btn btn-primary btn-sm">Add Investors</a>
-                                        <a href="javascript:void(0)" class="btn btn-link btn-sm download-investor-csv" >Download CSV</a>
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary download-investor-csv" >Download CSV</a>
                                     </div>
                                 </div>
 
                                 <div class="table-responsive mt-4">
-                                    <table id="datatable-investors" class="table dataFilterTable table-hover table-solid-bg">
+                                    <table id="datatable-investors" class="table dataFilterTable table-hover table-solid-bg dt-responsive">
                                         <thead>
                                             <tr>
                                                 <th></th>

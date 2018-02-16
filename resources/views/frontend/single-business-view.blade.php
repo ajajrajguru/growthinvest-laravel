@@ -13,6 +13,7 @@
 @section('js')
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script> -->
 <script src="{{ asset('/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
 
 <script>
 	$( document ).ready(function() {
@@ -42,6 +43,7 @@
 </script>
 @endsection
 
+@section('content')
 <div class="container pb-5">
 	<div class="row proposal-info-card">
 		<div class="col-sm-9">
