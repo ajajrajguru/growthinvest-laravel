@@ -482,7 +482,7 @@ class InvestorController extends Controller
             $data['to']            = [$email];
             $data['cc']            = [];
             $data['subject']       = "Notification: New Investor added under " . $firmName . " by " . $registeredBy . ".";
-            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
             sendEmail('investor-register-notification', $data);
 
             $data                  = [];

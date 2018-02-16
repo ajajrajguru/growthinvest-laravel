@@ -11,5 +11,17 @@ return [
     "investor-reg-automated" => [
         "laravel" => "email.investor-reg-automated",
         "pushcrew" => ""
+    ],
+    "add-intermediary" => [
+        "laravel" => "email.add-intermediary",
+        "pushcrew" => ""
+    ],
+    "intermediary-register-notification" => [
+        "laravel" => "email.intermediary-register-notification",
+        "pushcrew" => ""
+    ],
+    "intermediary-reg-automated" => [
+        "laravel" => "email.intermediary-reg-automated",
+        "pushcrew" => ""
     ]
 ];

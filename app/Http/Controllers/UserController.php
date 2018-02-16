@@ -137,8 +137,9 @@ class UserController extends Controller
 
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
+        $sendmail = false;
         if ($giCode == '') {
-
+            $sendmail = true;
             $userExist = User::where('email', $email)->first();
             if(!empty($userExist)){
                 Session::flash('error_message', 'User with '.$email.' already exist.');
@@ -212,6 +213,42 @@ class UserController extends Controller
         if ($role != "") {
             $user->assignRole($role);
         }
+
+        if($sendmail){}
+            $firmName = (!empty($user->firm)) ? $user->firm->name : 'N/A';
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$email];
+            $data['cc']            = [];
+            $data['subject']       = 'You have successfully submitted your Registration form on GrowthInvest';
+            $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'accountType' => ''];
+            sendEmail('add-intermediary', $data);
+
+            $registeredBy          = (!empty($user->registeredBy)) ? $user->registeredBy->displayName() : 'N/A';
+            $role = title_case($user->roles()->pluck('display_name')->implode(' '));
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$email];
+            $data['cc']            = [];
+            $data['subject']       = 'Notification: New User account created for '.$user->displayName().' by '.$registeredBy.' in firm '.$firmName.' with the role '.$role.'.';
+            $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1,'registeredBy' => $registeredBy,'role' => $role,'giCode' => $user->gi_code];
+            sendEmail('intermediary-register-notification', $data);
+
+
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$email];
+            $data['cc']            = [];
+            $data['subject']       = $user->displayName().' New from '.$firmName;
+            $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'registeredBy' => $registeredBy];
+            sendEmail('intermediary-reg-automated', $data);
+
+        
+
+        
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
         return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));
