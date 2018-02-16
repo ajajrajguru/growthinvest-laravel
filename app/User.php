@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Firm', 'firm_id');
     }
 
+    public function registeredBy()
+    {
+        return $this->belongsTo('App\User', 'registered_by');
+    }
+
     public function userData()
     {
         return $this->hasMany('App\UserData');
