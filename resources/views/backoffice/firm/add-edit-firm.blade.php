@@ -244,7 +244,7 @@
 				      					<div class="input-group">
 				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="wm_commission" value="{{$firm->wm_commission}}" data-parsley-type="number" >
 				      						<div class="input-group-append percentlbl @if($mode=='view') d-none @endif">
-				      							<span class="input-group-text">%</span>
+				      							<span class="input-group-text bg-white border-0">%</span>
 				      						</div>
 				      						<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->wm_commission}}%</span>
 				      					</div>
@@ -256,7 +256,7 @@
 				      					<div class="input-group">
 				      						<input type="text" class="form-control editmode @if($mode=='view') d-none @endif"" placeholder="" name="introducer_commission" value="{{$firm->introducer_commission}}" data-parsley-type="number" >
 				      						<div class="input-group-append  percentlbl @if($mode=='view') d-none @endif">
-				      							<span class="input-group-text">%</span>
+				      							<span class="input-group-text bg-white border-0">%</span>
 				      						</div>
 				      						<span class="viewmode @if($mode=='edit') d-none @endif">{{$firm->introducer_commission}}%</span>
 				      					</div>
@@ -339,9 +339,26 @@
 					<div class="col-md-3">
 						<label>Background Image</label>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-9">
 
-						<div class="form-check">
+						
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input class="custom-control-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1" id="imgFrontEnd" name="frontend_display" @if($firm->frontend_display=='yes') checked @endif >
+						  	<label class="custom-control-label" for="imgFrontEnd">
+						      	Display Image for Frontend Users
+						  	</label>
+						  	<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->frontend_display=='yes') ?  'Yes' : 'No' }}</span>
+						</div>
+						<div class="custom-control custom-checkbox custom-control-inline">
+						  	<input class="custom-control-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1"  @if($firm->backend_display=='yes') checked @endif id="imgBackEnd" name="backend_display" >
+						  	<label class="custom-control-label" for="imgBackEnd">
+						      	Display Image for Backend Users
+						  	</label>
+						  	<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->backend_display=='yes') ?  'Yes' : 'No' }}</span>
+						</div>
+						
+
+						<!-- <div class="form-check">
 							<input class="form-check-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1" id="imgFrontEnd" name="frontend_display" @if($firm->frontend_display=='yes') checked @endif >
 							<label class="form-check-label" for="imgFrontEnd">
 						    	Display Image for Frontend Users
@@ -354,7 +371,7 @@
 						    	Display Image for Backend Users
 							</label>
 							<span class="viewmode @if($mode=='edit') d-none @endif">{{ ($firm->backend_display=='yes') ?  'Yes' : 'No' }}</span>
-						</div>
+						</div> -->
 						<input type="hidden" name="backgroundid" value="{{$firm->backgroundid}}" />
 					</div>
 				</div>
@@ -363,7 +380,7 @@
 
 
 				<button type="submit" class="btn btn-primary mt-3">Save</button>
-				<button type="button" class="btn btn-secondary mt-3">Cancel</button>
+				<button type="button" class="btn btn-outline-danger mt-3">Cancel</button>
 
 			</form>
 		</div>

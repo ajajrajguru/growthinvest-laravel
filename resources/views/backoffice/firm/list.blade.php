@@ -77,7 +77,7 @@
                         @foreach($firms as $firm)
                                 <tr >
                                     <td></td>
-                                    <td><a href="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">{{ title_case($firm->name) }} </a></td>
+                                    <td><a class="font-weight-medium" href="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">{{ title_case($firm->name) }} </a></td>
                                     <td>{{ title_case($firm->firmType()->name) }} </td>
                                     <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>

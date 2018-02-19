@@ -10,6 +10,7 @@
         <script src="https://use.fontawesome.com/f78b0fef8f.js"></script>
 
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('/bower_components/jQuery.mmenu/dist/jquery.mmenu.all.css') }}">
 
         @yield('css')
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
@@ -31,6 +32,7 @@
         @yield('content')
 
         <script type="text/javascript" src="{{ asset('/bower_components/jquery/dist/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/bower_components/jQuery.mmenu/dist/jquery.mmenu.all.js') }}"></script>
 
         <!-- BS Script -->
         <script type="text/javascript" src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>

@@ -81,7 +81,7 @@
 						<div>{{$proposal_details['percentage-giveaway']==""?"0":format_amount($proposal_details['percentage-giveaway'], 0, false, false) }}%</div>
 					</li>
 					<li class="d-flex justify-content-between border-bottom border-white pt-2 pb-2">
-						<div><strong>Pre Money Valuation</strong> <a href=""><i class="fa fa-info-circle"></i></a></div>
+						<div><strong>Pre Money Valuation asd</strong> <a href="javascript:void(0);" class="ml-1 text-white" data-toggle="tooltip" title="Please note that the valuations of the businesses have not been independently verified unless stated otherwise"><i class="fa fa-info-circle"></i></a></div>
 						<div>{{$proposal_details['pre-money-valuation']==""?"-":format_amount($proposal_details['pre-money-valuation'], 0, true, true) }}</div>
 					</li>
 					<li class="d-flex justify-content-between pt-2 pb-2 ">
