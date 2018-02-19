@@ -43,7 +43,7 @@
 </script>
 @endsection
 
-@section('content')
+
 <div class="container pb-5">
 	<div class="row proposal-info-card">
 		<div class="col-sm-9">
