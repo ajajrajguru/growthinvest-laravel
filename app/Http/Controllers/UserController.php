@@ -232,7 +232,7 @@ class UserController extends Controller
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
-            $data['to']            = [$recipients];
+            $data['to']            = $recipients;
             $data['cc']            = [];
             $data['subject']       = 'Notification: New User account created for '.$user->displayName().' by '.$registeredBy.' in firm '.$firmName.' with the role '.$role.'.';
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1,'registeredBy' => $registeredBy,'role' => $role,'giCode' => $user->gi_code];
