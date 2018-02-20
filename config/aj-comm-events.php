@@ -23,5 +23,9 @@ return [
     "intermediary-reg-automated" => [
         "laravel" => "email.intermediary-reg-automated",
         "pushcrew" => ""
+    ],
+    "intermediary-changed-password" => [
+        "laravel" => "email.intermediary-changed-password",
+        "pushcrew" => ""
     ]
 ];

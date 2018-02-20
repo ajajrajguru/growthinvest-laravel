@@ -3,7 +3,7 @@
 @section('content')
 
 
-Hi {{ $toName }},<br/><br/>
+Welcome {{ $name }},<br/><br/>
 
 {{ $name }} has signed up as an Investor under <b><i>{{ $firmName }}</i></b> .<br/><br/>
 

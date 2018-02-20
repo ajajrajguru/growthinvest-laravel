@@ -3,7 +3,7 @@
 @section('content')
 
 
-Hi {{ $name }},<br/><br/>
+Hi {{ $toName }},<br/><br/>
 
 New User account created for {{ $name }} by {{ $registeredBy }} in firm {{ $firmName }} with the role {{ $role }}.<br/><br/>
 

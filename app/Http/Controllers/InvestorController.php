@@ -32,7 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-
+ 
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -482,11 +482,14 @@ class InvestorController extends Controller
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
-            $data['to']            = $recipients;
             $data['cc']            = [];
             $data['subject']       = "Notification: New Investor added under " . $firmName . " by " . $registeredBy . ".";
-            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
-            sendEmail('investor-register-notification', $data);
+
+            foreach ($recipients as $recipientEmail => $recipientName) {
+                $data['to']            = $recipientEmail;
+                $data['template_data'] = ['toName'=>$recipientName,'name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
+                sendEmail('investor-register-notification', $data);
+            }
 
             $data                  = [];
             $data['from']          = config('constants.email_from');
