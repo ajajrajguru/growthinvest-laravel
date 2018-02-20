@@ -1110,11 +1110,11 @@ function cdnPath($cdn, $asset)
 function getRecipientsByCapability($recipients,$capabilities,$firmId=0){
 
     if($firmId)
-        $userEmails = \App\User::permission('add_user')->where('firm_id',$firmId)->pluck('email');
+        $userEmails = \App\User::permission('add_user')->where('firm_id',$firmId)->pluck('email')->toArray();
     else
-        $userEmails = \App\User::permission('add_user')->pluck('email');
+        $userEmails = \App\User::permission('add_user')->pluck('email')->toArray();
 
-
+   
     $recipients +=$userEmails;
 
     return $recipients;
