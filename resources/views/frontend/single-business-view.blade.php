@@ -105,7 +105,7 @@
 			<a href="" class="btn btn-outline-primary"><i class="fa fa-plus"></i> ADD TO WATCHLIST</a>
 		</div>
 		<div class="col-sm-4 text-center mt-2 mt-sm-0">
-			<a href="" class="btn btn-primary btn-lg"> Invest Now</a>
+			<a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal2"> Invest Now</a>
 		</div>
 	</div>
 	<div class="row border">
@@ -945,6 +945,403 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Subscription Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        	<h4>(the "company")</h4>
+        	<p>(Incorporated and registered in England)</p>
+        	<h2>SHARE OFFER</h2>
+        </div>
+
+        <h4>Outline Terms of the Offer</h4>
+        <p>The Company is offering up to 1000 new ordinary shares in the share capital of the Company at a price of 1.00 per ordinary ("The Offer"). The Offer is made to raise (general working capital) for the Company, and on the basis that the current issued capital is 2000 Ordinary Shares.</p>
+
+        <h4>Procedure for Completion</h4>
+        <ol class="pl-3">
+        	<li>If you wish to invest as part of the Offer please complete in full the details requested at Sections 1 to 5 and then sign and date where indicated at Section 6.</li>
+        	<li>Payment should be made in full on application. Please enclose a cheque made payable to "", or transfer your funds to the bank account details of which are set out in Section 2 below.</li>
+        </ol>
+
+        <!-- accordion -->
+        <div id="" role="tablist" class="gi-collapse">
+          	<div class="card">
+        	    <div class="card-header" role="tab" id="headingOne">
+        	        <a data-toggle="collapse" href="#collapse1" role="button">
+        	          Section 1. Application for Shares – Your Details
+        	          <i class="fa fa-lg fa-plus-square-o"></i>
+        	          <i class="fa fa-lg fa-minus-square-o"></i>
+        	        </a>
+        	    </div>
+
+        	    <div id="collapse1" class="collapse show" role="tabpanel" >
+        	    	<div class="card-body border mb-3">
+        	    		<form>
+        	    			<div class="form-group row mb-3">
+        	    		    	<label class="col-sm-3 col-form-label">Mr, Mrs, Miss or Title:</label>
+        	    		    	<div class="col-sm-9">
+        	    		      		<input type="text" class="form-control">
+        	    		    	</div>
+        	    		  	</div>
+        	    		  	<div class="form-group row mb-3">
+        	    		    	<label class="col-sm-3 col-form-label">Forename(s) (in full): <span class="text-danger">*</span></label>
+        	    		    	<div class="col-sm-9">
+        	    		      		<input type="text" class="form-control">
+        	    		    	</div>
+        	    		  	</div>
+    	    		  		<div class="form-group row mb-3">
+    	    		  	    	<label class="col-sm-3 col-form-label">Surname:</label>
+    	    		  	    	<div class="col-sm-9">
+    	    		  	      		<input type="text" class="form-control">
+    	    		  	    	</div>
+    	    		  	  	</div>
+
+    	    		  	  	<div class="row">
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-6 col-form-label">Address in full:</label>
+	    		  	  			    	<div class="col-sm-6">
+	    		  	  			      		<textarea name="" id="" cols=" rows="2" class="form-control"></textarea>
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-3 col-form-label">Postcode:</label>
+	    		  	  			    	<div class="col-sm-9">
+	    		  	  			      		<input type="text" class="form-control">
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  	</div>
+
+	    		  	  		<div class="form-group row mb-3">
+	    		  	  	    	<label class="col-sm-3 col-form-label">Email Address:</label>
+	    		  	  	    	<div class="col-sm-9">
+	    		  	  	      		<input type="email" class="form-control">
+	    		  	  	    	</div>
+	    		  	  	  	</div>
+
+	    		  	  	  	<div class="form-group row mb-3">
+	    		  	  	    	<label class="col-sm-3 col-form-label">Daytime tel. no.</label>
+	    		  	  	    	<div class="col-sm-9">
+	    		  	  	      		<input type="text" class="form-control">
+	    		  	  	    	</div>
+	    		  	  	  	</div>
+
+    	    		  	  	<div class="row">
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-6 col-form-label">Permanent address (if different from above)</label>
+	    		  	  			    	<div class="col-sm-6">
+	    		  	  			      		<textarea name="" id="" cols=" rows="2" class="form-control"></textarea>
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-3 col-form-label">Postcode:</label>
+	    		  	  			    	<div class="col-sm-9">
+	    		  	  			      		<input type="text" class="form-control">
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  	</div>
+
+	    		  	  		<div class="form-group row mb-3">
+    	    		  	  	  	<label class="col-sm-3 col-form-label">Date of Birth:</label>
+    	    		  	  	  	<div class="col-sm-9">
+    	    		  	  	    		<input type="date" class="form-control">
+    	    		  	  	  	</div>
+	    		  	  		</div>
+
+	    		  	  		<div class="form-group row mb-3">
+    	    		  	  	  	<label class="col-sm-3 col-form-label">National Insurance No.</label>
+    	    		  	  	  	<div class="col-sm-9">
+    	    		  	  	    		<input type="text" class="form-control">
+    	    		  	  	  	</div>
+	    		  	  		</div>
+							
+							<div class="bg-gray p-2">
+	    	    		  	  	<div class="row mt-3">
+	    	    		  	  		<div class="col-sm-6">
+	    	    		  	  			<div class="form-group row mb-3">
+	    	    		  	  		    	<label class="col-sm-6 col-form-label">Investment Amount:</label>
+	    	    		  	  		    	<div class="col-sm-6">
+	    	    		  	  		      		<div class="input-group">
+  						    	    		  	  	<div class="input-group-prepend border-bottom">
+  						    	    		  	  		<span class="input-group-text border-0">&pound;</span>
+  						    	    		  	  	</div>
+  					    	    		  	  		<input type="number" class="form-control">
+  					    	    		  	  	</div>
+	    	    		  	  		    	</div>
+	    	    		  	  		  	</div>
+	    	    		  	  		</div>
+	    	    		  	  		<div class="col-sm-6">
+		    		  	  				<div class="form-group row mb-3">
+		    		  	  			    	<label class="col-sm-12 col-form-label">(Minimum Investment: £ 5,000.00 )</label>
+		    		  	  			  	</div>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+
+	    	    		  	  	<div class="row">
+	    	    		  	  		<div class="col-sm-6">
+	    	    		  	  			<div class="form-group row mb-3">
+	    	    		  	  		    	<label class="col-sm-6 col-form-label">Price per share:</label>
+	    	    		  	  		    	<div class="col-sm-6">
+	    	    		  	  		      		<div class="input-group">
+  						    	    		  	  	<div class="input-group-prepend border-bottom">
+  						    	    		  	  		<span class="input-group-text border-0">&pound;</span>
+  						    	    		  	  	</div>
+  					    	    		  	  		<input type="number" class="form-control">
+  					    	    		  	  	</div>
+	    	    		  	  		    	</div>
+	    	    		  	  		  	</div>
+	    	    		  	  		</div>
+	    	    		  	  		<div class="col-sm-6">
+		    		  	  				<label>SEIS/EIS relief sought?</label>
+  	  									<div class="d-sm-inline ml-sm-3">
+  	  										<div class="custom-control custom-radio custom-control-inline">
+  	  										  <input type="radio" id="yes2" name="radiobtninline" class="custom-control-input">
+  	  										  <label class="custom-control-label" for="yes2">Yes</label>
+  	  										</div>
+  	  										<div class="custom-control custom-radio custom-control-inline">
+  	  										  <input type="radio" id="no2" name="radiobtninline" class="custom-control-input" checked="">
+  	  										  <label class="custom-control-label" for="no2">No</label>
+  	  										</div>
+  	  									</div>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+
+	    	    		  	  	<div class="row">
+	    	    		  	  		<div class="col-sm-6">
+    	    		  	  				<div class="form-group row mb-3">
+    	    		  	  			    	<label class="col-sm-6 col-form-label">Number of Shares:</label>
+    	    		  	  			    	<div class="col-sm-6">
+    	    		  	  			      		<input type="text" class="form-control">
+    	    		  	  			    	</div>
+    	    		  	  			  	</div>
+	    	    		  	  		</div>
+	    	    		  	  		<div class="col-sm-6">
+		    		  	  				<small class="form-text text-muted">
+		    		  	  					It is only possible to subscribe to a complete whole number of shares. The Required Investment field will automatically calculate the final investment amount for the nearest whole number of shares, based on the initial value entered in the Investment Amount field
+		    		  	  				</small>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+
+	    	    		  	  	<div class="row">
+	    	    		  	  		<div class="col-sm-6">
+    	    		  	  				<div class="form-group row mb-3">
+    	    		  	  			    	<label class="col-sm-6 col-form-label">Required Investment: <span class="text-danger">*</span></label>
+    	    		  	  			    	<div class="col-sm-6">
+    	    		  	  			      		<div class="input-group">
+  						    	    		  	  	<div class="input-group-prepend border-bottom">
+  						    	    		  	  		<span class="input-group-text border-0">&pound;</span>
+  						    	    		  	  	</div>
+  					    	    		  	  		<input type="number" class="form-control">
+  					    	    		  	  	</div>
+    	    		  	  			    	</div>
+    	    		  	  			  	</div>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+    	    		  	  	</div>
+        	    		</form>
+        	    	</div>
+        	    </div>
+        	</div>
+
+          	<div class="card">
+        	    <div class="card-header" role="tab" id="headingOne">
+        	        <a data-toggle="collapse" href="#collapse2" role="button" class="collapsed">
+        	          Section 2: Your Subscription
+        	          <i class="fa fa-lg fa-plus-square-o"></i>
+        	          <i class="fa fa-lg fa-minus-square-o"></i>
+        	        </a>
+        	    </div>
+
+        	    <div id="collapse2" class="collapse show" role="tabpanel" >
+        	    	<div class="card-body border mb-3">
+        	    		<p>By completing and returning this form, you are agreeing to subscribe for <%=_.isUndefined(proposal_data.get('share-class-issued'))?" Unknown ":proposal_data.get('share-class-issued')%><!-- Ordinary Shares --> shares as part of the Offer on the following terms:-</p>
+	    		        <ol class="pl-3" type="i">
+	    					<li>You agree to provide any information (including any proof of identity requests) reasonably required by the Company or its solicitors in order to process your application for shares.</li>
+	    					<li>You agree to subscribe for the number of <!-- Ordinary Shares --><%=_.isUndefined(proposal_data.get('share-class-issued'))?" Unknown ":proposal_data.get('share-class-issued')%> shares stated above, or such lower number in the event of oversubscription (hereinafter “Your Shares”), subject to the memorandum and articles of association of the Company, as part of the Offer.</li>
+	    					<li>Where applicable you undertake to sign a Deed of Adherence to the Shareholders Agreement of the Company</li>
+	    					<li>You enclose a cheque or you have arranged an electronic transfer of funds in payment of the sum referred to above, to the account detailed below in this section, being the amount payable in full on application for the stated number of Ordinary Shares.</li>
+	    					<li>You understand that the completion and delivery of this application form accompanied by a cheque constitutes an undertaking that the cheque will be honoured on first presentation.</li>
+	    					<li>You understand that no application will be accepted unless and until payment in full for Your Shares has been made.</li>
+	    					<li>You understand that the Company will send you a share certificate by post at your risk to the address given in Section 1 below for Your Shares.</li>
+	    					<li>You agree to accept the above shares when allotted to you subject to the terms of the Memorandum and Articles of Association of the Company and you hereby authorise us to place your name in the Register of Members of the Company as the holder of those shares.</li>
+	    				</ol>
+
+	    				<p>The Company undertakes, where there is a minimum overall subscription level, to hold your money in a segregated account until such a time as the minimum subscription level is met.</p>
+						
+						<h5 class="mb-3">Bank Transfer Details:</h5>
+	    				<form action="">
+    						<div class="form-group row">
+    					    	<label class="col-sm-3 col-form-label">A/C Name:</label>
+    					    	<div class="col-sm-9">
+    					      		<input type="text" class="form-control">
+    					    	</div>
+    					  	</div>
+
+					  		<div class="form-group row">
+					  	    	<label class="col-sm-3 col-form-label">A/C Number:</label>
+					  	    	<div class="col-sm-9">
+					  	      		<input type="text" class="form-control">
+					  	    	</div>
+					  	  	</div>
+
+				  	  		<div class="form-group row">
+				  	  	    	<label class="col-sm-3 col-form-label">Sort Code:</label>
+				  	  	    	<div class="col-sm-9">
+				  	  	      		<input type="text" class="form-control">
+				  	  	    	</div>
+				  	  	  	</div>
+
+			  	  	  		<div class="form-group row">
+			  	  	  	    	<label class="col-sm-3 col-form-label">Bank:</label>
+			  	  	  	    	<div class="col-sm-9">
+			  	  	  	      		<input type="text" class="form-control">
+			  	  	  	    	</div>
+			  	  	  	  	</div>
+
+		  	  	  	  		<div class="form-group row">
+		  	  	  	  	    	<label class="col-sm-3 col-form-label">Reference:</label>
+		  	  	  	  	    	<div class="col-sm-9">
+		  	  	  	  	      		<input type="text" class="form-control">
+		  	  	  	  	    	</div>
+		  	  	  	  	  	</div>
+	    				</form>
+        	    	</div>
+        	    </div>
+        	</div>
+
+        	<!-- collapse3 -->
+    	  	<div class="card">
+    		    <div class="card-header" role="tab" id="headingOne">
+    		        <a data-toggle="collapse" href="#collapse3" role="button" class="collapsed">
+    		          Section 3: Procedure for Investment
+    		          <i class="fa fa-lg fa-plus-square-o"></i>
+    		          <i class="fa fa-lg fa-minus-square-o"></i>
+    		        </a>
+    		    </div>
+
+    		    <div id="collapse3" class="collapse show" role="tabpanel" >
+    		    	<div class="card-body border mb-3">
+    		    		<p>Once completed please return this subscription form to , c/o GrowthInvest, 120 Cannon Street, London, EC4N 6AS to arrive no later than 12 noon on 31st December 2017. Also please scan and email a copy to <a href="support@growthinvest.com">support@growthinvest.com</a> with email subject ' Subscription'.</p>
+    		    	</div>
+    		    </div>
+    		</div>
+        	<!-- /collapse3 -->
+
+	    	<!-- collapse4 -->
+		  	<div class="card">
+			    <div class="card-header" role="tab" id="headingOne">
+			        <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
+			          Section 4: Confirmation of Status
+			          <i class="fa fa-lg fa-plus-square-o"></i>
+			          <i class="fa fa-lg fa-minus-square-o"></i>
+			        </a>
+			    </div>
+
+			    <div id="collapse4" class="collapse show" role="tabpanel" >
+			    	<div class="card-body border mb-3">
+			    		<p>Under terms of the Financial Services and Markets Act 2000 (“FSMA”) and the Financial Services and Markets Act 2000 (Financial Promotion) Order 2005 (as amended) ("FSMAO"), the Company will only accept an application for shares if you are accurately categorised as an investor by an FCA authorised entity. The authorised entity would normally be either GrowthInvest (regulated as EIS Platforms Ltd by the FCA), or an authorised UK financial adviser or wealth manager. Please confirm that the below categorisation is still accurate and if not please <a href="">click here</a> to update your categorisation before completing this application</p>
+
+			    		<p><strong>Certification:</strong> <span></span></p>
+			    		<p>Date: <span></span></p>
+			    	</div>
+			    </div>
+			</div>
+	    	<!-- /collapse4 -->
+
+	    	<!-- collapse5 -->
+		  	<div class="card">
+			    <div class="card-header" role="tab" id="headingOne">
+			        <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
+			          Section 5: Verification of Identity
+			          <i class="fa fa-lg fa-plus-square-o"></i>
+			          <i class="fa fa-lg fa-minus-square-o"></i>
+			        </a>
+			    </div>
+
+			    <div id="collapse4" class="collapse show" role="tabpanel" >
+			    	<div class="card-body border mb-3">
+			    		<p>In order to invest all investors must go through identity checks, which include Know Your Client and Anti Money Laundering processes. This can be done online at GrowthInvest.com, and will be carried out by GrowthInvest approved partner <a href="https://onfido.com/" target="_blank">Onfido.com</a>. If you have not yet been through the verification process, please click here to request prior to completing the application.</p>
+			    	</div>
+			    </div>
+			</div>
+	    	<!-- /collapse5 -->
+
+	    	<!-- collapse6 -->
+		  	<div class="card">
+			    <div class="card-header" role="tab" id="headingOne">
+			        <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
+			          Section 6: Signature
+			          <i class="fa fa-lg fa-plus-square-o"></i>
+			          <i class="fa fa-lg fa-minus-square-o"></i>
+			        </a>
+			    </div>
+
+			    <div id="collapse4" class="collapse show" role="tabpanel" >
+			    	<div class="card-body border mb-3">
+			    		<div class="row">
+			    			<div class="col-md-12">
+			    				<p>I hereby apply for Offers Shares in , and agree to adhere to terms and conditions of Offer</p>
+			    			</div>
+			    			<div class="col-md-12">
+			    				<div class="row">
+			    					<div class="col-sm-6 border-sm-right border-0">
+			    						<div class="form-group">
+			    							<label for="">Signature:</label>
+			    							<div class="border p-3 w-100"></div>
+			    						</div>
+
+			    						<div class="form-group">
+			    							<strong>Name:</strong> <span>admin</span>
+			    						</div>
+			    					</div>
+			    					<div class="col-sm-6">
+			    						<div class="form-group">
+			    							<label for="">Date: </label> <span></span>
+			    						</div>
+			    					</div>
+			    				</div>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+			</div>
+	    	<!-- /collapse6 -->
+
+	    	<div class="text-left text-sm-center mb-4">
+	    		<a href="" class="btn btn-primary">Invest</a>
+	    		<a href="" class="float-sm-right float-sm-left btn btn-outline-danger">Cancel</a>
+	    	</div>
+
+	    	<p><strong>Note:</strong> Once the form is complete, please either click on the Invest button in order to start our online electronic signature process, which is run by our partners Adobe E-sign, or please use the Download button to download the pre-populated form as a PDF which can be printed, signed, and sent to , c/o GrowthInvest, 120 Cannon Street, London EC4N 6AS.</p>
+
+	    	<a href="" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+	    	<small class="text-muted form-text">Please note: A download will only include all investment and financial details if the user has submitted the application by clicking "Invest"</small>
+        </div>
+        <!-- /accordion -->
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
     </div>
   </div>
 </div>
