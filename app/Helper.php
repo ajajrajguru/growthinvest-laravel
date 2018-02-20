@@ -1107,60 +1107,18 @@ function cdnPath($cdn, $asset)
 }
 /* CDN END */
  
-function getRecipientsByCapability($recipients,$capabilities,$firm_id=0,$args=array()){
+function getRecipientsByCapability($recipients,$capabilities,$firmId=0){
+
+    if($firmId)
+        $userEmails = User::permission('add_user')->where('firm_id',$firmId)->pluck('email');
+    else
+        $userEmails = User::permission('add_user')->pluck('email');
+
+
+    $recipients +=$userEmails;
+
+    return $recipients;
  
-
-    global $wp_roles;
-
-    $editable_roles =  $wp_roles->roles;
-
-    foreach ( $editable_roles as $role => $details ) {
-
-        $role_check = get_role($role);
-         
-        $role_found = 0;
-
-        $capability_check = '';
-
-            foreach($capabilities as $capability){
-                if(  $role_check->has_cap($capability))
-                {
-                    $role_found = 1;
-
-                    $capability_check = $capability;
-                }
-            }
-            if($role_found==1){
-
-                $args['role']=   esc_attr($role);
-
-             
-                if($firm_id !=0){
-
-                    $args['meta_key'] =  'firm';
-                    $args['meta_value'] =  $firm_id;
-                    $args['meta_compare'] =  '='; 
-                }
-
-                $users =  get_users( $args );
-
-                foreach ($users as $user){
-                    if(isset($args['returntype'])){
-                        if($args['returntype']=='email')
-                         $recipients[] = $user->user_email;
-                        else
-                          $recipients[] = $user->ID;
-                    }
-                    else{
-                        $recipients[] = $user->ID;
-                    }                   
-                }
-            }
-        }
-
-        $recipients = array_unique($recipients);
-
-        return $recipients;
 }
 
 

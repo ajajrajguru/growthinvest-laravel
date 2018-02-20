@@ -214,7 +214,8 @@ class UserController extends Controller
             $user->assignRole($role);
         }
 
-        if($sendmail){}
+        if($sendmail){
+
             $firmName = (!empty($user->firm)) ? $user->firm->name : 'N/A';
             $data                  = [];
             $data['from']          = config('constants.email_from');
@@ -227,10 +228,11 @@ class UserController extends Controller
 
             $registeredBy          = (!empty($user->registeredBy)) ? $user->registeredBy->displayName() : 'N/A';
             $role = title_case($user->roles()->pluck('display_name')->implode(' '));
+            $recipients = getRecipientsByCapability([],array('manage_backoffice'));
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
-            $data['to']            = [$email];
+            $data['to']            = [$recipients];
             $data['cc']            = [];
             $data['subject']       = 'Notification: New User account created for '.$user->displayName().' by '.$registeredBy.' in firm '.$firmName.' with the role '.$role.'.';
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1,'registeredBy' => $registeredBy,'role' => $role,'giCode' => $user->gi_code];
@@ -240,13 +242,13 @@ class UserController extends Controller
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
-            $data['to']            = [$email];
+            $data['to']            = ['x+52703011248957@mail.asana.com'];
             $data['cc']            = [];
             $data['subject']       = $user->displayName().' New from '.$firmName;
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'registeredBy' => $registeredBy];
             sendEmail('intermediary-reg-automated', $data);
 
-        
+        }
 
         
 
