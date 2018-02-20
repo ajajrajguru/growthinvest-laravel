@@ -6,7 +6,7 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
-      "dom": '<"top"li>t<"bottom"ip>',
+      "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>',
       'aaSorting': [[1, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investors',
@@ -727,7 +727,7 @@
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
-      "dom": '<"top"li>t<"bottom"ip>',
+      "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>',
       'aaSorting': [[0, 'asc']],
       'ajax': {
         url: '/backoffice/investor/get-investor-invest',

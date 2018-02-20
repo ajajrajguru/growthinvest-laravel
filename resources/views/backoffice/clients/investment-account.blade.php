@@ -128,19 +128,24 @@
                 </div>
 
                 <div class="profile-content p-4">
-                    <h5 class="mt-3 mb-2">
-                        4: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary"> 
-                        @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
-                         Client Investment Account 
-                        @else
-                        Investment Account
-                        @endif
-                     </span>
-                    </h5>
-                    @if($investor->id)
-                                         <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn  @if($mode=='edit') d-none  @endif">Edit Details</a>
-                                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none @endif">Cancel Updates</a>
-                                    @endif
+                    <div class="d-sm-flex align-items-sm-center justify-content-sm-between mt-3">
+                        <h5 class="mt-3 mb-2">
+                            4: <i class="fa fa-info-circle text-primary"> </i> <span class="text-primary"> 
+                            @if(Auth::user()->hasPermissionTo('is_wealth_manager'))
+                             Client Investment Account 
+                            @else
+                            Investment Account
+                            @endif
+                         </span>
+                        </h5>
+
+                        <div>
+                            @if($investor->id)
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm editUserBtn  @if($mode=='edit') d-none  @endif">Edit Details</a>
+                                <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm  cancelUpdateBtn @if($mode=='view') d-none @endif">Cancel Updates</a>
+                            @endif
+                        </div>
+                    </div>
                     <hr class="my-3">
 
                     <!-- Investment Account Content HERE -->
@@ -272,7 +277,7 @@
                                             <p class="mt-3 text-center">EITHER</p>
                                                 
                                             <div class="form-group">
-                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
+                                                <input type="text" class="form-control editmode @if($mode=='view') d-none @endif" placeholder="Tax Identification Number (TIN)" name="tinnumber" value="@if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif" >
                                                 
                                                 <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['tinnumber'])){{ $nomineeDetails['tinnumber'] }}@endif</div>
 

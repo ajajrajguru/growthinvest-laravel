@@ -13,13 +13,16 @@
 @section('js')
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script> -->
 <script src="{{ asset('/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
 
 <script>
 	$( document ).ready(function() {
+		// knob
 	    $('.knob').each(function() {
         	var $this = $(this);
            	var myVal = $this.attr("rel");
            	$this.knob({
+           		'readOnly': true
            	});
            	$({
             	value: 0
@@ -33,10 +36,13 @@
               	}
            });
 	    });
+
+	    $('[data-toggle="tooltip"]').tooltip();
 	});
 	
 </script>
 @endsection
+
 
 <div class="container pb-5">
 	<div class="row proposal-info-card">
@@ -68,8 +74,8 @@
 						</li>
 					</ul>
 					<h3 class="">{{$title}}</h3>
-					<p class="mb-0"><i class="fa fa-map-marker"></i> {{$proposal_details['address']}}</p>
-					<p class="mb-0"><a href="">{{$proposal_details['website']}}</a></p>
+					<p class="mb-0"><i class="fa fa-map-marker text-white"></i> {{$proposal_details['address']}}</p>
+					<p class="mb-0"><i class="fa fa-globe text-white"></i> <a href="">{{$proposal_details['website']}}</a></p>
 				</div>
 			</div>
 		</div>
@@ -86,7 +92,7 @@
 						<a href="{{$proposal_details['social-linkedin']}}"  target="_blank"><i class="fa fa-linkedin"></i></a>
 					</li>
 					<li class="list-inline-item">
-						<a href="{{$proposal_details['social-companyhouse']}}"  target="_blank"><i class="fa fa-globe"></i></a>
+						<a href="{{$proposal_details['social-companyhouse']}}"  target="_blank" data-toggle="tooltip" title="Companies House"><img src="{{ url('img/company-house.png') }}" class="img-fluid" style="max-width: 70%;"></a>
 					</li>
 				</ul>
 				<a href="" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
@@ -147,7 +153,7 @@
 						<div><span class="badge badge-dark p-1">{{$milestone['name']}}</span></div>	
 					@endforeach
 					
-				</div>
+				</div><hr>
 			<!-- /Proposal-->
 
 			
