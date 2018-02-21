@@ -38,6 +38,15 @@
 	    });
 
 	    $('[data-toggle="tooltip"]').tooltip();
+
+	    $(".pledged-invested-users .edit-action").click(function(){
+            $(".fa").toggleClass("fa-pencil fa-close");
+        });
+
+	    $(".pledged-invested-users .cancel-action").click(function(){
+            $(".fa").toggleClass("fa-close fa-pencil");
+        });
+
 	});
 	
 </script>
@@ -75,7 +84,7 @@
 					</ul>
 					<h3 class="">{{$title}}</h3>
 					<p class="mb-0"><i class="fa fa-map-marker text-white"></i> {{$proposal_details['address']}}</p>
-					<p class="mb-0"><i class="fa fa-globe text-white"></i> <a href="">{{$proposal_details['website']}}</a></p>
+					<p class="mb-0"><i class="fa fa-globe text-white"></i> <a href="" class="text-white">{{$proposal_details['website']}}</a></p>
 				</div>
 			</div>
 		</div>
@@ -465,6 +474,285 @@
 			@if($type=="proposal")
 			<div class="tab-pane active p-3" id="business-idea" role="tabpanel">
 				<!-- accordions -->
+
+				<!-- test -->
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="">Platform GI Code </label>
+							<div>GIBP63799240</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="">Analyst Feedback:</label>
+							<div>Pending</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="text-right mb-3">
+					<a href="" class="btn btn-sm btn-outline-primary">Edit</a>
+					<a href="" class="btn btn-sm btn-outline-danger">Cancel</a>
+				</div>
+				<form action="" class="bg-gray p-3">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">Proposal Status</label>
+								<select name="" id="" class="form-control">
+									<option value="">1</option>
+									<option value="">2</option>
+									<option value="">3</option>
+								</select>
+								<div></div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">Proposal Approved By</label>
+								<select name="" id="" class="form-control">
+									<option value="">1</option>
+									<option value="">2</option>
+									<option value="">3</option>
+								</select>
+								<div></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">The Tax Distict</label>
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">HMRC Reference</label>
+								<input type="text" class="form-control">
+							</div>
+						</div>
+					</div>
+					
+					<div class="fomr-group">
+						<div class="d-sm-inline-block">
+							<div class="custom-control custom-checkbox">
+							  <input type="checkbox" class="custom-control-input" id="ch1">
+							  <label class="custom-control-label" for="ch1">Investment Opportunities</label>
+							</div>
+							<div class="custom-control custom-checkbox ml-4 mt-1">
+							  <input type="checkbox" class="custom-control-input" id="ch2" checked="">
+							  <label class="custom-control-label" for="ch2">Invest Listing only</label>
+							</div>
+						</div>
+
+						<div class="d-sm-inline-block align-top ml-sm-5 ml-0 mt-4 mt-sm-0">
+							<div class="custom-control custom-checkbox custom-control-inline">
+							  <input type="checkbox" class="custom-control-input" id="ch7">
+							  <label class="custom-control-label" for="ch7"> Single Company Type</label>
+							</div>
+						</div>
+					</div>
+					
+				</form>
+
+				<div class="table-responsive pledged-invested-users mt-3">
+					<table class="table table-hover table-solid-bg">
+						<thead>
+							<tr>
+								<th>Investor</th>
+								<th>Amount</th>
+								<th>Status</th>
+								<th>Edit</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><a href="">External Investments</a></td>
+								<td>&pound; 100, 00</td>
+								<td>Invested</td>
+								<td><a class="edit-action" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-pencil"></i></a></td>
+							</tr>
+							<tr id="collapseExample2" class="collapse border bg-gray">
+								<td colspan="4">
+									<div class="row px-3">
+										<div class="col-sm-4 border-sm-right border-0">
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Status:</label>
+										    	<div class="col-sm-8">
+										      		<select name="" id="" class="form-control">
+										      			<option value="">Pledged</option>
+										      			<option value="">Invesed</option>
+										      		</select>
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Amount:</label>
+										    	<div class="col-sm-8">
+										      		<div class="input-group">
+							    	    		  	  	<div class="input-group-prepend border-bottom">
+							    	    		  	  		<span class="input-group-text border-0 bg-transparent">&pound;</span>
+							    	    		  	  	</div>
+						    	    		  	  		<input type="number" class="form-control">
+						    	    		  	  	</div>
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Date:</label>
+										    	<div class="col-sm-8">
+										      		<input type="date" class="form-control">
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Relief:</label>
+										    	<div class="col-sm-8">
+										      		<select name="" id="" class="form-control">
+										      			<option value="">SEIS</option>
+										      			<option value="">EIS</option>
+										      		</select>
+										    	</div>
+										  	</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">No. of shares:</label>
+										    	<div class="col-sm-8">
+										      		<input type="text" class="form-control">
+										    	</div>
+										  	</div>
+
+									  		<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Share Issue Price: &pound;</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="text" class="form-control">
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Share Issue Date:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="date" class="form-control">
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Revaluation Date:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="date" class="form-control">
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Current Value:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="text" class="form-control">
+									  	    	</div>
+									  	  	</div>
+										</div>
+										<div class="col-sm-2 d-sm-flex align-items-sm-end pb-sm-3 pb-0">
+											<a href="" class="btn btn-sm btn-outline-primary mr-1">Save</a>
+											<a data-toggle="collapse" href="#collapseExample2" class="btn btn-sm btn-outline-danger cancel-action">Cancel</a>
+										</div>
+									</div>
+							  	</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<div class="form-group">
+					<label>Choose Sites to appear on</label>
+					<div>
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input type="checkbox" class="custom-control-input" id="ch31">
+							<label class="custom-control-label" for="ch31">GrowthInvest</label>
+						</div>
+
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input type="checkbox" class="custom-control-input" id="ch32">
+							<label class="custom-control-label" for="ch32">wardconnections</label>
+						</div>
+
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input type="checkbox" class="custom-control-input" id="ch33">
+							<label class="custom-control-label" for="ch33">whitelabeldemo</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Display on Home Page</label>
+					<div>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="ch11">
+							<label class="custom-control-label" for="ch11">Check if Yes</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Display to Non Logged in User on Platform</label>
+					<div>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="ch12">
+							<label class="custom-control-label" for="ch12">Check if Yes</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Choose Firms to appear on</label>
+					<ul class="list-unstyled">
+						<li>
+							<div class="custom-control custom-checkbox">
+							  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+							  	<label class="custom-control-label" for="ch2">Check1</label>
+							</div>
+						</li>
+						<li>
+							<div class="custom-control custom-checkbox">
+							  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+							  	<label class="custom-control-label" for="ch2">Check2</label>
+							</div>
+							<ul class="list-unstyled ml-4">
+								<li>
+									<div class="custom-control custom-checkbox">
+									  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+									  	<label class="custom-control-label" for="ch2">Check2.1</label>
+									</div>
+								</li>
+								<li>
+									<div class="custom-control custom-checkbox">
+									  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+									  	<label class="custom-control-label" for="ch2">Check2.2</label>
+									</div>
+									<ul class="list-unstyled ml-4">
+										<li>
+											<div class="custom-control custom-checkbox">
+											  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+											  	<label class="custom-control-label" for="ch2">Check2.2 - 1</label>
+											</div>
+										</li>
+										<li>
+											<div class="custom-control custom-checkbox">
+											  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+											  	<label class="custom-control-label" for="ch2">Check2.2 - 2</label>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+				
+				<!-- /test -->
 
 				<div id="" role="tablist" class="gi-collapse">
 				  	<div class="card">
@@ -1325,6 +1613,8 @@
 			    </div>
 			</div>
 	    	<!-- /collapse6 -->
+
+	    	
 
 	    	<div class="text-left text-sm-center mb-4">
 	    		<a href="" class="btn btn-primary">Invest</a>
