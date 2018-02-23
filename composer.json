@@ -28,7 +28,8 @@
             "database/factories"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Ajency\\Comm\\": "packages/ajency/comm/src"
         },
         "files": ["app/Helper.php","app/InvestorHelper.php"]
     },

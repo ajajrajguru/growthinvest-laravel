@@ -32,6 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
+ 
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -117,12 +118,12 @@ class InvestorController extends Controller
 
             $actionHtml = '<select class="form-control investor_actions form-control-sm" >
             <option id="select" value="">-Select-</option>
-            <option value="edit_profile" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-profile') .'">View Profile</option>
+            <option value="edit_profile" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
             <option value="manage_documents">View Investor Documents</option>
-            <option value="message_board" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-news-update') .'">View Message Board</option>
+            <option value="message_board" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-news-update') . '">View Message Board</option>
             <option value="nominee_application">Investment Account</option>
-            <option value="investoffers" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-invest') .'">Investment Offers</option>
+            <option value="investoffers" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-invest') . '">Investment Offers</option>
             </select>';
 
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
@@ -389,9 +390,10 @@ class InvestorController extends Controller
         $isSuspended             = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode                  = $requestData['gi_code'];
 
-        $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
-
+        $giArgs   = array('prefix' => "GIIN", 'min' => 10000001, 'max' => 20000000);
+        $sendmail = false;
         if ($giCode == '') {
+            $sendmail = true;
 
             $userExist = User::where('email', $email)->first();
 
@@ -459,6 +461,44 @@ class InvestorController extends Controller
         $roleName = $investor->getRoleNames()->first();
         if (empty($roleName)) {
             $investor->assignRole('yet_to_be_approved_investor');
+        }
+
+        if ($sendmail) {
+            $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+
+
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$email];
+            $data['cc']            = [];
+            $data['subject']       = "You have been registered on " . $firmName;
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'password' => $password];
+            sendEmail('add-investor', $data);
+
+
+            $recipients = getRecipientsByCapability([],array('manage_backoffice'));
+            $registeredBy          = (!empty($investor->registeredBy)) ? $investor->registeredBy->displayName() : 'N/A';
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['cc']            = [];
+            $data['subject']       = "Notification: New Investor added under " . $firmName . " by " . $registeredBy . ".";
+
+            foreach ($recipients as $recipientEmail => $recipientName) {
+                $data['to']            = $recipientEmail;
+                $data['template_data'] = ['toName'=>$recipientName,'name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
+                sendEmail('investor-register-notification', $data);
+            }
+
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = ['x+197408276330232@mail.asana.com'];
+            $data['cc']            = [];
+            $data['subject']       = $investor->displayName() . " added " . date('d/m/Y') . " by " . $registeredBy . ".";
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'registeredBy' => $registeredBy];
+            sendEmail('investor-reg-automated', $data);
         }
 
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client registration details added successfully and being redirected to certification stage.' : 'You are being redirected to certification page';
@@ -1017,7 +1057,7 @@ class InvestorController extends Controller
         $nomineeDetails['clientbankpostcode']                 = $requestData['clientbankpostcode'];
         $nomineeDetails['adviserinitialinvestpercent']        = $requestData['adviserinitialinvestpercent'];
         $nomineeDetails['adviserinitialinvestfixedamnt']      = $requestData['adviserinitialinvestfixedamnt'];
-        $nomineeDetails['adviservattobeapplied']            = (isset($requestData['adviservattobeapplied'])) ? $requestData['adviservattobeapplied'] : '';
+        $nomineeDetails['adviservattobeapplied']              = (isset($requestData['adviservattobeapplied'])) ? $requestData['adviservattobeapplied'] : '';
         $nomineeDetails['advdetailsnotapplicable']            = (isset($requestData['advdetailsnotapplicable'])) ? $requestData['advdetailsnotapplicable'] : '';
         $nomineeDetails['ongoingadvinitialinvestpercent']     = $requestData['ongoingadvinitialinvestpercent'];
         $nomineeDetails['ongoingadvinitialinvestfixedamnt']   = $requestData['ongoingadvinitialinvestfixedamnt'];
