@@ -45,7 +45,7 @@
 
 
 <div class="container pb-5">
-	<div class="row proposal-info-card">
+	<!-- <div class="row proposal-info-card">
 		<div class="col-sm-9">
 			<div class="row">
 				<div class="col-sm-3">
@@ -97,9 +97,71 @@
 				</ul>
 				<a href="" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
 			</div>
-			
+		</div>
+	</div> -->
+
+	<!-- media objects -->
+	<div class="row" style="margin-top: -120px">
+		<div class="col-sm-9">
+			<div class="media flex-wrap d-sm-flex align-items-sm-start text-sm-left text-center">
+				<div class="mr-sm-3 width-xs-100 ">
+				  	<!-- <div class="d-table-cell"> -->
+				  		<div class="mw-150 mh-150 mx-auto border d-flex align-items-center justify-content-center position-relative">
+
+				  			<!-- logo -->
+				  			<div class="position-absolute mw-60 mh-60" style="top: -30px; left: -30px;">
+				  				<a href="">
+				  					<img src="https://dummyimage.com/120x120" alt="" class="img-fluid">
+				  				</a>
+				  			</div>
+				  			<!-- /logo -->
+				  			<img src="https://dummyimage.com/120x100" alt="" class="img-fluid">
+				  		</div>
+					<!-- </div> -->
+				</div>
+			  	<div class="media-body">
+			    	<ul class="mb-0 pl-0 ">
+						<li class="list-inline-item">
+							<span class="badge bg-primary">
+								@foreach($tax_status as $t_status)
+									{{strtoupper($t_status)}},
+								@endforeach
+							</span>
+						</li>
+						<li class="list-inline-item">
+							@if($round!='')
+								{{get_ordinal_number($round)}} round
+							@endif
+						</li>
+					</ul>
+					<h3 class="text-capitalize text-sm-white">{{$title}}</h3>
+					<p class="mb-0 text-sm-white"><i class="fa fa-map-marker"></i> {{$proposal_details['address']}}</p>
+					<p class="mb-0 text-sm-white"><i class="fa fa-globe"></i> <a href="" target="_blank" class="">{{$proposal_details['website']}}</a></p>
+			  	</div>
+			</div>
+		</div>
+		<div class="col-sm-3 d-flex align-items-sm-center justify-content-sm-end justify-content-center mt-sm-0 mt-3">
+			<div class="text-sm-right text-center">
+				<ul class="mb-2 pl-0 social-icons text-nowrap">
+					<li class="list-inline-item">
+						<a href="{{$proposal_details['social-facebook']}}" target="_blank"><i class="fa fa-facebook-f"></i></a>
+					</li>
+					<li class="list-inline-item">
+						<a href="{{$proposal_details['social-twitter']}}"  target="_blank"><i class="fa fa-twitter"></i></a>
+					</li>
+					<li class="list-inline-item">
+						<a href="{{$proposal_details['social-linkedin']}}"  target="_blank"><i class="fa fa-linkedin"></i></a>
+					</li>
+					<li class="list-inline-item">
+						<a href="{{$proposal_details['social-companyhouse']}}"  target="_blank" data-toggle="tooltip" title="Companies House"><img src="{{ url('img/company-house.png') }}" class="img-fluid" style="max-width: 70%;"></a>
+					</li>
+				</ul>
+				<a href="" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+			</div>
 		</div>
 	</div>
+	
+	<!-- /media objects -->
 	<div class="row mt-3 mb-3">
 		<div class="col-sm-8 text-center text-sm-left">
 			<a href="" class="btn btn-outline-primary"><i class="fa fa-plus"></i> ADD TO WATCHLIST</a>
