@@ -840,8 +840,13 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
 {
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
-    $expiryDate        = date('Y-m-d', strtotime($certificationDate . '+1 year'));
 
+    if(env('APP_ENV') == 'local')
+        $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
+    else
+        $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
+
+    
     $d1       = new \DateTime($expiryDate);
     $d2       = new \DateTime();
     $interval = $d2->diff($d1);
