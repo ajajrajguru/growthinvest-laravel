@@ -452,11 +452,21 @@ function createOnfidoApplicant($investor)
 One of our client services team will be in touch shortly to confirm any additional information that we require. ";
         $onfido_error = "yes";
 
-        $args = array('investor_id' => $investor->id,
-            'onfido_error_html'         => $error_html,
-        );
+        
+        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $investorEmail = $investor->email;
+        $recipients = getRecipientsByCapability([],array('manage_options'));
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$recipientEmail];
+            $data['cc']            = [];
+            $data['subject']       = $investor->displayName()." Onfido submission failed ";
+            $data['template_data'] = ['name' =>$recipientName, 'investorName'=>$investor->displayName(), 'firmName' => $firmName, 'investorEmail' => $investorEmail, 'errorHtml' => $error_html];
+            sendEmail('onfido-submission-failed', $data);
+        }
 
-        // generate_mail('Onfido submission failed', $args);
         $onfidoSubmitted = 'fail';
     } else {
         $onfidoSubmitted = 'yes';

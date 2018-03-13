@@ -35,5 +35,9 @@ return [
     "investor-certification-expiry-backoffice-users" => [
         "laravel" => "email.investor-certification-expiry-backoffice-users",
         "pushcrew" => ""
+    ],
+    "onfido-submission-failed" => [
+        "laravel" => "email.onfido-submission-failed",
+        "pushcrew" => ""
     ]
 ];

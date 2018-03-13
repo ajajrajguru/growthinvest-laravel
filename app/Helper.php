@@ -846,11 +846,11 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
     else
         $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
 
-    
+   
     $d1       = new \DateTime($expiryDate);
     $d2       = new \DateTime();
     $interval = $d2->diff($d1);
-
+     
     $validity = '';
     // if($interval->y == 1)
     // {
@@ -891,6 +891,9 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
         $validity .= $interval->d . ' days';
     } elseif ($interval->d == 1) {
         $validity .= $interval->d . ' day';
+    }
+    else if($interval->d == 0 && $d1 > $d2){
+        $validity .= '1 day';
     }
 
     // $validity = $interval->format('%y years %m months and %d days');
