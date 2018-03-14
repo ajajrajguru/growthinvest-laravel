@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 });
 
 Route::post('investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf');
+Route::post('onfido-webhook', 'InvestorController@onfidoWebhook');
 
 Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController');
