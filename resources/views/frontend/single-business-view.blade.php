@@ -122,11 +122,11 @@
 			  	<div class="media-body">
 			    	<ul class="mb-0 pl-0 ">
 						<li class="list-inline-item">
-							<span class="badge bg-primary">
-								@foreach($tax_status as $t_status)
-									{{strtoupper($t_status)}},
-								@endforeach
-							</span>
+							@foreach($tax_status as $t_status)
+								<span class="badge bg-primary text-white mr-1">
+									{{strtoupper($t_status)}}
+								</span>
+							@endforeach
 						</li>
 						<li class="list-inline-item">
 							@if($round!='')
@@ -471,8 +471,8 @@
 				</ul>
 			</div>
 			<div class="col-12 col-sm-8 text-sm-right mt-sm-0 mt-3">
-				<a href="" class="btn btn-primary mb-1 mb-sm-0">Request a Call</a>
-				<a href="" class="btn btn-primary mb-1 mb-sm-0">Request Additional Information</a>
+				<a href="" class="btn btn-primary mb-1 mb-sm-0" data-toggle="modal" data-target="#request-call">Request a Call</a>
+				<a href="" class="btn btn-primary mb-1 mb-sm-0" data-toggle="modal" data-target="#request-additional-info">Request Additional Information</a>
 			</div>
 		</div>
 	</div> <!-- /container -->
@@ -647,13 +647,13 @@
 			<div class="tab-pane p-3" id="financial-projections" role="tabpanel">
 				<p><strong>Note: </strong> Financial projections are not a reliable indicator of future performance.</p>
 				<div class="table-responsive">
-					<table class="table">
+					<table class="table table-striped table-bordered">
 						<thead>
 							<tr>
-								<th></th>
-								<th>YEAR 1</th>
-								<th>YEAR 2</th>
-								<th>YEAR 3</th>
+								<th class=""></th>
+								<th class="">YEAR 1</th>
+								<th class="">YEAR 2</th>
+								<th class="">YEAR 3</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -813,8 +813,8 @@
 					    $business_round_link = url("investment-opportunities/single-company/" . $business_round['business_slug']);
 					}
 					@endphp
-					<div class="row border proposal_horizontal-car">
-						<div class="col-sm-8 proposal-details border-sm-right border-right-0">
+					<div class="row box-shadow-1 proposal_horizontal-car">
+						<div class="col-sm-8 proposal-details ">
 							<div class="media h-100 flex-wrap flex-sm-nowrap">
 								<div class="proposal-logo align-self-center mr-sm-3 mt-3 mt-sm-0 width-xs-100">
 									<div class="mw-60 mh-60 m-auto">
@@ -844,7 +844,7 @@
 							  </div>
 							</div>
 						</div>
-						<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3">
+						<div class="col-sm-4 text-center d-sm-flex align-items-sm-center justify-content-sm-center py-3" style="background: #eee;">
 							<div class="view-proposal">
 								<p class="mb-1">@if($round!='')
 									{{get_ordinal_number($business_round['biz_round'])}} round
@@ -885,7 +885,7 @@
 				<div>
 					<div class="d-flex justify-content-between mb-2">
 						<p class="mb-0">Pitch Event Video</p>
-						<a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal">Your Feedback</a>
+						<a href="javascript:void(0);" data-toggle="modal" data-target="#pitchevent-feedback">Your Feedback</a>
 					</div>
 					<video autobuffer controls class="w-100 d-block">
 					  <source id="mp4" src="{{$proposal_details['pitch_event_video']['embed_code']}}" type="video/mp4">
@@ -990,26 +990,274 @@
 	</div>
 </div><!-- /management team -->
 
+<!-- New & updates -->
+<div class="pt-4 pb-4" style="background-color: #eee;">
+	<div class="container">
+		<h4>News & Updates</h4>
+		
+		<div class="row">
+			<div class="col-sm-8">
+				<ul class="list-group">
+				  <li class="list-group-item">
+				  	<div class="mb-2">
+			  			<p class="mb-0"><strong>Dapibus ac facilisis in</strong></p>
+			  			<p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis et vel veritatis optio dolorem expedita ea, doloribus.</p>
+				  	</div>
+				  	
+			  		<div class="d-flex justify-content-between">
+			  			<div>
+			  				<a href="" class="btn btn-sm btn-link pl-0"><i class="fa fa-pencil"></i> Edit</a>
+			  				<a href="" class="btn btn-sm btn-link text-danger pl-0"><i class="fa fa-trash"></i> Delete</a>
+			  			</div>
+
+			  			<div><small class="">May 27, 2018</small></div>
+			  		</div>
+				  </li>
+
+				  <li class="list-group-item">
+				  	<form action="">
+				  		<div class="form-group">
+				  			<input type="text" class="form-control" value="Dapibus ac facilisis in">
+				  		</div>
+
+				  		<div class="form-group">
+				  			<textarea name="" id="" cols="3" rows="" class="form-control">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis et vel veritatis optio dolorem expedita ea, doloribus.</textarea>
+				  		</div>
+
+				  		<a href="" class="btn btn-sm btn-outline-primary">Save</a>
+				  		<a href="" class="btn btn-sm btn-outline-danger">Cancel</a>
+				  	</form>
+				  </li>
+
+				</ul>
+			</div>
+			<div class="col-sm-4"></div>
+		</div>
+	</div>
+</div>
+<!-- /news & updates -->
+<div class="pt-4 pb-4" style="background-color: #fff;">
+	<div class="container">
+		<h5 class="text-uppercase">get in touch</h5>
+		<div class="row">
+			<div class="col-md-2">
+				<ul class="mb-3 mb-sm-0 pl-0 social-icons text-nowrap dark">
+					<li class="list-inline-item">
+						<a href="https://twitter.com/GrowthInvestUK"  target="_blank"><i class="fa fa-twitter"></i></a>
+					</li>
+					<li class="list-inline-item">
+						<a href="https://www.linkedin.com/company/growthinvest"  target="_blank"><i class="fa fa-linkedin"></i></a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-3">
+				<div class="d-table">
+					<div class="d-table-cell align-top pr-2">
+						<div class="border rounded-circle d-inline-block bg-primary text-white w-35 h-35 lh-35 text-center"><i class="fa fa-map-marker"></i></div>
+					</div>
+					<div class="d-table-cell align-top">
+						<strong>Head Office</strong>
+						<p>25 Copthall Ave, 4th Floor, London EC2R 7BP</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="d-table">
+					<div class="d-table-cell align-top pr-2">
+						<div class="border rounded-circle d-inline-block bg-primary text-white w-35 h-35 lh-35 text-center"><i class="fa fa-map-marker"></i></div>
+					</div>
+					<div class="d-table-cell align-top">
+						<strong>Sales and Distribution LGBR Capital</strong>
+						<p>Candlewick House, 4th Floor, 120 Cannon Street, London EC4N 6AS</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="d-table">
+					<div class="d-table-cell align-top pr-2">
+						<div class="border rounded-circle d-inline-block bg-primary text-white w-35 h-35 lh-35 text-center"><i class="fa fa-phone"></i></div>
+					</div>
+					<div class="d-table-cell align-top">
+						<strong>Contact</strong>
+						<p>020 7071 3945</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="d-table">
+					<div class="d-table-cell align-top pr-2">
+						<div class="border rounded-circle d-inline-block bg-primary text-white w-35 h-35 lh-35 text-center"><i class="fa fa-envelope"></i></div>
+					</div>
+					<div class="d-table-cell align-top">
+						<strong>Email</strong>
+						<p><a class="word-break" href="mailto:enquiries@growthinvest.com">enquiries@growthinvest.com</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="pitchevent-feedback" tabindex="-1" role="dialog" aria-labelledby="pitchevent-feedback" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Pitch Event Video Feedback</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+      	<p>Please fill in Your Feedback on this Presentation</p>
+      	<div class="row">
+      		<div class="col-sm-6">
+      			<div class="form-group">
+		      	    <label>Rate our Presentation <span class="text-danger">*</span></label>
+		      	    <select name="" id="" class="form-control">
+		      	    	<option value="">1</option>
+		      	    	<option value="">2</option>
+		      	    	<option value="">3</option>
+		      	    </select>
+		      	</div>
+      		</div>
+      		<div class="col-sm-6">
+      			<div class="form-group">
+      				<label>Rate this Concept <span class="text-danger">*</span></label>
+      			  	<select name="" id="" class="form-control">
+      			  		<option value="">1</option>
+      			  		<option value="">2</option>
+      			  		<option value="">3</option>
+      			  	</select>
+      			</div>
+      		</div>
+      	</div>
+
+      	
+  		<div class="form-group">
+  			<label for="">Comment</label>
+  			<textarea class="form-control" name="" id="" cols="3" rows=""></textarea>
+  		</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+      	<button type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- modal - Request a call -->
+<div class="modal fade" id="request-call" tabindex="-1" role="dialog" aria-labelledby="request-call" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="request-call">Request a Call</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      	<div class="modal-body">
+      	<p>Please use this form to request a call back from the GrowthInvest client services team. Alternatively please call us during office hours on 020 7071 3945 or email us on <a href="mailto:support@growthinvest.com">support@growthinvest.com</a></p>
+      	<form>
+      	  <div class="form-group">
+      	    <label>Title</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>First Name</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Last Name</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Email</label>
+      	    <input type="email" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Telephone</label>
+      	    <input type="tel" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Investment</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Potential Investment <span class="text-danger">*</span></label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Preferred Time <span class="text-danger">*</span></label>
+      	    <select name="" id="" class="form-control">
+      	    	<option value="">1</option>
+      	    	<option value="">2</option>
+      	    	<option value="">3</option>
+      	    </select>
+      	  </div>
+      	  
+      	</form>
+      </div>
+      <div class="modal-footer justify-content-between">
+    	<input type="submit" class="btn btn-primary">
+    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /request a call -->
+
+<!-- modal - Request additional information-->
+<div class="modal fade" id="request-additional-info" tabindex="-1" role="dialog" aria-labelledby="request-additional-info" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="request-call">Request Additional Information</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      	<div class="modal-body">
+      	<p>Please use this form to request a call back from the GrowthInvest client services team. Alternatively please call us during office hours on 020 7071 3945 or email us on <a href="mailto:support@growthinvest.com">support@growthinvest.com</a></p>
+      	<form>
+      	  <div class="form-group">
+      	    <label>Title</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>First Name</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Last Name</label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Email</label>
+      	    <input type="email" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Telephone</label>
+      	    <input type="tel" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Additional Information required <span class="text-danger">*</span></label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	  <div class="form-group">
+      	    <label>Potential Investment <span class="text-danger">*</span></label>
+      	    <input type="text" class="form-control">
+      	  </div>
+      	</form>
+      </div>
+      <div class="modal-footer justify-content-between">
+    	<input type="submit" class="btn btn-primary">
+    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /request additional information -->
 
 @endsection
