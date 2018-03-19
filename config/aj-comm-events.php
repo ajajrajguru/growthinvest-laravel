@@ -27,5 +27,17 @@ return [
     "intermediary-changed-password" => [
         "laravel" => "email.intermediary-changed-password",
         "pushcrew" => ""
+    ],
+    "investor-certification-expiry" => [
+        "laravel" => "email.investor-certification-expiry",
+        "pushcrew" => ""
+    ],
+    "investor-certification-expiry-backoffice-users" => [
+        "laravel" => "email.investor-certification-expiry-backoffice-users",
+        "pushcrew" => ""
+    ],
+    "onfido-submission-failed" => [
+        "laravel" => "email.onfido-submission-failed",
+        "pushcrew" => ""
     ]
 ];

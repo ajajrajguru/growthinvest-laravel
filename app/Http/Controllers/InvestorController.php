@@ -32,7 +32,6 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
- 
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -486,7 +485,7 @@ class InvestorController extends Controller
             $data['subject']       = "Notification: New Investor added under " . $firmName . " by " . $registeredBy . ".";
 
             foreach ($recipients as $recipientEmail => $recipientName) {
-                $data['to']            = $recipientEmail;
+                $data['to']            = [$recipientEmail];
                 $data['template_data'] = ['toName'=>$recipientName,'name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
                 sendEmail('investor-register-notification', $data);
             }
@@ -1243,7 +1242,7 @@ class InvestorController extends Controller
             }
 
             $output_link       = $destination_dir . '/nominee_application_pdf_' . $now_date . '.pdf';
-            $callbackurl       = url('investor/adobe/' . $investor->gi_code . '/signed-doc-callback') . '?type=nominee_application';
+            $callbackurl       = url('investor/adobe/signed-doc-callback') . '?type=nominee_application';
             $adobesign_message = "Please sign GrownthInvest application form document";
             $adobesign_name    = "GrownthInvest Application Form";
 
@@ -1293,6 +1292,102 @@ class InvestorController extends Controller
             }
 
         }
+
+    }
+
+    public function onfidoWebhook(Request $request){
+
+       $onfidoRequest = $request->all();
+       $isReport = false;
+       $isCheck = false;
+       if(isset($onfidoRequest['payload'])){
+            $onfidoPayload = $onfidoRequest['payload'];
+            
+           if($onfidoPayload['resource_type']=="report" && $onfidoPayload['action']=="report.completed"){ //check for response is for report completed 
+                $reportObj = $onfidoPayload['object'];
+                $reportId = $reportObj['id'];
+                $isReport = true;
+                $userData = UserData::where('data_key','onfido_reports')->where('data_value','like', '%' . $reportId . '%')->get();
+     
+            }
+            else if($onfidoPayload['resource_type']=="check" && $onfidoPayload['action']=="check.completed"){
+                $checkObj = $onfidoPayload['object'];
+                $checkId =  $checkObj['id'];
+                $isCheck = true;
+                $userData = UserData::where('data_key','onfido_reports')->where('data_value','like', '%' . $checkId . '%')->get();
+            }
+ 
+            foreach ($userData as $userDataValue) {
+
+                $userId = $userDataValue->user_id;
+                $user = User::find($userId);
+                $reportVal =   $userDataValue->data_value;
+                $applicantId = $reportVal['applicant_id'];
+                $applicantCheck = $reportVal['check'];
+
+                $applicantCheckDownloadUrl = $applicantCheck['check_download_url'];
+                $applicantReports = $applicantCheck ['reports'];
+
+                $applicantReportsUpdated = array();
+
+                if($isReport){
+                    foreach ($applicantReports as $applicantReport) {
+                             
+                            if($reportId==$applicantReport->id){
+
+                                $newReportStatus = 'completed';   
+
+                                $applicantReport->status_growthinvest = $newReportStatus;   
+                                $reportValName = $applicantReport->name;
+                            }  
+
+                            $applicantReportsUpdated[] = $applicantReport;  
+                            $reportVal['reports'] = $applicantReportsUpdated;
+                         
+                    }
+                     
+                    $userDataValue->data_value = $reportVal;
+                    $userDataValue->save();
+
+                }
+                else if($isCheck) {
+
+                    if($applicantCheck['id'] ==$checkId ){
+                         
+                        foreach ($applicantReports as $applicantReport) {     
+
+                            $newReportStatus = 'completed'; 
+                            $applicantReport->status_growthinvest = $newReportStatus ;                              
+                            $applicantReportsUpdated[] = $applicantReport;          
+                            $reportValNameAr[] = $applicantReport->name;                    
+                        }
+          
+                        $reportVal['reports'] = $applicantReportsUpdated;
+                        $userDataValue->data_value = $reportVal;
+                        $userDataValue->save();
+                        
+                    }
+
+                }
+
+
+                //update url
+                $onfidoInfoReqUrl = $user->userOnfidoInfoReqUrl();
+                if (empty($onfidoInfoReqUrl)) {
+                    $onfidoInfoReqUrl           = new \App\UserData;
+                    $onfidoInfoReqUrl->user_id  = $userId;
+                    $onfidoInfoReqUrl->data_key = 'onfido_info_req_url';
+                }
+
+                $onfidoInfoReqUrl->data_value = $applicantCheckDownloadUrl;
+                $onfidoInfoReqUrl->save();
+ 
+            }
+
+       }
+         
+        
+        return response()->json(['success'=>true]);
 
     }
 

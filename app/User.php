@@ -93,6 +93,13 @@ class User extends Authenticatable
         return $userData;
     }
 
+    
+    public function userOnfidoInfoReqUrl()
+    {
+        $userData = $this->userData()->where('data_key','onfido_info_req_url')->first();
+        return $userData;
+    }
+
     public function userOnfidoApplicationId()
     {
         $userData = $this->userData()->where('data_key','onfido_applicant_id')->first();

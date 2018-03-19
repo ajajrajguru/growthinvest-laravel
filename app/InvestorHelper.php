@@ -2,12 +2,26 @@
 
 function investorCertificationExpiry()
 {
-    $date = date('Y-m-d', strtotime('-1 year')); 
+    if(env('APP_ENV') == 'local')
+        $date = date('Y-m-d', strtotime('-1 day')); 
+    else
+        $date = date('Y-m-d', strtotime('-1 year')); 
+
 
     $userCertifications = App\UserHasCertification::where('created_at','<=',$date)->where('active','1')->get(); 
 
     foreach ($userCertifications as $key => $userCertification) {
         $investor = $userCertification->user;
+        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $firmId =  $investor->firm_id;
+        $certification = $userCertification->certification()->name;
+        $certificationDate = $userCertification->created_at;
+
+        if(env('APP_ENV') == 'local')
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
+        else
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
+
 
         $userCertification->active = 0;
         $userCertification->save();
@@ -16,6 +30,28 @@ function investorCertificationExpiry()
             $investor->removeRole('investor');
             $investor->assignRole('yet_to_be_approved_investor');
         }
+
+        
+        $data                  = [];
+        $data['from']          = config('constants.email_from');
+        $data['name']          = config('constants.email_from_name');
+        $data['to']            = [$investor->email];
+        $data['cc']            = [];
+        $data['subject']       = $certification." Certification has expired";
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+        sendEmail('investor-certification-expiry', $data);
+
+        $recipients = getRecipientsByCapability([],array('view_all_investors'));
+        $recipients = getRecipientsByCapability($recipients,array('view_firm_investors','is_wealth_manager'),$firmId);
+         
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data['to']            = [$recipientEmail];
+            $data['subject']       =  "Investor's Certification has expired.";
+            $data['template_data'] = ['name' =>$recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+
+            sendEmail('investor-certification-expiry-backoffice-users', $data);
+        }
+ 
     }
    
 
@@ -416,11 +452,21 @@ function createOnfidoApplicant($investor)
 One of our client services team will be in touch shortly to confirm any additional information that we require. ";
         $onfido_error = "yes";
 
-        $args = array('investor_id' => $investor->id,
-            'onfido_error_html'         => $error_html,
-        );
+        
+        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $investorEmail = $investor->email;
+        $recipients = getRecipientsByCapability([],array('manage_options'));
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$recipientEmail];
+            $data['cc']            = [];
+            $data['subject']       = $investor->displayName()." Onfido submission failed ";
+            $data['template_data'] = ['name' =>$recipientName, 'investorName'=>$investor->displayName(), 'firmName' => $firmName, 'investorEmail' => $investorEmail, 'errorHtml' => $error_html];
+            sendEmail('onfido-submission-failed', $data);
+        }
 
-        // generate_mail('Onfido submission failed', $args);
         $onfidoSubmitted = 'fail';
     } else {
         $onfidoSubmitted = 'yes';

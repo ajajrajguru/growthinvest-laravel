@@ -3,19 +3,14 @@
 @section('content')
 
 
-Welcome {{ $name }},<br/><br/>
+Hi {{ $name }},<br/><br/>
 
-{{ $name }} has signed up as an Investor under <b><i>{{ $firmName }}</i></b> .<br/><br/>
+Your Self Certification has expired. Kindly renew your certificate at your earliest convenience so that you can use the platform.<br/><br/>
 
+<b>Below are the details:</b><br/>
+Certification Name: {{ $certification }}<br/>
+Expired Date: {{ date('d-m-Y', strtotime($expiryDate)) }}<br/><br/>
 
-<strong>Details of the Account:</strong><br/><br/>
-
-Name: {{ $name }}<br>
-E-mail: {{ $email }} <br>
-Contact #: {{ $telephone }}<br>
-Location: {{ $address }}<br><br>
-
-Added by: {{ $registeredBy }}<br><br>
-Please log in to the Site to view more details.  <a href="{{ url('backoffice/investor/'.$giCode.'/investor-profile')}}">view more details</a>. On your dashboard you will find the certificate relating to your certification category. This document is downloadable and there for your reference.
+You can log in to the site and view the details <a href="{{ url('backoffice/investor/'.$investorGiCode.'/investor-profile') }}">Click here</a>
 
  @endsection
