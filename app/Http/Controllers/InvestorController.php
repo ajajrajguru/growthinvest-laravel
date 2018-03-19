@@ -619,6 +619,50 @@ class InvestorController extends Controller
         $certificationvalidityHtml = genActiveCertificationValidityHtml($hasCertification, $fileId);
         $isWealthManager           = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? true : false;
 
+        //send mail
+
+        if(env('APP_ENV') == 'local')
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
+        else
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
+
+        if(!empty($investor->firm)){
+            $firmName =  $investor->firm->name;
+            $firmId =  $investor->firm_id;
+        }
+        else{
+            $firmName = 'N/A';
+            $firmName = 0;
+        }
+        
+        $recipients = getRecipientsByCapability([],array('view_all_investors'));
+        $recipients = getRecipientsByCapability($recipients,array('view_firm_investors'),$firmId);
+        $registeredBy = (!empty($investor->registeredBy)) ? $investor->registeredBy->displayName() : 'N/A';
+        $certification = $hasCertification->certification()->name;
+
+        $data                  = [];
+        $data['from']          = config('constants.email_from');
+        $data['name']          = config('constants.email_from_name');
+        $data['cc']            = [];
+        $data['subject']       = 'Notification: Certification of '. $registeredBy.' of Firm '.$firmName.' has been confirmed.';
+
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data['to']            = [$recipientEmail];
+            $data['template_data'] = ['toName'=>$recipientName,'name' => $investor->displayName(), 'firmName' => $firmName,  'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'certification' => $certification, 'giCode' => $investor->gi_code, 'certificationDate' => date('Y-m-d H:i:s'), 'certificationExpiryDate' => $expiryDate ];
+            sendEmail('investor-confirmed-certification', $data);
+        }
+
+        $data                  = [];
+        $data['from']          = config('constants.email_from');
+        $data['name']          = config('constants.email_from_name');
+        $data['cc']            = [];
+        $data['subject']       = 'Welcome Investor to '.$firmName 
+        $data['to']            = [$email];
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName ];
+        sendEmail('investor-confirmed-certification', $data);
+
+
+
         return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml, 'isWealthManager' => $isWealthManager]);
 
     }
