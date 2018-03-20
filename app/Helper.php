@@ -486,6 +486,31 @@ function sendEmail($event='welcome', $data=[]) {
     
 }
 
+/**
+*
+*/
+function getUploadFileUrl($id) {
+    $url = '';
+    if(!empty($id)){
+        $fileUrl = \DB::select('select url  from  fileupload_files where id ='.$id);
+
+        if(!empty($fileUrl)){
+            $url = $fileUrl[0]->url;
+        }
+    }
+
+     return $url;
+}
+
+
+function getFileMimeType($ext){
+ 
+    $mimeTypes = ['pdf'=>'application/pdf','docx'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document','doc'=>'application/msword'];
+
+    $mimeType = $mimeTypes[$ext];
+    return $mimeType;
+}
+
 
 /**
 * This function is used to determine whether the Server Hosted is in Development or Production Mode

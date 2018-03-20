@@ -554,12 +554,21 @@ class InvestorController extends Controller
         }
 
         $requestData = $request->all();
+        $invHasCertification = false;
 
         $activeCertification = $investor->getActiveCertification();
         if (!empty($activeCertification)) {
             $activeCertification->active = 0;
             $activeCertification->save();
+            $invHasCertification = true;
         }
+        else{
+            if($investor->userCertification()->count()){
+                $invHasCertification = true;
+            }
+        }
+
+        
 
         $details = [];
         $addData = [];
@@ -597,6 +606,7 @@ class InvestorController extends Controller
         $fileId = $this->generateInvestorCertificationPdf($requestData['save-type'], $details, $investor, $addData);
 
         $hasCertification = $investor->userCertification()->where('certification_default_id', $requestData['client_category_id'])->first();
+        $certificationDate = date('Y-m-d H:i:s');
         if (empty($hasCertification)) {
             $hasCertification                           = new UserHasCertification;
             $hasCertification->user_id                  = $investor->id;
@@ -608,7 +618,7 @@ class InvestorController extends Controller
         $hasCertification->certification = $requestData['certification_type'];
         $hasCertification->active        = 1;
         $hasCertification->details       = $details;
-        $hasCertification->created_at    = date('Y-m-d H:i:s');
+        $hasCertification->created_at    = $certificationDate;
         $hasCertification->save();
 
         if (!$investor->hasRole('investor')) {
@@ -640,29 +650,58 @@ class InvestorController extends Controller
         $registeredBy = (!empty($investor->registeredBy)) ? $investor->registeredBy->displayName() : 'N/A';
         $certification = $hasCertification->certification()->name;
 
-        $data                  = [];
-        $data['from']          = config('constants.email_from');
-        $data['name']          = config('constants.email_from_name');
-        $data['cc']            = [];
-        $data['subject']       = 'Notification: Certification of '. $registeredBy.' of Firm '.$firmName.' has been confirmed.';
 
-        foreach ($recipients as $recipientEmail => $recipientName) {
-            $data['to']            = [$recipientEmail];
-            $data['template_data'] = ['toName'=>$recipientName,'name' => $investor->displayName(), 'firmName' => $firmName,  'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'certification' => $certification, 'giCode' => $investor->gi_code, 'certificationDate' => date('Y-m-d H:i:s'), 'certificationExpiryDate' => $expiryDate ];
-            sendEmail('investor-confirmed-certification', $data);
+        //new certification
+        if(!$invHasCertification){
+            $subject = 'Notification: Certification of '. $registeredBy.' of Firm '.$firmName.' has been confirmed.';
+            $subjectForinvestor = 'Welcome Investor to '.$firmName; 
+
+            $template = 'investor-confirmed-certification';
+            $templateForinvestor = 'confirmed-certification-to-investor';
+            
+        }
+        else{
+            //re certification
+            $subject = 'Notification: Certification of '. $registeredBy.' of Firm '.$firmName.' has been confirmed.';
+            $subjectForinvestor = 'Welcome Investor to '.$firmName; 
+
+            $template = 'investor-confirmed-certification';
+            $templateForinvestor = 'confirmed-certification-to-investor';
         }
 
         $data                  = [];
         $data['from']          = config('constants.email_from');
         $data['name']          = config('constants.email_from_name');
         $data['cc']            = [];
-        $data['subject']       = 'Welcome Investor to '.$firmName 
-        $data['to']            = [$email];
-        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName ];
-        sendEmail('investor-confirmed-certification', $data);
+        $data['subject']       = $subject;
 
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data['to']            = [$recipientEmail];
+            $data['template_data'] = ['toName'=>$recipientName,'name' => $investor->displayName(), 'firmName' => $firmName,  'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'certification' => $certification, 'giCode' => $investor->gi_code, 'certificationDate' => $certificationDate, 'certificationExpiryDate' => $expiryDate, 'invHasCertification' => $invHasCertification ];
+            sendEmail($template, $data);
+        }
 
+        $data                  = [];
+        $data['from']          = config('constants.email_from');
+        $data['name']          = config('constants.email_from_name');
+        $data['cc']            = [];
+        $data['subject']       = $subjectForinvestor;
+        $data['to']            = [$investor->email];
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'invHasCertification' => $invHasCertification ];
 
+        if($fileId){
+            $filename = DocumentFile::find($fileId)->file_url;
+            $destination_dir = public_path() . '/userdocs/';
+
+            $filePath = $destination_dir . '/' . $filename;
+            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+            $mimeType = getFileMimeType($ext);
+            $file = \File::get($filePath);
+            $data['attach'] = [['file' => base64_encode($file), 'as'=>$filename, 'mime'=>$mimeType]];
+        }
+        sendEmail($templateForinvestor, $data);
+
+        
         return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml, 'isWealthManager' => $isWealthManager]);
 
     }

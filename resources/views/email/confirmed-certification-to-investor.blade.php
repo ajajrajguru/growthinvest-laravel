@@ -6,7 +6,7 @@ Hi  {{ $name }},<br/><br/>
 
 
 Thanks for your Confirmation as an Investor.<br/>
-Kindly find attached your Certification Confirmation Document.<br/><br/>
+Kindly find attached your @if(!$invHasCertification) Certification @else Re-Certification @endif Confirmation Document.<br/><br/>
 
 
 You can login with the login credentials provided by you during Registration.<br/><br/>
