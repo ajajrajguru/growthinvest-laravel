@@ -32,7 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-         
+         investorCertificationExpiryReminder(); exit;
         $user      = new User;
         $investors = $user->getInvestorUsers();
 

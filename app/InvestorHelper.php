@@ -57,6 +57,53 @@ function investorCertificationExpiry()
 
 }
 
+/**
+ investor expiry reminder 
+ 7 days befor expiry
+ */
+
+function investorCertificationExpiryReminder()
+{
+    $date = date('Y-m-d');  
+    $userCertifications = App\UserHasCertification::where(DB::raw('DATE_FORMAT(DATE_ADD(DATE_ADD(created_at, INTERVAL 1 YEAR), INTERVAL -7 DAY), "%Y-%m-%d")'), $date)->where('active','1')->get();  
+
+    foreach ($userCertifications as $key => $userCertification) {
+        $investor = $userCertification->user;
+        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $firmId =  $investor->firm_id;
+        $certification = $userCertification->certification()->name;
+        $certificationDate = $userCertification->created_at;
+
+        if(env('APP_ENV') == 'local')
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
+        else
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
+        
+        $data                  = [];
+        $data['from']          = config('constants.email_from');
+        $data['name']          = config('constants.email_from_name');
+        $data['to']            = [$investor->email];
+        $data['cc']            = [];
+        $data['subject']       = "Reminder for Renewal of your ".$certification." Certification";
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+        sendEmail('certification-expiry-in-week-investor', $data);
+     
+        $recipients = getRecipientsByCapability([],array('view_all_investors'));
+        $recipients = getRecipientsByCapability($recipients,array('view_firm_investors','is_wealth_manager'),$firmId);
+         
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data['to']            = [$recipientEmail];
+            $data['subject']       =  "Reminder for Renewal of Investor's Certification";
+            $data['template_data'] = ['name' =>$recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+
+            sendEmail('certification-expiry-in-week', $data);
+        }
+ 
+    }
+
+ 
+}
+
 function getHeaderPageMarkup($args)
 {
 
