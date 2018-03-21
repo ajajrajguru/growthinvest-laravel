@@ -32,6 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
+        investorCertificationExpiry();exit;
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -669,8 +670,8 @@ class InvestorController extends Controller
         }
         else{
             //re certification
-            $subject = 'Notification: Certification of '. $registeredBy.' of Firm '.$firmName.' has been confirmed.';
-            $subjectForinvestor = 'Welcome Investor to '.$firmName; 
+            $subject = 'Notification: Re-Certification of '. $registeredBy.' of Firm '.$firmName.' has been confirmed.';
+            $subjectForinvestor = 'Re-Certification confirmed on '.$firmName; 
 
             $template = 'investor-confirmed-certification';
             $templateForinvestor = 'confirmed-certification-to-investor';

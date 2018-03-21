@@ -4,10 +4,13 @@
 
 Hi  {{ $name }},<br/><br/>
 
-
-Thanks for your Confirmation as an Investor.<br/>
-Kindly find attached your @if(!$invHasCertification) Certification @else Re-Certification @endif Confirmation Document.<br/><br/>
-
+@if(!$invHasCertification)
+	Thanks for your Confirmation as an Investor.<br/>
+	Kindly find attached your Certification Confirmation Document.<br/><br/>
+@else
+	Thanks for your Re-certification.<br/>
+	Kindly find attached your Certification Confirmation Document.<br/><br/>
+@endif
 
 You can login with the login credentials provided by you during Registration.<br/><br/>
 
