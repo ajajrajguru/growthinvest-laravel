@@ -477,7 +477,11 @@ class InvestorController extends Controller
 
 
             $recipients = getRecipientsByCapability([],array('manage_backoffice'));
-            $registeredBy          = (!empty($investor->registeredBy)) ? $investor->registeredBy->displayName() : 'N/A';
+            if(!empty($investor->registeredBy))
+                $registeredBy = ($investor->registered_by == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
+            else
+                $registeredBy ='N/A';
+
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
@@ -647,7 +651,10 @@ class InvestorController extends Controller
         
         $recipients = getRecipientsByCapability([],array('view_all_investors'));
         $recipients = getRecipientsByCapability($recipients,array('view_firm_investors'),$firmId);
-        $registeredBy = (!empty($investor->registeredBy)) ? $investor->registeredBy->displayName() : 'N/A';
+        if(!empty($investor->registeredBy))
+            $registeredBy = ($investor->registered_by == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
+        else
+            $registeredBy ='N/A';
         $certification = $hasCertification->certification()->name;
 
 
