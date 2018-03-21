@@ -26,7 +26,11 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             investorCertificationExpiry();
-        })->daily();  
+        })->dailyAt('01:00');
+
+        $schedule->call(function () {
+            investorCertificationExpiryReminder();
+        })->dailyAt('02:00');
     }
 
     /**

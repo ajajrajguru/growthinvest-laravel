@@ -2,26 +2,26 @@
 
 function investorCertificationExpiry()
 {
-    if(env('APP_ENV') == 'local')
-        $date = date('Y-m-d', strtotime('-1 day')); 
-    else
-        $date = date('Y-m-d', strtotime('-1 year')); 
+    if (env('APP_ENV') == 'local') {
+        $date = date('Y-m-d', strtotime('-1 day'));
+    } else {
+        $date = date('Y-m-d', strtotime('-1 year'));
+    }
 
-
-    $userCertifications = App\UserHasCertification::where('created_at','<=',$date)->where('active','1')->get(); 
+    $userCertifications = App\UserHasCertification::where('created_at', '<=', $date)->where('active', '1')->get();
 
     foreach ($userCertifications as $key => $userCertification) {
-        $investor = $userCertification->user;
-        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
-        $firmId =  $investor->firm_id;
-        $certification = $userCertification->certification()->name;
+        $investor          = $userCertification->user;
+        $firmName          = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $firmId            = $investor->firm_id;
+        $certification     = $userCertification->certification()->name;
         $certificationDate = $userCertification->created_at;
 
-        if(env('APP_ENV') == 'local')
+        if (env('APP_ENV') == 'local') {
             $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
-        else
+        } else {
             $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
-
+        }
 
         $userCertification->active = 0;
         $userCertification->save();
@@ -31,77 +31,75 @@ function investorCertificationExpiry()
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
-        
         $data                  = [];
         $data['from']          = config('constants.email_from');
         $data['name']          = config('constants.email_from_name');
         $data['to']            = [$investor->email];
         $data['cc']            = [];
-        $data['subject']       = $certification." Certification has expired";
-        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+        $data['subject']       = $certification . " Certification has expired";
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
         sendEmail('investor-certification-expiry', $data);
 
-        $recipients = getRecipientsByCapability([],array('view_all_investors'));
-        $recipients = getRecipientsByCapability($recipients,array('view_firm_investors','is_wealth_manager'),$firmId);
-         
+        $recipients = getRecipientsByCapability([], array('view_all_investors'));
+        $recipients = getRecipientsByCapability($recipients, array('view_firm_investors', 'is_wealth_manager'), $firmId);
+
         foreach ($recipients as $recipientEmail => $recipientName) {
             $data['to']            = [$recipientEmail];
-            $data['subject']       =  "Investor's Certification has expired.";
-            $data['template_data'] = ['name' =>$recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+            $data['subject']       = "Investor's Certification has expired.";
+            $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
 
             sendEmail('investor-certification-expiry-backoffice-users', $data);
         }
- 
+
     }
-   
 
 }
 
 /**
- investor expiry reminder 
- 7 days befor expiry
+investor expiry reminder
+7 days befor expiry
  */
 
 function investorCertificationExpiryReminder()
 {
-    $date = date('Y-m-d');  
-    $userCertifications = App\UserHasCertification::where(DB::raw('DATE_FORMAT(DATE_ADD(DATE_ADD(created_at, INTERVAL 1 YEAR), INTERVAL -7 DAY), "%Y-%m-%d")'), $date)->where('active','1')->get();  
+    $date               = date('Y-m-d');
+    $userCertifications = App\UserHasCertification::where(DB::raw('DATE_FORMAT(DATE_ADD(DATE_ADD(created_at, INTERVAL 1 YEAR), INTERVAL -7 DAY), "%Y-%m-%d")'), $date)->where('active', '1')->get();
 
     foreach ($userCertifications as $key => $userCertification) {
-        $investor = $userCertification->user;
-        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
-        $firmId =  $investor->firm_id;
-        $certification = $userCertification->certification()->name;
+        $investor          = $userCertification->user;
+        $firmName          = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $firmId            = $investor->firm_id;
+        $certification     = $userCertification->certification()->name;
         $certificationDate = $userCertification->created_at;
 
-        if(env('APP_ENV') == 'local')
+        if (env('APP_ENV') == 'local') {
             $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
-        else
+        } else {
             $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
-        
+        }
+
         $data                  = [];
         $data['from']          = config('constants.email_from');
         $data['name']          = config('constants.email_from_name');
         $data['to']            = [$investor->email];
         $data['cc']            = [];
-        $data['subject']       = "Reminder for Renewal of your ".$certification." Certification";
-        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+        $data['subject']       = "Reminder for Renewal of your " . $certification . " Certification";
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
         sendEmail('certification-expiry-in-week-investor', $data);
-     
-        $recipients = getRecipientsByCapability([],array('view_all_investors'));
-        $recipients = getRecipientsByCapability($recipients,array('view_firm_investors','is_wealth_manager'),$firmId);
-         
+
+        $recipients = getRecipientsByCapability([], array('view_all_investors'));
+        $recipients = getRecipientsByCapability($recipients, array('view_firm_investors', 'is_wealth_manager'), $firmId);
+
         foreach ($recipients as $recipientEmail => $recipientName) {
             $data['to']            = [$recipientEmail];
-            $data['subject']       =  "Reminder for Renewal of Investor's Certification";
-            $data['template_data'] = ['name' =>$recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate'=> $expiryDate];
+            $data['subject']       = "Reminder for Renewal of Investor's Certification";
+            $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
 
             sendEmail('certification-expiry-in-week', $data);
         }
- 
+
     }
 
- 
 }
 
 function getHeaderPageMarkup($args)
@@ -276,36 +274,33 @@ function transferAssetsSubheaders($label, $sublabel = '', $args = array())
  * @param  array  $args               ['identity_report_status','aml_report_status']   -> newstatus to be added
  * @return [type]                     [updated report data object]
  */
-function update_onfido_report_status($cur_report_details,$args=array()){
+function update_onfido_report_status($cur_report_details, $args = array())
+{
 
-
-    if(isset($args['identity_report_status'])){
+    if (isset($args['identity_report_status'])) {
         $new_identity_report_status = $args['identity_report_status'];
     }
 
-    if(isset($args['aml_report_status'])){
+    if (isset($args['aml_report_status'])) {
         $new_aml_report_status = $args['aml_report_status'];
     }
 
+    switch ($cur_report_details->name) {
+        case 'identity':if (isset($new_identity_report_status)) {
 
-    switch($cur_report_details->name){
-        case 'identity'              :  if(isset($new_identity_report_status)){
+                $new_status_cur_report                   = $new_identity_report_status;
+                $cur_report_details->status_growthinvest = $new_status_cur_report;
+                //$cur_report_details->status       = $cur_report_details->status_onfido;
+            }
+            break;
+        case 'anti_money_laundering':if (isset($new_aml_report_status)) {
 
-                                            $new_status_cur_report              = $new_identity_report_status;
-                                            $cur_report_details->status_growthinvest  = $new_status_cur_report;
-                                            //$cur_report_details->status       = $cur_report_details->status_onfido;
-                                        }
-                                        break;
-        case 'anti_money_laundering' :  if(isset($new_aml_report_status)){
-
-                                            $new_status_cur_report              = $new_aml_report_status;
-                                            $cur_report_details->status_growthinvest  = $new_status_cur_report;
-                                            //$cur_report_details->status       = $cur_report_details->status_onfido;
-                                        }
-                                        break;
+                $new_status_cur_report                   = $new_aml_report_status;
+                $cur_report_details->status_growthinvest = $new_status_cur_report;
+                //$cur_report_details->status       = $cur_report_details->status_onfido;
+            }
+            break;
     }
-
-
 
     return $cur_report_details;
 
@@ -499,18 +494,17 @@ function createOnfidoApplicant($investor)
 One of our client services team will be in touch shortly to confirm any additional information that we require. ";
         $onfido_error = "yes";
 
-        
-        $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+        $firmName      = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
         $investorEmail = $investor->email;
-        $recipients = getRecipientsByCapability([],array('manage_options'));
+        $recipients    = getRecipientsByCapability([], array('manage_options'));
         foreach ($recipients as $recipientEmail => $recipientName) {
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
             $data['to']            = [$recipientEmail];
             $data['cc']            = [];
-            $data['subject']       = $investor->displayName()." Onfido submission failed ";
-            $data['template_data'] = ['name' =>$recipientName, 'investorName'=>$investor->displayName(), 'firmName' => $firmName, 'investorEmail' => $investorEmail, 'errorHtml' => $error_html];
+            $data['subject']       = $investor->displayName() . " Onfido submission failed ";
+            $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'investorEmail' => $investorEmail, 'errorHtml' => $error_html];
             sendEmail('onfido-submission-failed', $data);
         }
 
@@ -717,56 +711,44 @@ function add_update_onfido_reports_meta($applicant_id = '', $investor = [], $che
         $onfido_report_meta->data_value = $report_data;
         $onfido_report_meta->save();
 
-        
-
     }
 
 }
 
-
-function add_new_onfido_report_onplatform($investor,$args){
-
+function add_new_onfido_report_onplatform($investor, $args)
+{
 
     $identity_report_status = $args['identity_report_status'];
     $aml_report_status      = $args['aml_report_status'];
     $reports                = array();
 
-
-
-    $identity_report_obj = new stdClass;
-    $identity_report_obj->name = 'identity';
-    $identity_report_obj->id = '';
+    $identity_report_obj                      = new stdClass;
+    $identity_report_obj->name                = 'identity';
+    $identity_report_obj->id                  = '';
     $identity_report_obj->status_growthinvest = $identity_report_status;
 
-
-
-    $aml_report_obj = new stdClass;
-    $aml_report_obj->name = 'anti_money_laundering';
-    $aml_report_obj->id = '';
+    $aml_report_obj                      = new stdClass;
+    $aml_report_obj->name                = 'anti_money_laundering';
+    $aml_report_obj->id                  = '';
     $aml_report_obj->status_growthinvest = $aml_report_status;
 
-
-
-
-    $reports[] =  $identity_report_obj;
+    $reports[] = $identity_report_obj;
     $reports[] = $aml_report_obj;
 
-
-
-    $report_data = array( 'applicant_id'    => '',
-                          'check'           => array('id'               => '',
-                                                 'check_status'         => '',
-                                                 'check_type'           => '',
-                                                 'check_result_url'     => '',
-                                                 'check_download_url'   => '',
-                                                 'check_form_url'       => '',
-                                                 'check_paused'         => '',
-                                                 'reports'              => $reports
-                                                )
-                         );
-    if($args['set_report_meta']==false)
+    $report_data = array('applicant_id' => '',
+        'check'                             => array('id' => '',
+            'check_status'                                    => '',
+            'check_type'                                      => '',
+            'check_result_url'                                => '',
+            'check_download_url'                              => '',
+            'check_form_url'                                  => '',
+            'check_paused'                                    => '',
+            'reports'                                         => $reports,
+        ),
+    );
+    if ($args['set_report_meta'] == false) {
         return $report_data;
-    else{
+    } else {
         $onfido_report_meta = $investor->userOnfidoApplicationReports();
 
         if (empty($onfido_report_meta)) {
@@ -781,10 +763,8 @@ function add_new_onfido_report_onplatform($investor,$args){
     }
 }
 
-
-function update_onfido_reports_status($investor, $args){
-
-
+function update_onfido_reports_status($investor, $args)
+{
 
     $identity_report_status = $args['identity_report_status'];
     $aml_report_status      = $args['aml_report_status'];
@@ -794,56 +774,50 @@ function update_onfido_reports_status($investor, $args){
 
     $onfido_report_meta = $investor->userOnfidoApplicationReports();
 
-
-
     /*$args = array('identity_report_status'=> $identity_report_status,
-                  'aml_report_status'     => $aml_report_status
-                 ); */
+    'aml_report_status'     => $aml_report_status
+    ); */
 
-    if(empty($onfido_report_meta)){
+    if (empty($onfido_report_meta)) {
 
         //echo "one ";
 
-
         $investor_onfido_applicant_id = $investor->userOnfidoApplicationId();
 
-        if(!empty($investor_onfido_applicant_id)){  // If there is associated applicant id, retrieve check and reports and update the meta
+        if (!empty($investor_onfido_applicant_id)) {
+            // If there is associated applicant id, retrieve check and reports and update the meta
             //echo "two ";
             $investor_onfido_applicant_id = $investor_onfido_applicant_id->data_value;
-            $report_data = get_onfido_reports_meta_by_applicant_id($investor_onfido_applicant_id,$args);
+            $report_data                  = get_onfido_reports_meta_by_applicant_id($investor_onfido_applicant_id, $args);
 
+        } else {
 
-        }
-        else{ 
-
-            add_new_onfido_report_onplatform($investor_id,$args);
+            add_new_onfido_report_onplatform($investor_id, $args);
 
         }
 
-    }// END if($onfido_report_meta==false){
-    else{
+    } // END if($onfido_report_meta==false){
+    else {
 
         $reports = array();
 
         //echo "four ";
 
-
         $report_data = (!empty($onfido_report_meta)) ? $onfido_report_meta->data_value : [];
         // var_dump($report_data);
 
-         $onfido_check = $report_data['check'];
-         $onfido_reports = $onfido_check['reports'];
+        $onfido_check   = $report_data['check'];
+        $onfido_reports = $onfido_check['reports'];
 
-         foreach ($onfido_reports as $key => $value) {
-            $reports[]  = update_onfido_report_status($value,$args);
+        foreach ($onfido_reports as $key => $value) {
+            $reports[] = update_onfido_report_status($value, $args);
 
         }
 
-         $onfido_check['reports'] = $reports;
-         $report_data['check'] = $onfido_check;
+        $onfido_check['reports'] = $reports;
+        $report_data['check']    = $onfido_check;
 
     }
-
 
     $onfido_report_meta = $investor->userOnfidoApplicationReports();
 
@@ -855,139 +829,129 @@ function update_onfido_reports_status($investor, $args){
 
     $onfido_report_meta->data_value = $report_data;
     $onfido_report_meta->save();
-    
 
 }
 
-
 /*Function to  get onfido reports data for given applicant id and if new statuses are given for report update the report status in report data */
- function get_onfido_reports_meta_by_applicant_id($applicant_id='',$args=array()){
+function get_onfido_reports_meta_by_applicant_id($applicant_id = '', $args = array())
+{
 
-    if($applicant_id=='')
+    if ($applicant_id == '') {
         return false;
+    }
 
- 
-    if(isset($args['identity_report_status'])){
+    if (isset($args['identity_report_status'])) {
         $new_identity_report_status = $args['identity_report_status'];
     }
 
-    if(isset($args['aml_report_status'])){
+    if (isset($args['aml_report_status'])) {
         $new_aml_report_status = $args['aml_report_status'];
     }
 
-
     $reports = array();
- 
+
     //$applicant_id = 'de331d9e-5276-4337-999b-dbcc7b47904d';
     $applicant_list_checks = json_decode(list_applicant_checks($applicant_id));
 
+    $list_checks = $applicant_list_checks->checks;
 
-    $list_checks = $applicant_list_checks->checks ;
+    foreach ($list_checks as $key => $value) {
+        //looping thru all checks of applicant
 
-    foreach ($list_checks as $key => $value) { //looping thru all checks of applicant
+        $check_id           = $value->id;
+        $check_status       = $value->status;
+        $check_type         = $value->type;
+        $check_results_uri  = $value->results_uri;
+        $check_download_uri = $value->download_uri;
+        $check_form_uri     = $value->form_uri;
+        $check_paused       = $value->paused;
 
+        $reports_ar = $value->reports;
 
+        foreach ($reports_ar as $report_key => $report_value) {
+            //looping thru all reports of check
 
-        $check_id               = $value->id;
-        $check_status           = $value->status;
-        $check_type             = $value->type;
-        $check_results_uri      = $value->results_uri;
-        $check_download_uri     = $value->download_uri;
-        $check_form_uri         = $value->form_uri;
-        $check_paused           = $value->paused;
+            $cur_report_id = $report_value;
 
-        $reports_ar             = $value->reports;
+            $args_report_check = array('reportid' => $cur_report_id, 'checkid' => $check_id);
+            $cur_report_data   = retrieve_report_details($args_report_check);
 
+            $cur_report_details = update_onfido_report_status($cur_report_data, $args); //update report status with new statuses if provided
 
-
-        foreach ($reports_ar as $report_key => $report_value) { //looping thru all reports of check
-
-
-                $cur_report_id = $report_value;
-
-                $args_report_check              = array('reportid'=>$cur_report_id,'checkid'=>$check_id );
-                $cur_report_data                = retrieve_report_details($args_report_check);
-
-                $cur_report_details             = update_onfido_report_status($cur_report_data,$args); //update report status with new statuses if provided
-
-                $reports[] = $cur_report_details;
-
+            $reports[] = $cur_report_details;
 
         }
     }
     $report_data = array('applicant_id' => $applicant_id,
-                          'check'           => array('id'               => $check_id,
-                                                 'check_status'         => $check_status,
-                                                 'check_type'           => $check_type,
-                                                 'check_result_url'     => $check_results_uri,
-                                                 'check_download_url'   => $check_download_uri,
-                                                 'check_form_url'       => $check_form_uri,
-                                                 'check_paused'         => $check_paused,
-                                                 'reports'              => $reports
-                                                )
-                        );
- 
+        'check'                             => array('id' => $check_id,
+            'check_status'                                    => $check_status,
+            'check_type'                                      => $check_type,
+            'check_result_url'                                => $check_results_uri,
+            'check_download_url'                              => $check_download_uri,
+            'check_form_url'                                  => $check_form_uri,
+            'check_paused'                                    => $check_paused,
+            'reports'                                         => $reports,
+        ),
+    );
+
     return $report_data;
 
 }
 
-function list_applicant_checks($applicant_id){
+function list_applicant_checks($applicant_id)
+{
 
     $token = env('ONFIDO_ACCESS_TOKEN');
-    
 
     //$auth = base64_encode( 'token='.$token );
-    $ch = curl_init();
-    $curlopt_url = "https://api.onfido.com/v1/applicants/".$applicant_id."/checks";
+    $ch          = curl_init();
+    $curlopt_url = "https://api.onfido.com/v1/applicants/" . $applicant_id . "/checks";
     curl_setopt($ch, CURLOPT_URL, $curlopt_url);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
-    'Authorization: Token token='.$token));
+        'Authorization: Token token=' . $token));
     curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/3.0');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    $result = curl_exec($ch); 
+    $result = curl_exec($ch);
 
-
-    
     /* echo "<pre>";
     print_r($result);
-    echo "</pre>"; */ 
+    echo "</pre>"; */
     return $result;
-    /* Example response 
+    /* Example response
 
-     {"checks":[{"id":"eec6a785-9aa2-4d6e-9b14-e622b2198628","created_at":"2017-03-29T10:36:58Z","status":"complete","redirect_uri":null,"type":"express","result":"clear","sandbox":true,"report_type_groups":["2004"],"tags":[],"results_uri":"https://onfido.com/dashboard/information_requests/3106711","download_uri":"https://onfido.com/dashboard/pdf/information_requests/3106711","form_uri":null,"href":"/v1/applicants/d6783af5-b4d9-45b8-a5e8-fa49827340cb/checks/eec6a785-9aa2-4d6e-9b14-e622b2198628","reports":["71c794af-df1a-4ae6-ac94-84d5cbe05ede","ac71e083-fa98-49a9-8a24-a890369253d8"],"paused":false}]}
+{"checks":[{"id":"eec6a785-9aa2-4d6e-9b14-e622b2198628","created_at":"2017-03-29T10:36:58Z","status":"complete","redirect_uri":null,"type":"express","result":"clear","sandbox":true,"report_type_groups":["2004"],"tags":[],"results_uri":"https://onfido.com/dashboard/information_requests/3106711","download_uri":"https://onfido.com/dashboard/pdf/information_requests/3106711","form_uri":null,"href":"/v1/applicants/d6783af5-b4d9-45b8-a5e8-fa49827340cb/checks/eec6a785-9aa2-4d6e-9b14-e622b2198628","reports":["71c794af-df1a-4ae6-ac94-84d5cbe05ede","ac71e083-fa98-49a9-8a24-a890369253d8"],"paused":false}]}
 
-    */
+ */
 }
 
-function retrieve_report_details($args=array()){
+function retrieve_report_details($args = array())
+{
 
     $token = env('ONFIDO_ACCESS_TOKEN');
-    
-    if(isset($args['url']) && $args['url']!=''){
+
+    if (isset($args['url']) && $args['url'] != '') {
         $retrieve_url = $args['url'];
-    }
-    else if(isset($args['reportid']) && isset($args['checkid'])){
-        $retrieve_url = "https://api.onfido.com/v2/checks/".$args['checkid']."/reports/".$args['reportid'];
-    }
-    else{
+    } else if (isset($args['reportid']) && isset($args['checkid'])) {
+        $retrieve_url = "https://api.onfido.com/v2/checks/" . $args['checkid'] . "/reports/" . $args['reportid'];
+    } else {
         return false;
     }
 
     //$auth = base64_encode( 'token='.$token );
-    $ch = curl_init();
+    $ch          = curl_init();
     $curlopt_url = $retrieve_url;
     curl_setopt($ch, CURLOPT_URL, $curlopt_url);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
-    'Authorization: Token token='.$token));
+        'Authorization: Token token=' . $token));
     curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/3.0');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    $result = curl_exec($ch); 
+    $result              = curl_exec($ch);
     $result_json_decoded = json_decode($result);
 
     /*echo "<pre>";
@@ -995,8 +959,7 @@ function retrieve_report_details($args=array()){
     echo "</pre>";*/
 
     return $result_json_decoded;
-    /* Example response 
- 
-    */
-}
+    /* Example response
 
+ */
+}

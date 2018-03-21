@@ -866,75 +866,65 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
 
+    $today =  date('Y-m-d');
+
     if(env('APP_ENV') == 'local')
         $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
     else
         $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
 
    
-    $d1       = new \DateTime($expiryDate);
-    $d2       = new \DateTime();
-    $interval = $d2->diff($d1);
-     
-    $validity = '';
-    // if($interval->y == 1)
-    // {
-    //     $validity = 'a Year';
-    // }
-    // elseif($interval->m > 1)
-    // {
-    //     $validity = $interval->m.' months';
-    // }
-    // elseif($interval->m == 1)
-    // {
-    //     $validity = $interval->m.' months';
-    // }
-    // elseif($interval->d > 1)
-    // {
-    //     $validity = $interval->d.' days';
-    // }
-    // elseif($interval->d == 1)
-    // {
-    //     $validity = $interval->d.' day';
-    // }
-
-    if ($interval->y == 1) {
-        $validity .= 'a Year ';
-    }
-
-    if ($interval->m > 1) {
-        $validity .= $interval->m . ' months';
-    } elseif ($interval->m == 1) {
-        $validity .= $interval->m . ' month';
-    }
-
-    if ($interval->m >= 1) {
-        $validity .= ' and ';
-    }
-
-    if ($interval->d > 1) {
-        $validity .= $interval->d . ' days';
-    } elseif ($interval->d == 1) {
-        $validity .= $interval->d . ' day';
-    }
-    else if($interval->d == 0 && $d1 > $d2){
-        $validity .= '1 day';
-    }
-
     // $validity = $interval->format('%y years %m months and %d days');
 
     $html = '<div class="alert bg-gray certification-success">
         <div class="l-30">
-        <h5 class="">' . $certificationName . ' Certification</h5>
+        <h5 class="">' . $certificationName . ' Certification</h5>';
 
-            <i class="icon icon-ok text-success"></i> Certified on
-         <span class="date-rem">' . date('d/m/Y', strtotime($certificationDate)) . '
-            <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
-        </span>&nbsp;
-        <span class="text-danger">
-            and valid for: ' . $validity . '
-        </span>
-        </div>
+
+    if($today >= $expiryDate){
+         $html .= '<span class="text-danger"> Date Expired : </span> <button class="btn btn-danger save-re-certification ld-ext-right" client-category="" inv-gi-code="" type="button" get-input-class="retail-input">Re-Certify <div class="ld ld-ring ld-spin"></div></button>';
+    }
+    else{
+
+        $d1       = new \DateTime($expiryDate);
+        $d2       = new \DateTime();
+        $interval = $d2->diff($d1);
+         
+        $validity = '';
+
+        if ($interval->y == 1) {
+            $validity .= 'a Year ';
+        }
+
+        if ($interval->m > 1) {
+            $validity .= $interval->m . ' months';
+        } elseif ($interval->m == 1) {
+            $validity .= $interval->m . ' month';
+        }
+
+        if ($interval->m >= 1) {
+            $validity .= ' and ';
+        }
+
+        if ($interval->d > 1) {
+            $validity .= $interval->d . ' days';
+        } elseif ($interval->d == 1) {
+            $validity .= $interval->d . ' day';
+        }
+        else if($interval->d == 0 && $d1 > $d2){
+            $validity .= '1 day';
+        }
+
+        $html .= '<i class="icon icon-ok text-success"></i> Certified on
+             <span class="date-rem">' . date('d/m/Y', strtotime($certificationDate)) . '
+                <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
+            </span>&nbsp;
+            <span class="text-danger">
+                and valid for: ' . $validity . '
+            </span>';
+    }
+
+    $html .= '</div>
     </div>';
 
     return $html;

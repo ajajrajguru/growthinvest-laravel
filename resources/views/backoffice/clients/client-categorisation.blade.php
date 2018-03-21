@@ -1181,6 +1181,12 @@
                            <button class="btn btn-primary save-elective-prof-inv save-certification @if($isElectiveProfInv) d-none @endif ld-ext-right" client-category="{{ (!empty($clientCategory)) ? $clientCategory->id :'' }}" inv-gi-code="{{ $investor->gi_code }}" type="button" >Submit<div class="ld ld-ring ld-spin"></div></button>
 
                             <div class="investor-certification">
+                            @php
+                            if(empty($investorCertification)){
+                                $investorCertification = $investor->getLastActiveCertification();
+                            }
+                            @endphp
+
                             @if(!empty($investorCertification))
                             {!! genActiveCertificationValidityHtml($investorCertification,$investorCertification->file_id) !!}
                             @endif
