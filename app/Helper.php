@@ -1139,6 +1139,17 @@ function getRecipientsByCapability($recipients,$capabilities,$firmId=0){
         $userEmails = \App\User::permission('add_user')->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"),'email')->pluck('display_name','email')->toArray();
 
     $recipients +=$userEmails;
+    
+    //send only to one user if local
+    if (env('APP_ENV') == 'local') {
+        $rec = [];
+        foreach ($recipients as $key => $recipient) {
+            $rec[$key] = $recipient;
+            break;
+        }
+
+        $recipients = $rec;
+    }
 
     return $recipients;
  

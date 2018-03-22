@@ -9,7 +9,7 @@ function investorCertificationExpiry()
     }
 
     $userCertifications = App\UserHasCertification::where('created_at', '<=', $date)->where('active', '1')->get();
-
+    $mailSent = false;
     foreach ($userCertifications as $key => $userCertification) {
         $investor          = $userCertification->user;
         $firmName          = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
@@ -31,24 +31,34 @@ function investorCertificationExpiry()
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
-        $data                  = [];
-        $data['from']          = config('constants.email_from');
-        $data['name']          = config('constants.email_from_name');
-        $data['to']            = [$investor->email];
-        $data['cc']            = [];
-        $data['subject']       = $certification . " Certification has expired";
-        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
-        sendEmail('investor-certification-expiry', $data);
 
-        $recipients = getRecipientsByCapability([], array('view_all_investors'));
-        $recipients = getRecipientsByCapability($recipients, array('view_firm_investors', 'is_wealth_manager'), $firmId);
+        if(!$mailSent){
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$investor->email];
+            $data['cc']            = [];
+            $data['subject']       = $certification . " Certification has expired";
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
+            sendEmail('investor-certification-expiry', $data);
 
-        foreach ($recipients as $recipientEmail => $recipientName) {
-            $data['to']            = [$recipientEmail];
-            $data['subject']       = "Investor's Certification has expired.";
-            $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
+            $recipients = getRecipientsByCapability([], array('view_all_investors'));
+            $recipients = getRecipientsByCapability($recipients, array('view_firm_investors', 'is_wealth_manager'), $firmId);
 
-            sendEmail('investor-certification-expiry-backoffice-users', $data);
+            foreach ($recipients as $recipientEmail => $recipientName) {
+                $data['to']            = [$recipientEmail];
+                $data['subject']       = "Investor's Certification has expired.";
+                $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
+
+                sendEmail('investor-certification-expiry-backoffice-users', $data);
+            }
+
+            //if local send to only once user
+            if (env('APP_ENV') == 'local') {
+                $mailSent = true;
+            }
+
+
         }
 
     }
@@ -65,6 +75,7 @@ function investorCertificationExpiryReminder()
     $date               = date('Y-m-d');
     $userCertifications = App\UserHasCertification::where(DB::raw('DATE_FORMAT(DATE_ADD(DATE_ADD(created_at, INTERVAL 1 YEAR), INTERVAL -7 DAY), "%Y-%m-%d")'), $date)->where('active', '1')->get();
 
+    $mailSent = false;
     foreach ($userCertifications as $key => $userCertification) {
         $investor          = $userCertification->user;
         $firmName          = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
@@ -78,24 +89,33 @@ function investorCertificationExpiryReminder()
             $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
         }
 
-        $data                  = [];
-        $data['from']          = config('constants.email_from');
-        $data['name']          = config('constants.email_from_name');
-        $data['to']            = [$investor->email];
-        $data['cc']            = [];
-        $data['subject']       = "Reminder for Renewal of your " . $certification . " Certification";
-        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
-        sendEmail('certification-expiry-in-week-investor', $data);
+        if(!$mailSent){
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$investor->email];
+            $data['cc']            = [];
+            $data['subject']       = "Reminder for Renewal of your " . $certification . " Certification";
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
+            sendEmail('certification-expiry-in-week-investor', $data);
 
-        $recipients = getRecipientsByCapability([], array('view_all_investors'));
-        $recipients = getRecipientsByCapability($recipients, array('view_firm_investors', 'is_wealth_manager'), $firmId);
+            $recipients = getRecipientsByCapability([], array('view_all_investors'));
+            $recipients = getRecipientsByCapability($recipients, array('view_firm_investors', 'is_wealth_manager'), $firmId);
 
-        foreach ($recipients as $recipientEmail => $recipientName) {
-            $data['to']            = [$recipientEmail];
-            $data['subject']       = "Reminder for Renewal of Investor's Certification";
-            $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
+            foreach ($recipients as $recipientEmail => $recipientName) {
+                $data['to']            = [$recipientEmail];
+                $data['subject']       = "Reminder for Renewal of Investor's Certification";
+                $data['template_data'] = ['name' => $recipientName, 'investorName' => $investor->displayName(), 'firmName' => $firmName, 'certification' => $certification, 'investorGiCode' => $investor->gi_code, 'expiryDate' => $expiryDate];
 
-            sendEmail('certification-expiry-in-week', $data);
+                sendEmail('certification-expiry-in-week', $data);
+            }
+
+            //if local send to only once user
+            if (env('APP_ENV') == 'local') {
+                $mailSent = true;
+            }
+
+
         }
 
     }

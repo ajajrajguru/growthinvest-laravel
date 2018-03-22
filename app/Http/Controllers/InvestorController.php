@@ -32,7 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-
+        $recipients = getRecipientsByCapability([], array('view_all_investors'));
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
