@@ -470,6 +470,14 @@
         });
       }
     });
+    $('.save-re-certification').click(function() {
+      var btnObj, clientCategoryId;
+      btnObj = $(this);
+      btnObj.addClass('running');
+      clientCategoryId = $(this).attr('exp-client-category');
+      $('button[client-category="' + clientCategoryId + '"]').click();
+      // return console.log("12");
+    });
     $(document).on('click', '.validate-nominee-data', function() {
       $('.parent-tabpanel').each(function() {
         var hrefId, invalidTabHeadObj, isValidTab;

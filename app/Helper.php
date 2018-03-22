@@ -882,7 +882,8 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
 
 
     if($today >= $expiryDate){
-         $html .= '<span class="text-danger"> Date Expired : </span> <button class="btn btn-danger save-re-certification ld-ext-right" client-category="" inv-gi-code="" type="button" get-input-class="retail-input">Re-Certify <div class="ld ld-ring ld-spin"></div></button>';
+        $invGiCode = $investorCertification->user->gi_code;
+        $html .= '<span class="text-danger"> Date Expired : </span> <button class="btn btn-danger save-re-certification ld-ext-right" exp-client-category="'. $investorCertification->certification_default_id .'" type="button" get-input-class="retail-input">Re-Certify <div class="ld ld-ring ld-spin"></div></button>';
     }
     else{
 

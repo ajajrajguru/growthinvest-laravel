@@ -420,6 +420,14 @@ $(document).ready ->
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
+  $('.save-re-certification').click ->
+    btnObj = $(this)
+    clientCategoryId = $(this).attr('exp-client-category')
+    $('button[client-category="'+clientCategoryId+'"]').click();
+    console.log "12"
+
+
+
 
   $(document).on 'click', '.validate-nominee-data', ->
     $('.parent-tabpanel').each ->
