@@ -473,10 +473,9 @@
     $('.save-re-certification').click(function() {
       var btnObj, clientCategoryId;
       btnObj = $(this);
-      btnObj.addClass('running');
       clientCategoryId = $(this).attr('exp-client-category');
       $('button[client-category="' + clientCategoryId + '"]').click();
-      // return console.log("12");
+      return console.log("12");
     });
     $(document).on('click', '.validate-nominee-data', function() {
       $('.parent-tabpanel').each(function() {
@@ -624,51 +623,39 @@
       }
     });
     $(document).on('keyup', '.invest-perc', function() {
-      var ipEmpty;
-      ipEmpty = 0;
-      $('.invest-perc').each(function() {
-        if ($(this).val() !== "" && ipEmpty === 0) {
-          return ipEmpty++;
-        }
-      });
-      if (ipEmpty > 0) {
+      if (($('input[name="adviserinitialinvestpercent"]').val() !== '' || $('input[name="ongoingadvinitialinvestpercent"]').val() !== '') && $(this).attr('readonly') !== 'readonly') {
         $('.aic-investment-input').attr('readonly', true);
         $('.invest-amount').attr('readonly', true);
-        $('.investment-input').attr('readonly', false);
+      } else if ($('input[name="adviserinitialinvestpercent"]').val() === '' && $('input[name="ongoingadvinitialinvestpercent"]').val() === '' && $(this).attr('readonly') !== 'readonly') {
         $('.aic-investment-input').attr('readonly', false);
+        $('.invest-amount').attr('readonly', false);
       }
     });
     $(document).on('keyup', '.invest-amount', function() {
-      var iaEmpty;
-      iaEmpty = 0;
-      $('.invest-amount').each(function() {
-        if ($(this).val() !== "" && iaEmpty) {
-          return iaEmpty++;
-        }
-      });
-      if (iaEmpty > 0) {
+      if (($('input[name="adviserinitialinvestfixedamnt"]').val() !== '' || $('input[name="ongoingadvinitialinvestfixedamnt"]').val() !== '') && $(this).attr('readonly') !== 'readonly') {
         $('.aic-investment-input').attr('readonly', true);
         $('.invest-perc').attr('readonly', true);
-        $('.investment-input').attr('readonly', false);
+      } else if ($('input[name="adviserinitialinvestfixedamnt"]').val() === '' && $('input[name="ongoingadvinitialinvestfixedamnt"]').val() === '' && $(this).attr('readonly') !== 'readonly') {
         $('.aic-investment-input').attr('readonly', false);
+        $('.invest-perc').attr('readonly', false);
       }
     });
     $(document).on('keyup', '.aic-investment-perc', function() {
-      if ($(this).val() !== "") {
+      if ($(this).val() !== "" && $(this).attr('readonly') !== 'readonly') {
         $('.investment-input').attr('readonly', true);
-        return $('.aic-investment-amount').attr('readonly', true);
-      } else {
+        $('.aic-investment-amount').attr('readonly', true);
+      } else if ($(this).val() === "" && $(this).attr('readonly') !== 'readonly') {
         $('.investment-input').attr('readonly', false);
-        return $('.aic-investment-input').attr('readonly', false);
+        $('.aic-investment-amount').attr('readonly', false);
       }
     });
     $(document).on('keyup', '.aic-investment-amount', function() {
-      if ($(this).val() !== "") {
+      if ($(this).val() !== "" && $(this).attr('readonly') !== 'readonly') {
         $('.investment-input').attr('readonly', true);
-        return $('.aic-investment-perc').attr('readonly', true);
-      } else {
+        $('.aic-investment-perc').attr('readonly', true);
+      } else if ($(this).val() === "" && $(this).attr('readonly') !== 'readonly') {
         $('.investment-input').attr('readonly', false);
-        return $('.aic-investment-input').attr('readonly', false);
+        $('.aic-investment-perc').attr('readonly', false);
       }
     });
     $(document).on('click', '.reply-comment', function() {
