@@ -76,25 +76,20 @@ function getCounty()
     return ['Avon', 'Bedfordshire', 'Berkshire', 'Borders', 'Buckinghamshire', 'Cambridgeshire', 'Central', 'Cheshire', 'Cleveland', 'Clwyd', 'Cornwall', 'County Antrim', 'County Armagh', 'County Down', 'County Fermanagh', 'County Londonderry', 'County Tyrone', 'Cumbria', 'Derbyshire', 'Devon', 'Dorset', 'Dumfries and Galloway', 'Durham', 'Dyfed', 'East Sussex', 'Essex', 'Fife', 'Gloucestershire', 'Grampian', 'Greater Manchester', 'Gwent', 'Gwynedd County', 'Hampshire', 'Herefordshire', 'Hertfordshire', 'Highlands and Islands', 'Humberside', 'Isle of Wight', 'Kent', 'Lancashire', 'Leicestershire', 'Lincolnshire', 'London', 'Lothian', 'Merseyside', 'Mid Glamorgan', 'Norfolk', 'North Yorkshire', 'Northamptonshire', 'Northumberland', 'Nottinghamshire', 'Oxfordshire', 'Powys', 'Rutland', 'Shropshire', 'Somerset', 'South Glamorgan', 'South Yorkshire', 'Staffordshire', 'Strathclyde', 'Suffolk', 'Surrey', 'Tayside', 'Tyne and Wear', 'Warwickshire', 'West Glamorgan', 'West Midlands', 'West Sussex', 'West Yorkshire', 'Wiltshire', 'Worcestershire'];
 }
 
-function investmentOfferType(){
+function investmentOfferType()
+{
     return ["fund" => "Fund", "proposal" => "Single Company"];
 }
 
-function investmentTaxStatus(){
+function investmentTaxStatus()
+{
     return ["eis" => "EIS", "seis" => "SEIS", "vct" => "VCT", "iht" => "BR", "sitr" => "SITR"];
 }
-
-
-
-
-
-
 
 function getCountry()
 {
     return ["GB" => "United Kingdom", "AF" => "Afghanistan", "AX" => "Aland Islands", "AL" => "Albania", "DZ" => "Algeria", "AS" => "American Samoa", "AD" => "Andorra", "AO" => "Angola", "AI" => "Anguilla", "AQ" => "Antarctica", "AG" => "Antigua And Barbuda", "AR" => "Argentina", "AM" => "Armenia", "AW" => "Aruba", "AU" => "Australia", "AT" => "Austria", "AZ" => "Azerbaijan", "BS" => "Bahamas", "BH" => "Bahrain", "BD" => "Bangladesh", "BB" => "Barbados", "BY" => "Belarus", "BE" => "Belgium", "BZ" => "Belize", "BJ" => "Benin", "BM" => "Bermuda", "BT" => "Bhutan", "BO" => "Bolivia", "BA" => "Bosnia And Herzegovina", "BW" => "Botswana", "BV" => "Bouvet Island", "BR" => "Brazil", "IO" => "British Indian Ocean Territory", "BN" => "Brunei Darussalam", "BG" => "Bulgaria", "BF" => "Burkina Faso", "BI" => "Burundi", "KH" => "Cambodia", "CM" => "Cameroon", "CA" => "Canada", "CV" => "Cape Verde", "KY" => "Cayman Islands", "CF" => "Central African Republic", "TD" => "Chad", "CL" => "Chile", "CN" => "China", "CX" => "Christmas Island", "CC" => "Cocos (Keeling) Islands", "CO" => "Colombia", "KM" => "Comoros", "CG" => "Congo", "CD" => "Congo,Democratic Republic", "CK" => "Cook Islands", "CR" => "Costa Rica", "CI" => "Cote D'Ivoire", "HR" => "Croatia", "CU" => "Cuba", "CY" => "Cyprus", "CZ" => "Czech Republic", "DK" => "Denmark", "DJ" => "Djibouti", "DM" => "Dominica", "DO" => "Dominican Republic", "EC" => "Ecuador", "EG" => "Egypt", "SV" => "El Salvador", "GQ" => "Equatorial Guinea", "ER" => "Eritrea", "EE" => "Estonia", "ET" => "Ethiopia", "FK" => "Falkland Islands (Malvinas)", "FO" => "Faroe Islands", "FJ" => "Fiji", "FI" => "Finland", "FR" => "France", "GF" => "French Guiana", "PF" => "French Polynesia", "TF" => "French Southern Territories", "GA" => "Gabon", "GM" => "Gambia", "GE" => "Georgia", "DE" => "Germany", "GH" => "Ghana", "GI" => "Gibraltar", "GR" => "Greece", "GL" => "Greenland", "GD" => "Grenada", "GP" => "Guadeloupe", "GU" => "Guam", "GT" => "Guatemala", "GG" => "Guernsey", "GN" => "Guinea", "GW" => "Guinea-Bissau", "GY" => "Guyana", "HT" => "Haiti", "HM" => "Heard Island & Mcdonald Islands", "VA" => "Holy See (Vatican City State)", "HN" => "Honduras", "HK" => "Hong Kong", "HU" => "Hungary", "IS" => "Iceland", "IN" => "India", "ID" => "Indonesia", "IR" => "Iran, Islamic Republic Of", "IQ" => "Iraq", "IE" => "Ireland", "IM" => "Isle Of Man", "IL" => "Israel", "IT" => "Italy", "JM" => "Jamaica", "JP" => "Japan", "JE" => "Jersey", "JO" => "Jordan", "KZ" => "Kazakhstan", "KE" => "Kenya", "KI" => "Kiribati", "KR" => "Korea", "KW" => "Kuwait", "KG" => "Kyrgyzstan", "LA" => "Lao People's Democratic Republic", "LV" => "Latvia", "LB" => "Lebanon", "LS" => "Lesotho", "LR" => "Liberia", "LY" => "Libyan Arab Jamahiriya", "LI" => "Liechtenstein", "LT" => "Lithuania", "LU" => "Luxembourg", "MO" => "Macao", "MK" => "Macedonia", "MG" => "Madagascar", "MW" => "Malawi", "MY" => "Malaysia", "MV" => "Maldives", "ML" => "Mali", "MT" => "Malta", "MH" => "Marshall Islands", "MQ" => "Martinique", "MR" => "Mauritania", "MU" => "Mauritius", "YT" => "Mayotte", "MX" => "Mexico", "FM" => "Micronesia, Federated States Of", "MD" => "Moldova", "MC" => "Monaco", "MN" => "Mongolia", "ME" => "Montenegro", "MS" => "Montserrat", "MA" => "Morocco", "MZ" => "Mozambique", "MM" => "Myanmar", "NA" => "Namibia", "NR" => "Nauru", "NP" => "Nepal", "NL" => "Netherlands", "AN" => "Netherlands Antilles", "NC" => "New Caledonia", "NZ" => "New Zealand", "NI" => "Nicaragua", "NE" => "Niger", "NG" => "Nigeria", "NU" => "Niue", "NF" => "Norfolk Island", "MP" => "Northern Mariana Islands", "NO" => "Norway", "OM" => "Oman", "PK" => "Pakistan", "PW" => "Palau", "PS" => "Palestinian Territory, Occupied", "PA" => "Panama", "PG" => "Papua New Guinea", "PY" => "Paraguay", "PE" => "Peru", "PH" => "Philippines", "PN" => "Pitcairn", "PL" => "Poland", "PT" => "Portugal", "PR" => "Puerto Rico", "QA" => "Qatar", "RE" => "Reunion", "RO" => "Romania", "RU" => "Russian Federation", "RW" => "Rwanda", "BL" => "Saint Barthelemy", "SH" => "Saint Helena", "KN" => "Saint Kitts And Nevis", "LC" => "Saint Lucia", "MF" => "Saint Martin", "PM" => "Saint Pierre And Miquelon", "VC" => "Saint Vincent And Grenadines", "WS" => "Samoa", "SM" => "San Marino", "ST" => "Sao Tome And Principe", "SA" => "Saudi Arabia", "SN" => "Senegal", "RS" => "Serbia", "SC" => "Seychelles", "SL" => "Sierra Leone", "SG" => "Singapore", "SK" => "Slovakia", "SI" => "Slovenia", "SB" => "Solomon Islands", "SO" => "Somalia", "ZA" => "South Africa", "GS" => "South Georgia And Sandwich Isl.", "ES" => "Spain", "LK" => "Sri Lanka", "SD" => "Sudan", "SR" => "Suriname", "SJ" => "Svalbard And Jan Mayen", "SZ" => "Swaziland", "SE" => "Sweden", "CH" => "Switzerland", "SY" => "Syrian Arab Republic", "TW" => "Taiwan", "TJ" => "Tajikistan", "TZ" => "Tanzania", "TH" => "Thailand", "TL" => "Timor-Leste", "TG" => "Togo", "TK" => "Tokelau", "TO" => "Tonga", "TT" => "Trinidad And Tobago", "TN" => "Tunisia", "TR" => "Turkey", "TM" => "Turkmenistan", "TC" => "Turks And Caicos Islands", "TV" => "Tuvalu", "UG" => "Uganda", "UA" => "Ukraine", "AE" => "United Arab Emirates", "US" => "United States", "UM" => "United States Outlying Islands", "UY" => "Uruguay", "UZ" => "Uzbekistan", "VU" => "Vanuatu", "VE" => "Venezuela", "VN" => "Viet Nam", "VG" => "Virgin Islands, British", "VI" => "Virgin Islands, U.S.", "WF" => "Wallis And Futuna", "EH" => "Western Sahara", "YE" => "Yemen", "ZM" => "Zambia", "ZW" => "Zimbabwe"];
 }
-
 
 function getCountrycodeAlpha2ToAlpha3()
 {
@@ -343,6 +338,192 @@ function getCountrycodeAlpha2ToAlpha3()
 
 };
 
+function durationType()
+{
+    $duration = [
+        "today"       => "Today",
+        "last7d"      => "Last 7 Days",
+        "lastfd"      => 'Last 15 Days',
+        "thismonth"   => 'This Month',
+        "lastmonth"   => 'Last Month',
+        "thisquater"  => 'This Quarter',
+        "lastquater"  => 'Last Quarter',
+        "yeartodate"  => 'Year to Date',
+        "last12month" => 'Last 12 Months',
+    ];
+
+    return $duration;
+
+}
+
+function getDateByPeriod($period){
+    $fromDate =  '';
+    $toDate =  '';
+
+    $currentDate = date('Y-m-d');
+    $currentMonth = date('m');
+    $currentYear = date('Y');
+
+
+    if($period == 'today'){
+        $fromDate =  $currentDate;
+        $toDate =  $currentDate;
+    }
+    elseif($period == 'last7d'){
+        $fromDate =  date('Y-m-d', strtotime('- 7 days'));
+        $toDate =  date('Y-m-d');
+    }
+    elseif($period == 'lastfd'){
+        $fromDate =  date('Y-m-d', strtotime('- 15 days'));
+        $toDate =  date('Y-m-d');
+    }
+    elseif($period == 'lastfd'){
+        $fromDate =  date('Y-m-d', strtotime('- 15 days'));
+        $toDate =  date('Y-m-d');
+    }
+    elseif($period == 'thismonth'){
+        $fromDate =  date('Y-m-01'); 
+        $toDate =  date('Y-m-t');
+    }
+    elseif($period == 'lastmonth'){
+        $fromDate = date('Y-m-d', strtotime('first day of last month'));
+        $toDate =  date('Y-m-d', strtotime('last day of last month'));
+    }
+    elseif($period == 'thisquater'){
+        $fromDate = date('Y-m-d', strtotime('first day of last month'));
+        $toDate =  date('Y-m-d', strtotime('last day of last month'));
+    }
+    elseif($period =='thisquater'){
+
+          if($currentMonth>=1 && $currentMonth<=3)
+          {
+            $start_date = strtotime('1-January-'.$currentYear);  // timestamp or 1-Januray 12:00:00 AM
+            $end_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM means end of 31 March
+          }
+          else  if($currentMonth>=4 && $currentMonth<=6)
+          {
+            $start_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM
+            $end_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM means end of 30 June
+          }
+          else  if($currentMonth>=7 && $currentMonth<=9)
+          {
+            $start_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM
+            $end_date = strtotime('1-October-'.$currentYear);  // timestamp or 1-October 12:00:00 AM means end of 30 September
+          }
+          else  if($currentMonth>=10 && $currentMonth<=12)
+          {
+            $start_date = strtotime('1-October-'.$currentYear);  // timestamp or 1-October 12:00:00 AM
+            $end_date = strtotime('1-January-'.($currentYear+1));  // timestamp or 1-January Next year 12:00:00 AM means end of 31 December this year
+          }
+          $fromdate=date("Y-m-d", $start_date);
+          $todate=date("Y-m-d",  strtotime('-1 day', $end_date));
+    }
+    elseif($period == 'lastquater'){
+
+          if($currentMonth>=1 && $currentMonth<=3)
+          {
+            $start_date = strtotime('1-October-'.($currentYear-1));  // timestamp or 1-October Last Year 12:00:00 AM
+            $end_date = strtotime('1-January-'.$currentYear);  // // timestamp or 1-January  12:00:00 AM means end of 31 December Last year
+          }
+          else if($currentMonth>=4 && $currentMonth<=6)
+          {
+            $start_date = strtotime('1-January-'.$currentYear);  // timestamp or 1-Januray 12:00:00 AM
+            $end_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM means end of 31 March
+          }
+          else  if($currentMonth>=7 && $currentMonth<=9)
+          {
+            $start_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM
+            $end_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM means end of 30 June
+          }
+          else  if($currentMonth>=10 && $currentMonth<=12)
+          {
+            $start_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM
+            $end_date = strtotime('1-October-'.$currentYear);  // timestamp or 1-October 12:00:00 AM means end of 30 September
+          }
+           $fromdate=date("Y-m-d", $start_date);
+           $todate=date("Y-m-d",  strtotime('-1 day', $end_date));
+    }
+
+    return ['fromDate' => $fromDate, 'toDate'=>$toDate];
+}
+
+function activityTypeList()
+{
+    $activity_array = [
+        'watchlist'                                   => 'Watch List',
+        'registered_interest'                         => 'Expressed Interest',
+        'request_meeting'                             => 'Request Meeting',
+        'pledge_added'                                => 'Pledge Added',
+        'pledge_updated'                              => 'Pledge Updated',
+        'request_extra_dd_added'                      => 'Request Additional Information Added',
+        'request_extra_dd_updated'                    => 'Request Additional Information Updated',
+        'invested'                                    => 'Invested',
+        'download'                                    => 'Download Key And Additional',
+        'certification'                               => 'Certification',
+        'registration'                                => 'Registration',
+        'proposal_creation'                           => 'Proposal Creation',
+        'fund_creation'                               => 'Fund Creation',
+        'proposal_status_update'                      => 'Proposal Status Update',
+        'fund_status_update'                          => 'Fund Status Update',
+        'proposal_details_update'                     => 'Proposal Details Update',
+        'fund_details_update'                         => 'Fund Details Update',
+        'proposal_post_update'                        => 'Proposal Post Update',
+        'due_diligence_update'                        => 'Due Diligence Update',
+        'investor_message'                            => 'Investor Message',
+        'qa_message'                                  => 'QA Message',
+        'nominee_application'                         => 'Nominee Application',
+        'auth_fail'                                   => 'Login Failed',
+        'view_proposal'                               => 'Viewed Proposal',
+        'onfido_requested'                            => 'Onfido - Requested',
+
+        'stage1_investor_registration'                => 'Stage 1 Investor Registration',
+        'entrepreneur_account_registration'           => 'Entrepreneur Account Registration',
+        'fundmanager_account_registration'            => 'Fundmanager Account Registration',
+        'onfido_confirmed'                            => 'Onfido - Confirmed',
+        'fund_proposal_post_update'                   => 'Fund Proposal Post Update',
+        'download_summary'                            => 'Download Summary',
+        'removed_from_watchlist'                      => 'Removed From Watchlist',
+        'download_fund_summary'                       => 'Download Fund Summary',
+        'download_dd_report'                          => 'Download Platform DD Report',
+        'download_dd_report1'                         => 'Download DD Report 1',
+        'download_dd_report2'                         => 'Download DD Report 2',
+        'download_finan_proj'                         => 'Download Financial Projection',
+        'download_presentatation'                     => 'Download Presentation',
+        'download_information_memorandum'             => 'Download - Information Memorandum',
+        'download_app_forms'                          => 'Download - App Forms',
+        'social_media_facebook'                       => 'Social Media - Facebook',
+        'social_media_twitter'                        => 'Social Media - Twitter',
+        'social_media_linkedin'                       => 'Social Media - Linkedin',
+        'social_media_google'                         => 'Social Media - G+',
+        'management_team_linked_in_clicks'            => 'Management Team - Linked-in clicks',
+        'invest_button_proposal'                      => 'Invest Button (proposal)',
+        'fund_investment_button'                      => 'Fund Investment Button',
+        'invest_button_invest_tab'                    => 'Invest Button (Invest tab)',
+        'successful_logins'                           => 'Successful Login',
+
+        'download_client_registration_guide'          => 'Download Client Registration Guide',
+        'download_investor_csv'                       => 'Download Investor CSV',
+        'download_transfer_asset_guide'               => 'Download Transfer Asset Guide',
+        'download_vct_asset_transfer_form'            => 'Download VCT Asset Transfer Form',
+        'download_single_company_asset_transfer_form' => 'Download Single Company Asset Transfer Form',
+        'download_iht_product_asset_transfer_form'    => 'Download IHT Product Asset Transfer Form',
+        'download_portfolio_asset_transfer_form'      => 'Download Portfolio Asset Transfer Form',
+        'download_stock_transfer_form'                => 'Download Stock Transfer Form',
+        'submitted_transfers'                         => 'Submitted Transfers',
+        'status_changes_for_asset_transfers'          => 'Status Changes For Asset Transfers',
+        'transfers_deleted'                           => 'Transfers Deleted',
+        'new_provider_added'                          => 'New Provider Added',
+        'start_adobe_sign'                            => 'Start Adobe Sign',
+        'completed_adobe_sign'                        => 'Completed Adobe Sign',
+        'external_downloads'                          => 'External Downloads',
+        'stage_3_profile_details'                     => 'Stage 3 Profile Details',
+        'cash_deposits'                               => 'Cash deposits',
+        'cash_withdrawl'                              => 'Cash withdrawal',
+    ];
+    return $activity_array;
+
+}
+
 function convertCountrycodeAlpha2Alpha3($alpha2_country_code)
 {
 
@@ -418,106 +599,122 @@ function getCaptchaKey()
     return env('captcha_private_key');
 }
 
-
 /**
-* This function is used to send email for each event
-* This function will send an email to given recipients
-* @param data can contain the following extra parameters
-*   @param template_data
-*   @param to 
-*   @param cc
-*   @param bcc
-*   @param from
-*   @param name
-*   @param subject
-*   @param delay  - @var integer
-*   @param priority - @var string -> ['low','default','high']
-*   @param attach - An Array of arrays each containing the following parameters:
-*           @param file - base64 encoded raw file
-*           @param as - filename to be given to the attachment
-*           @param mime - mime of the attachment
-*/
-function sendEmail($event='welcome', $data=[]) {
+ * This function is used to send email for each event
+ * This function will send an email to given recipients
+ * @param data can contain the following extra parameters
+ *   @param template_data
+ *   @param to
+ *   @param cc
+ *   @param bcc
+ *   @param from
+ *   @param name
+ *   @param subject
+ *   @param delay  - @var integer
+ *   @param priority - @var string -> ['low','default','high']
+ *   @param attach - An Array of arrays each containing the following parameters:
+ *           @param file - base64 encoded raw file
+ *           @param as - filename to be given to the attachment
+ *           @param mime - mime of the attachment
+ */
+function sendEmail($event = 'welcome', $data = [])
+{
     $email = new \Ajency\Comm\Models\EmailRecipient();
     /* from */
-    $from = (isset($data['from']))? $data['from'] : config('constants.email.defaultID');
-    $name = (isset($data['name']))? $data['name'] : config('constants.email.defaultName');
+    $from = (isset($data['from'])) ? $data['from'] : config('constants.email.defaultID');
+    $name = (isset($data['name'])) ? $data['name'] : config('constants.email.defaultName');
     $from = sendEmailTo($from, 'from');
     $email->setFrom($from, $name);
     /* to */
-    if(!isset($data['to']))
-        $data['to']= [];
-    else
-        if(!is_array($data['to'])) // If not in array format
-            $data['to'] = [$data['to']];
+    if (!isset($data['to'])) {
+        $data['to'] = [];
+    } else
+    if (!is_array($data['to'])) // If not in array format
+    {
+        $data['to'] = [$data['to']];
+    }
+
     // $to = sendEmailTo($data['to'], 'to');
     $to = $data['to'];
     $email->setTo($to);
     /* cc */
-    $cc = isset($data['cc']) ? sendEmailTo($data['cc'], 'cc') : sendEmailTo([], 'cc');  
-    if(!is_array($cc)) $cc = [$cc];
+    $cc = isset($data['cc']) ? sendEmailTo($data['cc'], 'cc') : sendEmailTo([], 'cc');
+    if (!is_array($cc)) {
+        $cc = [$cc];
+    }
+
     $email->setCc($cc);
     /* bcc */
-    if(isset($data['bcc'])) {
+    if (isset($data['bcc'])) {
         $bcc = sendEmailTo($data['bcc'], 'bcc');
         $email->setCc($bcc);
     }
-    
-    $params = (isset($data['template_data']))? $data['template_data']:[];
-    if(!is_array($params)) $params = [$params];
-    $params['email_subject'] = (isset($data['subject']))? $data['subject']:"";
- 
+
+    $params = (isset($data['template_data'])) ? $data['template_data'] : [];
+    if (!is_array($params)) {
+        $params = [$params];
+    }
+
+    $params['email_subject'] = (isset($data['subject'])) ? $data['subject'] : "";
+
     $email->setParams($params);
-    if(isset($data['attach'])) $email->setAttachments($data['attach']);
+    if (isset($data['attach'])) {
+        $email->setAttachments($data['attach']);
+    }
+
     $notify = new \Ajency\Comm\Communication\Notification();
     $notify->setEvent($event);
-    $notify->setRecipientIds([$email]); 
+    $notify->setRecipientIds([$email]);
     // if(isset($data['delay']))  $data['delay'] = config('constants.send_delay_dev');
-    
+
     if (isset($data['delay']) and is_integer($data['delay'])) {
 
-        Illuminate\Support\Facades\Log::info('send email delay: '.$data['delay']);
+        Illuminate\Support\Facades\Log::info('send email delay: ' . $data['delay']);
         $notify->setDelay($data['delay']);
     }
-    if (isset($data['priority'])) $notify->setPriority($data['priority']);
+    if (isset($data['priority'])) {
+        $notify->setPriority($data['priority']);
+    }
+
     // dd($notify);
     // $notify->setRecipientIds([$email,$email1]);
     AjComm::sendNotification($notify);
-    
+
 }
 
 /**
-*
-*/
-function getUploadFileUrl($id) {
+ *
+ */
+function getUploadFileUrl($id)
+{
     $url = '';
-    if(!empty($id)){
-        $fileUrl = \DB::select('select url  from  fileupload_files where id ='.$id);
+    if (!empty($id)) {
+        $fileUrl = \DB::select('select url  from  fileupload_files where id =' . $id);
 
-        if(!empty($fileUrl)){
+        if (!empty($fileUrl)) {
             $url = $fileUrl[0]->url;
         }
     }
 
-     return $url;
+    return $url;
 }
 
+function getFileMimeType($ext)
+{
 
-function getFileMimeType($ext){
- 
-    $mimeTypes = ['pdf'=>'application/pdf','docx'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document','doc'=>'application/msword'];
+    $mimeTypes = ['pdf' => 'application/pdf', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'doc' => 'application/msword'];
 
     $mimeType = $mimeTypes[$ext];
     return $mimeType;
 }
 
-
 /**
-* This function is used to determine whether the Server Hosted is in Development or Production Mode
-* @return boolean
-*/
-function in_develop() {
-    if(in_array(env('APP_ENV'), config('constants.app_dev_envs'))) {
+ * This function is used to determine whether the Server Hosted is in Development or Production Mode
+ * @return boolean
+ */
+function in_develop()
+{
+    if (in_array(env('APP_ENV'), config('constants.app_dev_envs'))) {
         return true;
     } else {
         return false;
@@ -525,16 +722,16 @@ function in_develop() {
 }
 
 /**
-* This function will return Email IDs based on ENV if it is Development or Production mode
-*/
-function sendEmailTo($emails = [], $type='to') {
-    if(in_develop()) {
+ * This function will return Email IDs based on ENV if it is Development or Production mode
+ */
+function sendEmailTo($emails = [], $type = 'to')
+{
+    if (in_develop()) {
         $emails = config('constants.email_' . $type . '_dev');
     }
 
     return $emails;
 }
-    
 
 function recaptcha_validate($recaptcha)
 {
@@ -866,31 +1063,29 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
 
-    $today =  date('Y-m-d');
+    $today = date('Y-m-d');
 
-    if(env('APP_ENV') == 'local')
+    if (env('APP_ENV') == 'local') {
         $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
-    else
+    } else {
         $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
+    }
 
-   
     // $validity = $interval->format('%y years %m months and %d days');
 
     $html = '<div class="alert bg-gray certification-success">
         <div class="l-30">
         <h5 class="">' . $certificationName . ' Certification</h5>';
 
-
-    if($today >= $expiryDate){
+    if ($today >= $expiryDate) {
         $invGiCode = $investorCertification->user->gi_code;
-        $html .= '<span class="text-danger"> Date Expired : </span> <button class="btn btn-danger save-re-certification ld-ext-right" exp-client-category="'. $investorCertification->certification_default_id .'" type="button" get-input-class="retail-input">Re-Certify <div class="ld ld-ring ld-spin"></div></button>';
-    }
-    else{
+        $html .= '<span class="text-danger"> Date Expired : </span> <button class="btn btn-danger save-re-certification ld-ext-right" exp-client-category="' . $investorCertification->certification_default_id . '" type="button" get-input-class="retail-input">Re-Certify <div class="ld ld-ring ld-spin"></div></button>';
+    } else {
 
         $d1       = new \DateTime($expiryDate);
         $d2       = new \DateTime();
         $interval = $d2->diff($d1);
-         
+
         $validity = '';
 
         if ($interval->y == 1) {
@@ -911,8 +1106,7 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
             $validity .= $interval->d . ' days';
         } elseif ($interval->d == 1) {
             $validity .= $interval->d . ' day';
-        }
-        else if($interval->d == 0 && $d1 > $d2){
+        } else if ($interval->d == 0 && $d1 > $d2) {
             $validity .= '1 day';
         }
 
@@ -939,7 +1133,7 @@ function getSectors()
 
 function getBusinessSectors()
 {
-    return \App\Defaults::where('type','business-sector')->get();
+    return \App\Defaults::where('type', 'business-sector')->get();
 }
 
 /**
@@ -1016,8 +1210,6 @@ function getObjectComments($objectType, $objectId, $parent)
 
 }
 
-
-
 /**
  * Store logged in user menu in session
  */
@@ -1081,17 +1273,15 @@ function getUserAdminMenus($user_permissions)
 /* USER MENU END*/
 
 /* CDN START */
- 
+
 function cdn($asset)
 {
 
     //Check if we added cdn's to the config file
 
-    if (!Config::get('app.cdn') || Config::get('app.cdn')=="") {
+    if (!Config::get('app.cdn') || Config::get('app.cdn') == "") {
         return asset($asset);
     }
-
-
 
     //Get file name & cdn's
 
@@ -1127,19 +1317,21 @@ function cdnPath($cdn, $asset)
 {
 
     return "//" . rtrim($cdn, "/") . "/" . ltrim($asset, "/");
- 
+
 }
 /* CDN END */
- 
-function getRecipientsByCapability($recipients,$capabilities,$firmId=0){
 
-    if($firmId)
-        $userEmails = \App\User::permission('add_user')->where('firm_id',$firmId)->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"),'email')->pluck('display_name','email')->toArray();
-    else
-        $userEmails = \App\User::permission('add_user')->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"),'email')->pluck('display_name','email')->toArray();
+function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
+{
 
-    $recipients +=$userEmails;
-    
+    if ($firmId) {
+        $userEmails = \App\User::permission('add_user')->where('firm_id', $firmId)->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"), 'email')->pluck('display_name', 'email')->toArray();
+    } else {
+        $userEmails = \App\User::permission('add_user')->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"), 'email')->pluck('display_name', 'email')->toArray();
+    }
+
+    $recipients += $userEmails;
+
     //send only to one user if local
     if (env('APP_ENV') == 'local') {
         $rec = [];
@@ -1152,9 +1344,5 @@ function getRecipientsByCapability($recipients,$capabilities,$firmId=0){
     }
 
     return $recipients;
- 
+
 }
-
-
- 
- 

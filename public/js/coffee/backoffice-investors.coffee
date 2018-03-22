@@ -775,6 +775,42 @@ $(document).ready ->
     investorInvestTable.ajax.reload()
     return
 
+  investorActivityTable = $('#datatable-investor-activity').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>' 
+    'aaSorting': [[0,'asc']]
+    'ajax':
+      url: '/backoffice/investor/get-investor-activity'
+      type: 'post'
+      data: (data) ->
+
+        filters = {}
+        filters.duration = $('select[name="duration"]').val()
+        filters.duration_from = $('input[name="duration_from"]').val()
+        filters.duration_to = $('input[name="duration_to"]').val()
+        filters.user_id = $('input[name="user_id"]').val()
+        filters.type = $('select[name="type"]').val()
+        filters.companies = $('select[name="companies"]').val()
+
+        data.filters = filters
+        data
+
+      error: ->
+        return
+
+    'columns': [
+      { 'data': 'logo', "orderable": false }
+      { 'data': 'proposal_funds' }
+      { 'data': 'user'}
+      { 'data': 'description' }
+      { 'data': 'date' }
+      { 'data': 'activity' }
+
+    ])
+
  
 
   

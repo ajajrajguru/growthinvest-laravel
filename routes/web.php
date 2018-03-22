@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('/save-news-update', 'InvestorController@saveInvestorNewsUpdate');
     Route::post('/delete-news-update', 'InvestorController@deleteInvestorNewsUpdate');
     Route::post('investor/get-investor-invest', 'InvestorController@getInvestorInvest');
+    Route::post('investor/get-investor-activity', 'InvestorController@getInvestorActivity');
     Route::resource('investor', 'InvestorController'); 
 
     //business

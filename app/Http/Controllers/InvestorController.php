@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AdobeSignature;
 use App\BusinessListing;
+use App\Activity;
 use App\Comment;
 use App\Defaults;
 use App\DocumentFile;
@@ -32,9 +33,9 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-        $recipients = getRecipientsByCapability([], array('view_all_investors'));
-        $user      = new User;
-        $investors = $user->getInvestorUsers();
+        
+        $user       = new User;
+        $investors  = $user->getInvestorUsers();
 
         $requestFilters = $request->all();
 
@@ -530,7 +531,7 @@ class InvestorController extends Controller
 
         $investorCertification = $investor->getLastActiveCertification();
 
-        $investorFai           = $investor->userFinancialAdvisorInfo();
+        $investorFai = $investor->userFinancialAdvisorInfo();
 
         $data['investor']                = $investor;
         $data['countyList']              = getCounty();
@@ -563,7 +564,7 @@ class InvestorController extends Controller
 
         $activeCertification = $investor->getActiveCertification();
         if (!empty($activeCertification)) {
-            $activeCertification->active   = 0;
+            $activeCertification->active      = 0;
             $activeCertification->last_active = 0;
             $activeCertification->save();
             $invHasCertification = true;
@@ -630,7 +631,7 @@ class InvestorController extends Controller
             $investor->assignRole('investor');
         }
 
-        $certificationvalidityHtml = genActiveCertificationValidityHtml($hasCertification, $fileId,$investor);
+        $certificationvalidityHtml = genActiveCertificationValidityHtml($hasCertification, $fileId, $investor);
         $isWealthManager           = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? true : false;
 
         //send mail
@@ -1784,13 +1785,119 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Activity'];
 
-        $data['activity']    = [];
-        $data['investor']    = $investor;
-        $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'View Activity';
-        $data['activeMenu']  = 'manage_clients';
+        $businessListing         = BusinessListing::where('status', 'publish')->where('status', 'publish')->get();
+        $data['businessListings'] = $businessListing;
+        $data['activityTypes']   = activityTypeList();
+        $data['durationType']    = durationType();
+        $data['investor']        = $investor;
+        $data['breadcrumbs']     = $breadcrumbs;
+        $data['pageTitle']       = 'View Activity';
+        $data['activeMenu']      = 'manage_clients';
 
         return view('backoffice.clients.investor-activity')->with($data);
+
+    }
+
+
+    public function getInvestorActivity(Request $request)
+    {
+
+        $requestData = $request->all(); //dd($requestData);
+        $data        = [];
+        $skip        = $requestData['start'];
+        $length      = $requestData['length'];
+        $orderValue  = $requestData['order'][0];
+        $filters     = $requestData['filters'];
+
+        $columnOrder = array(
+            // '0' => 'business_listings.title',
+            // '1' => 'business_listings.manager',
+            // '3' => 'business_listings.type',
+            // '4' => 'business_listings.investment_objective',
+            // '5' => 'business_listings.target_amount',
+            // '6' => 'business_listings.minimum_investment',
+            // '7' => 'amount_raised',
+        );
+
+        $columnName = 'activity.date_recorded';
+        $orderBy    = 'asc';
+
+        if (isset($columnOrder[$orderValue['column']])) {
+            $columnName = $columnOrder[$orderValue['column']];
+            $orderBy    = $orderValue['dir'];
+        }
+
+        $orderDataBy = [$columnName => $orderBy];
+
+        $filterActivityListing = $this->getFilteredActivityListing($filters, $skip, $length, $orderDataBy);
+        $activityListings      = $filterActivityListing['list'];
+        $totalActivityListings = $filterActivityListing['totalActivityListings'];
+    
+        $activityListingData = [];
+        $activityTypeList = activityTypeList();
+
+        foreach ($activityListings as $key => $activityListing) {
+            $activityMeta =  (!empty($activityListing->meta()->first())) ? $activityListing->meta()->first()->meta_value : '';
+
+            $activityListingData[] = [
+                'logo'       => '',
+                'proposal_funds'     => ucfirst(''),
+                'user'  => (!empty($activityListing->user)) ? $activityListing->user->displayName() : '',
+                'description'        => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
+                'date'       => (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
+                'activity' => (isset($activityTypeList[$activityListing->type])) ? $activityTypeList[$activityListing->type] : '',
+
+            ];
+
+        }
+
+        $json_data = array(
+            "draw"            => intval($requestData['draw']),
+            "recordsTotal"    => intval($totalActivityListings),
+            "recordsFiltered" => intval($totalActivityListings),
+            "data"            => $activityListingData,
+        );
+
+        return response()->json($json_data);
+
+    }
+
+    public function getFilteredActivityListing($filters, $skip, $length, $orderDataBy){
+
+        $activityListingQuery = Activity::select('*');
+
+        // if (isset($filters['user_id']) && $filters['user_id'] != "") {
+        //     $activityListingQuery->where('activity.user_id', $filters['user_id']);
+        // }
+
+        if (isset($filters['duration']) && $filters['duration'] != "") {
+            $activityListingQuery->where('activity.user_id', $filters['user_id']);
+        }
+
+        if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != ""))  {
+            $activityListingQuery->where('activity.user_id', $filters['user_id']);
+        }
+
+        if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != ""))  {
+            $activityListingQuery->where('activity.user_id', $filters['user_id']);
+        }
+ 
+
+        foreach ($orderDataBy as $columnName => $orderBy) {
+            $activityListingQuery->orderBy($columnName, $orderBy);
+        }
+
+        if ($length > 1) {
+
+            $totalActivityListings = $activityListingQuery->get()->count();
+            $activityListings       = $activityListingQuery->skip($skip)->take($length)->get();
+        } else {
+            $activityListings       = $activityListingQuery->get();
+            $totalActivityListings = $activityListingQuery->count();
+        }
+
+        return ['totalActivityListings' => $totalActivityListings, 'list' => $activityListings];
+
 
     }
 

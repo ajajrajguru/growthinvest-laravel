@@ -10,16 +10,18 @@
 <link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
 <script type="text/javascript">
-    
+
     $(document).ready(function() {
         // select2
-        $('.select2-single').select2({
-            // placeholder: "Search here"
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy'
         });
-    });
-  
 
-</script>
+       
+    });
+        
+
+  </script>
 
 
 
@@ -58,45 +60,53 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <div>
-                                <select name="company" class="form-control">
-                                  <option value="">All</option>
+                                <select name="duration" class="form-control">
+                                  <option value="">Select Period</option>
+                                  @foreach($durationType as $durationKey=>$duration)
+                                    <option value="{{ $durationKey }}">{{ $duration }}</option>
+                                  @endforeach
                                    
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-             
-                                <select name="sector" id="" class="form-control">
-                                    <option value="">All</option>
-                                     
-                                </select>
+                
+                                <input type="text"  class="form-control datepicker" name="duration_from" > - 
+                                <input type="text"  class="form-control datepicker" name="duration_to" >
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
                                 
                                 <select name="type" id="" class="form-control">
-                                    <option value="">All</option>
-                              
+                                  <option value="">View All Activity Type</option>
+                                  @foreach($activityTypes as $activityTypeKey=>$activityType)
+                                    <option value="{{ $activityTypeKey }}">{{ $activityType }}</option>
+                                  @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
                   
-                                <select name="manager" id="" class="form-control">
-                                    <option value="">All</option>
+                                <select name="companies" id="" class="form-control">
+                                  <option value="">View All Companies</option>
+                                  @foreach($businessListings as $businessListing)
+                                    <option value="{{ $businessListing->id }}">{{ $businessListing->title }}</option>
+                                  @endforeach
                                      
                                 </select>
+
+                                <input type="hidden" name="user_id" value="{{ $investor->id }}">
                             </div>
                         </div>
                     </div>
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
                          
                         <div class="mt-3 mt-sm-0">
-                            <button class="btn btn-primary mr-1 apply-invest-filters">Apply</button>
-                            <button class="btn btn-default reset-invest-filters">Reset</button>
+                            <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
+                            <button class="btn btn-default reset-activity-filters">Reset</button>
                         </div>
                     </div>
                      

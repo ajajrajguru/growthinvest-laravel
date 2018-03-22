@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasMany('App\UserHasCertification', 'user_id');
     }
 
+    public function activity()
+    {
+        return $this->hasMany('App\Activity', 'user_id');
+    }
+
     public function nomineeApplication()
     {
         return $this->hasOne('App\NomineeApplication', 'user_id');
