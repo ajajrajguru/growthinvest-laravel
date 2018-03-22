@@ -528,7 +528,8 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
 
-        $investorCertification = $investor->getActiveCertification();
+        $investorCertification = $investor->getLastActiveCertification();
+
         $investorFai           = $investor->userFinancialAdvisorInfo();
 
         $data['investor']                = $investor;
