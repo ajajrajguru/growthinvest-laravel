@@ -1770,4 +1770,28 @@ class InvestorController extends Controller
         return response()->json($json_data);
     }
 
+    public function investorActivity($giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Activity'];
+
+        $data['activity']    = [];
+        $data['investor']    = $investor;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'View Activity';
+        $data['activeMenu']  = 'manage_clients';
+
+        return view('backoffice.clients.investor-activity')->with($data);
+
+    }
+
 }
