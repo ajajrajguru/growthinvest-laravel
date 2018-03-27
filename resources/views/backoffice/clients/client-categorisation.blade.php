@@ -405,7 +405,7 @@
                                             <option value="{{ $key }}" {{ (!empty($investorCertification) && $investorCertification->certification == $key) ? 'selected' : '' }} >{{ $certificationType }}</option>
                                             @endforeach
                                         </select>
-                                        <span class="viewmode @if($mode=='edit') d-none @endif">{{ (!empty($investorCertification) && isset($certificationTypes[$investorCertification->certification])) ? $certificationTypes[$investorCertification->certification] : '' }}</span>
+                                        <span class="viewmode @if($mode=='edit') d-none @endif">{{ (!empty($investorCertification) && isset($certificationTypes[$investorCertification->certification])) ? $certificationTypes[$investorCertification->certification] : 'N/A' }}</span>
                                     </div>
                                     <div class="col-sm-6">
                                         <button class="btn btn-primary pull-right editUserBtn" type="button">Edit Details</button>

@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Firm', 'firm_id');
     }
 
+    public function registeredBy()
+    {
+        return $this->belongsTo('App\User', 'registered_by');
+    }
+
     public function userData()
     {
         return $this->hasMany('App\UserData');
@@ -85,6 +90,13 @@ class User extends Authenticatable
     public function userIntermidaiteCompInfo()
     {
         $userData = $this->userData()->where('data_key','intermediary_company_info')->first();
+        return $userData;
+    }
+
+    
+    public function userOnfidoInfoReqUrl()
+    {
+        $userData = $this->userData()->where('data_key','onfido_info_req_url')->first();
         return $userData;
     }
 
@@ -141,6 +153,11 @@ class User extends Authenticatable
     public function getActiveCertification(){
         $activeCertification = $this->userCertification()->where('active',1)->first();
         return $activeCertification;
+    }
+
+    public function getLastActiveCertification(){
+        $lastactiveCertification = $this->userCertification()->where('last_active',1)->first();
+        return $lastactiveCertification;
     }
 
     public function getbackOfficeAccessRoleIds(){

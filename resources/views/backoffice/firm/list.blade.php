@@ -7,18 +7,27 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
-        $( ".firm_actions" ).change(function() {
+        // $( ".firm_actions" ).change(function() {
 
-            var gi_code = $(this).attr('gi_code')
-            var sel_val = $(this).val();
-            switch(sel_val){
-                case 'edit' :
-                            var action_url = '/backoffice/firms/'+gi_code;
-                            window.open(action_url);
-                break;
-            }
+        //     var gi_code = $(this).attr('gi_code')
+        //     var sel_val = $(this).val();
+        //     switch(sel_val){
+        //         case 'edit' :
+        //                     var action_url = '/backoffice/firms/'+gi_code;
+        //                     window.open(action_url);
+        //         break;
+        //     }
 
+        // });
+
+        $(document).on('change', '.firm_actions', function() {
+           var editUrl = $('option:selected', this).attr('edit-url');
+           if(editUrl!=''){
+            window.open(editUrl);
+           }
+           
         });
+
     });
 </script>
 
@@ -82,14 +91,14 @@
                                     <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
                                     <td>{{ $firm->gi_code }}</td>
                                     <td>
-                                        <select class="form-control" data-id="78523" class="firm_actions" gi_code="{{ $firm->gi_code }}">
+                                        <select class="form-control firm_actions" data-id="78523"   gi_code="{{ $firm->gi_code }}">
                                         <option>--select--</option>
-                                        <option value="edit">View Firm Details</option>
+                                        <option value="edit" edit-url="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">View Firm Details</option>
                                         <option value="view_wm_commissions">View Investment Clients</option>
                                         <option value="view_introducer_commissions">View Business Clients</option>
                                         </select>
                                     </td>
-
+ 
                                 </tr>
                             @endforeach
                     </tbody>

@@ -420,6 +420,14 @@ $(document).ready ->
           $('.investor-certification').html(data.html)
           scrollTopContainer("#add_clients")
 
+  $('.save-re-certification').click ->
+    btnObj = $(this)
+    clientCategoryId = $(this).attr('exp-client-category')
+    $('button[client-category="'+clientCategoryId+'"]').click();
+    console.log "12"
+
+
+
 
   $(document).on 'click', '.validate-nominee-data', ->
     $('.parent-tabpanel').each ->
@@ -566,49 +574,43 @@ $(document).ready ->
 
     
  
-  $(document).on 'keyup', '.invest-perc', ->
-    ipEmpty = 0
-    $('.invest-perc').each ->
-      if($(this).val()!="" && ipEmpty==0)
-        ipEmpty++
-
-    if ipEmpty > 0
+  $(document).on 'keyup', '.invest-perc', -> 
+    
+    if(($('input[name="adviserinitialinvestpercent"]').val() !='' || $('input[name="ongoingadvinitialinvestpercent"]').val()!='') && $(this).attr('readonly')!='readonly')
       $('.aic-investment-input').attr('readonly',true)
       $('.invest-amount').attr('readonly',true)
-      $('.investment-input').attr('readonly',false)
+    else if($('input[name="adviserinitialinvestpercent"]').val() =='' && $('input[name="ongoingadvinitialinvestpercent"]').val()=='' && $(this).attr('readonly')!='readonly')
       $('.aic-investment-input').attr('readonly',false)
-
+      $('.invest-amount').attr('readonly',false)
     return
 
   $(document).on 'keyup', '.invest-amount', ->
-    iaEmpty = 0
-    $('.invest-amount').each ->
-      if($(this).val()!="" && iaEmpty)
-        iaEmpty++
-
-    if iaEmpty > 0
+    if(($('input[name="adviserinitialinvestfixedamnt"]').val() !='' || $('input[name="ongoingadvinitialinvestfixedamnt"]').val()!='') && $(this).attr('readonly')!='readonly')
       $('.aic-investment-input').attr('readonly',true)
       $('.invest-perc').attr('readonly',true)
-      $('.investment-input').attr('readonly',false)
+    else if($('input[name="adviserinitialinvestfixedamnt"]').val() =='' && $('input[name="ongoingadvinitialinvestfixedamnt"]').val()=='' && $(this).attr('readonly')!='readonly')
       $('.aic-investment-input').attr('readonly',false)
-
+      $('.invest-perc').attr('readonly',false)
     return
 
+
   $(document).on 'keyup', '.aic-investment-perc', ->
-    if($(this).val()!="")
+    if($(this).val()!="" && $(this).attr('readonly')!='readonly')
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-amount').attr('readonly',true)
-    else
+    else if($(this).val()=="" && $(this).attr('readonly')!='readonly')
       $('.investment-input').attr('readonly',false)
-      $('.aic-investment-input').attr('readonly',false)
+      $('.aic-investment-amount').attr('readonly',false)
+    return
 
   $(document).on 'keyup', '.aic-investment-amount', ->
-    if($(this).val()!="")
+    if($(this).val()!="" && $(this).attr('readonly')!='readonly')
       $('.investment-input').attr('readonly',true)
       $('.aic-investment-perc').attr('readonly',true)
-    else
+    else if($(this).val()=="" && $(this).attr('readonly')!='readonly')
       $('.investment-input').attr('readonly',false)
-      $('.aic-investment-input').attr('readonly',false)
+      $('.aic-investment-perc').attr('readonly',false)
+    return
 
 
   $(document).on 'click', '.reply-comment', ->

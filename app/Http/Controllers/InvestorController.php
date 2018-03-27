@@ -32,6 +32,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
+         
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -117,12 +118,12 @@ class InvestorController extends Controller
 
             $actionHtml = '<select class="form-control investor_actions form-control-sm" >
             <option id="select" value="">-Select-</option>
-            <option value="edit_profile" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-profile') .'">View Profile</option>
+            <option value="edit_profile" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-profile') . '">View Profile</option>
             <option value="view_portfolio">View Portfolio</option>
             <option value="manage_documents">View Investor Documents</option>
-            <option value="message_board" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-news-update') .'">View Message Board</option>
+            <option value="message_board" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-news-update') . '">View Message Board</option>
             <option value="nominee_application">Investment Account</option>
-            <option value="investoffers" edit-url="'. url('backoffice/investor/' . $investor->gi_code . '/investor-invest') .'">Investment Offers</option>
+            <option value="investoffers" edit-url="' . url('backoffice/investor/' . $investor->gi_code . '/investor-invest') . '">Investment Offers</option>
             </select>';
 
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
@@ -389,9 +390,10 @@ class InvestorController extends Controller
         $isSuspended             = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode                  = $requestData['gi_code'];
 
-        $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
-
+        $giArgs   = array('prefix' => "GIIN", 'min' => 10000001, 'max' => 20000000);
+        $sendmail = false;
         if ($giCode == '') {
+            $sendmail = true;
 
             $userExist = User::where('email', $email)->first();
 
@@ -461,6 +463,47 @@ class InvestorController extends Controller
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
+        if ($sendmail) {
+            $firmName = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
+
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = [$email];
+            $data['cc']            = [];
+            $data['subject']       = "You have been registered on " . $firmName;
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'password' => $password];
+            sendEmail('add-investor', $data);
+
+            $recipients = getRecipientsByCapability([], array('manage_backoffice'));
+            if (!empty($investor->registeredBy)) {
+                $registeredBy = ($investor->registered_by == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
+            } else {
+                $registeredBy = 'N/A';
+            }
+
+            $data            = [];
+            $data['from']    = config('constants.email_from');
+            $data['name']    = config('constants.email_from_name');
+            $data['cc']      = [];
+            $data['subject'] = "Notification: New Investor added under " . $firmName . " by " . $registeredBy . ".";
+
+            foreach ($recipients as $recipientEmail => $recipientName) {
+                $data['to']            = [$recipientEmail];
+                $data['template_data'] = ['toName' => $recipientName, 'name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'address' => $investor->address_1, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'giCode' => $investor->gi_code];
+                sendEmail('investor-register-notification', $data);
+            }
+
+            $data                  = [];
+            $data['from']          = config('constants.email_from');
+            $data['name']          = config('constants.email_from_name');
+            $data['to']            = ['x+197408276330232@mail.asana.com'];
+            $data['cc']            = [];
+            $data['subject']       = $investor->displayName() . " added " . date('d/m/Y') . " by " . $registeredBy . ".";
+            $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'registeredBy' => $registeredBy];
+            sendEmail('investor-reg-automated', $data);
+        }
+
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client registration details added successfully and being redirected to certification stage.' : 'You are being redirected to certification page';
         Session::flash('success_message', $successMessage);
 
@@ -485,7 +528,8 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Client Categorisation'];
 
-        $investorCertification = $investor->getActiveCertification();
+        $investorCertification = $investor->getLastActiveCertification();
+
         $investorFai           = $investor->userFinancialAdvisorInfo();
 
         $data['investor']                = $investor;
@@ -514,12 +558,19 @@ class InvestorController extends Controller
             abort(404);
         }
 
-        $requestData = $request->all();
+        $requestData         = $request->all();
+        $invHasCertification = false;
 
         $activeCertification = $investor->getActiveCertification();
         if (!empty($activeCertification)) {
-            $activeCertification->active = 0;
+            $activeCertification->active   = 0;
+            $activeCertification->last_active = 0;
             $activeCertification->save();
+            $invHasCertification = true;
+        } else {
+            if ($investor->userCertification()->count()) {
+                $invHasCertification = true;
+            }
         }
 
         $details = [];
@@ -557,7 +608,8 @@ class InvestorController extends Controller
 
         $fileId = $this->generateInvestorCertificationPdf($requestData['save-type'], $details, $investor, $addData);
 
-        $hasCertification = $investor->userCertification()->where('certification_default_id', $requestData['client_category_id'])->first();
+        $hasCertification  = $investor->userCertification()->where('certification_default_id', $requestData['client_category_id'])->first();
+        $certificationDate = date('Y-m-d H:i:s');
         if (empty($hasCertification)) {
             $hasCertification                           = new UserHasCertification;
             $hasCertification->user_id                  = $investor->id;
@@ -568,8 +620,9 @@ class InvestorController extends Controller
         $hasCertification->file_id       = $fileId;
         $hasCertification->certification = $requestData['certification_type'];
         $hasCertification->active        = 1;
+        $hasCertification->last_active   = 1;
         $hasCertification->details       = $details;
-        $hasCertification->created_at    = date('Y-m-d H:i:s');
+        $hasCertification->created_at    = $certificationDate;
         $hasCertification->save();
 
         if (!$investor->hasRole('investor')) {
@@ -577,8 +630,83 @@ class InvestorController extends Controller
             $investor->assignRole('investor');
         }
 
-        $certificationvalidityHtml = genActiveCertificationValidityHtml($hasCertification, $fileId);
+        $certificationvalidityHtml = genActiveCertificationValidityHtml($hasCertification, $fileId,$investor);
         $isWealthManager           = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? true : false;
+
+        //send mail
+
+        if (env('APP_ENV') == 'local') {
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
+        } else {
+            $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
+        }
+
+        if (!empty($investor->firm)) {
+            $firmName = $investor->firm->name;
+            $firmId   = $investor->firm_id;
+        } else {
+            $firmName = 'N/A';
+            $firmName = 0;
+        }
+
+        $recipients = getRecipientsByCapability([], array('view_all_investors'));
+        $recipients = getRecipientsByCapability($recipients, array('view_firm_investors'), $firmId);
+        if (!empty($investor->registeredBy)) {
+            $registeredBy = ($investor->registered_by == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
+        } else {
+            $registeredBy = 'N/A';
+        }
+
+        $certification = $hasCertification->certification()->name;
+
+        //new certification
+        if (!$invHasCertification) {
+            $subject            = 'Notification: Certification of ' . $registeredBy . ' of Firm ' . $firmName . ' has been confirmed.';
+            $subjectForinvestor = 'Welcome Investor to ' . $firmName;
+
+            $template            = 'investor-confirmed-certification';
+            $templateForinvestor = 'confirmed-certification-to-investor';
+
+        } else {
+            //re certification
+            $subject            = 'Notification: Re-Certification of ' . $registeredBy . ' of Firm ' . $firmName . ' has been confirmed.';
+            $subjectForinvestor = 'Re-Certification confirmed on ' . $firmName;
+
+            $template            = 'investor-confirmed-certification';
+            $templateForinvestor = 'confirmed-certification-to-investor';
+        }
+
+        $data            = [];
+        $data['from']    = config('constants.email_from');
+        $data['name']    = config('constants.email_from_name');
+        $data['cc']      = [];
+        $data['subject'] = $subject;
+
+        foreach ($recipients as $recipientEmail => $recipientName) {
+            $data['to']            = [$recipientEmail];
+            $data['template_data'] = ['toName' => $recipientName, 'name' => $investor->displayName(), 'firmName' => $firmName, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'certification' => $certification, 'giCode' => $investor->gi_code, 'certificationDate' => $certificationDate, 'certificationExpiryDate' => $expiryDate, 'invHasCertification' => $invHasCertification];
+            sendEmail($template, $data);
+        }
+
+        $data                  = [];
+        $data['from']          = config('constants.email_from');
+        $data['name']          = config('constants.email_from_name');
+        $data['cc']            = [];
+        $data['subject']       = $subjectForinvestor;
+        $data['to']            = [$investor->email];
+        $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'invHasCertification' => $invHasCertification];
+
+        if ($fileId) {
+            $filename        = DocumentFile::find($fileId)->file_url;
+            $destination_dir = public_path() . '/userdocs/';
+
+            $filePath       = $destination_dir . '/' . $filename;
+            $ext            = pathinfo($filePath, PATHINFO_EXTENSION);
+            $mimeType       = getFileMimeType($ext);
+            $file           = \File::get($filePath);
+            $data['attach'] = [['file' => base64_encode($file), 'as' => $filename, 'mime' => $mimeType]];
+        }
+        sendEmail($templateForinvestor, $data);
 
         return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml, 'isWealthManager' => $isWealthManager]);
 
@@ -1017,7 +1145,7 @@ class InvestorController extends Controller
         $nomineeDetails['clientbankpostcode']                 = $requestData['clientbankpostcode'];
         $nomineeDetails['adviserinitialinvestpercent']        = $requestData['adviserinitialinvestpercent'];
         $nomineeDetails['adviserinitialinvestfixedamnt']      = $requestData['adviserinitialinvestfixedamnt'];
-        $nomineeDetails['adviservattobeapplied']            = (isset($requestData['adviservattobeapplied'])) ? $requestData['adviservattobeapplied'] : '';
+        $nomineeDetails['adviservattobeapplied']              = (isset($requestData['adviservattobeapplied'])) ? $requestData['adviservattobeapplied'] : '';
         $nomineeDetails['advdetailsnotapplicable']            = (isset($requestData['advdetailsnotapplicable'])) ? $requestData['advdetailsnotapplicable'] : '';
         $nomineeDetails['ongoingadvinitialinvestpercent']     = $requestData['ongoingadvinitialinvestpercent'];
         $nomineeDetails['ongoingadvinitialinvestfixedamnt']   = $requestData['ongoingadvinitialinvestfixedamnt'];
@@ -1203,7 +1331,7 @@ class InvestorController extends Controller
             }
 
             $output_link       = $destination_dir . '/nominee_application_pdf_' . $now_date . '.pdf';
-            $callbackurl       = url('investor/adobe/' . $investor->gi_code . '/signed-doc-callback') . '?type=nominee_application';
+            $callbackurl       = url('investor/adobe/signed-doc-callback') . '?type=nominee_application';
             $adobesign_message = "Please sign GrownthInvest application form document";
             $adobesign_name    = "GrownthInvest Application Form";
 
@@ -1253,6 +1381,100 @@ class InvestorController extends Controller
             }
 
         }
+
+    }
+
+    public function onfidoWebhook(Request $request)
+    {
+
+        $onfidoRequest = $request->all();
+        $isReport      = false;
+        $isCheck       = false;
+        if (isset($onfidoRequest['payload'])) {
+            $onfidoPayload = $onfidoRequest['payload'];
+
+            if ($onfidoPayload['resource_type'] == "report" && $onfidoPayload['action'] == "report.completed") {
+                //check for response is for report completed
+                $reportObj = $onfidoPayload['object'];
+                $reportId  = $reportObj['id'];
+                $isReport  = true;
+                $userData  = UserData::where('data_key', 'onfido_reports')->where('data_value', 'like', '%' . $reportId . '%')->get();
+
+            } else if ($onfidoPayload['resource_type'] == "check" && $onfidoPayload['action'] == "check.completed") {
+                $checkObj = $onfidoPayload['object'];
+                $checkId  = $checkObj['id'];
+                $isCheck  = true;
+                $userData = UserData::where('data_key', 'onfido_reports')->where('data_value', 'like', '%' . $checkId . '%')->get();
+            }
+
+            foreach ($userData as $userDataValue) {
+
+                $userId         = $userDataValue->user_id;
+                $user           = User::find($userId);
+                $reportVal      = $userDataValue->data_value;
+                $applicantId    = $reportVal['applicant_id'];
+                $applicantCheck = $reportVal['check'];
+
+                $applicantCheckDownloadUrl = $applicantCheck['check_download_url'];
+                $applicantReports          = $applicantCheck['reports'];
+
+                $applicantReportsUpdated = array();
+
+                if ($isReport) {
+                    foreach ($applicantReports as $applicantReport) {
+
+                        if ($reportId == $applicantReport->id) {
+
+                            $newReportStatus = 'completed';
+
+                            $applicantReport->status_growthinvest = $newReportStatus;
+                            $reportValName                        = $applicantReport->name;
+                        }
+
+                        $applicantReportsUpdated[] = $applicantReport;
+                        $reportVal['reports']      = $applicantReportsUpdated;
+
+                    }
+
+                    $userDataValue->data_value = $reportVal;
+                    $userDataValue->save();
+
+                } else if ($isCheck) {
+
+                    if ($applicantCheck['id'] == $checkId) {
+
+                        foreach ($applicantReports as $applicantReport) {
+
+                            $newReportStatus                      = 'completed';
+                            $applicantReport->status_growthinvest = $newReportStatus;
+                            $applicantReportsUpdated[]            = $applicantReport;
+                            $reportValNameAr[]                    = $applicantReport->name;
+                        }
+
+                        $reportVal['reports']      = $applicantReportsUpdated;
+                        $userDataValue->data_value = $reportVal;
+                        $userDataValue->save();
+
+                    }
+
+                }
+
+                //update url
+                $onfidoInfoReqUrl = $user->userOnfidoInfoReqUrl();
+                if (empty($onfidoInfoReqUrl)) {
+                    $onfidoInfoReqUrl           = new \App\UserData;
+                    $onfidoInfoReqUrl->user_id  = $userId;
+                    $onfidoInfoReqUrl->data_key = 'onfido_info_req_url';
+                }
+
+                $onfidoInfoReqUrl->data_value = $applicantCheckDownloadUrl;
+                $onfidoInfoReqUrl->save();
+
+            }
+
+        }
+
+        return response()->json(['success' => true]);
 
     }
 
@@ -1546,6 +1768,30 @@ class InvestorController extends Controller
         );
 
         return response()->json($json_data);
+    }
+
+    public function investorActivity($giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Activity'];
+
+        $data['activity']    = [];
+        $data['investor']    = $investor;
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'View Activity';
+        $data['activeMenu']  = 'manage_clients';
+
+        return view('backoffice.clients.investor-activity')->with($data);
+
     }
 
 }

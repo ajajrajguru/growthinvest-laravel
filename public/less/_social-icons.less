@@ -10,15 +10,26 @@
 			text-align: CENTER;
 			color: #fff;
 			@media (max-width: 767px) {
-				color: #333;
-				border-color: #333;
+				color: @body-text;
+				border-color: @body-text;
 			}
 			&:hover {
-				background-color: #5c5c5c;
-				@media (max-width: 767px) {
+				background-color: @body-text;
+				color: #fff;
+			}
+			
+		}
+	}
+	&.dark {
+		li {
+			a {
+				border-color: @body-text;
+				color: @body-text;
+				&:hover {
+					background: @body-text;
 					color: #fff;
 				}
 			}
 		}
 	}
-}
+}	

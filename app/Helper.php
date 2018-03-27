@@ -418,6 +418,124 @@ function getCaptchaKey()
     return env('captcha_private_key');
 }
 
+
+/**
+* This function is used to send email for each event
+* This function will send an email to given recipients
+* @param data can contain the following extra parameters
+*   @param template_data
+*   @param to 
+*   @param cc
+*   @param bcc
+*   @param from
+*   @param name
+*   @param subject
+*   @param delay  - @var integer
+*   @param priority - @var string -> ['low','default','high']
+*   @param attach - An Array of arrays each containing the following parameters:
+*           @param file - base64 encoded raw file
+*           @param as - filename to be given to the attachment
+*           @param mime - mime of the attachment
+*/
+function sendEmail($event='welcome', $data=[]) {
+    $email = new \Ajency\Comm\Models\EmailRecipient();
+    /* from */
+    $from = (isset($data['from']))? $data['from'] : config('constants.email.defaultID');
+    $name = (isset($data['name']))? $data['name'] : config('constants.email.defaultName');
+    $from = sendEmailTo($from, 'from');
+    $email->setFrom($from, $name);
+    /* to */
+    if(!isset($data['to']))
+        $data['to']= [];
+    else
+        if(!is_array($data['to'])) // If not in array format
+            $data['to'] = [$data['to']];
+    // $to = sendEmailTo($data['to'], 'to');
+    $to = $data['to'];
+    $email->setTo($to);
+    /* cc */
+    $cc = isset($data['cc']) ? sendEmailTo($data['cc'], 'cc') : sendEmailTo([], 'cc');  
+    if(!is_array($cc)) $cc = [$cc];
+    $email->setCc($cc);
+    /* bcc */
+    if(isset($data['bcc'])) {
+        $bcc = sendEmailTo($data['bcc'], 'bcc');
+        $email->setCc($bcc);
+    }
+    
+    $params = (isset($data['template_data']))? $data['template_data']:[];
+    if(!is_array($params)) $params = [$params];
+    $params['email_subject'] = (isset($data['subject']))? $data['subject']:"";
+ 
+    $email->setParams($params);
+    if(isset($data['attach'])) $email->setAttachments($data['attach']);
+    $notify = new \Ajency\Comm\Communication\Notification();
+    $notify->setEvent($event);
+    $notify->setRecipientIds([$email]); 
+    // if(isset($data['delay']))  $data['delay'] = config('constants.send_delay_dev');
+    
+    if (isset($data['delay']) and is_integer($data['delay'])) {
+
+        Illuminate\Support\Facades\Log::info('send email delay: '.$data['delay']);
+        $notify->setDelay($data['delay']);
+    }
+    if (isset($data['priority'])) $notify->setPriority($data['priority']);
+    // dd($notify);
+    // $notify->setRecipientIds([$email,$email1]);
+    AjComm::sendNotification($notify);
+    
+}
+
+/**
+*
+*/
+function getUploadFileUrl($id) {
+    $url = '';
+    if(!empty($id)){
+        $fileUrl = \DB::select('select url  from  fileupload_files where id ='.$id);
+
+        if(!empty($fileUrl)){
+            $url = $fileUrl[0]->url;
+        }
+    }
+
+     return $url;
+}
+
+
+function getFileMimeType($ext){
+ 
+    $mimeTypes = ['pdf'=>'application/pdf','docx'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document','doc'=>'application/msword'];
+
+    $mimeType = $mimeTypes[$ext];
+    return $mimeType;
+}
+
+
+/**
+* This function is used to determine whether the Server Hosted is in Development or Production Mode
+* @return boolean
+*/
+function in_develop() {
+    if(in_array(env('APP_ENV'), config('constants.app_dev_envs'))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+* This function will return Email IDs based on ENV if it is Development or Production mode
+*/
+function sendEmailTo($emails = [], $type='to') {
+    if(in_develop()) {
+        $emails = config('constants.email_' . $type . '_dev');
+    }
+
+    return $emails;
+}
+    
+
 function recaptcha_validate($recaptcha)
 {
     $captcha    = $recaptcha;
@@ -747,68 +865,67 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
 {
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
-    $expiryDate        = date('Y-m-d', strtotime($certificationDate . '+1 year'));
 
-    $d1       = new \DateTime($expiryDate);
-    $d2       = new \DateTime();
-    $interval = $d2->diff($d1);
+    $today =  date('Y-m-d');
 
-    $validity = '';
-    // if($interval->y == 1)
-    // {
-    //     $validity = 'a Year';
-    // }
-    // elseif($interval->m > 1)
-    // {
-    //     $validity = $interval->m.' months';
-    // }
-    // elseif($interval->m == 1)
-    // {
-    //     $validity = $interval->m.' months';
-    // }
-    // elseif($interval->d > 1)
-    // {
-    //     $validity = $interval->d.' days';
-    // }
-    // elseif($interval->d == 1)
-    // {
-    //     $validity = $interval->d.' day';
-    // }
+    if(env('APP_ENV') == 'local')
+        $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 day'));
+    else
+        $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
 
-    if ($interval->y == 1) {
-        $validity .= 'a Year ';
-    }
-
-    if ($interval->m > 1) {
-        $validity .= $interval->m . ' months';
-    } elseif ($interval->m == 1) {
-        $validity .= $interval->m . ' month';
-    }
-
-    if ($interval->m >= 1) {
-        $validity .= ' and ';
-    }
-
-    if ($interval->d > 1) {
-        $validity .= $interval->d . ' days';
-    } elseif ($interval->d == 1) {
-        $validity .= $interval->d . ' day';
-    }
-
+   
     // $validity = $interval->format('%y years %m months and %d days');
 
     $html = '<div class="alert bg-gray certification-success">
         <div class="l-30">
-        <h5 class="">' . $certificationName . ' Certification</h5>
+        <h5 class="">' . $certificationName . ' Certification</h5>';
 
-            <i class="icon icon-ok text-success"></i> Certified on
-         <span class="date-rem">' . date('d/m/Y', strtotime($certificationDate)) . '
-            <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
-        </span>&nbsp;
-        <span class="text-danger">
-            and valid for: ' . $validity . '
-        </span>
-        </div>
+
+    if($today >= $expiryDate){
+        $invGiCode = $investorCertification->user->gi_code;
+        $html .= '<span class="text-danger"> Date Expired : </span> <button class="btn btn-danger save-re-certification ld-ext-right" exp-client-category="'. $investorCertification->certification_default_id .'" type="button" get-input-class="retail-input">Re-Certify <div class="ld ld-ring ld-spin"></div></button>';
+    }
+    else{
+
+        $d1       = new \DateTime($expiryDate);
+        $d2       = new \DateTime();
+        $interval = $d2->diff($d1);
+         
+        $validity = '';
+
+        if ($interval->y == 1) {
+            $validity .= 'a Year ';
+        }
+
+        if ($interval->m > 1) {
+            $validity .= $interval->m . ' months';
+        } elseif ($interval->m == 1) {
+            $validity .= $interval->m . ' month';
+        }
+
+        if ($interval->m >= 1) {
+            $validity .= ' and ';
+        }
+
+        if ($interval->d > 1) {
+            $validity .= $interval->d . ' days';
+        } elseif ($interval->d == 1) {
+            $validity .= $interval->d . ' day';
+        }
+        else if($interval->d == 0 && $d1 > $d2){
+            $validity .= '1 day';
+        }
+
+        $html .= '<i class="icon icon-ok text-success"></i> Certified on
+             <span class="date-rem">' . date('d/m/Y', strtotime($certificationDate)) . '
+                <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
+            </span>&nbsp;
+            <span class="text-danger">
+                and valid for: ' . $validity . '
+            </span>';
+    }
+
+    $html .= '</div>
     </div>';
 
     return $html;
@@ -1014,7 +1131,29 @@ function cdnPath($cdn, $asset)
 }
 /* CDN END */
  
+function getRecipientsByCapability($recipients,$capabilities,$firmId=0){
 
+    if($firmId)
+        $userEmails = \App\User::permission('add_user')->where('firm_id',$firmId)->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"),'email')->pluck('display_name','email')->toArray();
+    else
+        $userEmails = \App\User::permission('add_user')->select(\DB::raw("CONCAT(first_name,' ',last_name)  AS display_name"),'email')->pluck('display_name','email')->toArray();
+
+    $recipients +=$userEmails;
+    
+    //send only to one user if local
+    if (env('APP_ENV') == 'local') {
+        $rec = [];
+        foreach ($recipients as $key => $recipient) {
+            $rec[$key] = $recipient;
+            break;
+        }
+
+        $recipients = $rec;
+    }
+
+    return $recipients;
+ 
+}
 
 
  

@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        '/investor/adobe/signed-doc-callback'
+        '/investor/adobe/signed-doc-callback',
+        '/onfido-webhook'
+
     ];
 }
