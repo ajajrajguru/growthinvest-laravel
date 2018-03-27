@@ -50,6 +50,8 @@ class UserPermission
                 'backoffice/investor/{giCode}/investor-news-update'           => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/save-news-update'                                 => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/delete-news-update'                               => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/{giCode}/investor-activity'              => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/get-investor-activity'                   => ['view_all_investors', 'investors', 'view_investors'],
 
                 'backoffice/investor/get-investors'                           => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/export-investors'                        => ['view_all_investors', 'investors', 'view_investors'],

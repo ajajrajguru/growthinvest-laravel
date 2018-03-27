@@ -155,6 +155,11 @@ class User extends Authenticatable
         return $activeCertification;
     }
 
+    public function getLastActiveCertification(){
+        $lastactiveCertification = $this->userCertification()->where('last_active',1)->first();
+        return $lastactiveCertification;
+    }
+
     public function getbackOfficeAccessRoleIds(){
         $roleIds = Permission::join('role_has_permissions', function ($join) {
                         $join->on('permissions.id', '=', 'role_has_permissions.permission_id')

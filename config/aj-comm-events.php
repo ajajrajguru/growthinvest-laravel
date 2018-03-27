@@ -12,6 +12,14 @@ return [
         "laravel" => "email.investor-reg-automated",
         "pushcrew" => ""
     ],
+    "investor-confirmed-certification" => [
+        "laravel" => "email.investor-confirmed-certification",
+        "pushcrew" => ""
+    ],
+    "confirmed-certification-to-investor" => [
+        "laravel" => "email.confirmed-certification-to-investor",
+        "pushcrew" => ""
+    ],
     "add-intermediary" => [
         "laravel" => "email.add-intermediary",
         "pushcrew" => ""
@@ -26,6 +34,14 @@ return [
     ],
     "intermediary-changed-password" => [
         "laravel" => "email.intermediary-changed-password",
+        "pushcrew" => ""
+    ],
+    "certification-expiry-in-week" => [
+        "laravel" => "email.certification-expiry-in-week",
+        "pushcrew" => ""
+    ],
+    "certification-expiry-in-week-investor" => [
+        "laravel" => "email.certification-expiry-in-week-investor",
         "pushcrew" => ""
     ],
     "investor-certification-expiry" => [

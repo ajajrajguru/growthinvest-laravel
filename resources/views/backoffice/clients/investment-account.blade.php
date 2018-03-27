@@ -599,14 +599,14 @@
                                     $readonlyagreeInvPer = '';
                                     $readonlyagreeInvAmt = '';
 
-                                    if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestpercent']) && isset($nomineeDetails['ongoingadvinitialinvestpercent']) && $nomineeDetails['adviserinitialinvestpercent']!="" && $nomineeDetails['ongoingadvinitialinvestpercent']!=""){
+                                    if(!empty($nomineeDetails) && ( (isset($nomineeDetails['adviserinitialinvestpercent']) && $nomineeDetails['adviserinitialinvestpercent']!="") || (isset($nomineeDetails['ongoingadvinitialinvestpercent']) && $nomineeDetails['ongoingadvinitialinvestpercent']!="" ))){
                                         $readonlyInvAmt = 'readonly';
                                         $readonlyagreeInvPer = 'readonly';
                                         $readonlyagreeInvAmt = 'readonly';
                                     }
 
 
-                                    if(!empty($nomineeDetails) && isset($nomineeDetails['adviserinitialinvestfixedamnt']) && isset($nomineeDetails['ongoingadvinitialinvestfixedamnt']) && $nomineeDetails['adviserinitialinvestfixedamnt']!="" && $nomineeDetails['ongoingadvinitialinvestfixedamnt']!=""){
+                                    if(!empty($nomineeDetails) && ((isset($nomineeDetails['adviserinitialinvestfixedamnt']) && $nomineeDetails['adviserinitialinvestfixedamnt']!="") || (isset($nomineeDetails['ongoingadvinitialinvestfixedamnt']) && $nomineeDetails['ongoingadvinitialinvestfixedamnt']!=""))){
                                         $readonlyInvPer = 'readonly';
                                         $readonlyagreeInvPer = 'readonly';
                                         $readonlyagreeInvAmt = 'readonly';
