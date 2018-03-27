@@ -617,14 +617,16 @@
 										      		</select>
 										    	</div>
 										  	</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group row mb-3">
+
+										  	<div class="form-group row mb-3">
 										    	<label for="" class="col-sm-4 col-form-label">No. of shares:</label>
 										    	<div class="col-sm-8">
 										      		<input type="text" class="form-control">
 										    	</div>
 										  	</div>
+										</div>
+										<div class="col-sm-4 border-sm-right border-0">
+											
 
 									  		<div class="form-group row mb-3">
 									  	    	<label for="" class="col-sm-4 col-form-label">Share Issue Price: &pound;</label>
@@ -654,11 +656,54 @@
 									  	    	</div>
 									  	  	</div>
 										</div>
-										<div class="col-sm-2 d-sm-flex align-items-sm-end pb-sm-3 pb-0">
-											<a href="" class="btn btn-sm btn-outline-primary mr-1">Save</a>
-											<a data-toggle="collapse" href="#collapseExample2" class="btn btn-sm btn-outline-danger cancel-action">Cancel</a>
+										<div class="col-sm-4">
+											<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">AI-C/AI-NC:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">Custody</option>
+									  	      			<option value="">Non-custody</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Platform AI-C/AI-NC:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">1</option>
+									  	      			<option value="">2</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Platform/Off Platform:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">1</option>
+									  	      			<option value="">2</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">External Asset:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">Yes</option>
+									  	      			<option value="">No</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
 										</div>
 									</div>
+
+									<div class="text-right">
+										<a href="" class="btn btn-sm btn-outline-primary mr-1">Save</a>
+										<a data-toggle="collapse" href="#collapseExample2" class="btn btn-sm btn-outline-danger cancel-action">Cancel</a>
+									</div>
+
 							  	</td>
 							</tr>
 						</tbody>
@@ -1267,14 +1312,14 @@
         <div id="" role="tablist" class="gi-collapse">
           	<div class="card">
         	    <div class="card-header" role="tab" id="headingOne">
-        	        <a data-toggle="collapse" href="#collapse1" role="button">
+        	        <a data-toggle="collapse" href="#collapse-a" role="button">
         	          Section 1. Application for Shares – Your Details
         	          <i class="fa fa-lg fa-plus-square-o"></i>
         	          <i class="fa fa-lg fa-minus-square-o"></i>
         	        </a>
         	    </div>
 
-        	    <div id="collapse1" class="collapse show" role="tabpanel" >
+        	    <div id="collapse-a" class="collapse show" role="tabpanel" >
         	    	<div class="card-body border mb-3">
         	    		<form>
         	    			<div class="form-group row mb-3">
@@ -1452,14 +1497,14 @@
 
           	<div class="card">
         	    <div class="card-header" role="tab" id="headingOne">
-        	        <a data-toggle="collapse" href="#collapse2" role="button" class="collapsed">
+        	        <a data-toggle="collapse" href="#collapse-b" role="button" class="collapsed">
         	          Section 2: Your Subscription
         	          <i class="fa fa-lg fa-plus-square-o"></i>
         	          <i class="fa fa-lg fa-minus-square-o"></i>
         	        </a>
         	    </div>
 
-        	    <div id="collapse2" class="collapse show" role="tabpanel" >
+        	    <div id="collapse-b" class="collapse show" role="tabpanel" >
         	    	<div class="card-body border mb-3">
         	    		<p>By completing and returning this form, you are agreeing to subscribe for <%=_.isUndefined(proposal_data.get('share-class-issued'))?" Unknown ":proposal_data.get('share-class-issued')%><!-- Ordinary Shares --> shares as part of the Offer on the following terms:-</p>
 	    		        <ol class="pl-3" type="i">
@@ -1519,14 +1564,14 @@
         	<!-- collapse3 -->
     	  	<div class="card">
     		    <div class="card-header" role="tab" id="headingOne">
-    		        <a data-toggle="collapse" href="#collapse3" role="button" class="collapsed">
+    		        <a data-toggle="collapse" href="#collapse-c" role="button" class="collapsed">
     		          Section 3: Procedure for Investment
     		          <i class="fa fa-lg fa-plus-square-o"></i>
     		          <i class="fa fa-lg fa-minus-square-o"></i>
     		        </a>
     		    </div>
 
-    		    <div id="collapse3" class="collapse show" role="tabpanel" >
+    		    <div id="collapse-c" class="collapse show" role="tabpanel" >
     		    	<div class="card-body border mb-3">
     		    		<p>Once completed please return this subscription form to , c/o GrowthInvest, 120 Cannon Street, London, EC4N 6AS to arrive no later than 12 noon on 31st December 2017. Also please scan and email a copy to <a href="support@growthinvest.com">support@growthinvest.com</a> with email subject ' Subscription'.</p>
     		    	</div>
@@ -1537,14 +1582,14 @@
 	    	<!-- collapse4 -->
 		  	<div class="card">
 			    <div class="card-header" role="tab" id="headingOne">
-			        <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
+			        <a data-toggle="collapse" href="#collapse-d" role="button" class="collapsed">
 			          Section 4: Confirmation of Status
 			          <i class="fa fa-lg fa-plus-square-o"></i>
 			          <i class="fa fa-lg fa-minus-square-o"></i>
 			        </a>
 			    </div>
 
-			    <div id="collapse4" class="collapse show" role="tabpanel" >
+			    <div id="collapse-d" class="collapse show" role="tabpanel" >
 			    	<div class="card-body border mb-3">
 			    		<p>Under terms of the Financial Services and Markets Act 2000 (“FSMA”) and the Financial Services and Markets Act 2000 (Financial Promotion) Order 2005 (as amended) ("FSMAO"), the Company will only accept an application for shares if you are accurately categorised as an investor by an FCA authorised entity. The authorised entity would normally be either GrowthInvest (regulated as EIS Platforms Ltd by the FCA), or an authorised UK financial adviser or wealth manager. Please confirm that the below categorisation is still accurate and if not please <a href="">click here</a> to update your categorisation before completing this application</p>
 
@@ -1558,14 +1603,14 @@
 	    	<!-- collapse5 -->
 		  	<div class="card">
 			    <div class="card-header" role="tab" id="headingOne">
-			        <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
+			        <a data-toggle="collapse" href="#collapse-e" role="button" class="collapsed">
 			          Section 5: Verification of Identity
 			          <i class="fa fa-lg fa-plus-square-o"></i>
 			          <i class="fa fa-lg fa-minus-square-o"></i>
 			        </a>
 			    </div>
 
-			    <div id="collapse4" class="collapse show" role="tabpanel" >
+			    <div id="collapse-e" class="collapse show" role="tabpanel" >
 			    	<div class="card-body border mb-3">
 			    		<p>In order to invest all investors must go through identity checks, which include Know Your Client and Anti Money Laundering processes. This can be done online at GrowthInvest.com, and will be carried out by GrowthInvest approved partner <a href="https://onfido.com/" target="_blank">Onfido.com</a>. If you have not yet been through the verification process, please click here to request prior to completing the application.</p>
 			    	</div>
@@ -1576,14 +1621,14 @@
 	    	<!-- collapse6 -->
 		  	<div class="card">
 			    <div class="card-header" role="tab" id="headingOne">
-			        <a data-toggle="collapse" href="#collapse4" role="button" class="collapsed">
+			        <a data-toggle="collapse" href="#collapse-f" role="button" class="collapsed">
 			          Section 6: Signature
 			          <i class="fa fa-lg fa-plus-square-o"></i>
 			          <i class="fa fa-lg fa-minus-square-o"></i>
 			        </a>
 			    </div>
 
-			    <div id="collapse4" class="collapse show" role="tabpanel" >
+			    <div id="collapse-f" class="collapse show" role="tabpanel" >
 			    	<div class="card-body border mb-3">
 			    		<div class="row">
 			    			<div class="col-md-12">
