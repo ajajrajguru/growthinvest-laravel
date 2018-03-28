@@ -811,6 +811,82 @@ $(document).ready ->
 
     ])
 
+
+  $('body').on 'click', '.apply-activity-filters', ->
+    urlParams = ''
+
+    if($('select[name="duration"]').val()!="")
+      urlParams +='duration='+$('select[name="duration"]').val() 
+
+    if($('input[name="duration_from"]').val()!="")
+      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+    if($('input[name="duration_to"]').val()!="")
+      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+    if($('select[name="type"]').val()!="")
+      urlParams +='&type='+$('select[name="type"]').val()
+
+    if($('select[name="companies"]').val()!="")
+      urlParams +='&companies='+$('select[name="companies"]').val()
+
+
+ 
+    window.history.pushState("", "", "?"+urlParams);
+
+    investorActivityTable.ajax.reload()
+    return
+
+  $('body').on 'click', '.reset-activity-filters', ->
+    $('select[name="duration"]').val('')
+    $('input[name="duration_from"]').val('')
+    $('input[name="duration_to"]').val('')
+    $('select[name="type"]').val('')
+    $('select[name="companies"]').val('')
+    window.history.pushState("", "", "?");
+    investorActivityTable.ajax.reload()
+    return
+
+  $('body').on 'change', 'select[name="duration"]', ->
+    if($(this).val())
+      $('input[name="duration_from"]').val('').attr('disabled',true)
+      $('input[name="duration_to"]').val('').attr('disabled',true)
+    else
+      $('input[name="duration_from"]').val('').attr('disabled',false)
+      $('input[name="duration_to"]').val('').attr('disabled',false)
+
+  $('body').on 'change', '.date_range', ->
+    if($(this).val())
+      $('select[name="duration"]').val('').attr('disabled',true)
+    else
+      $('select[name="duration"]').val('').attr('disabled',false)
+
+  $('.download-investor-activity-report').click ->
+    type = $(this).attr('report-type')
+    urlParams = ''
+
+    if($('select[name="duration"]').val()!="")
+      urlParams +='duration='+$('select[name="duration"]').val() 
+
+    if($('input[name="duration_from"]').val()!="")
+      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+    if($('input[name="duration_to"]').val()!="")
+      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+    if($('select[name="type"]').val()!="")
+      urlParams +='&type='+$('select[name="type"]').val()
+
+    if($('select[name="companies"]').val()!="")
+      urlParams +='&companies='+$('select[name="companies"]').val()
+
+    if($('select[name="user_id"]').val()!="")
+      urlParams +='&user_id='+$('input[name="user_id"]').val()
+    
+    if(type == 'csv')  
+      window.open("/backoffice/investor/export-investors-activity?"+urlParams)
+    else if(type == 'pdf')  
+      window.open("/backoffice/investor/investors-activity-pdf?"+urlParams)
  
 
   

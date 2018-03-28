@@ -356,95 +356,77 @@ function durationType()
 
 }
 
-function getDateByPeriod($period){
-    $fromDate =  '';
-    $toDate =  '';
+function getDateByPeriod($period)
+{
+    $fromDate = '';
+    $toDate   = '';
 
-    $currentDate = date('Y-m-d');
+    $currentDate  = date('Y-m-d');
     $currentMonth = date('m');
-    $currentYear = date('Y');
+    $currentYear  = date('Y');
 
-
-    if($period == 'today'){
-        $fromDate =  $currentDate;
-        $toDate =  $currentDate;
-    }
-    elseif($period == 'last7d'){
-        $fromDate =  date('Y-m-d', strtotime('- 7 days'));
-        $toDate =  date('Y-m-d');
-    }
-    elseif($period == 'lastfd'){
-        $fromDate =  date('Y-m-d', strtotime('- 15 days'));
-        $toDate =  date('Y-m-d');
-    }
-    elseif($period == 'lastfd'){
-        $fromDate =  date('Y-m-d', strtotime('- 15 days'));
-        $toDate =  date('Y-m-d');
-    }
-    elseif($period == 'thismonth'){
-        $fromDate =  date('Y-m-01'); 
-        $toDate =  date('Y-m-t');
-    }
-    elseif($period == 'lastmonth'){
+    if ($period == 'today') {
+        $fromDate = $currentDate;
+        $toDate   = $currentDate;
+    } elseif ($period == 'last7d') {
+        $fromDate = date('Y-m-d', strtotime('- 7 days'));
+        $toDate   = date('Y-m-d');
+    } elseif ($period == 'lastfd') {
+        $fromDate = date('Y-m-d', strtotime('- 15 days'));
+        $toDate   = date('Y-m-d');
+    } elseif ($period == 'lastfd') {
+        $fromDate = date('Y-m-d', strtotime('- 15 days'));
+        $toDate   = date('Y-m-d');
+    } elseif ($period == 'thismonth') {
+        $fromDate = date('Y-m-01');
+        $toDate   = date('Y-m-t');
+    } elseif ($period == 'lastmonth') {
         $fromDate = date('Y-m-d', strtotime('first day of last month'));
-        $toDate =  date('Y-m-d', strtotime('last day of last month'));
-    }
-    elseif($period == 'thisquater'){
-        $fromDate = date('Y-m-d', strtotime('first day of last month'));
-        $toDate =  date('Y-m-d', strtotime('last day of last month'));
-    }
-    elseif($period =='thisquater'){
+        $toDate   = date('Y-m-d', strtotime('last day of last month'));
+    } elseif ($period == 'thisquater') {
 
-          if($currentMonth>=1 && $currentMonth<=3)
-          {
-            $start_date = strtotime('1-January-'.$currentYear);  // timestamp or 1-Januray 12:00:00 AM
-            $end_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM means end of 31 March
-          }
-          else  if($currentMonth>=4 && $currentMonth<=6)
-          {
-            $start_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM
-            $end_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM means end of 30 June
-          }
-          else  if($currentMonth>=7 && $currentMonth<=9)
-          {
-            $start_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM
-            $end_date = strtotime('1-October-'.$currentYear);  // timestamp or 1-October 12:00:00 AM means end of 30 September
-          }
-          else  if($currentMonth>=10 && $currentMonth<=12)
-          {
-            $start_date = strtotime('1-October-'.$currentYear);  // timestamp or 1-October 12:00:00 AM
-            $end_date = strtotime('1-January-'.($currentYear+1));  // timestamp or 1-January Next year 12:00:00 AM means end of 31 December this year
-          }
-          $fromdate=date("Y-m-d", $start_date);
-          $todate=date("Y-m-d",  strtotime('-1 day', $end_date));
-    }
-    elseif($period == 'lastquater'){
+        if ($currentMonth >= 1 && $currentMonth <= 3) {
+            $startDate = strtotime('01-01-' . $currentYear); // timestamp or 1-Januray 12:00:00 AM
+            $endDate   = strtotime('01-04-' . $currentYear); // timestamp or 1-April 12:00:00 AM means end of 31 March
+        } else if ($currentMonth >= 4 && $currentMonth <= 6) {
+            $startDate = strtotime('01-04-' . $currentYear); // timestamp or 1-April 12:00:00 AM
+            $endDate   = strtotime('01-07-' . $currentYear); // timestamp or 1-July 12:00:00 AM means end of 30 June
+        } else if ($currentMonth >= 7 && $currentMonth <= 9) {
+            $startDate = strtotime('01-07-' . $currentYear); // timestamp or 1-July 12:00:00 AM
+            $endDate   = strtotime('01-10-' . $currentYear); // timestamp or 1-October 12:00:00 AM means end of 30 September
+        } else if ($currentMonth >= 10 && $currentMonth <= 12) {
+            $startDate = strtotime('01-10-' . $currentYear); // timestamp or 1-October 12:00:00 AM
+            $endDate   = strtotime('01-01-' . ($currentYear + 1)); // timestamp or 1-January Next year 12:00:00 AM means end of 31 December this year
+        }
 
-          if($currentMonth>=1 && $currentMonth<=3)
-          {
-            $start_date = strtotime('1-October-'.($currentYear-1));  // timestamp or 1-October Last Year 12:00:00 AM
-            $end_date = strtotime('1-January-'.$currentYear);  // // timestamp or 1-January  12:00:00 AM means end of 31 December Last year
-          }
-          else if($currentMonth>=4 && $currentMonth<=6)
-          {
-            $start_date = strtotime('1-January-'.$currentYear);  // timestamp or 1-Januray 12:00:00 AM
-            $end_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM means end of 31 March
-          }
-          else  if($currentMonth>=7 && $currentMonth<=9)
-          {
-            $start_date = strtotime('1-April-'.$currentYear);  // timestamp or 1-April 12:00:00 AM
-            $end_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM means end of 30 June
-          }
-          else  if($currentMonth>=10 && $currentMonth<=12)
-          {
-            $start_date = strtotime('1-July-'.$currentYear);  // timestamp or 1-July 12:00:00 AM
-            $end_date = strtotime('1-October-'.$currentYear);  // timestamp or 1-October 12:00:00 AM means end of 30 September
-          }
-           $fromdate=date("Y-m-d", $start_date);
-           $todate=date("Y-m-d",  strtotime('-1 day', $end_date));
+        $fromDate = date("Y-m-d", $startDate);
+        $toDate   = date("Y-m-d", strtotime('-1 day', $endDate));
+    } elseif ($period == 'lastquater') {
+
+        if ($currentMonth >= 1 && $currentMonth <= 3) {
+            $startDate = strtotime('01-10-' . ($currentYear - 1)); // timestamp or 1-October Last Year 12:00:00 AM
+            $endDate   = strtotime('01-01-' . $currentYear); // // timestamp or 1-January  12:00:00 AM means end of 31 December Last year
+        } else if ($currentMonth >= 4 && $currentMonth <= 6) {
+            $startDate = strtotime('01-01-' . $currentYear); // timestamp or 1-Januray 12:00:00 AM
+            $endDate   = strtotime('01-04-' . $currentYear); // timestamp or 1-April 12:00:00 AM means end of 31 March
+        } else if ($currentMonth >= 7 && $currentMonth <= 9) {
+            $startDate = strtotime('01-04-' . $currentYear); // timestamp or 1-April 12:00:00 AM
+            $endDate   = strtotime('01-07-' . $currentYear); // timestamp or 1-July 12:00:00 AM means end of 30 June
+        } else if ($currentMonth >= 10 && $currentMonth <= 12) {
+            $startDate = strtotime('01-07-' . $currentYear); // timestamp or 1-July 12:00:00 AM
+            $endDate   = strtotime('01-10-' . $currentYear); // timestamp or 1-October 12:00:00 AM means end of 30 September
+        }
+        $fromDate = date("Y-m-d", $startDate);
+        $toDate   = date("Y-m-d", strtotime('-1 day', $endDate));
+    } elseif ($period == 'yeartodate') {
+        $fromDate = date('Y-01-01');
+        $toDate   = date('Y-12-31');
+    } elseif ($period == 'last12month') {
+        $fromDate = date('Y-m-d', strtotime('- 12 months'));
+        $toDate   = date('Y-m-d');
     }
 
-    return ['fromDate' => $fromDate, 'toDate'=>$toDate];
+    return ['fromDate' => $fromDate, 'toDate' => $toDate];
 }
 
 function activityTypeList()
@@ -520,6 +502,8 @@ function activityTypeList()
         'cash_deposits'                               => 'Cash deposits',
         'cash_withdrawl'                              => 'Cash withdrawal',
     ];
+
+    asort($activity_array);
     return $activity_array;
 
 }
@@ -1345,4 +1329,200 @@ function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
 
     return $recipients;
 
+}
+
+public function saveActivityLog($component,$userId,$type,$itemId,$action,$content='',$secItemId=0,$primaryLink=""){
+    $activity = new \App\Actvity;
+    $activity->user_id = $userId;
+    $activity->component = $component;
+    $activity->type = $type;
+    $activity->action = $action;
+    $activity->content = $content;
+    $activity->primary_link = $primaryLink;
+    $activity->item_id = $itemId;
+    $activity->secondary_item_id = $secItemId;
+    $activity->date_recorded = date('Y-m-d H:i:s');
+    $activity->save();
+
+
+    return $activity->id;
+}
+
+function activityQueryBuilder(){
+
+    $type_lists= \App\Actvity::select('distinct type')->get()->toArray(); ("select distinct type from activity ".$typewhere."");
+        
+    $count=0;
+    $union='';
+    $select_activity_log='';
+    foreach ($type_lists as $type_list) {   
+
+        if($count!=0)
+        $union= " union ";
+
+        $mainselect="select a1.id,a1.component,a1.type,a1.action,a1.content,a1.primary_link,p2.post_title as firmname,a1.secondary_item_id";
+        $maintable =" from activity a1 ";
+        $mainjoin = " INNER JOIN ".$this->db->prefix."posts p2 on p2.ID=a1.secondary_item_id";
+        // $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$wheredate.$firmwhere;
+        //$groupby=" group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id";
+        $orderby = " order by date_recorded desc";
+        
+
+        switch ($type_list->type) {
+            case 'nominee_application': 
+            /*case 'identity_verification_requested': */
+            case 'onfido_requested':
+            case 'onfido_confirmed':
+            case 'certification':
+            case 'registration':
+            case 'stage1_investor_registration':
+            case 'entrepreneur_account_registration':
+            case 'fundmanager_account_registration':
+            case 'successful_logins':
+            case 'download_client_registration_guide':
+            case 'download_investor_csv':
+            case 'download_transfer_asset_guide' :
+            case 'download_vct_asset_transfer_form':
+            case 'download_single_company_asset_transfer_form' :
+            case 'download_iht_product_asset_transfer_form':
+            case 'download_portfolio_asset_transfer_form'  :
+            case 'download_stock_transfer_form'            :
+            case 'submitted_transfers'                     :
+            case 'status_changes_for_asset_transfers'      :
+            case 'transfers_deleted'                       :                
+            case 'start_adobe_sign'                        :
+            case 'completed_adobe_sign'                    :
+            case 'external_downloads'                      :
+            case 'stage_3_profile_details'                 :
+            case 'auth_fail':
+            case 'cash_withdrawl'                           :
+            case 'cash_deposits'                            :
+                $customfieldselect =" ,a1.item_id as user_id,'' as itemname,u1.display_name as username ,u1.user_email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
+                $customjoin =" LEFT OUTER JOIN ".$this->db->prefix."users u1 on u1.ID=a1.item_id ";
+                $customwhere=$parent_child_firms;
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.item_id='".$parameters['userid']."' ";
+
+      $mainjoin = " LEFT OUTER JOIN ".$this->db->prefix."posts p2 on p2.ID=a1.secondary_item_id";
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$wheredate.$firmwhere;
+                $groupby="";
+                break;
+            case 'new_provider_added':
+                $customfieldselect =" ,a1.item_id as user_id,cmp.name as itemname,u1.display_name as username ,u1.user_email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
+                $customjoin =" INNER JOIN ".$this->db->prefix."users u1 on u1.ID=a1.user_id 
+                               LEFT JOIN company_master cmp on  a1.item_id = cmp.id";
+                $customwhere=$parent_child_firms;
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.item_id='".$parameters['userid']."' ";
+
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$wheredate.$firmwhere;
+                $groupby="";
+                break;
+
+            case 'investor_message':
+            case 'entrepreneur_message':
+            /*  $customfieldselect =" ,a1.item_id as user_id , '' as itemname,u2.display_name as username ,'' as itemid,a1.date_recorded as date_recorded";
+                $customjoin =" INNER JOIN ".$this->db->prefix."users u1 on u1.ID=a1.item_id 
+                INNER JOIN ".$this->db->prefix."users u2 on u2.ID=a1.user_id";
+                $customwhere=$parent_child_firms;*/
+
+
+                $customfieldselect =" ,a1.user_id as user_id,u1.display_name as itemname,u2.display_name as username ,u2.user_email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug";
+                $customjoin =" INNER JOIN ".$this->db->prefix."users u1 on u1.ID=a1.item_id 
+                INNER JOIN ".$this->db->prefix."users u2 on u2.ID=a1.user_id";
+                $customwhere=$parent_child_firms;
+
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.item_id='".$parameters['userid']."' ";
+
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$wheredate.$firmwhere;
+                $groupby="";
+                break;
+                
+            case 'proposal_details_update':
+            case 'fund_details_update':
+                $customfieldselect=" ,a1.user_id as user_id,p1.post_title as itemname,u1.display_name as username ,u1.user_email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.post_name as item_slug";
+                $customjoin = " INNER JOIN ".$this->db->prefix."users u1 on u1.ID=a1.user_id
+                         INNER JOIN ".$this->db->prefix."posts p1 on p1.ID=a1.item_id";
+                $customwhere = $parent_child_firms;
+
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.user_id='".$parameters['userid']."' ";
+
+                if($parameters['prop_id']!='')
+                $propwhere=" and a1.item_id='".$parameters['prop_id']."' ";
+
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$propwhere.$wheredate.$firmwhere;
+                $groupby=" group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id";
+            break;
+
+            /*case 'site_visitors':
+
+                $mainjoin = "LEFT JOIN ".$this->db->prefix."posts p2 on p2.ID=a1.secondary_item_id";
+                $customfieldselect =" ,a1.item_id as user_id,p1.post_title as itemname,u1.display_name as username ,'' as itemid,a1.date_recorded as date_recorded";
+                $customjoin =" LEFT JOIN ".$this->db->prefix."users u1 on u1.ID=a1.user_id 
+                                LEFT JOIN ".$this->db->prefix."posts p1 on p1.ID=a1.item_id";
+                $customwhere=$parent_child_firms;
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.item_id='".$parameters['userid']."' ";
+
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$wheredate.$firmwhere;
+                $groupby="";
+                break;*/
+
+            case 'invested':
+                $customfieldselect=" ,a1.user_id as user_id,p1.post_title as itemname,u1.display_name as username ,u1.user_email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.post_name as item_slug";
+                $customjoin = " LEFT JOIN ".$this->db->prefix."users u1 on u1.ID=a1.user_id
+                         LEFT JOIN ".$this->db->prefix."posts p1 on p1.ID=a1.item_id";
+                $customwhere = $parent_child_firms;
+
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.user_id='".$parameters['userid']."' ";
+
+                if($parameters['prop_id']!='')
+                $propwhere=" and a1.item_id='".$parameters['prop_id']."' ";
+
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$propwhere.$wheredate.$firmwhere;
+                $groupby="";    
+                break;  
+
+            default:
+                $customfieldselect=" ,a1.user_id as user_id,p1.post_title as itemname,u1.display_name as username ,u1.user_email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.post_name as item_slug";
+                $customjoin = " INNER JOIN ".$this->db->prefix."users u1 on u1.ID=a1.user_id
+                         INNER JOIN ".$this->db->prefix."posts p1 on p1.ID=a1.item_id";
+                $customwhere = $parent_child_firms;
+
+                //overide the condition
+                if($parameters['userid']!='')
+                $userwhere=" and a1.user_id='".$parameters['userid']."' ";
+
+                if($parameters['prop_id']!='')
+                $propwhere=" and a1.item_id='".$parameters['prop_id']."' ";
+
+                $mainwhere = " where  a1.type='".$type_list->type."' ".$userwhere.$propwhere.$wheredate.$firmwhere;
+                $groupby="";
+            break;
+        }
+
+
+            //exclude the admin ids in summary data  MC130
+             //echo $parameters['exclude_admin_activity']."<br/><Br/>";
+
+
+            /*if($parameters['exclude_admin_activity'] == 'yes'){
+
+                $mainwhere.=" AND a1.user_id not in (".$admins_to_exclude.") ";
+            }*/
+
+
+            $select_activity_log.=$union.$mainselect.$customfieldselect.$maintable.$mainjoin.$customjoin.$mainwhere.$customwhere.$groupby;
+
+            $count++;
+    }
 }

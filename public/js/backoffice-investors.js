@@ -831,7 +831,7 @@
       window.history.pushState("", "", "?");
       investorInvestTable.ajax.reload();
     });
-    return investorActivityTable = $('#datatable-investor-activity').DataTable({
+    investorActivityTable = $('#datatable-investor-activity').DataTable({
       'pageLength': 50,
       'processing': false,
       'serverSide': true,
@@ -871,6 +871,80 @@
           'data': 'activity'
         }
       ]
+    });
+    $('body').on('click', '.apply-activity-filters', function() {
+      var urlParams;
+      urlParams = '';
+      if ($('select[name="duration"]').val() !== "") {
+        urlParams += 'duration=' + $('select[name="duration"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('select[name="type"]').val() !== "") {
+        urlParams += '&type=' + $('select[name="type"]').val();
+      }
+      if ($('select[name="companies"]').val() !== "") {
+        urlParams += '&companies=' + $('select[name="companies"]').val();
+      }
+      window.history.pushState("", "", "?" + urlParams);
+      investorActivityTable.ajax.reload();
+    });
+    $('body').on('click', '.reset-activity-filters', function() {
+      $('select[name="duration"]').val('');
+      $('input[name="duration_from"]').val('');
+      $('input[name="duration_to"]').val('');
+      $('select[name="type"]').val('');
+      $('select[name="companies"]').val('');
+      window.history.pushState("", "", "?");
+      investorActivityTable.ajax.reload();
+    });
+    $('body').on('change', 'select[name="duration"]', function() {
+      if ($(this).val()) {
+        $('input[name="duration_from"]').val('').attr('disabled', true);
+        return $('input[name="duration_to"]').val('').attr('disabled', true);
+      } else {
+        $('input[name="duration_from"]').val('').attr('disabled', false);
+        return $('input[name="duration_to"]').val('').attr('disabled', false);
+      }
+    });
+    $('body').on('change', '.date_range', function() {
+      if ($(this).val()) {
+        return $('select[name="duration"]').val('').attr('disabled', true);
+      } else {
+        return $('select[name="duration"]').val('').attr('disabled', false);
+      }
+    });
+    return $('.download-investor-activity-report').click(function() {
+      var type, urlParams;
+      type = $(this).attr('report-type');
+      urlParams = '';
+      if ($('select[name="duration"]').val() !== "") {
+        urlParams += 'duration=' + $('select[name="duration"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('select[name="type"]').val() !== "") {
+        urlParams += '&type=' + $('select[name="type"]').val();
+      }
+      if ($('select[name="companies"]').val() !== "") {
+        urlParams += '&companies=' + $('select[name="companies"]').val();
+      }
+      if ($('select[name="user_id"]').val() !== "") {
+        urlParams += '&user_id=' + $('input[name="user_id"]').val();
+      }
+      if (type === 'csv') {
+        return window.open("/backoffice/investor/export-investors-activity?" + urlParams);
+      } else if (type === 'pdf') {
+        return window.open("/backoffice/investor/investors-activity-pdf?" + urlParams);
+      }
     });
   });
 

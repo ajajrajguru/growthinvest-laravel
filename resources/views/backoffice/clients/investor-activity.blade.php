@@ -12,14 +12,25 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-        // select2
-        $('.datepicker').datepicker({
-            format: 'dd/mm/yyyy'
-        });
+ 
+      $('input[name="duration_from"]').datepicker({
+        format: 'dd-mm-yyyy'
+      }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('input[name="duration_to"]').datepicker('setStartDate', minDate);
+      });
 
-       
+      $('input[name="duration_to"]').datepicker({
+        format: 'dd-mm-yyyy'
+      }).on('changeDate', function (selected) {
+        var maxDate = new Date(selected.date.valueOf());
+        $('input[name="duration_from"]').datepicker('setEndDate', maxDate);
+      });
+
+
+
     });
-        
+
 
   </script>
 
@@ -54,8 +65,8 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane p-3 active" id="activity" role="tabpanel">
-                
-                         
+
+
                 <div class="gray-section border bg-gray p-3">
                     <div class="row mb-3">
                         <div class="col-md-3">
@@ -65,20 +76,20 @@
                                   @foreach($durationType as $durationKey=>$duration)
                                     <option value="{{ $durationKey }}">{{ $duration }}</option>
                                   @endforeach
-                                   
+
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-                
-                                <input type="text"  class="form-control datepicker" name="duration_from" > - 
-                                <input type="text"  class="form-control datepicker" name="duration_to" >
+                              OR
+                                <input type="text"  class="form-control datepicker date_range" name="duration_from" > -
+                                <input type="text"  class="form-control datepicker date_range" name="duration_to" >
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-                                
+
                                 <select name="type" id="" class="form-control">
                                   <option value="">View All Activity Type</option>
                                   @foreach($activityTypes as $activityTypeKey=>$activityType)
@@ -89,13 +100,13 @@
                         </div>
                         <div class="col-md-3">
                             <div>
-                  
+
                                 <select name="companies" id="" class="form-control">
                                   <option value="">View All Companies</option>
                                   @foreach($businessListings as $businessListing)
                                     <option value="{{ $businessListing->id }}">{{ $businessListing->title }}</option>
                                   @endforeach
-                                     
+
                                 </select>
 
                                 <input type="hidden" name="user_id" value="{{ $investor->id }}">
@@ -103,19 +114,19 @@
                         </div>
                     </div>
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
-                         
+
                         <div class="mt-3 mt-sm-0">
                             <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
                             <button class="btn btn-default reset-activity-filters">Reset</button>
                         </div>
                     </div>
-                     
+
                 </div>
-                
+
                 <div class="text-right mt-3 mb-2">
                     <div class="">
-                        <a href="" class="btn btn-outline-primary" >Download CSV </a>     
-                        <a href="" class="btn btn-outline-primary" > Download PDF</a>    
+                        <a href="javascript:void(0)" class="btn btn-outline-primary download-investor-activity-report" report-type="csv">Download CSV </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-primary download-investor-activity-report" report-type="pdf"> Download PDF</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -135,7 +146,7 @@
                         </tbody>
                     </table>
 
-                     
+
                 </div>
             </div> <!-- /invest tab -->
 
@@ -149,10 +160,10 @@
     </div>
 
     <!-- Modal -->
-  
+
 
 </div>
- 
+
     <style type="text/css">
         #datatable-investor-invest_filter{
             visibility: hidden;
@@ -160,4 +171,3 @@
     </style>
 
 @endsection
-

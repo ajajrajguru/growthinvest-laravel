@@ -55,6 +55,8 @@ class UserPermission
 
                 'backoffice/investor/get-investors'                           => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/export-investors'                        => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/export-investors-activity'               => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/investors-activity-pdf'                  => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/registration'                            => ['add_investor'],
                 'backoffice/investor/{giCode}/registration'                   => ['add_investor'],
                 'backoffice/investor/save-registration'                       => ['add_investor'],

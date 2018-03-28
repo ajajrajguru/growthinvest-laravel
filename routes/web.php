@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
 
     //investors
     Route::get('investor/export-investors', 'InvestorController@exportInvestors');
+    Route::get('investor/export-investors-activity', 'InvestorController@exportInvestorsActivity');
+    Route::get('investor/investors-activity-pdf', 'InvestorController@generateInvestorsActivityPdf');
     Route::get('investor/registration', 'InvestorController@registration');
     Route::get('investor/download-certification/{fileid}', 'InvestorController@downloadCertification');
     Route::get('investor/{giCode}/registration', 'InvestorController@editRegistration');
