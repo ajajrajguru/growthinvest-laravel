@@ -1349,7 +1349,7 @@ function saveActivityLog($component,$userId,$type,$itemId,$action,$content='',$s
 }
 
 function saveActivityMeta($activityId,$key,$value=[]){
-    $activityMeta = new \App\ActvityMeta;
+    $activityMeta = new \App\ActivityMeta;
     $activityMeta->activity_id = $activityId;
     $activityMeta->key = $key;
     $activityMeta->meta_value = $value;
