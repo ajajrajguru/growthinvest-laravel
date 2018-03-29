@@ -23,6 +23,8 @@ class Activity extends Model
         return $this->hasMany('App\ActivityMeta', 'activity_id');
     }
 
+    
+
     // public function getActivityUserOrPropsalFund()
     // {
     //     if (in_array($this->type, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration',

@@ -308,6 +308,9 @@ class InvestorController extends Controller
             ];
         }
 
+        $action = 'Download Investor CSV';
+        $activity = saveActivityLog('User',Auth::user()->id,'download_investor_csv',Auth::user()->id,$action,'',Auth::user()->firm_id);
+
         generateCSV($header, $userData, $fileName);
 
         return true;
@@ -506,6 +509,9 @@ class InvestorController extends Controller
             $data['subject']       = $investor->displayName() . " added " . date('d/m/Y') . " by " . $registeredBy . ".";
             $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'registeredBy' => $registeredBy];
             sendEmail('investor-reg-automated', $data);
+
+            $action="New Registration on ".$firmName;
+            saveActivityLog('User',Auth::user()->id,'stage1_investor_registration',$investorId,$action,'',$investor->firm_id);
         }
 
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client registration details added successfully and being redirected to certification stage.' : 'You are being redirected to certification page';
@@ -579,17 +585,23 @@ class InvestorController extends Controller
 
         $details = [];
         $addData = [];
-
+        $certificationName = '';
         if ($requestData['save-type'] == 'retail') {
             $details = $this->getRetailData($requestData);
             $addData = ['client_category_id' => $requestData['client_category_id']];
+            $certificationName='retail Restricted investor';
+
         } elseif ($requestData['save-type'] == 'sophisticated') {
             $details = $this->getSophisticatedData($requestData);
+            $certificationName='sophisticated investor';
 
         } elseif ($requestData['save-type'] == 'high_net_worth') {
             $details = $this->getHighNetWorthData($requestData);
+            $certificationName='high net worth individual';
+
         } elseif ($requestData['save-type'] == 'professsional_investors') {
             $details = $this->getProfessionalInvData($requestData);
+            $certificationName='professional investor';
         } elseif ($requestData['save-type'] == 'advice_investors') {
             $reqDetails = $this->getAdviceInvestorsData($requestData);
 
@@ -605,9 +617,12 @@ class InvestorController extends Controller
             $financialAdvInfo->data_value = $financialAdvInfoData;
             $financialAdvInfo->save();
 
+            $certificationName='Advised investor';
+
         } elseif ($requestData['save-type'] == 'elective_prof') {
             $details = $this->getElectiveProfData($requestData);
             $addData = ['client_category_id' => $requestData['client_category_id']];
+            $certificationName='elective professional investor';
         }
 
         $fileId = $this->generateInvestorCertificationPdf($requestData['save-type'], $details, $investor, $addData);
@@ -711,6 +726,13 @@ class InvestorController extends Controller
             $data['attach'] = [['file' => base64_encode($file), 'as' => $filename, 'mime' => $mimeType]];
         }
         sendEmail($templateForinvestor, $data);
+
+
+        $action="Completed Certification ".$certificationName;
+        $activity = saveActivityLog('User',Auth::user()->id,'certification',$investor->id,$action,'',$investor->firm_id);
+        $metaData=array('certification'=>$certificationName);
+        saveActivityMeta($activity->id,'details',$metaData);
+
 
         return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml, 'isWealthManager' => $isWealthManager]);
 
@@ -1041,6 +1063,10 @@ class InvestorController extends Controller
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client Additional Information has successfully been added.' : 'Thank you. The Additional Information page has now been successfully updated';
         Session::flash('success_message', $successMessage);
 
+
+        $action="Stage 3 Profile Details";
+        $activity = saveActivityLog('User',Auth::user()->id,'stage_3_profile_details',$investor->id,$action,'',$investor->firm_id);
+
         return redirect(url('backoffice/investor/' . $giCode . '/additional-information'));
 
     }
@@ -1195,6 +1221,9 @@ class InvestorController extends Controller
 
             $successMessage = 'Thank you for your submission to the Investment Account. One of our client services team will be in touch shortly to confirm any additional information that we require.';
         }
+
+        $action="Nominee Application Submitted";
+        $activity = saveActivityLog('User',Auth::user()->id,'nominee_application',$investor->id,$action,'',$investor->firm_id);
 
         Session::flash('success_message', $successMessage);
 

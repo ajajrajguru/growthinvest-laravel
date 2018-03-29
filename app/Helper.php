@@ -1331,7 +1331,7 @@ function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
 
 }
 
-public function saveActivityLog($component,$userId,$type,$itemId,$action,$content='',$secItemId=0,$primaryLink=""){
+function saveActivityLog($component,$userId,$type,$itemId,$action,$content='',$secItemId=0,$primaryLink=""){
     $activity = new \App\Actvity;
     $activity->user_id = $userId;
     $activity->component = $component;
@@ -1345,7 +1345,16 @@ public function saveActivityLog($component,$userId,$type,$itemId,$action,$conten
     $activity->save();
 
 
-    return $activity->id;
+    return $activity;
+}
+
+function saveActivityMeta($activityId,$key,$value=[]){
+    $activityMeta = new \App\ActvityMeta;
+    $activityMeta->activity_id = $activityId;
+    $activityMeta->key = $key;
+    $activityMeta->meta_value = $value;
+    $activityMeta->save();
+    return $activityMeta;
 }
 
 function activityQueryBuilder(){
