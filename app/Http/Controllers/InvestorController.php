@@ -2020,7 +2020,7 @@ class InvestorController extends Controller
         $queryCheck = [];
 
         //for testing
-        $filters['user_id'] = 2557;
+       // $filters['user_id'] = 2557;
         foreach ($typeLists as $typeList) {
 
             if ($typeList->type == "") {
