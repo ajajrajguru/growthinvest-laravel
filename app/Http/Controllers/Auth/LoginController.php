@@ -48,6 +48,9 @@ class LoginController extends Controller
     {
 
         $user = Auth::user();
+        $action = 'Successful Login';
+        $activity = saveActivityLog('User',$user->id,'successful_logins',$user->id,$action,'',$user->firm_id);
+
         if ($user->can('backoffice_access')) {
 
             return url('/backoffice/dashboard');

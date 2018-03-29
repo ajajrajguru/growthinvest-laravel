@@ -1308,6 +1308,9 @@ class InvestorController extends Controller
 
                         }
 
+                        $action="Onfido - Requested";
+                        $activity = saveActivityLog('User',Auth::user()->id,'onfido_requested',$investor->id,$action,'',$investor->firm_id);
+
                     }
 
                 } else {
@@ -1388,6 +1391,9 @@ class InvestorController extends Controller
             $nomineeApplication->adobe_doc_key = $dockeyvalue;
             $nomineeApplication->save();
 
+            $action = 'Start Adobe Sign';
+            $activity = saveActivityLog('User',Auth::user()->id,'start_adobe_sign',$investor->id,$action,'',$investor->firm_id);
+
         }
     }
 
@@ -1412,6 +1418,9 @@ class InvestorController extends Controller
                 $nomineeData->doc_signed_date = date('Y-m-d H:i:s');
                 $nomineeData->save();
             }
+
+            $action = 'Completed Adobe Sign';
+            $activity = saveActivityLog('User',Auth::user()->id,'completed_adobe_sign',$nomineeData->user_id,$action);
 
         }
 
@@ -1504,6 +1513,10 @@ class InvestorController extends Controller
                 $onfidoInfoReqUrl->save();
 
             }
+
+
+            $action = 'Onfido - Confirmed';
+            $activity = saveActivityLog('User',Auth::user()->id,'onfido_confirmed',$nomineeData->user_id,$action);
 
         }
 

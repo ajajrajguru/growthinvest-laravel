@@ -1332,7 +1332,7 @@ function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
 }
 
 function saveActivityLog($component,$userId,$type,$itemId,$action,$content='',$secItemId=0,$primaryLink=""){
-    $activity = new \App\Actvity;
+    $activity = new \App\Activity;
     $activity->user_id = $userId;
     $activity->component = $component;
     $activity->type = $type;
@@ -1344,7 +1344,7 @@ function saveActivityLog($component,$userId,$type,$itemId,$action,$content='',$s
     $activity->date_recorded = date('Y-m-d H:i:s');
     $activity->save();
 
-
+    
     return $activity;
 }
 
