@@ -38,6 +38,15 @@
 	    });
 
 	    $('[data-toggle="tooltip"]').tooltip();
+
+	    $(".pledged-invested-users .edit-action").click(function(){
+            $(".fa").toggleClass("fa-pencil fa-close");
+        });
+
+	    $(".pledged-invested-users .cancel-action").click(function(){
+            $(".fa").toggleClass("fa-close fa-pencil");
+        });
+
 	});
 	
 </script>
@@ -75,7 +84,7 @@
 					</ul>
 					<h3 class="">{{$title}}</h3>
 					<p class="mb-0"><i class="fa fa-map-marker text-white"></i> {{$proposal_details['address']}}</p>
-					<p class="mb-0"><i class="fa fa-globe text-white"></i> <a href="">{{$proposal_details['website']}}</a></p>
+					<p class="mb-0"><i class="fa fa-globe text-white"></i> <a href="" class="text-white">{{$proposal_details['website']}}</a></p>
 				</div>
 			</div>
 		</div>
@@ -167,7 +176,7 @@
 			<a href="" class="btn btn-outline-primary"><i class="fa fa-plus"></i> ADD TO WATCHLIST</a>
 		</div>
 		<div class="col-sm-4 text-center mt-2 mt-sm-0">
-			<a href="" class="btn btn-primary btn-lg"> Invest Now</a>
+			<a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal2"> Invest Now</a>
 		</div>
 	</div>
 	<div class="row border">
@@ -527,6 +536,330 @@
 			@if($type=="proposal")
 			<div class="tab-pane active p-3" id="business-idea" role="tabpanel">
 				<!-- accordions -->
+
+				<!-- test -->
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="">Platform GI Code </label>
+							<div>GIBP63799240</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="">Analyst Feedback:</label>
+							<div>Pending</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="text-right mb-3">
+					<a href="" class="btn btn-sm btn-outline-primary">Edit</a>
+					<a href="" class="btn btn-sm btn-outline-danger">Cancel</a>
+				</div>
+				<form action="" class="bg-gray p-3">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">Proposal Status</label>
+								<select name="" id="" class="form-control">
+									<option value="">1</option>
+									<option value="">2</option>
+									<option value="">3</option>
+								</select>
+								<div></div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">Proposal Approved By</label>
+								<select name="" id="" class="form-control">
+									<option value="">1</option>
+									<option value="">2</option>
+									<option value="">3</option>
+								</select>
+								<div></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">The Tax Distict</label>
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">HMRC Reference</label>
+								<input type="text" class="form-control">
+							</div>
+						</div>
+					</div>
+					
+					<div class="fomr-group">
+						<div class="d-sm-inline-block">
+							<div class="custom-control custom-checkbox">
+							  <input type="checkbox" class="custom-control-input" id="ch1">
+							  <label class="custom-control-label" for="ch1">Investment Opportunities</label>
+							</div>
+							<div class="custom-control custom-checkbox ml-4 mt-1">
+							  <input type="checkbox" class="custom-control-input" id="ch2" checked="">
+							  <label class="custom-control-label" for="ch2">Invest Listing only</label>
+							</div>
+						</div>
+
+						<div class="d-sm-inline-block align-top ml-sm-5 ml-0 mt-4 mt-sm-0">
+							<div class="custom-control custom-checkbox custom-control-inline">
+							  <input type="checkbox" class="custom-control-input" id="ch7">
+							  <label class="custom-control-label" for="ch7"> Single Company Type</label>
+							</div>
+						</div>
+					</div>
+					
+				</form>
+
+				<div class="table-responsive pledged-invested-users mt-3">
+					<table class="table table-hover table-solid-bg">
+						<thead>
+							<tr>
+								<th>Investor</th>
+								<th>Amount</th>
+								<th>Status</th>
+								<th>Edit</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><a href="">External Investments</a></td>
+								<td>&pound; 100, 00</td>
+								<td>Invested</td>
+								<td><a class="edit-action" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-pencil"></i></a></td>
+							</tr>
+							<tr id="collapseExample2" class="collapse border bg-gray">
+								<td colspan="4">
+									<div class="row px-3">
+										<div class="col-sm-4 border-sm-right border-0">
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Status:</label>
+										    	<div class="col-sm-8">
+										      		<select name="" id="" class="form-control">
+										      			<option value="">Pledged</option>
+										      			<option value="">Invesed</option>
+										      		</select>
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Amount:</label>
+										    	<div class="col-sm-8">
+										      		<div class="input-group">
+							    	    		  	  	<div class="input-group-prepend border-bottom">
+							    	    		  	  		<span class="input-group-text border-0 bg-transparent">&pound;</span>
+							    	    		  	  	</div>
+						    	    		  	  		<input type="number" class="form-control">
+						    	    		  	  	</div>
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Date:</label>
+										    	<div class="col-sm-8">
+										      		<input type="date" class="form-control">
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">Relief:</label>
+										    	<div class="col-sm-8">
+										      		<select name="" id="" class="form-control">
+										      			<option value="">SEIS</option>
+										      			<option value="">EIS</option>
+										      		</select>
+										    	</div>
+										  	</div>
+
+										  	<div class="form-group row mb-3">
+										    	<label for="" class="col-sm-4 col-form-label">No. of shares:</label>
+										    	<div class="col-sm-8">
+										      		<input type="text" class="form-control">
+										    	</div>
+										  	</div>
+										</div>
+										<div class="col-sm-4 border-sm-right border-0">
+											
+
+									  		<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Share Issue Price: &pound;</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="text" class="form-control">
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Share Issue Date:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="date" class="form-control">
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Revaluation Date:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="date" class="form-control">
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Current Value:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<input type="text" class="form-control">
+									  	    	</div>
+									  	  	</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">AI-C/AI-NC:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">Custody</option>
+									  	      			<option value="">Non-custody</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Platform AI-C/AI-NC:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">1</option>
+									  	      			<option value="">2</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">Platform/Off Platform:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">1</option>
+									  	      			<option value="">2</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+
+									  	  	<div class="form-group row mb-3">
+									  	    	<label for="" class="col-sm-4 col-form-label">External Asset:</label>
+									  	    	<div class="col-sm-8">
+									  	      		<select name="" id="" class="form-control">
+									  	      			<option value="">Yes</option>
+									  	      			<option value="">No</option>
+									  	      		</select>
+									  	    	</div>
+									  	  	</div>
+										</div>
+									</div>
+
+									<div class="text-right">
+										<a href="" class="btn btn-sm btn-outline-primary mr-1">Save</a>
+										<a data-toggle="collapse" href="#collapseExample2" class="btn btn-sm btn-outline-danger cancel-action">Cancel</a>
+									</div>
+
+							  	</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<div class="form-group">
+					<label>Choose Sites to appear on</label>
+					<div>
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input type="checkbox" class="custom-control-input" id="ch31">
+							<label class="custom-control-label" for="ch31">GrowthInvest</label>
+						</div>
+
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input type="checkbox" class="custom-control-input" id="ch32">
+							<label class="custom-control-label" for="ch32">wardconnections</label>
+						</div>
+
+						<div class="custom-control custom-checkbox custom-control-inline">
+							<input type="checkbox" class="custom-control-input" id="ch33">
+							<label class="custom-control-label" for="ch33">whitelabeldemo</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Display on Home Page</label>
+					<div>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="ch11">
+							<label class="custom-control-label" for="ch11">Check if Yes</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Display to Non Logged in User on Platform</label>
+					<div>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="ch12">
+							<label class="custom-control-label" for="ch12">Check if Yes</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>Choose Firms to appear on</label>
+					<ul class="list-unstyled">
+						<li>
+							<div class="custom-control custom-checkbox">
+							  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+							  	<label class="custom-control-label" for="ch2">Check1</label>
+							</div>
+						</li>
+						<li>
+							<div class="custom-control custom-checkbox">
+							  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+							  	<label class="custom-control-label" for="ch2">Check2</label>
+							</div>
+							<ul class="list-unstyled ml-4">
+								<li>
+									<div class="custom-control custom-checkbox">
+									  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+									  	<label class="custom-control-label" for="ch2">Check2.1</label>
+									</div>
+								</li>
+								<li>
+									<div class="custom-control custom-checkbox">
+									  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+									  	<label class="custom-control-label" for="ch2">Check2.2</label>
+									</div>
+									<ul class="list-unstyled ml-4">
+										<li>
+											<div class="custom-control custom-checkbox">
+											  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+											  	<label class="custom-control-label" for="ch2">Check2.2 - 1</label>
+											</div>
+										</li>
+										<li>
+											<div class="custom-control custom-checkbox">
+											  	<input type="checkbox" class="custom-control-input" id="ch2" checked="">
+											  	<label class="custom-control-label" for="ch2">Check2.2 - 2</label>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+				
+				<!-- /test -->
 
 				<div id="" role="tablist" class="gi-collapse">
 				  	<div class="card">
@@ -1147,6 +1480,7 @@
   </div>
 </div>
 
+
 <!-- modal - Request a call -->
 <div class="modal fade" id="request-call" tabindex="-1" role="dialog" aria-labelledby="request-call" aria-hidden="true">
 	<div class="modal-dialog" role="document">
@@ -1259,5 +1593,406 @@
   </div>
 </div>
 <!-- /request additional information -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Subscription Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        	<h4>(the "company")</h4>
+        	<p>(Incorporated and registered in England)</p>
+        	<h2>SHARE OFFER</h2>
+        </div>
+
+        <h4>Outline Terms of the Offer</h4>
+        <p>The Company is offering up to 1000 new ordinary shares in the share capital of the Company at a price of 1.00 per ordinary ("The Offer"). The Offer is made to raise (general working capital) for the Company, and on the basis that the current issued capital is 2000 Ordinary Shares.</p>
+
+        <h4>Procedure for Completion</h4>
+        <ol class="pl-3">
+        	<li>If you wish to invest as part of the Offer please complete in full the details requested at Sections 1 to 5 and then sign and date where indicated at Section 6.</li>
+        	<li>Payment should be made in full on application. Please enclose a cheque made payable to "", or transfer your funds to the bank account details of which are set out in Section 2 below.</li>
+        </ol>
+
+        <!-- accordion -->
+        <div id="" role="tablist" class="gi-collapse">
+          	<div class="card">
+        	    <div class="card-header" role="tab" id="headingOne">
+        	        <a data-toggle="collapse" href="#collapse-a" role="button">
+        	          Section 1. Application for Shares – Your Details
+        	          <i class="fa fa-lg fa-plus-square-o"></i>
+        	          <i class="fa fa-lg fa-minus-square-o"></i>
+        	        </a>
+        	    </div>
+
+        	    <div id="collapse-a" class="collapse show" role="tabpanel" >
+        	    	<div class="card-body border mb-3">
+        	    		<form>
+        	    			<div class="form-group row mb-3">
+        	    		    	<label class="col-sm-3 col-form-label">Mr, Mrs, Miss or Title:</label>
+        	    		    	<div class="col-sm-9">
+        	    		      		<input type="text" class="form-control">
+        	    		    	</div>
+        	    		  	</div>
+        	    		  	<div class="form-group row mb-3">
+        	    		    	<label class="col-sm-3 col-form-label">Forename(s) (in full): <span class="text-danger">*</span></label>
+        	    		    	<div class="col-sm-9">
+        	    		      		<input type="text" class="form-control">
+        	    		    	</div>
+        	    		  	</div>
+    	    		  		<div class="form-group row mb-3">
+    	    		  	    	<label class="col-sm-3 col-form-label">Surname:</label>
+    	    		  	    	<div class="col-sm-9">
+    	    		  	      		<input type="text" class="form-control">
+    	    		  	    	</div>
+    	    		  	  	</div>
+
+    	    		  	  	<div class="row">
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-6 col-form-label">Address in full:</label>
+	    		  	  			    	<div class="col-sm-6">
+	    		  	  			      		<textarea name="" id="" cols=" rows="2" class="form-control"></textarea>
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-3 col-form-label">Postcode:</label>
+	    		  	  			    	<div class="col-sm-9">
+	    		  	  			      		<input type="text" class="form-control">
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  	</div>
+
+	    		  	  		<div class="form-group row mb-3">
+	    		  	  	    	<label class="col-sm-3 col-form-label">Email Address:</label>
+	    		  	  	    	<div class="col-sm-9">
+	    		  	  	      		<input type="email" class="form-control">
+	    		  	  	    	</div>
+	    		  	  	  	</div>
+
+	    		  	  	  	<div class="form-group row mb-3">
+	    		  	  	    	<label class="col-sm-3 col-form-label">Daytime tel. no.</label>
+	    		  	  	    	<div class="col-sm-9">
+	    		  	  	      		<input type="text" class="form-control">
+	    		  	  	    	</div>
+	    		  	  	  	</div>
+
+    	    		  	  	<div class="row">
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-6 col-form-label">Permanent address (if different from above)</label>
+	    		  	  			    	<div class="col-sm-6">
+	    		  	  			      		<textarea name="" id="" cols=" rows="2" class="form-control"></textarea>
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  		<div class="col-sm-6">
+	    		  	  				<div class="form-group row mb-3">
+	    		  	  			    	<label class="col-sm-3 col-form-label">Postcode:</label>
+	    		  	  			    	<div class="col-sm-9">
+	    		  	  			      		<input type="text" class="form-control">
+	    		  	  			    	</div>
+	    		  	  			  	</div>
+    	    		  	  		</div>
+    	    		  	  	</div>
+
+	    		  	  		<div class="form-group row mb-3">
+    	    		  	  	  	<label class="col-sm-3 col-form-label">Date of Birth:</label>
+    	    		  	  	  	<div class="col-sm-9">
+    	    		  	  	    		<input type="date" class="form-control">
+    	    		  	  	  	</div>
+	    		  	  		</div>
+
+	    		  	  		<div class="form-group row mb-3">
+    	    		  	  	  	<label class="col-sm-3 col-form-label">National Insurance No.</label>
+    	    		  	  	  	<div class="col-sm-9">
+    	    		  	  	    		<input type="text" class="form-control">
+    	    		  	  	  	</div>
+	    		  	  		</div>
+							
+							<div class="bg-gray p-2">
+	    	    		  	  	<div class="row mt-3">
+	    	    		  	  		<div class="col-sm-6">
+	    	    		  	  			<div class="form-group row mb-3">
+	    	    		  	  		    	<label class="col-sm-6 col-form-label">Investment Amount:</label>
+	    	    		  	  		    	<div class="col-sm-6">
+	    	    		  	  		      		<div class="input-group">
+  						    	    		  	  	<div class="input-group-prepend border-bottom">
+  						    	    		  	  		<span class="input-group-text border-0">&pound;</span>
+  						    	    		  	  	</div>
+  					    	    		  	  		<input type="number" class="form-control">
+  					    	    		  	  	</div>
+	    	    		  	  		    	</div>
+	    	    		  	  		  	</div>
+	    	    		  	  		</div>
+	    	    		  	  		<div class="col-sm-6">
+		    		  	  				<div class="form-group row mb-3">
+		    		  	  			    	<label class="col-sm-12 col-form-label">(Minimum Investment: £ 5,000.00 )</label>
+		    		  	  			  	</div>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+
+	    	    		  	  	<div class="row">
+	    	    		  	  		<div class="col-sm-6">
+	    	    		  	  			<div class="form-group row mb-3">
+	    	    		  	  		    	<label class="col-sm-6 col-form-label">Price per share:</label>
+	    	    		  	  		    	<div class="col-sm-6">
+	    	    		  	  		      		<div class="input-group">
+  						    	    		  	  	<div class="input-group-prepend border-bottom">
+  						    	    		  	  		<span class="input-group-text border-0">&pound;</span>
+  						    	    		  	  	</div>
+  					    	    		  	  		<input type="number" class="form-control">
+  					    	    		  	  	</div>
+	    	    		  	  		    	</div>
+	    	    		  	  		  	</div>
+	    	    		  	  		</div>
+	    	    		  	  		<div class="col-sm-6">
+		    		  	  				<label>SEIS/EIS relief sought?</label>
+  	  									<div class="d-sm-inline ml-sm-3">
+  	  										<div class="custom-control custom-radio custom-control-inline">
+  	  										  <input type="radio" id="yes2" name="radiobtninline" class="custom-control-input">
+  	  										  <label class="custom-control-label" for="yes2">Yes</label>
+  	  										</div>
+  	  										<div class="custom-control custom-radio custom-control-inline">
+  	  										  <input type="radio" id="no2" name="radiobtninline" class="custom-control-input" checked="">
+  	  										  <label class="custom-control-label" for="no2">No</label>
+  	  										</div>
+  	  									</div>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+
+	    	    		  	  	<div class="row">
+	    	    		  	  		<div class="col-sm-6">
+    	    		  	  				<div class="form-group row mb-3">
+    	    		  	  			    	<label class="col-sm-6 col-form-label">Number of Shares:</label>
+    	    		  	  			    	<div class="col-sm-6">
+    	    		  	  			      		<input type="text" class="form-control">
+    	    		  	  			    	</div>
+    	    		  	  			  	</div>
+	    	    		  	  		</div>
+	    	    		  	  		<div class="col-sm-6">
+		    		  	  				<small class="form-text text-muted">
+		    		  	  					It is only possible to subscribe to a complete whole number of shares. The Required Investment field will automatically calculate the final investment amount for the nearest whole number of shares, based on the initial value entered in the Investment Amount field
+		    		  	  				</small>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+
+	    	    		  	  	<div class="row">
+	    	    		  	  		<div class="col-sm-6">
+    	    		  	  				<div class="form-group row mb-3">
+    	    		  	  			    	<label class="col-sm-6 col-form-label">Required Investment: <span class="text-danger">*</span></label>
+    	    		  	  			    	<div class="col-sm-6">
+    	    		  	  			      		<div class="input-group">
+  						    	    		  	  	<div class="input-group-prepend border-bottom">
+  						    	    		  	  		<span class="input-group-text border-0">&pound;</span>
+  						    	    		  	  	</div>
+  					    	    		  	  		<input type="number" class="form-control">
+  					    	    		  	  	</div>
+    	    		  	  			    	</div>
+    	    		  	  			  	</div>
+	    	    		  	  		</div>
+	    	    		  	  	</div>
+    	    		  	  	</div>
+        	    		</form>
+        	    	</div>
+        	    </div>
+        	</div>
+
+          	<div class="card">
+        	    <div class="card-header" role="tab" id="headingOne">
+        	        <a data-toggle="collapse" href="#collapse-b" role="button" class="collapsed">
+        	          Section 2: Your Subscription
+        	          <i class="fa fa-lg fa-plus-square-o"></i>
+        	          <i class="fa fa-lg fa-minus-square-o"></i>
+        	        </a>
+        	    </div>
+
+        	    <div id="collapse-b" class="collapse show" role="tabpanel" >
+        	    	<div class="card-body border mb-3">
+        	    		<p>By completing and returning this form, you are agreeing to subscribe for <%=_.isUndefined(proposal_data.get('share-class-issued'))?" Unknown ":proposal_data.get('share-class-issued')%><!-- Ordinary Shares --> shares as part of the Offer on the following terms:-</p>
+	    		        <ol class="pl-3" type="i">
+	    					<li>You agree to provide any information (including any proof of identity requests) reasonably required by the Company or its solicitors in order to process your application for shares.</li>
+	    					<li>You agree to subscribe for the number of <!-- Ordinary Shares --><%=_.isUndefined(proposal_data.get('share-class-issued'))?" Unknown ":proposal_data.get('share-class-issued')%> shares stated above, or such lower number in the event of oversubscription (hereinafter “Your Shares”), subject to the memorandum and articles of association of the Company, as part of the Offer.</li>
+	    					<li>Where applicable you undertake to sign a Deed of Adherence to the Shareholders Agreement of the Company</li>
+	    					<li>You enclose a cheque or you have arranged an electronic transfer of funds in payment of the sum referred to above, to the account detailed below in this section, being the amount payable in full on application for the stated number of Ordinary Shares.</li>
+	    					<li>You understand that the completion and delivery of this application form accompanied by a cheque constitutes an undertaking that the cheque will be honoured on first presentation.</li>
+	    					<li>You understand that no application will be accepted unless and until payment in full for Your Shares has been made.</li>
+	    					<li>You understand that the Company will send you a share certificate by post at your risk to the address given in Section 1 below for Your Shares.</li>
+	    					<li>You agree to accept the above shares when allotted to you subject to the terms of the Memorandum and Articles of Association of the Company and you hereby authorise us to place your name in the Register of Members of the Company as the holder of those shares.</li>
+	    				</ol>
+
+	    				<p>The Company undertakes, where there is a minimum overall subscription level, to hold your money in a segregated account until such a time as the minimum subscription level is met.</p>
+						
+						<h5 class="mb-3">Bank Transfer Details:</h5>
+	    				<form action="">
+    						<div class="form-group row">
+    					    	<label class="col-sm-3 col-form-label">A/C Name:</label>
+    					    	<div class="col-sm-9">
+    					      		<input type="text" class="form-control">
+    					    	</div>
+    					  	</div>
+
+					  		<div class="form-group row">
+					  	    	<label class="col-sm-3 col-form-label">A/C Number:</label>
+					  	    	<div class="col-sm-9">
+					  	      		<input type="text" class="form-control">
+					  	    	</div>
+					  	  	</div>
+
+				  	  		<div class="form-group row">
+				  	  	    	<label class="col-sm-3 col-form-label">Sort Code:</label>
+				  	  	    	<div class="col-sm-9">
+				  	  	      		<input type="text" class="form-control">
+				  	  	    	</div>
+				  	  	  	</div>
+
+			  	  	  		<div class="form-group row">
+			  	  	  	    	<label class="col-sm-3 col-form-label">Bank:</label>
+			  	  	  	    	<div class="col-sm-9">
+			  	  	  	      		<input type="text" class="form-control">
+			  	  	  	    	</div>
+			  	  	  	  	</div>
+
+		  	  	  	  		<div class="form-group row">
+		  	  	  	  	    	<label class="col-sm-3 col-form-label">Reference:</label>
+		  	  	  	  	    	<div class="col-sm-9">
+		  	  	  	  	      		<input type="text" class="form-control">
+		  	  	  	  	    	</div>
+		  	  	  	  	  	</div>
+	    				</form>
+        	    	</div>
+        	    </div>
+        	</div>
+
+        	<!-- collapse3 -->
+    	  	<div class="card">
+    		    <div class="card-header" role="tab" id="headingOne">
+    		        <a data-toggle="collapse" href="#collapse-c" role="button" class="collapsed">
+    		          Section 3: Procedure for Investment
+    		          <i class="fa fa-lg fa-plus-square-o"></i>
+    		          <i class="fa fa-lg fa-minus-square-o"></i>
+    		        </a>
+    		    </div>
+
+    		    <div id="collapse-c" class="collapse show" role="tabpanel" >
+    		    	<div class="card-body border mb-3">
+    		    		<p>Once completed please return this subscription form to , c/o GrowthInvest, 120 Cannon Street, London, EC4N 6AS to arrive no later than 12 noon on 31st December 2017. Also please scan and email a copy to <a href="support@growthinvest.com">support@growthinvest.com</a> with email subject ' Subscription'.</p>
+    		    	</div>
+    		    </div>
+    		</div>
+        	<!-- /collapse3 -->
+
+	    	<!-- collapse4 -->
+		  	<div class="card">
+			    <div class="card-header" role="tab" id="headingOne">
+			        <a data-toggle="collapse" href="#collapse-d" role="button" class="collapsed">
+			          Section 4: Confirmation of Status
+			          <i class="fa fa-lg fa-plus-square-o"></i>
+			          <i class="fa fa-lg fa-minus-square-o"></i>
+			        </a>
+			    </div>
+
+			    <div id="collapse-d" class="collapse show" role="tabpanel" >
+			    	<div class="card-body border mb-3">
+			    		<p>Under terms of the Financial Services and Markets Act 2000 (“FSMA”) and the Financial Services and Markets Act 2000 (Financial Promotion) Order 2005 (as amended) ("FSMAO"), the Company will only accept an application for shares if you are accurately categorised as an investor by an FCA authorised entity. The authorised entity would normally be either GrowthInvest (regulated as EIS Platforms Ltd by the FCA), or an authorised UK financial adviser or wealth manager. Please confirm that the below categorisation is still accurate and if not please <a href="">click here</a> to update your categorisation before completing this application</p>
+
+			    		<p><strong>Certification:</strong> <span></span></p>
+			    		<p>Date: <span></span></p>
+			    	</div>
+			    </div>
+			</div>
+	    	<!-- /collapse4 -->
+
+	    	<!-- collapse5 -->
+		  	<div class="card">
+			    <div class="card-header" role="tab" id="headingOne">
+			        <a data-toggle="collapse" href="#collapse-e" role="button" class="collapsed">
+			          Section 5: Verification of Identity
+			          <i class="fa fa-lg fa-plus-square-o"></i>
+			          <i class="fa fa-lg fa-minus-square-o"></i>
+			        </a>
+			    </div>
+
+			    <div id="collapse-e" class="collapse show" role="tabpanel" >
+			    	<div class="card-body border mb-3">
+			    		<p>In order to invest all investors must go through identity checks, which include Know Your Client and Anti Money Laundering processes. This can be done online at GrowthInvest.com, and will be carried out by GrowthInvest approved partner <a href="https://onfido.com/" target="_blank">Onfido.com</a>. If you have not yet been through the verification process, please click here to request prior to completing the application.</p>
+			    	</div>
+			    </div>
+			</div>
+	    	<!-- /collapse5 -->
+
+	    	<!-- collapse6 -->
+		  	<div class="card">
+			    <div class="card-header" role="tab" id="headingOne">
+			        <a data-toggle="collapse" href="#collapse-f" role="button" class="collapsed">
+			          Section 6: Signature
+			          <i class="fa fa-lg fa-plus-square-o"></i>
+			          <i class="fa fa-lg fa-minus-square-o"></i>
+			        </a>
+			    </div>
+
+			    <div id="collapse-f" class="collapse show" role="tabpanel" >
+			    	<div class="card-body border mb-3">
+			    		<div class="row">
+			    			<div class="col-md-12">
+			    				<p>I hereby apply for Offers Shares in , and agree to adhere to terms and conditions of Offer</p>
+			    			</div>
+			    			<div class="col-md-12">
+			    				<div class="row">
+			    					<div class="col-sm-6 border-sm-right border-0">
+			    						<div class="form-group">
+			    							<label for="">Signature:</label>
+			    							<div class="border p-3 w-100"></div>
+			    						</div>
+
+			    						<div class="form-group">
+			    							<strong>Name:</strong> <span>admin</span>
+			    						</div>
+			    					</div>
+			    					<div class="col-sm-6">
+			    						<div class="form-group">
+			    							<label for="">Date: </label> <span></span>
+			    						</div>
+			    					</div>
+			    				</div>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+			</div>
+	    	<!-- /collapse6 -->
+
+	    	
+
+	    	<div class="text-left text-sm-center mb-4">
+	    		<a href="" class="btn btn-primary">Invest</a>
+	    		<a href="" class="float-sm-right float-sm-left btn btn-outline-danger">Cancel</a>
+	    	</div>
+
+	    	<p><strong>Note:</strong> Once the form is complete, please either click on the Invest button in order to start our online electronic signature process, which is run by our partners Adobe E-sign, or please use the Download button to download the pre-populated form as a PDF which can be printed, signed, and sent to , c/o GrowthInvest, 120 Cannon Street, London EC4N 6AS.</p>
+
+	    	<a href="" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+	    	<small class="text-muted form-text">Please note: A download will only include all investment and financial details if the user has submitted the application by clicking "Invest"</small>
+        </div>
+        <!-- /accordion -->
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
 
 @endsection
