@@ -134,11 +134,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Business Proposals/Funds</th>
-                                <th>User</th>
+                                <th class="w-search">Business Proposals/Funds</th>
+                                <th class="w-search">User</th>
                                 <th>Description</th>
-                                <th>Date</th>
-                                <th>Activity</th>
+                                <th class="w-search">Date</th>
+                                <th class="w-search">Activity</th>
                             </tr>
                         </thead>
                         <tbody>
