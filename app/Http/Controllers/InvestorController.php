@@ -1884,7 +1884,7 @@ class InvestorController extends Controller
             $activityListingData[] = [
                 'logo'           => '',
                 'proposal_funds' => '',
-                'user'           => (!empty($activityListing->username)) ? $activityListing->username : '',
+                'user'           => (!empty($activityListing->username)) ? title_case($activityListing->username) : '',
                 'description'    => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
                 'date'           => (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
                 'activity'       => (isset($activityTypeList[$activityListing->type])) ? $activityTypeList[$activityListing->type] : '',
@@ -2209,6 +2209,10 @@ class InvestorController extends Controller
 
         foreach ($activityListings as $key => $activityListing) {
 
+            $userName = $activityListing->username;
+            $userName = explode(' ', $userName);
+            list($firstName,$lastName) = $userName;
+
             $activityId[]      = $activityListing->id;
             $userActivity      = Activity::find($activityListing->id);
             $investor          = $userActivity->user;
@@ -2218,8 +2222,8 @@ class InvestorController extends Controller
             $activityData[] = [
                 (!empty($investor)) ? $investor->gi_code : '',
                 '',
-                (!empty($investor)) ? title_case($investor->first_name) : '',
-                (!empty($investor)) ? title_case($investor->last_name) : '',
+                title_case($firstName),
+                title_case($lastName),
                 $certificationName,
                 (isset($activityTypeList[$activityListing->type])) ? $activityTypeList[$activityListing->type] : '',
                 (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
