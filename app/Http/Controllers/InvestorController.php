@@ -2196,7 +2196,7 @@ class InvestorController extends Controller
             $count++;
         }
 
-        echo $activityListQuery; exit;
+        // echo $activityListQuery; exit;
 
         if ($length > 1) {
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
