@@ -2019,8 +2019,7 @@ class InvestorController extends Controller
 
         $queryCheck = [];
 
-        //for testing
-        //$filters['user_id'] = 2557;
+ 
  
         foreach ($typeLists as $typeList) {
 
@@ -2034,6 +2033,7 @@ class InvestorController extends Controller
 
             $mainselect = "select a1.id,a1.component,a1.type,a1.action,a1.content,a1.primary_link,a1.secondary_item_id";
             $maintable  = " from activity a1 ";
+            $mainjoin = " INNER JOIN firms p2 on p2.ID=a1.secondary_item_id";
             $orderby    = " order by date_recorded desc";
 
             if (in_array($typeList->type, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
@@ -2044,11 +2044,11 @@ class InvestorController extends Controller
                 'external_downloads', 'stage_3_profile_details',
                 'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
 
-                if (isset($queryCheck['section1'])) {
-                    continue;
-                }
+                // if (isset($queryCheck['section1'])) {
+                //     continue;
+                // }
 
-                $queryCheck['section1'] = true;
+                // $queryCheck['section1'] = true;
                 $customfieldselect      = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
                 $customjoin             = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
                 $customwhere            = $parentChildFirms;
@@ -2057,20 +2057,18 @@ class InvestorController extends Controller
                     $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                 }
 
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $whereStr .= ' and a1.type = "' . $typeList->type . '"';
-                }
+                
 
                 $mainjoin  = " LEFT OUTER JOIN business_listings p2 on p2.ID=a1.secondary_item_id";
-                $mainwhere = " where 1" . $userWhere . $whereStr . $firmWhere;
+                $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $whereStr . $firmWhere;
                 $groupby   = "";
 
             } elseif (in_array($typeList->type, ['new_provider_added'])) {
-                if (isset($queryCheck['section2'])) {
-                    continue;
-                }
+                // if (isset($queryCheck['section2'])) {
+                //     continue;
+                // }
 
-                $queryCheck['section2'] = true;
+                // $queryCheck['section2'] = true;
 
                 $customfieldselect = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
                 $customjoin        = " INNER JOIN users u1 on u1.ID=a1.user_id";
@@ -2080,18 +2078,14 @@ class InvestorController extends Controller
                     $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                 }
 
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $whereStr .= ' and a1.type = "' . $typeList->type . '"';
-                }
-
-                $mainwhere = " where 1" . $userWhere . $whereStr . $firmWhere;
+                $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $whereStr . $firmWhere;
                 $groupby   = "";
             } elseif (in_array($typeList->type, ['investor_message', 'entrepreneur_message'])) {
-                if (isset($queryCheck['section3'])) {
-                    continue;
-                }
+                // if (isset($queryCheck['section3'])) {
+                //     continue;
+                // }
 
-                $queryCheck['section3'] = true;
+                // $queryCheck['section3'] = true;
 
                 $customfieldselect = " ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug";
                 $customjoin        = " INNER JOIN users u1 on u1.ID=a1.item_id INNER JOIN users u2 on u2.ID=a1.user_id";
@@ -2102,19 +2096,15 @@ class InvestorController extends Controller
                     $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                 }
 
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $whereStr .= ' and a1.type = "' . $typeList->type . '"';
-                }
-
-                $mainwhere = " where 1" . $userWhere . $whereStr . $firmWhere;
+                $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $whereStr . $firmWhere;
                 $groupby   = "";
 
             } elseif (in_array($typeList->type, ['proposal_details_update', 'fund_details_update'])) {
-                if (isset($queryCheck['section4'])) {
-                    continue;
-                }
+                // if (isset($queryCheck['section4'])) {
+                //     continue;
+                // }
 
-                $queryCheck['section4'] = true;
+                // $queryCheck['section4'] = true;
 
                 $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug";
                 $customjoin        = " INNER JOIN  users u1 on u1.ID=a1.user_id INNER JOIN business_listings p1 on p1.ID=a1.item_id";
@@ -2128,19 +2118,16 @@ class InvestorController extends Controller
                 if (isset($filters['companies']) && $filters['companies'] != "") {
                     $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                 }
+ 
 
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $whereStr .= ' and a1.type = "' . $typeList->type . '"';
-                }
-
-                $mainwhere = " where  1 " . $userWhere . $companyWhere . $whereStr . $firmWhere;
+                $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $companyWhere . $whereStr . $firmWhere;
                 $groupby   = " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id";
             } elseif (in_array($typeList->type, ['invested'])) {
-                if (isset($queryCheck['section5'])) {
-                    continue;
-                }
+                // if (isset($queryCheck['section5'])) {
+                //     continue;
+                // }
 
-                $queryCheck['section5'] = true;
+                // $queryCheck['section5'] = true;
 
                 $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug";
                 $customjoin        = " LEFT JOIN users u1 on u1.ID=a1.user_id
@@ -2156,18 +2143,16 @@ class InvestorController extends Controller
                     $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                 }
 
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $whereStr .= ' and a1.type = "' . $typeList->type . '"';
-                }
+                
 
-                $mainwhere = " where 1 " . $userWhere . $companyWhere . $whereStr . $firmWhere;
+                $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $companyWhere . $whereStr . $firmWhere;
                 $groupby   = "";
             } else {
-                if (isset($queryCheck['section6'])) {
-                    continue;
-                }
+                // if (isset($queryCheck['section6'])) {
+                //     continue;
+                // }
 
-                $queryCheck['section6'] = true;
+                // $queryCheck['section6'] = true;
 
                 $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug";
                 $customjoin        = " INNER JOIN users u1 on u1.ID=a1.user_id
@@ -2183,20 +2168,20 @@ class InvestorController extends Controller
                     $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                 }
 
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $whereStr .= ' and a1.type = "' . $typeList->type . '"';
-                }
 
-                $mainwhere = " where 1 " . $userWhere . $companyWhere . $whereStr . $firmWhere;
+                $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $companyWhere . $whereStr . $firmWhere;
                 $groupby   = "";
             }
 
             $activityListQuery .= $union . $mainselect . $customfieldselect . $maintable . $mainjoin . $customjoin . $mainwhere . $customwhere . $groupby;
 
             $count++;
-        }
 
-        // echo $activityListQuery; exit;
+
+
+        }
+        // echo $activityListQuery;exit;
+        
 
         if ($length > 1) {
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
@@ -2235,7 +2220,7 @@ class InvestorController extends Controller
 
         foreach ($activityListings as $key => $activityListing) {
 
-            $activityId[$activityListing->id] = $activityListing->id;
+            $activityId[] = $activityListing->id;
             $userActivity                     = Activity::find($activityListing->id);
             $investor                         = $userActivity->user;
             $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
