@@ -864,7 +864,8 @@
         }, {
           'data': 'user'
         }, {
-          'data': 'description'
+          'data': 'description',
+          "orderable": false
         }, {
           'data': 'date'
         }, {

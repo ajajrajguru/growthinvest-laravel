@@ -1853,16 +1853,12 @@ class InvestorController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
-            // '0' => 'business_listings.title',
-            // '1' => 'business_listings.manager',
-            // '3' => 'business_listings.type',
-            // '4' => 'business_listings.investment_objective',
-            // '5' => 'business_listings.target_amount',
-            // '6' => 'business_listings.minimum_investment',
-            // '7' => 'amount_raised',
+            '2' => 'username',
+            '4' => 'date_recorded',
+            '5' => 'a1.type',
         );
 
-        $columnName = 'activity.date_recorded';
+        $columnName = 'date_recorded';
         $orderBy    = 'asc';
 
         if (isset($columnOrder[$orderValue['column']])) {
@@ -2010,6 +2006,11 @@ class InvestorController extends Controller
             }
         }
 
+        foreach ($orderDataBy as $columnName => $orderBy) {
+            $orderby    = " order by ".$columnName." ".$orderBy;
+        }
+        
+
         $typeLists = DB::select("select distinct type from activity a1 where 1 " . $whereStr . $typeStr);
 
         $count             = 0;
@@ -2031,7 +2032,7 @@ class InvestorController extends Controller
             $mainselect = "select a1.id,a1.component,a1.type,a1.action,a1.content,a1.primary_link,a1.secondary_item_id";
             $maintable  = " from activity a1 ";
             $mainjoin   = " INNER JOIN firms p2 on p2.ID=a1.secondary_item_id";
-            $orderby    = " order by date_recorded desc";
+           
 
             if (in_array($typeList->type, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
                 'download_investor_csv', 'download_transfer_asset_guide',
@@ -2169,7 +2170,7 @@ class InvestorController extends Controller
             $count++;
 
         }
-        // echo $activityListQuery;exit;
+        
 
         if ($length > 1) {
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
@@ -2178,7 +2179,7 @@ class InvestorController extends Controller
 
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
         }
-
+        
         $activityListings = DB::select(DB::raw($activityListQuery));
 
         return ['totalActivityListings' => $totalActivityListings, 'list' => $activityListings];

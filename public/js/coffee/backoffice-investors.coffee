@@ -805,7 +805,7 @@ $(document).ready ->
       { 'data': 'logo', "orderable": false }
       { 'data': 'proposal_funds' }
       { 'data': 'user'}
-      { 'data': 'description' }
+      { 'data': 'description' , "orderable": false}
       { 'data': 'date' }
       { 'data': 'activity' }
 
