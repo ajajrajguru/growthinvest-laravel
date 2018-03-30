@@ -3672,13 +3672,17 @@ class InvestorPdfHtml
                     $bgcolor = '#f9fafb';
                 }
 
+                $userName = $activityListing->username;
+                $userName = explode(' ', $userName);
+                list($firstName,$lastName) = $userName;
+
                 $activityId[$activityListing->id] = $activityListing->id;
                 $userActivity                     = Activity::find($activityListing->id);
                 $investor                         = $userActivity->user;
                 $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
                 $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
-                $firstname                        = (!empty($investor)) ? title_case($investor->first_name) : '';
-                $lastname                         = (!empty($investor)) ? title_case($investor->last_name) : '';
+                $firstname                        = title_case($firstName);
+                $lastname                         = title_case($lastName);
                 $activityName                     = (isset($activityTypeList[$activityListing->type])) ? $activityTypeList[$activityListing->type] : '';
                 $date                             = (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '';
                 $description                      = (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '';
