@@ -1855,7 +1855,7 @@ class InvestorController extends Controller
         $columnOrder = array(
             '2' => 'username',
             '4' => 'date_recorded',
-            '5' => 'a1.type',
+            '5' => 'activitytype',
         );
 
         $columnName = 'date_recorded';
@@ -2029,7 +2029,7 @@ class InvestorController extends Controller
                 $union = " union ";
             }
 
-            $mainselect = "select a1.id,a1.component,a1.type,a1.action,a1.content,a1.primary_link,a1.secondary_item_id";
+            $mainselect = "select a1.id,a1.component,a1.type,a1.type as activitytype,a1.action,a1.content,a1.primary_link,a1.secondary_item_id";
             $maintable  = " from activity a1 ";
             $mainjoin   = " INNER JOIN firms p2 on p2.ID=a1.secondary_item_id";
            
