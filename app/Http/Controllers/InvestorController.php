@@ -308,8 +308,8 @@ class InvestorController extends Controller
             ];
         }
 
-        $action = 'Download Investor CSV';
-        $activity = saveActivityLog('User',Auth::user()->id,'download_investor_csv',Auth::user()->id,$action,'',Auth::user()->firm_id);
+        $action   = 'Download Investor CSV';
+        $activity = saveActivityLog('User', Auth::user()->id, 'download_investor_csv', Auth::user()->id, $action, '', Auth::user()->firm_id);
 
         generateCSV($header, $userData, $fileName);
 
@@ -510,8 +510,8 @@ class InvestorController extends Controller
             $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $investor->telephone_no, 'registeredBy' => $registeredBy];
             sendEmail('investor-reg-automated', $data);
 
-            $action="New Registration on ".$firmName;
-            saveActivityLog('User',Auth::user()->id,'stage1_investor_registration',$investorId,$action,'',$investor->firm_id);
+            $action = "New Registration on " . $firmName;
+            saveActivityLog('User', Auth::user()->id, 'stage1_investor_registration', $investorId, $action, '', $investor->firm_id);
         }
 
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client registration details added successfully and being redirected to certification stage.' : 'You are being redirected to certification page';
@@ -583,25 +583,25 @@ class InvestorController extends Controller
             }
         }
 
-        $details = [];
-        $addData = [];
+        $details           = [];
+        $addData           = [];
         $certificationName = '';
         if ($requestData['save-type'] == 'retail') {
-            $details = $this->getRetailData($requestData);
-            $addData = ['client_category_id' => $requestData['client_category_id']];
-            $certificationName='retail Restricted investor';
+            $details           = $this->getRetailData($requestData);
+            $addData           = ['client_category_id' => $requestData['client_category_id']];
+            $certificationName = 'retail Restricted investor';
 
         } elseif ($requestData['save-type'] == 'sophisticated') {
-            $details = $this->getSophisticatedData($requestData);
-            $certificationName='sophisticated investor';
+            $details           = $this->getSophisticatedData($requestData);
+            $certificationName = 'sophisticated investor';
 
         } elseif ($requestData['save-type'] == 'high_net_worth') {
-            $details = $this->getHighNetWorthData($requestData);
-            $certificationName='high net worth individual';
+            $details           = $this->getHighNetWorthData($requestData);
+            $certificationName = 'high net worth individual';
 
         } elseif ($requestData['save-type'] == 'professsional_investors') {
-            $details = $this->getProfessionalInvData($requestData);
-            $certificationName='professional investor';
+            $details           = $this->getProfessionalInvData($requestData);
+            $certificationName = 'professional investor';
         } elseif ($requestData['save-type'] == 'advice_investors') {
             $reqDetails = $this->getAdviceInvestorsData($requestData);
 
@@ -617,12 +617,12 @@ class InvestorController extends Controller
             $financialAdvInfo->data_value = $financialAdvInfoData;
             $financialAdvInfo->save();
 
-            $certificationName='Advised investor';
+            $certificationName = 'Advised investor';
 
         } elseif ($requestData['save-type'] == 'elective_prof') {
-            $details = $this->getElectiveProfData($requestData);
-            $addData = ['client_category_id' => $requestData['client_category_id']];
-            $certificationName='elective professional investor';
+            $details           = $this->getElectiveProfData($requestData);
+            $addData           = ['client_category_id' => $requestData['client_category_id']];
+            $certificationName = 'elective professional investor';
         }
 
         $fileId = $this->generateInvestorCertificationPdf($requestData['save-type'], $details, $investor, $addData);
@@ -727,12 +727,10 @@ class InvestorController extends Controller
         }
         sendEmail($templateForinvestor, $data);
 
-
-        $action="Completed Certification ".$certificationName;
-        $activity = saveActivityLog('User',Auth::user()->id,'certification',$investor->id,$action,'',$investor->firm_id);
-        $metaData=array('certification'=>$certificationName);
-        saveActivityMeta($activity->id,'details',$metaData);
-
+        $action   = "Completed Certification " . $certificationName;
+        $activity = saveActivityLog('User', Auth::user()->id, 'certification', $investor->id, $action, '', $investor->firm_id);
+        $metaData = array('certification' => $certificationName);
+        saveActivityMeta($activity->id, 'details', $metaData);
 
         return response()->json(['success' => true, 'file_id' => $fileId, 'html' => $certificationvalidityHtml, 'isWealthManager' => $isWealthManager]);
 
@@ -1063,9 +1061,8 @@ class InvestorController extends Controller
         $successMessage = (Auth::user()->hasPermissionTo('is_wealth_manager')) ? 'Your client Additional Information has successfully been added.' : 'Thank you. The Additional Information page has now been successfully updated';
         Session::flash('success_message', $successMessage);
 
-
-        $action="Stage 3 Profile Details";
-        $activity = saveActivityLog('User',Auth::user()->id,'stage_3_profile_details',$investor->id,$action,'',$investor->firm_id);
+        $action   = "Stage 3 Profile Details";
+        $activity = saveActivityLog('User', Auth::user()->id, 'stage_3_profile_details', $investor->id, $action, '', $investor->firm_id);
 
         return redirect(url('backoffice/investor/' . $giCode . '/additional-information'));
 
@@ -1222,8 +1219,8 @@ class InvestorController extends Controller
             $successMessage = 'Thank you for your submission to the Investment Account. One of our client services team will be in touch shortly to confirm any additional information that we require.';
         }
 
-        $action="Nominee Application Submitted";
-        $activity = saveActivityLog('User',Auth::user()->id,'nominee_application',$investor->id,$action,'',$investor->firm_id);
+        $action   = "Nominee Application Submitted";
+        $activity = saveActivityLog('User', Auth::user()->id, 'nominee_application', $investor->id, $action, '', $investor->firm_id);
 
         Session::flash('success_message', $successMessage);
 
@@ -1308,8 +1305,8 @@ class InvestorController extends Controller
 
                         }
 
-                        $action="Onfido - Requested";
-                        $activity = saveActivityLog('User',Auth::user()->id,'onfido_requested',$investor->id,$action,'',$investor->firm_id);
+                        $action   = "Onfido - Requested";
+                        $activity = saveActivityLog('User', Auth::user()->id, 'onfido_requested', $investor->id, $action, '', $investor->firm_id);
 
                     }
 
@@ -1391,8 +1388,8 @@ class InvestorController extends Controller
             $nomineeApplication->adobe_doc_key = $dockeyvalue;
             $nomineeApplication->save();
 
-            $action = 'Start Adobe Sign';
-            $activity = saveActivityLog('User',Auth::user()->id,'start_adobe_sign',$investor->id,$action,'',$investor->firm_id);
+            $action   = 'Start Adobe Sign';
+            $activity = saveActivityLog('User', Auth::user()->id, 'start_adobe_sign', $investor->id, $action, '', $investor->firm_id);
 
         }
     }
@@ -1419,8 +1416,8 @@ class InvestorController extends Controller
                 $nomineeData->save();
             }
 
-            $action = 'Completed Adobe Sign';
-            $activity = saveActivityLog('User',Auth::user()->id,'completed_adobe_sign',$nomineeData->user_id,$action);
+            $action   = 'Completed Adobe Sign';
+            $activity = saveActivityLog('User', Auth::user()->id, 'completed_adobe_sign', $nomineeData->user_id, $action);
 
         }
 
@@ -1514,9 +1511,8 @@ class InvestorController extends Controller
 
             }
 
-
-            $action = 'Onfido - Confirmed';
-            $activity = saveActivityLog('User',Auth::user()->id,'onfido_confirmed',$nomineeData->user_id,$action);
+            $action   = 'Onfido - Confirmed';
+            $activity = saveActivityLog('User', Auth::user()->id, 'onfido_confirmed', $nomineeData->user_id, $action);
 
         }
 
@@ -1816,12 +1812,14 @@ class InvestorController extends Controller
         return response()->json($json_data);
     }
 
-    public function investorActivity($giCode)
+    public function investorActivity($giCode,Request $request)
     {
         $investor = User::where('gi_code', $giCode)->first();
         if (empty($investor)) {
             abort(404);
         }
+
+        $requestFilters = $request->all();
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
@@ -1836,6 +1834,7 @@ class InvestorController extends Controller
         $data['durationType']     = durationType();
         $data['investor']         = $investor;
         $data['breadcrumbs']      = $breadcrumbs;
+        $data['requestFilters']   = $requestFilters;
         $data['pageTitle']        = 'View Activity';
         $data['activeMenu']       = 'manage_clients';
 
@@ -1968,20 +1967,20 @@ class InvestorController extends Controller
 
         if (isset($filters['duration']) && $filters['duration'] != "") {
             $durationDates = getDateByPeriod($filters['duration']);
-            $whereStr .= ' and DATE_FORMAT(a1.date_recorded, "%Y-%m-%d") >= "' . $durationDates['fromDate'] . '"';
-            $whereStr .= ' and DATE_FORMAT(a1.date_recorded, "%Y-%m-%d") <= "' . $durationDates['toDate'] . '"';
+            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') >= '" . $durationDates['fromDate'] . "'";
+            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') <= '" . $durationDates['toDate'] . "'";
 
         }
 
         if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != "")) {
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
-            $whereStr .= ' and DATE_FORMAT(a1.date_recorded, "%Y-%m-%d") >= "' . $fromDate . '"';
-            $whereStr .= ' and DATE_FORMAT(a1.date_recorded, "%Y-%m-%d") <= "' . $whereStr . '"';
+            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') >= '" . $fromDate . "'";
+            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') <= '" . $toDate . "'";
         }
 
         if (isset($filters['type']) && $filters['type'] != "") {
-            $typeStr .= ' and a1.type = "' . $filters['type'] . '"';
+            $typeStr .= " and a1.type = '" . $filters['type'] . "'";
         }
 
         if (Auth::user()->hasPermissionTo('site_level_activity_feed')) {
@@ -2019,8 +2018,6 @@ class InvestorController extends Controller
 
         $queryCheck = [];
 
- 
- 
         foreach ($typeLists as $typeList) {
 
             if ($typeList->type == "") {
@@ -2033,7 +2030,7 @@ class InvestorController extends Controller
 
             $mainselect = "select a1.id,a1.component,a1.type,a1.action,a1.content,a1.primary_link,a1.secondary_item_id";
             $maintable  = " from activity a1 ";
-            $mainjoin = " INNER JOIN firms p2 on p2.ID=a1.secondary_item_id";
+            $mainjoin   = " INNER JOIN firms p2 on p2.ID=a1.secondary_item_id";
             $orderby    = " order by date_recorded desc";
 
             if (in_array($typeList->type, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
@@ -2049,15 +2046,13 @@ class InvestorController extends Controller
                 // }
 
                 // $queryCheck['section1'] = true;
-                $customfieldselect      = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
-                $customjoin             = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
-                $customwhere            = $parentChildFirms;
+                $customfieldselect = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
+                $customjoin        = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
+                $customwhere       = $parentChildFirms;
                 //overide the condition
                 if (isset($filters['user_id']) && $filters['user_id'] != "") {
                     $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                 }
-
-                
 
                 $mainjoin  = " LEFT OUTER JOIN business_listings p2 on p2.ID=a1.secondary_item_id";
                 $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $whereStr . $firmWhere;
@@ -2118,7 +2113,6 @@ class InvestorController extends Controller
                 if (isset($filters['companies']) && $filters['companies'] != "") {
                     $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                 }
- 
 
                 $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $companyWhere . $whereStr . $firmWhere;
                 $groupby   = " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id";
@@ -2143,8 +2137,6 @@ class InvestorController extends Controller
                     $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                 }
 
-                
-
                 $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $companyWhere . $whereStr . $firmWhere;
                 $groupby   = "";
             } else {
@@ -2168,7 +2160,6 @@ class InvestorController extends Controller
                     $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                 }
 
-
                 $mainwhere = " where a1.type = '" . $typeList->type . "'" . $userWhere . $companyWhere . $whereStr . $firmWhere;
                 $groupby   = "";
             }
@@ -2177,15 +2168,12 @@ class InvestorController extends Controller
 
             $count++;
 
-
-
         }
         // echo $activityListQuery;exit;
-        
 
         if ($length > 1) {
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
-            $activityListQuery .= " limit " . $skip . ", " . $length;
+            $activityListQuery .= $orderby . " limit " . $skip . ", " . $length;
         } else {
 
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
@@ -2220,11 +2208,11 @@ class InvestorController extends Controller
 
         foreach ($activityListings as $key => $activityListing) {
 
-            $activityId[] = $activityListing->id;
-            $userActivity                     = Activity::find($activityListing->id);
-            $investor                         = $userActivity->user;
-            $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
-            $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
+            $activityId[]      = $activityListing->id;
+            $userActivity      = Activity::find($activityListing->id);
+            $investor          = $userActivity->user;
+            $certificationName = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
+            $activityMeta      = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
 
             $activityData[] = [
                 (!empty($investor)) ? $investor->gi_code : '',
@@ -2247,7 +2235,6 @@ class InvestorController extends Controller
 
     }
 
-
     public function generateInvestorsActivityPdf(Request $request)
     {
         $data    = [];
@@ -2264,21 +2251,16 @@ class InvestorController extends Controller
         $args                     = array();
         $header_footer_start_html = getHeaderPageMarkup($args);
 
-         
-
         $investorPdf = new InvestorPdfHtml();
-         
+
         $html = $investorPdf->getInvestorsActivityHtml($activityListings);
-           // echo $html; exit;
+        // echo $html; exit;
 
         $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(5, 5, 5, 5));
         $html2pdf->pdf->SetDisplayMode('fullpage');
 
         $html2pdf->writeHTML($html);
         $html2pdf->output();
- 
-
-         
 
         return true;
 

@@ -894,9 +894,9 @@
       investorActivityTable.ajax.reload();
     });
     $('body').on('click', '.reset-activity-filters', function() {
-      $('select[name="duration"]').val('');
-      $('input[name="duration_from"]').val('');
-      $('input[name="duration_to"]').val('');
+      $('select[name="duration"]').val('').attr('disabled', false);
+      $('input[name="duration_from"]').val('').attr('disabled', false);
+      $('input[name="duration_to"]').val('').attr('disabled', false);
       $('select[name="type"]').val('');
       $('select[name="companies"]').val('');
       window.history.pushState("", "", "?");

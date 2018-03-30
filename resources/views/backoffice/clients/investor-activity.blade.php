@@ -74,7 +74,7 @@
                                 <select name="duration" class="form-control">
                                   <option value="">Select Period</option>
                                   @foreach($durationType as $durationKey=>$duration)
-                                    <option value="{{ $durationKey }}">{{ $duration }}</option>
+                                    <option value="{{ $durationKey }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey) selected @endif>{{ $duration }}</option>
                                   @endforeach
 
                                 </select>
@@ -83,8 +83,8 @@
                         <div class="col-md-3">
                             <div>
                               OR
-                                <input type="text"  class="form-control datepicker date_range" name="duration_from" > -
-                                <input type="text"  class="form-control datepicker date_range" name="duration_to" >
+                                <input type="text"  class="form-control datepicker date_range" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif> -
+                                <input type="text"  class="form-control datepicker date_range" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -93,7 +93,7 @@
                                 <select name="type" id="" class="form-control">
                                   <option value="">View All Activity Type</option>
                                   @foreach($activityTypes as $activityTypeKey=>$activityType)
-                                    <option value="{{ $activityTypeKey }}">{{ $activityType }}</option>
+                                    <option value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
                                   @endforeach
                                 </select>
                             </div>
@@ -104,7 +104,7 @@
                                 <select name="companies" id="" class="form-control">
                                   <option value="">View All Companies</option>
                                   @foreach($businessListings as $businessListing)
-                                    <option value="{{ $businessListing->id }}">{{ $businessListing->title }}</option>
+                                    <option value="{{ $businessListing->id }}" @if(isset($requestFilters['companies']) && $requestFilters['companies'] == $businessListing->id) selected @endif>{{ $businessListing->title }}</option>
                                   @endforeach
 
                                 </select>
