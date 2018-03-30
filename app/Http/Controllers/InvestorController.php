@@ -2077,7 +2077,7 @@ class InvestorController extends Controller
                 $customwhere       = $parentChildFirms;
                 //overide the condition
                 if (isset($filters['user_id']) && $filters['user_id'] != "") {
-                    $userwhere = " and a1.item_id='" . $filters['user_id'] . "' ";
+                    $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                 }
 
                 if (isset($filters['type']) && $filters['type'] != "") {
@@ -2099,7 +2099,7 @@ class InvestorController extends Controller
 
                 //overide the condition
                 if (isset($filters['user_id']) && $filters['user_id'] != "") {
-                    $userwhere = " and a1.item_id='" . $filters['user_id'] . "' ";
+                    $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                 }
 
                 if (isset($filters['type']) && $filters['type'] != "") {
@@ -2122,7 +2122,7 @@ class InvestorController extends Controller
 
                 //overide the condition
                 if (isset($filters['user_id']) && $filters['user_id'] != "") {
-                    $userwhere = " and a1.user_id='" . $filters['user_id'] . "' ";
+                    $userWhere = " and a1.user_id='" . $filters['user_id'] . "' ";
                 }
 
                 if (isset($filters['companies']) && $filters['companies'] != "") {
@@ -2149,7 +2149,7 @@ class InvestorController extends Controller
 
                 //overide the condition
                 if (isset($filters['user_id']) && $filters['user_id'] != "") {
-                    $userwhere = " and a1.user_id='" . $filters['user_id'] . "' ";
+                    $userWhere = " and a1.user_id='" . $filters['user_id'] . "' ";
                 }
 
                 if (isset($filters['companies']) && $filters['companies'] != "") {
