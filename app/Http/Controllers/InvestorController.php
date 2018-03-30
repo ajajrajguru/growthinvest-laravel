@@ -671,7 +671,7 @@ class InvestorController extends Controller
         $recipients = getRecipientsByCapability([], array('view_all_investors'));
         $recipients = getRecipientsByCapability($recipients, array('view_firm_investors'), $firmId);
         if (!empty($investor->registeredBy)) {
-            $registeredBy = ($investor->registered_by == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
+            $registeredBy = (Auth::user()->id == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
         } else {
             $registeredBy = 'N/A';
         }
