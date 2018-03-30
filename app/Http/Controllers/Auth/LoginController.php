@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -64,6 +65,19 @@ class LoginController extends Controller
         }
 
         return '/home';
+    }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $email = $request->email;
+        $user = \App\User::where('email',$email)->first();
+        $action = 'Login Failed';
+        $activity = saveActivityLog('User',$user->id,'auth_fail',$user->id,$action,'',$user->firm_id);
+
+
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.failed')],
+        ]);
     }
 
     protected function logout(Request $request)
