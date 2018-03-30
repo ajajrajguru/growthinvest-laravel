@@ -2020,7 +2020,7 @@ class InvestorController extends Controller
         $queryCheck = [];
 
         //for testing
-        $filters['user_id'] = 2557;
+        // $filters['user_id'] = 2557;
         foreach ($typeLists as $typeList) {
 
             if ($typeList->type == "") {
@@ -2194,6 +2194,8 @@ class InvestorController extends Controller
 
             $count++;
         }
+
+        echo $activityListQuery; exit;
 
         if ($length > 1) {
             $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
