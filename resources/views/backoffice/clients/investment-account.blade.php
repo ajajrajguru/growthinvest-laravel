@@ -334,8 +334,8 @@
 
                                             <div class="form-group">
                                                 <label>Address <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address_1}}@endif</textarea>
-                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])) {{ $nomineeDetails['address'] }}@else{{ $investor->address_1 }}@endif</div>
+                                                <textarea name="account_address" id="" cols="30" rows="3" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" data-parsley-required data-parsley-required-message="Please enter the address.">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])){{ $nomineeDetails['address'] }}@else{{$investor->address_1}}&#13;&#10;{{$investor->address_2}}&#13;&#10;{{$investor->city}}&#13;&#10;{{$investor->county}}@endif</textarea>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">@if(!empty($nomineeDetails) && isset($nomineeDetails['address'])) {{ $nomineeDetails['address'] }}@else{{$investor->address_1}}<br>{{$investor->address_2}}<br>{{$investor->city}}<br>{{$investor->county}}@endif</div>
                                             </div>
 
                                             <div class="form-group">
