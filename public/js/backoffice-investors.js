@@ -919,7 +919,7 @@
         return $('select[name="duration"]').val('').attr('disabled', false);
       }
     });
-    return $('.download-investor-activity-report').click(function() {
+    $('.download-investor-activity-report').click(function() {
       var type, urlParams;
       type = $(this).attr('report-type');
       urlParams = '';
@@ -946,6 +946,40 @@
       } else if (type === 'pdf') {
         return window.open("/backoffice/investor/investors-activity-pdf?" + urlParams);
       }
+    });
+    return $(document).on('click', '.save-onfido-report-status', function() {
+      var aml_report, btnObj, identity_report, investorId, watchlist_report;
+      btnObj = $(this);
+      investorId = $('input[name="investor_gi"]').val();
+      identity_report = $('select[name="identity_report"]').val();
+      aml_report = $('select[name="aml_report"]').val();
+      watchlist_report = $('select[name="watchlist_report"]').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/save-onfido-report-status',
+        data: {
+          'investor_id': investorId,
+          'identity_report_status': identity_report,
+          'aml_report_status': aml_report,
+          'watchlist_report_status': watchlist_report
+        },
+        success: function(data) {
+          if (!data.success) {
+            $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none');
+            $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none');
+            $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').find('#message').html("Failed to update Status of the onfido reports");
+          } else {
+            $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none');
+            $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none');
+            $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully");
+            $(this).addClass('d-none');
+            $(this).attr('submit-quiz', "true");
+          }
+        },
+        error: function(request, status, error) {
+          throwError();
+        }
+      });
     });
   });
 

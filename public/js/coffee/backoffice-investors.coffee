@@ -887,6 +887,39 @@ $(document).ready ->
       window.open("/backoffice/investor/export-investors-activity?"+urlParams)
     else if(type == 'pdf')  
       window.open("/backoffice/investor/investors-activity-pdf?"+urlParams)
+
+
+  $(document).on 'click', '.save-onfido-report-status', ->
+    btnObj = $(this)
+    investorId = $('input[name="investor_gi"]').val()
+    identity_report = $('select[name="identity_report"]').val()
+    aml_report = $('select[name="aml_report"]').val()
+    watchlist_report = $('select[name="watchlist_report"]').val()
+   
+    $.ajax
+      type: 'post'
+      url: '/backoffice/save-onfido-report-status'
+      data:
+        'investor_id': investorId
+        'identity_report_status': identity_report
+        'aml_report_status': aml_report
+        'watchlist_report_status': watchlist_report
+      success: (data) ->
+        if !data.success
+          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none')
+          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none')
+          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').find('#message').html("Failed to update Status of the onfido reports")
+        else
+          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none')
+          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none')
+          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully")
+          $(this).addClass('d-none')
+          $(this).attr('submit-quiz',"true")
+
+        return
+      error: (request, status, error) ->
+        throwError()
+        return
  
 
   

@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('investor/{giCode}/investor-invest', 'InvestorController@investorInvest');
     Route::get('investor/{giCode}/investor-news-update', 'InvestorController@investorNewsUpdate');
     Route::get('investor/{giCode}/investor-activity', 'InvestorController@investorActivity');
+    Route::post('/save-onfido-report-status', 'InvestorController@saveOnfidoReportStatus');
     Route::post('/save-news-update', 'InvestorController@saveInvestorNewsUpdate');
     Route::post('/delete-news-update', 'InvestorController@deleteInvestorNewsUpdate');
     Route::post('investor/get-investor-invest', 'InvestorController@getInvestorInvest');

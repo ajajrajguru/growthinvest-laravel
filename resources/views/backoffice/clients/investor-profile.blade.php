@@ -78,22 +78,74 @@
                     <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information') }}">Additoinal Information: </a> Picture, Social Media and Investment Profile</li>
                     <li class="list-unstyled"><a class="font-weight-medium text-decoration-none" href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account: </a> Full investment and transactional account details</li>
                 </ul>
+                @php
 
-                <div class="row mt-5">
+                    $identityReport = '';
+                    $amlReport = '';
+                    $watchlistReport = '';
+                    foreach($onfidoReports as $onfidoReport){
+                        if($onfidoReport->name == 'anti_money_laundering')
+                            $amlReport = $onfidoReport->status_growthinvest;
+                        elseif($onfidoReport->name == 'identity')
+                            $identityReport = $onfidoReport->status_growthinvest;
+                        elseif($onfidoReport->name == 'watchlist')
+                            $watchlistReport = $onfidoReport->status_growthinvest;
+
+                    }
+                @endphp
+                <div class="row mt-5 onfido-report-status-container">
                     <div class="col-md-3">
+                        <input type="hidden" name="investor_gi" value="{{ $investor->gi_code }}">
                         <div class="">
                             <label for="">Identitiy Report</label>
-                            <input type="text" class="form-control">
+                            <select class="form-control" name="identity_report" id="identity_report" >  
+                             <option value="">Select</option>
+                             <option value="completed" @if($identityReport == "completed") selected @endif >Complete</option>
+                             <option value="complete_pending_evidence" @if($identityReport == "complete_pending_evidence") selected @endif >Complete Pending evidence</option>  
+                             <option value="requested" @if($identityReport == "requested") selected @endif>Requested</option>  
+                             <option value="inprogress" @if($identityReport == "inprogress") selected @endif>in progress</option>  
+                             <option value="manual_kyc" @if($identityReport == "manual_kyc") selected @endif>Manual</option>  
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="">
                             <label for="">AML Report</label>
-                            <input type="text" class="form-control">
+                            <select class="form-control" name="aml_report" id="aml_report" disabled >                 
+                             <option value="">Select</option>
+                             <option value="completed" @if($amlReport == "completed") selected @endif >Complete</option>
+                             <option value="complete_pending_evidence" @if($amlReport == "complete_pending_evidence") selected @endif >Complete Pending evidence</option>  
+                             <option value="requested" @if($amlReport == "requested") selected @endif>Requested</option>  
+                             <option value="inprogress" @if($amlReport == "inprogress") selected @endif>in progress</option>  
+                             <option value="manual_kyc" @if($amlReport == "manual_kyc") selected @endif>Manual</option>  
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="">
+                            <label for="">Watchlist Report</label>
+                            <select class="form-control" name="watchlist_report" id="watchlist_report" >                 
+                             <option value="">Select</option>
+                             <option value="completed" @if($watchlistReport == "completed") selected @endif >Complete</option>
+                             <option value="complete_pending_evidence" @if($watchlistReport == "complete_pending_evidence") selected @endif >Complete Pending evidence</option>  
+                             <option value="requested" @if($watchlistReport == "requested") selected @endif>Requested</option>  
+                             <option value="inprogress" @if($watchlistReport == "inprogress") selected @endif>in progress</option>  
+                             <option value="manual_kyc" @if($watchlistReport == "manual_kyc") selected @endif>Manual</option>  
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-3 d-sm-flex">
-                        <a href="" class="btn btn-primary align-self-sm-end">Save</a>
+                        <a href="javascript:void(0)" class="btn btn-primary align-self-sm-end save-onfido-report-status">Save</a>
+                    </div>
+                    <br><br>
+                     <div class="alert alert-success onfido-report-status-success d-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                       <span id="message"></span>
+                    </div>
+                     
+                    <div class="alert alert-danger onfido-report-status-danger d-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                       <span id="message"></span>
                     </div>
                 </div>
             </div> <!-- /Profile -->

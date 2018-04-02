@@ -1524,6 +1524,138 @@ class InvestorController extends Controller
 
     }
 
+
+    public function saveOnfidoReportStatus(Request $request)
+    {
+
+        $onfidoRequest = $request->all();
+
+        $investor_id            = $onfidoRequest['investor_id'];
+        $identity_report_status = $onfidoRequest['identity_report_status'];
+        $aml_report_status      = $onfidoRequest['aml_report_status'];
+        $watchlist_report_status = $onfidoRequest['watchlist_report_status'];
+        
+        $reports                = array();
+        $investor = User::where('gi_code', $investor_id)->first();
+
+        if(empty($investor))
+            return response()->json(['success' => false]);
+
+
+        $args = array('identity_report_status'=> $identity_report_status,
+                  'aml_report_status'     => $aml_report_status,
+                  'watchlist_report_status'=> $watchlist_report_status
+                 );
+
+        $onfido_report_meta = $investor->userOnfidoApplicationReports();
+
+        if (empty($onfido_report_meta)) {
+
+            //echo "one ";
+
+            $investor_onfido_applicant_id = $investor->userOnfidoApplicationId();
+
+            if (!empty($investor_onfido_applicant_id)) {
+                // If there is associated applicant id, retrieve check and reports and update the meta
+                //echo "two ";
+                $investor_onfido_applicant_id = $investor_onfido_applicant_id->data_value;
+                $report_data                  = get_onfido_reports_meta_by_applicant_id($investor_onfido_applicant_id, $args);
+
+                if(isset($report_data['check']['reports']) && empty($report_data['check']['reports'])){
+
+                    $reports = createOnfidoReportObject([],$args);
+                    $report_data['check']['reports'] = $reports;
+                }
+
+                if(isset($report_data['reports']) && empty($report_data['reports'])){
+                    $reports = createOnfidoReportObject([],$args);
+                    $report_data['reports'] = $reports;
+                }
+                elseif(!isset($report_data['reports'])){
+                    $reports = createOnfidoReportObject([],$args);
+                    $report_data['reports'] = $reports;
+                }
+
+            } else {
+
+                
+
+                $reports = createOnfidoReportObject([]);
+
+
+                $report_data = array( 'applicant_id'    => '',
+                                      'check'           => array('id'               => '',
+                                                             'check_status'         => '',
+                                                             'check_type'           => '',
+                                                             'check_result_url'     => '',
+                                                             'check_download_url'   => '',
+                                                             'check_form_url'       => '',
+                                                             'check_paused'         => '',
+                                                             'reports'              => $reports
+                                                            ),
+                                      'reports'              => $reports
+                                     );
+
+
+            }
+
+        } // END if($onfido_report_meta==false){
+        else {
+
+            $reports = array();
+
+            //echo "four ";
+
+            $report_data = (!empty($onfido_report_meta)) ? $onfido_report_meta->data_value : [];
+            // dd($report_data);
+
+            $onfido_check   = $report_data['check'];
+            $onfido_reports = $onfido_check['reports'];
+            $watchlist_report_exists = false;
+
+            foreach ($onfido_reports as $key => $value) {
+
+                if($value->name=="watchlist"){
+                    $watchlist_report_exists = true;
+                }
+
+                $reports[] = update_onfido_report_status($value, $args);
+
+            }
+
+            if($watchlist_report_exists==false){
+
+                $watchlist_report_obj = new \stdClass;
+                $watchlist_report_obj->name = 'watchlist';
+                $watchlist_report_obj->variant = 'full';
+                $watchlist_report_obj->id = '';
+                $watchlist_report_obj->status_growthinvest = $watchlist_report_status;
+                $reports[] = $watchlist_report_obj;
+
+            }
+
+            $onfido_check['reports'] = $reports;
+            $report_data['check']    = $onfido_check;
+            $report_data['reports'] = $reports;
+
+        }
+
+        $onfido_report_meta = $investor->userOnfidoApplicationReports();
+
+        if (empty($onfido_report_meta)) {
+            $onfido_report_meta           = new \App\UserData;
+            $onfido_report_meta->user_id  = $investor->id;
+            $onfido_report_meta->data_key = 'onfido_reports';
+        }
+
+        $onfido_report_meta->data_value = $report_data;
+        $onfido_report_meta->save();
+            
+
+        return response()->json(['success' => true]);
+
+    }
+
     public function investorProfile($giCode)
     {
         $investor = User::where('gi_code', $giCode)->first();
@@ -1531,7 +1663,10 @@ class InvestorController extends Controller
             abort(404);
         }
 
-        $investorCertification = $investor->getActiveCertification();
+        $investorCertification = $investor->getActiveCertification(); 
+        $onfidoReportMeta = $investor->userOnfidoApplicationReports(); 
+        $onfidoReport = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value:[];
+        
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
@@ -1542,6 +1677,7 @@ class InvestorController extends Controller
 
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['onfidoReports']      = (isset($onfidoReport['reports']) && !empty($onfidoReport['reports'])  ) ? $onfidoReport['reports'] : [];
         $data['breadcrumbs']           = $breadcrumbs;
         $data['pageTitle']             = 'View Profile';
         $data['activeMenu']            = 'manage_clients';
