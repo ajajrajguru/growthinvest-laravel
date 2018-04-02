@@ -1301,7 +1301,7 @@ class InvestorController extends Controller
                             //add and update report details for the onfido applicant check
                             $check_report_result = $result_onfido['result']['create_checkreports_result'];
 
-                            add_update_onfido_reports_meta($applicant_id, $investor, $check_report_result);
+                            addUpdateOnfidoReportsMeta($applicant_id, $investor, $check_report_result);
                             if ($result_onfido['onfido_error'] == "yes") {
                                 $success = false;
                                 return $result_onfido;
