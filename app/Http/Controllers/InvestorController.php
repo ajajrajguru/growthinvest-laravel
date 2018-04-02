@@ -671,16 +671,20 @@ class InvestorController extends Controller
         $recipients = getRecipientsByCapability([], array('view_all_investors'));
         $recipients = getRecipientsByCapability($recipients, array('view_firm_investors'), $firmId);
         if (!empty($investor->registeredBy)) {
-            $registeredBy = (Auth::user()->id == $investor->id) ? 'Self' : $investor->registeredBy->displayName();
+            $registeredBy = $investor->registeredBy->displayName();
         } else {
             $registeredBy = 'N/A';
         }
+
+        $certificationOf = (Auth::user()->id == $investor->id) ? 'Self' :$investor->displayName();
+        $certificationBy = (Auth::user()->id == $investor->id) ? 'Self' :Auth::user()->displayName();
+
 
         $certification = $hasCertification->certification()->name;
 
         //new certification
         if (!$invHasCertification) {
-            $subject            = 'Notification: Certification of ' . $registeredBy . ' of Firm ' . $firmName . ' has been confirmed.';
+            $subject            = 'Notification: Certification of ' . $certificationOf . ' of Firm ' . $firmName . ' has been confirmed.';
             $subjectForinvestor = 'Welcome Investor to ' . $firmName;
 
             $template            = 'investor-confirmed-certification';
@@ -688,7 +692,7 @@ class InvestorController extends Controller
 
         } else {
             //re certification
-            $subject            = 'Notification: Re-Certification of ' . $registeredBy . ' of Firm ' . $firmName . ' has been confirmed.';
+            $subject            = 'Notification: Re-Certification of ' . $certificationOf . ' of Firm ' . $firmName . ' has been confirmed.';
             $subjectForinvestor = 'Re-Certification confirmed on ' . $firmName;
 
             $template            = 'investor-confirmed-certification';
@@ -703,7 +707,7 @@ class InvestorController extends Controller
 
         foreach ($recipients as $recipientEmail => $recipientName) {
             $data['to']            = [$recipientEmail];
-            $data['template_data'] = ['toName' => $recipientName, 'name' => $investor->displayName(), 'firmName' => $firmName, 'registeredBy' => $registeredBy, 'registeredBy' => $registeredBy, 'certification' => $certification, 'giCode' => $investor->gi_code, 'certificationDate' => $certificationDate, 'certificationExpiryDate' => $expiryDate, 'invHasCertification' => $invHasCertification];
+            $data['template_data'] = ['toName' => $recipientName, 'name' => $investor->displayName(), 'firmName' => $firmName, 'registeredBy' => $registeredBy, 'certificationOf' => $certificationOf, 'certificationBy' => $certificationBy, 'certification' => $certification, 'giCode' => $investor->gi_code, 'certificationDate' => $certificationDate, 'certificationExpiryDate' => $expiryDate, 'invHasCertification' => $invHasCertification];
             sendEmail($template, $data);
         }
 
