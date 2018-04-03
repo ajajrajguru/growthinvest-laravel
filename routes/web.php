@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
 
     //activity feeds
     Route::get('manage-act-feed-group', 'ActivityController@manageActivityFeedGroup');
+    Route::post('activity-group/get-activity-type', 'ActivityController@getActivityGroupType');
+    Route::post('activity-group/save-activity-type', 'ActivityController@saveActivityGroupType');
 
     //investors
     Route::get('investor/export-investors', 'InvestorController@exportInvestors');

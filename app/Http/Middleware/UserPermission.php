@@ -43,7 +43,9 @@ class UserPermission
                 'backoffice/firms/save-firm-invite'                           => ['add_firm', 'edit_firm', 'edit_my_firm'],
                 'backoffice/firms/{giCode}'                                   => ['edit_firm', 'edit_my_firm'],
 
-                'backoffice/manage-act-feed-group'                            => ['investment_activity_group', 'opportunity_activity_group'],
+                'backoffice/manage-act-feed-group'                            => ['manage_options'],
+                'backoffice/activity-group/get-activity-type'                            => ['manage_options'],
+                'backoffice/activity-group/save-activity-type'                            => ['manage_options'],
 
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],

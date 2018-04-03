@@ -4,6 +4,7 @@
   @parent
 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/backoffice-manage.js') }}"></script>
  
 
 
@@ -18,7 +19,7 @@
          @include('includes.manage-tabs')
 
         <div class="mt-4 bg-white border border-gray p-4">
-
+            @include('includes.notification')
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="section-title font-weight-medium text-primary mb-0">Activity Feed Group</h1>
@@ -31,8 +32,8 @@
                     </div>
                 </div>
             </div>
-
-            <div class="table-responsive mt-3">
+            
+            <div class="activity-group-type-map mt-3">
                 <select class="form-control" name="activity_group" id="activity_group" >                 
                  <option value="">Select</option>
                     @foreach($groupList as $list)
@@ -40,10 +41,11 @@
                     @endforeach
                 </select>
 
-                <div class="activity-list">
+                <div class="activity-list d-none">
                     <ul>
-                        <li></li>
+                        
                     </ul>
+                     <button type="button" class="btn btn-primary save-activity-group-types" >Save</button>
                 </div>
             </div>
         </div>

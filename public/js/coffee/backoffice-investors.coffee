@@ -905,7 +905,6 @@ $(document).ready ->
         'aml_report_status': aml_report
         'watchlist_report_status': watchlist_report
       success: (data) ->
-        console.log data
         if !data.success
           btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none')
           btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none')
@@ -914,7 +913,6 @@ $(document).ready ->
           btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none')
           btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none')
           btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully")
-          btnObj.addClass('d-none')
           
         return
       error: (request, status, error) ->

@@ -499,13 +499,11 @@ class ActivityController extends Controller
     {
 
         $groupList = ActivityGroup::where('deleted', '0')->get();
-        $typeList  = activityTypeList();
-
+        
         $breadcrumbs             = [];
         $breadcrumbs[]           = ['url' => url('backoffice/dashboard'), 'name' => "Dashboard"];
         $breadcrumbs[]           = ['url' => '', 'name' => 'Activity Feed Group'];
         $data['groupList']       = $groupList;
-        $data['typeList']        = $typeList;
         $data['breadcrumbs']     = $breadcrumbs;
         $data['pageTitle']       = 'Activity Feed Group';
         $data['page_short_desc'] = '';
@@ -513,5 +511,46 @@ class ActivityController extends Controller
 
         return view('backoffice.manage.activity-feed-group')->with($data);
 
+    }
+
+    public function getActivityGroupType(Request $request){
+    	$activityGroupId = $request->get('type_id');
+    	$typeList  = activityTypeList();
+    	$group = ActivityGroup::where('id', $activityGroupId)->first();
+    	$html = '';
+    	if(!empty($group)){
+    		$groupActivityType = $group->activity_type_value;
+    		foreach ($typeList as $typeId => $type) {
+    			$checked = (!empty($groupActivityType) && in_array($typeId, $groupActivityType)) ? 'checked' :'';
+    			
+    			$html .= '<li><input type="checkbox" class="" value="'.$typeId.'" id="ch_'.$typeId.'" '.$checked.' name="activity_types[]">
+                                                  <label class="" for="ch_'.$typeId.'">'.$type.'</label></li>';	 
+    		}
+
+    	}
+    	 
+    	return response()->json(['html'=>$html]);
+    }
+
+    public function saveActivityGroupType(Request $request){
+
+    	$activityGroupId = $request->get('group_id');
+    	$activityTypesStr = $request->get('activity_types');
+    	$activityTypes = explode(',', $activityTypesStr);
+    	$activityTypes = array_filter($activityTypes); 
+
+    	$group = ActivityGroup::find($activityGroupId);
+    	 
+    	if(!empty($group)){
+    		$success = true;
+    		$group->activity_type_value = $activityTypes;
+    		$group->save();
+
+    	}
+    	else
+    		$success = false;
+    	
+    	 
+    	return response()->json(['success'=>$success]);
     }
 }
