@@ -1580,7 +1580,7 @@ class InvestorController extends Controller
 
                 
 
-                $reports = createOnfidoReportObject([]);
+                $reports = createOnfidoReportObject([],$args);
 
 
                 $report_data = array( 'applicant_id'    => '',

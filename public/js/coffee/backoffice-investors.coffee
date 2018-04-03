@@ -905,17 +905,17 @@ $(document).ready ->
         'aml_report_status': aml_report
         'watchlist_report_status': watchlist_report
       success: (data) ->
+        console.log data
         if !data.success
-          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none')
-          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none')
-          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').find('#message').html("Failed to update Status of the onfido reports")
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').find('#message').html("Failed to update Status of the onfido reports")
         else
-          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none')
-          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none')
-          $(this).closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully")
-          $(this).addClass('d-none')
-          $(this).attr('submit-quiz',"true")
-
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully")
+          btnObj.addClass('d-none')
+          
         return
       error: (request, status, error) ->
         throwError()
