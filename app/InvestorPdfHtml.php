@@ -3598,4 +3598,125 @@ class InvestorPdfHtml
 
     }
 
+    public function getInvestorsActivityHtml($activityListings)
+    {
+        $html = '
+
+                                                <style>
+                     h3 {
+
+                    margin-top: 4px;
+                    font-size:18px;
+                    font-weight:600;
+                    line-height: 20px;
+                    margin-top:10px;
+
+                    }
+                       
+
+                    
+                    th{
+                        vertical-align:top;
+                        color: #000
+                    }
+                    th,td {
+                        padding : 10px 15px;
+                        font-size:12px;
+                    }
+
+                    td{
+                        color: #A2A0A0
+                    }
+
+                    
+
+                     </style>
+ 
+ 
+
+                     <h3>Activity Log Data</h3>
+                    <table cellpadding="0" cellspacing="0"  style="width: 100%;"  >
+                         
+                         <tr>
+                              <td align="left" valign="bottom" style="width: 50%;"  >Date - ' . date('d/m/Y') . ' </td>
+                              <td align="right" valign="bottom" style="width: 50%;color:#A2A0A0" >&nbsp;</td>
+                         </tr>
+                         <tr height="8" style="height:4px;padding:0px;">
+                            <td colspan="2" valign="top" height="4" style="width: 100%;height:8px;padding:0px;"><hr style="border:1px solid #ccc;width: 100%;"></td>
+                         </tr>
+                    </table>';
+        $table_html = '<table  cellpadding="0" cellspacing="0" style="width:100%;" border="1" cellpadding="8px" cellspacing="0px">';
+
+        $table_html .= '<tr    class="title-bg" style=" ">
+                            <th style="width: 10%;">&nbsp;</th>
+                            <th style="width: 15%;">Company</th>
+                            <th style="width: 10%;">First Name</th>
+                            <th style="width: 10%;">Last Name</th>
+                            <th style="width: 10%;">Type of User</th>
+                            <th style="width: 15%;">Activity Name</th>
+                            <th style="width: 15%;">Date</th>
+                            <th style="width: 15%;">Description</th>
+
+                          </tr>';
+        $bgcolor          = '#fff';
+        $activityData     = [];
+        $activityTypeList = activityTypeList();
+        $row_cnt = 0;
+        if (!empty($activityListings)) {
+
+            foreach ($activityListings as $key => $activityListing) {
+
+                if ($row_cnt % 2 == 0) {
+                    $bgcolor = '#fff';
+                } else {
+                    $bgcolor = '#f9fafb';
+                }
+
+                $userName = $activityListing->username;
+                $userName = explode(' ', $userName);
+                list($firstName,$lastName) = $userName;
+
+                $activityId[$activityListing->id] = $activityListing->id;
+                $userActivity                     = Activity::find($activityListing->id);
+                $investor                         = $userActivity->user;
+                $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
+                $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
+                $firstname                        = title_case($firstName);
+                $lastname                         = title_case($lastName);
+                $activityName                     = (isset($activityTypeList[$activityListing->type])) ? $activityTypeList[$activityListing->type] : '';
+                $date                             = (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '';
+                $description                      = (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '';
+
+                $box_img = '';
+
+                $table_html .= "<tr style='background-color:$bgcolor;'>
+                            <td style='width: 10%;'>" . $box_img . "</td>
+                            <td  style='width: 15%;' align='center' ></td>
+                            <td style='width: 10%;'>" . $firstname . "</td>
+                            <td style='width: 10%;''>" . $lastname . "</td>
+                            <td style='width: 10%;'>" . $certificationName . "</td>
+                            <td style='width: 15%;'>" . $activityName . "</td>
+                            <td style='width: 15%;'>" . $date . "</td>
+                            <td style='width: 15%;' align='center' >". $description ."</td>";
+                $table_html .= " 
+
+
+                          </tr>";
+
+                $row_cnt++;
+
+            }
+        } else {
+            $table_html .= '<tr style="background-color:' . $bgcolor . '">
+                            <td colspan="5" >No Activity Data</td>
+                      </tr>';
+        }
+
+        $table_html .= '</table>';
+
+        $html = $html . $table_html;
+
+        return $html;
+    }
+
 }

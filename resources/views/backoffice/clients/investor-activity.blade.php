@@ -10,16 +10,29 @@
 <link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
 <script type="text/javascript">
-    
-    $(document).ready(function() {
-        // select2
-        $('.select2-single').select2({
-            // placeholder: "Search here"
-        });
-    });
-  
 
-</script>
+    $(document).ready(function() {
+ 
+      $('input[name="duration_from"]').datepicker({
+        format: 'dd-mm-yyyy'
+      }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('input[name="duration_to"]').datepicker('setStartDate', minDate);
+      });
+
+      $('input[name="duration_to"]').datepicker({
+        format: 'dd-mm-yyyy'
+      }).on('changeDate', function (selected) {
+        var maxDate = new Date(selected.date.valueOf());
+        $('input[name="duration_from"]').datepicker('setEndDate', maxDate);
+      });
+
+
+
+    });
+
+
+  </script>
 
 
 
@@ -52,60 +65,68 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane p-3 active" id="activity" role="tabpanel">
-                
-                         
+
+
                 <div class="gray-section border bg-gray p-3">
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <div>
-                                <select name="company" class="form-control">
-                                  <option value="">All</option>
-                                   
+                                <select name="duration" class="form-control">
+                                  <option value="">Select Period</option>
+                                  @foreach($durationType as $durationKey=>$duration)
+                                    <option value="{{ $durationKey }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey) selected @endif>{{ $duration }}</option>
+                                  @endforeach
+
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-             
-                                <select name="sector" id="" class="form-control">
-                                    <option value="">All</option>
-                                     
-                                </select>
+                              OR
+                                <input type="text"  class="form-control datepicker date_range" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif> -
+                                <input type="text"  class="form-control datepicker date_range" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-                                
+
                                 <select name="type" id="" class="form-control">
-                                    <option value="">All</option>
-                              
+                                  <option value="">View All Activity Type</option>
+                                  @foreach($activityTypes as $activityTypeKey=>$activityType)
+                                    <option value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
+                                  @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div>
-                  
-                                <select name="manager" id="" class="form-control">
-                                    <option value="">All</option>
-                                     
+
+                                <select name="companies" id="" class="form-control">
+                                  <option value="">View All Companies</option>
+                                  @foreach($businessListings as $businessListing)
+                                    <option value="{{ $businessListing->id }}" @if(isset($requestFilters['companies']) && $requestFilters['companies'] == $businessListing->id) selected @endif>{{ $businessListing->title }}</option>
+                                  @endforeach
+
                                 </select>
+
+                                <input type="hidden" name="user_id" value="{{ $investor->id }}">
                             </div>
                         </div>
                     </div>
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
-                         
+
                         <div class="mt-3 mt-sm-0">
-                            <button class="btn btn-primary mr-1 apply-invest-filters">Apply</button>
-                            <button class="btn btn-default reset-invest-filters">Reset</button>
+                            <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
+                            <button class="btn btn-default reset-activity-filters">Reset</button>
                         </div>
                     </div>
-                     
+
                 </div>
-                
+
                 <div class="text-right mt-3 mb-2">
                     <div class="">
-                        <a href="" class="btn btn-outline-primary" >Download CSV </a>     
-                        <a href="" class="btn btn-outline-primary" > Download PDF</a>    
+                        <a href="javascript:void(0)" class="btn btn-outline-primary download-investor-activity-report" report-type="csv">Download CSV </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-primary download-investor-activity-report" report-type="pdf"> Download PDF</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -113,11 +134,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Business Proposals/Funds</th>
-                                <th>User</th>
+                                <th class="w-search">Business Proposals/Funds</th>
+                                <th class="w-search">User</th>
                                 <th>Description</th>
-                                <th>Date</th>
-                                <th>Activity</th>
+                                <th class="w-search">Date</th>
+                                <th class="w-search">Activity</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -125,7 +146,7 @@
                         </tbody>
                     </table>
 
-                     
+
                 </div>
             </div> <!-- /invest tab -->
 
@@ -139,10 +160,10 @@
     </div>
 
     <!-- Modal -->
-  
+
 
 </div>
- 
+
     <style type="text/css">
         #datatable-investor-invest_filter{
             visibility: hidden;
@@ -150,4 +171,3 @@
     </style>
 
 @endsection
-

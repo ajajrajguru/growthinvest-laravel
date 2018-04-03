@@ -9,7 +9,7 @@ function investorCertificationExpiry()
     }
 
     $userCertifications = App\UserHasCertification::where('created_at', '<=', $date)->where('active', '1')->get();
-    $mailSent = false;
+    $mailSent           = false;
     foreach ($userCertifications as $key => $userCertification) {
         $investor          = $userCertification->user;
         $firmName          = (!empty($investor->firm)) ? $investor->firm->name : 'N/A';
@@ -31,8 +31,7 @@ function investorCertificationExpiry()
             $investor->assignRole('yet_to_be_approved_investor');
         }
 
-
-        if(!$mailSent){
+        if (!$mailSent) {
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
@@ -57,7 +56,6 @@ function investorCertificationExpiry()
             if (env('APP_ENV') == 'local') {
                 $mailSent = true;
             }
-
 
         }
 
@@ -89,7 +87,7 @@ function investorCertificationExpiryReminder()
             $expiryDate = date('Y-m-d', strtotime($certificationDate . '+1 year'));
         }
 
-        if(!$mailSent){
+        if (!$mailSent) {
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
@@ -114,7 +112,6 @@ function investorCertificationExpiryReminder()
             if (env('APP_ENV') == 'local') {
                 $mailSent = true;
             }
-
 
         }
 
@@ -305,6 +302,10 @@ function update_onfido_report_status($cur_report_details, $args = array())
         $new_aml_report_status = $args['aml_report_status'];
     }
 
+    if (isset($args['watchlist_report_status'])) {
+        $new_watchlist_report_status = $args['watchlist_report_status'];
+    }
+
     switch ($cur_report_details->name) {
         case 'identity':if (isset($new_identity_report_status)) {
 
@@ -316,6 +317,13 @@ function update_onfido_report_status($cur_report_details, $args = array())
         case 'anti_money_laundering':if (isset($new_aml_report_status)) {
 
                 $new_status_cur_report                   = $new_aml_report_status;
+                $cur_report_details->status_growthinvest = $new_status_cur_report;
+                //$cur_report_details->status       = $cur_report_details->status_onfido;
+            }
+            break;
+        case 'watchlist':if (isset($new_watchlist_report_status)) {
+
+                $new_status_cur_report                   = $new_watchlist_report_status;
                 $cur_report_details->status_growthinvest = $new_status_cur_report;
                 //$cur_report_details->status       = $cur_report_details->status_onfido;
             }
@@ -645,12 +653,13 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
 
 }
 
-function add_update_onfido_reports_meta($applicant_id = '', $investor = [], $check_report_result)
+function addUpdateOnfidoReportsMeta($applicant_id = '', $investor = [], $check_report_result)
 {
 
     if ($applicant_id != '' && empty($investor)) {
 
         $reports = array();
+        $args    = array();
 
         $check_id           = $check_report_result->id;
         $check_status       = $check_report_result->status;
@@ -669,10 +678,11 @@ function add_update_onfido_reports_meta($applicant_id = '', $investor = [], $che
 
             if (empty($onfido_report_meta)) {
 
-                $args['identity_report_status'] = "requested";
-                $args['aml_report_status']      = "requested";
-                $args['set_report_meta']        = false;
-                $report_data                    = add_new_onfido_report_onplatform($investor, $args);
+                $args['identity_report_status']  = "requested";
+                $args['aml_report_status']       = "requested";
+                $args['watchlist_report_status'] = "requested";
+                $args['set_report_meta']         = false;
+                $report_data                     = add_new_onfido_report_onplatform($investor, $args);
 
             } else {
 
@@ -738,13 +748,14 @@ function add_update_onfido_reports_meta($applicant_id = '', $investor = [], $che
 function add_new_onfido_report_onplatform($investor, $args)
 {
 
-    $identity_report_status = $args['identity_report_status'];
-    $aml_report_status      = $args['aml_report_status'];
-    $reports                = array();
+    $identity_report_status  = $args['identity_report_status'];
+    $aml_report_status       = $args['aml_report_status'];
+    $watchlist_report_status = $data['watchlist_report_status'];
+    $reports                 = array();
 
     $identity_report_obj                      = new stdClass;
     $identity_report_obj->name                = 'identity';
-    $identity_report_obj->id                  = '';
+    $identity_report_obj->id                  = 'kyc';
     $identity_report_obj->status_growthinvest = $identity_report_status;
 
     $aml_report_obj                      = new stdClass;
@@ -752,8 +763,14 @@ function add_new_onfido_report_onplatform($investor, $args)
     $aml_report_obj->id                  = '';
     $aml_report_obj->status_growthinvest = $aml_report_status;
 
+    $watchlist_report_obj                      = new stdClass;
+    $watchlist_report_obj->name                = 'watchlist';
+    $watchlist_report_obj->id                  = 'full';
+    $watchlist_report_obj->status_growthinvest = $watchlist_report_status;
+
     $reports[] = $identity_report_obj;
     $reports[] = $aml_report_obj;
+    $reports[] = $watchlist_report_obj;
 
     $report_data = array('applicant_id' => '',
         'check'                             => array('id' => '',
@@ -766,6 +783,7 @@ function add_new_onfido_report_onplatform($investor, $args)
             'reports'                                         => $reports,
         ),
     );
+    
     if ($args['set_report_meta'] == false) {
         return $report_data;
     } else {
@@ -786,9 +804,10 @@ function add_new_onfido_report_onplatform($investor, $args)
 function update_onfido_reports_status($investor, $args)
 {
 
-    $identity_report_status = $args['identity_report_status'];
-    $aml_report_status      = $args['aml_report_status'];
-    $reports                = array();
+    $identity_report_status  = $args['identity_report_status'];
+    $aml_report_status       = $args['aml_report_status'];
+    $watchlist_report_status = $data['watchlist_report_status'];
+    $reports                 = array();
 
     $args['set_report_meta'] = false;
 
@@ -869,6 +888,13 @@ function get_onfido_reports_meta_by_applicant_id($applicant_id = '', $args = arr
     }
 
     $reports = array();
+    $check_id           = '';
+    $check_status       = '';
+    $check_type         = '';
+    $check_results_uri  = '';
+    $check_download_uri = '';
+    $check_form_uri     = '';
+    $check_paused       = '';
 
     //$applicant_id = 'de331d9e-5276-4337-999b-dbcc7b47904d';
     $applicant_list_checks = json_decode(list_applicant_checks($applicant_id));
@@ -982,4 +1008,41 @@ function retrieve_report_details($args = array())
     /* Example response
 
  */
+}
+
+function createOnfidoReportObject($onfidoReports,$args){
+
+    if(empty($onfidoReports)){
+        $identity_report_obj = new \stdClass;
+        $identity_report_obj->name = 'identity';
+        $identity_report_obj->variant = 'kyc';
+        $identity_report_obj->id = '';
+        $identity_report_obj->status_growthinvest = $args['identity_report_status'];
+
+
+
+        $aml_report_obj = new \stdClass;
+        $aml_report_obj->name = 'anti_money_laundering';
+        $aml_report_obj->id = '';
+        $aml_report_obj->status_growthinvest = $args['aml_report_status'];
+
+
+        $watchlist_report_obj = new \stdClass;
+        $watchlist_report_obj->name = 'watchlist';
+        $watchlist_report_obj->variant = 'full';
+        $watchlist_report_obj->id = '';
+        $watchlist_report_obj->status_growthinvest = $args['watchlist_report_status'];
+
+        $reports[] = $identity_report_obj;
+        $reports[] = $aml_report_obj;
+        $reports[] = $watchlist_report_obj;
+    }
+    else{
+        $reports = $onfidoReports;
+    }
+
+
+
+    return $reports;
+
 }

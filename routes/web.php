@@ -40,8 +40,15 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('fundmanagers/get-fundmanagers', 'FundmanagerController@getFundmanagerslist');
     Route::get('fundmanager/export-fundmanagers', 'FundmanagerController@exportFundmanagers');
 
+    //activity feeds
+    Route::get('manage-act-feed-group', 'ActivityController@manageActivityFeedGroup');
+    Route::post('activity-group/get-activity-type', 'ActivityController@getActivityGroupType');
+    Route::post('activity-group/save-activity-type', 'ActivityController@saveActivityGroupType');
+
     //investors
     Route::get('investor/export-investors', 'InvestorController@exportInvestors');
+    Route::get('investor/export-investors-activity', 'ActivityController@exportInvestorsActivity');
+    Route::get('investor/investors-activity-pdf', 'ActivityController@generateInvestorsActivityPdf');
     Route::get('investor/registration', 'InvestorController@registration');
     Route::get('investor/download-certification/{fileid}', 'InvestorController@downloadCertification');
     Route::get('investor/{giCode}/registration', 'InvestorController@editRegistration');
@@ -58,10 +65,12 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('investor/{giCode}/investor-profile', 'InvestorController@investorProfile');
     Route::get('investor/{giCode}/investor-invest', 'InvestorController@investorInvest');
     Route::get('investor/{giCode}/investor-news-update', 'InvestorController@investorNewsUpdate');
-    Route::get('investor/{giCode}/investor-activity', 'InvestorController@investorActivity');
+    Route::get('investor/{giCode}/investor-activity', 'ActivityController@investorActivity');
+    Route::post('/save-onfido-report-status', 'InvestorController@saveOnfidoReportStatus');
     Route::post('/save-news-update', 'InvestorController@saveInvestorNewsUpdate');
     Route::post('/delete-news-update', 'InvestorController@deleteInvestorNewsUpdate');
     Route::post('investor/get-investor-invest', 'InvestorController@getInvestorInvest');
+    Route::post('investor/get-investor-activity', 'ActivityController@getInvestorActivity');
     Route::resource('investor', 'InvestorController'); 
 
     //business
@@ -97,7 +106,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('manage/manage-backoffice', ['type' => 'manage-backoffice', 'uses' => 'UserController@showAdminManage']);
     Route::get('manage/manage-frontoffice', ['type' => 'manage-frontoffice', 'uses' => 'UserController@showAdminManage']);
     Route::get('manage/companylist', ['type' => 'manage-companylist', 'uses' => 'UserController@showAdminManage']);
-    Route::get('manage/manage-act-feed-group', ['type' => 'manage-activityfeedgroup', 'uses' => 'UserController@showAdminManage']);
+    // Route::get('manage/manage-act-feed-group', ['type' => 'manage-activityfeedgroup', 'uses' => 'UserController@showAdminManage']);
     /*End Coming soon routes on manage */
 
 

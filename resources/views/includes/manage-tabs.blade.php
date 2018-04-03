@@ -20,7 +20,7 @@
                <a class="nav-link d-none d-sm-block coming-soon @if($activeMenu == 'manage-companylist') active @endif " href="{{url('backoffice/manage/companylist')}}">View/Add Company </a>
            </li>
            <li class="nav-item">
-               <a class="nav-link d-none d-sm-block coming-soon @if($activeMenu == 'manage-activityfeedgroup') active @endif "   href="{{url('backoffice/manage/manage-act-feed-group')}}">Activity Feed Group </a>
+               <a class="nav-link d-none d-sm-block coming-soon @if($activeMenu == 'manage-acttivyt-feedgroup') active @endif "   href="{{url('backoffice/manage-act-feed-group')}}">Activity Feed Group </a>
            </li>
        </ul>
 </div>

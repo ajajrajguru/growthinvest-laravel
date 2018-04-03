@@ -775,6 +775,149 @@ $(document).ready ->
     investorInvestTable.ajax.reload()
     return
 
+  investorActivityTable = $('#datatable-investor-activity').DataTable(
+    'pageLength': 50
+    'processing': false
+    'serverSide': true
+    'bAutoWidth': false
+    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>' 
+    'aaSorting': [[0,'asc']]
+    'ajax':
+      url: '/backoffice/investor/get-investor-activity'
+      type: 'post'
+      data: (data) ->
+
+        filters = {}
+        filters.duration = $('select[name="duration"]').val()
+        filters.duration_from = $('input[name="duration_from"]').val()
+        filters.duration_to = $('input[name="duration_to"]').val()
+        filters.user_id = $('input[name="user_id"]').val()
+        filters.type = $('select[name="type"]').val()
+        filters.companies = $('select[name="companies"]').val()
+
+        data.filters = filters
+        data
+
+      error: ->
+        return
+
+    'columns': [
+      { 'data': 'logo', "orderable": false }
+      { 'data': 'proposal_funds' }
+      { 'data': 'user'}
+      { 'data': 'description' , "orderable": false}
+      { 'data': 'date' }
+      { 'data': 'activity' }
+
+    ])
+
+
+  $('body').on 'click', '.apply-activity-filters', ->
+    urlParams = ''
+
+    if($('select[name="duration"]').val()!="")
+      urlParams +='duration='+$('select[name="duration"]').val() 
+
+    if($('input[name="duration_from"]').val()!="")
+      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+    if($('input[name="duration_to"]').val()!="")
+      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+    if($('select[name="type"]').val()!="")
+      urlParams +='&type='+$('select[name="type"]').val()
+
+    if($('select[name="companies"]').val()!="")
+      urlParams +='&companies='+$('select[name="companies"]').val()
+
+
+ 
+    window.history.pushState("", "", "?"+urlParams);
+
+    investorActivityTable.ajax.reload()
+    return
+
+  $('body').on 'click', '.reset-activity-filters', ->
+    $('select[name="duration"]').val('').attr('disabled',false)
+    $('input[name="duration_from"]').val('').attr('disabled',false)
+    $('input[name="duration_to"]').val('').attr('disabled',false)
+    $('select[name="type"]').val('')
+    $('select[name="companies"]').val('')
+    window.history.pushState("", "", "?");
+    investorActivityTable.ajax.reload()
+    return
+
+  $('body').on 'change', 'select[name="duration"]', ->
+    if($(this).val())
+      $('input[name="duration_from"]').val('').attr('disabled',true)
+      $('input[name="duration_to"]').val('').attr('disabled',true)
+    else
+      $('input[name="duration_from"]').val('').attr('disabled',false)
+      $('input[name="duration_to"]').val('').attr('disabled',false)
+
+  $('body').on 'change', '.date_range', ->
+    if($(this).val())
+      $('select[name="duration"]').val('').attr('disabled',true)
+    else
+      $('select[name="duration"]').val('').attr('disabled',false)
+
+  $('.download-investor-activity-report').click ->
+    type = $(this).attr('report-type')
+    urlParams = ''
+
+    if($('select[name="duration"]').val()!="")
+      urlParams +='duration='+$('select[name="duration"]').val() 
+
+    if($('input[name="duration_from"]').val()!="")
+      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+    if($('input[name="duration_to"]').val()!="")
+      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+    if($('select[name="type"]').val()!="")
+      urlParams +='&type='+$('select[name="type"]').val()
+
+    if($('select[name="companies"]').val()!="")
+      urlParams +='&companies='+$('select[name="companies"]').val()
+
+    if($('select[name="user_id"]').val()!="")
+      urlParams +='&user_id='+$('input[name="user_id"]').val()
+    
+    if(type == 'csv')  
+      window.open("/backoffice/investor/export-investors-activity?"+urlParams)
+    else if(type == 'pdf')  
+      window.open("/backoffice/investor/investors-activity-pdf?"+urlParams)
+
+
+  $(document).on 'click', '.save-onfido-report-status', ->
+    btnObj = $(this)
+    investorId = $('input[name="investor_gi"]').val()
+    identity_report = $('select[name="identity_report"]').val()
+    aml_report = $('select[name="aml_report"]').val()
+    watchlist_report = $('select[name="watchlist_report"]').val()
+   
+    $.ajax
+      type: 'post'
+      url: '/backoffice/save-onfido-report-status'
+      data:
+        'investor_id': investorId
+        'identity_report_status': identity_report
+        'aml_report_status': aml_report
+        'watchlist_report_status': watchlist_report
+      success: (data) ->
+        if !data.success
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').find('#message').html("Failed to update Status of the onfido reports")
+        else
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none')
+          btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully")
+          
+        return
+      error: (request, status, error) ->
+        throwError()
+        return
  
 
   
