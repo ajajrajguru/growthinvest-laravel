@@ -261,9 +261,11 @@ class UserController extends Controller
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'password' => $password];
             sendEmail('intermediary-changed-password', $data);
 
+            $action="New Registration on ".$firmName;
+            saveActivityLog('User',Auth::user()->id,'registration',$userId,$action,'',$user->firm_id);
+
         }
 
-        
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
         return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));

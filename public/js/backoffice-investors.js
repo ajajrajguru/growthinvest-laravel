@@ -1,6 +1,6 @@
 (function() {
   $(document).ready(function() {
-    var investorInvestTable, investorTable, scrollTopContainer, validateQuiz;
+    var investorActivityTable, investorInvestTable, investorTable, scrollTopContainer, validateQuiz;
     investorTable = $('#datatable-investors').DataTable({
       'pageLength': 50,
       'processing': false,
@@ -822,7 +822,7 @@
       window.history.pushState("", "", "?" + urlParams);
       return investorInvestTable.ajax.reload();
     });
-    return $('body').on('click', '.reset-invest-filters', function() {
+    $('body').on('click', '.reset-invest-filters', function() {
       $('select[name="company"]').val('');
       $('select[name="sector"]').val('');
       $('select[name="type"]').val('');
@@ -830,6 +830,154 @@
       $('input[name="tax_status[]"]').prop('checked', false);
       window.history.pushState("", "", "?");
       investorInvestTable.ajax.reload();
+    });
+    investorActivityTable = $('#datatable-investor-activity').DataTable({
+      'pageLength': 50,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>',
+      'aaSorting': [[0, 'asc']],
+      'ajax': {
+        url: '/backoffice/investor/get-investor-activity',
+        type: 'post',
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.duration = $('select[name="duration"]').val();
+          filters.duration_from = $('input[name="duration_from"]').val();
+          filters.duration_to = $('input[name="duration_to"]').val();
+          filters.user_id = $('input[name="user_id"]').val();
+          filters.type = $('select[name="type"]').val();
+          filters.companies = $('select[name="companies"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': 'logo',
+          "orderable": false
+        }, {
+          'data': 'proposal_funds'
+        }, {
+          'data': 'user'
+        }, {
+          'data': 'description',
+          "orderable": false
+        }, {
+          'data': 'date'
+        }, {
+          'data': 'activity'
+        }
+      ]
+    });
+    $('body').on('click', '.apply-activity-filters', function() {
+      var urlParams;
+      urlParams = '';
+      if ($('select[name="duration"]').val() !== "") {
+        urlParams += 'duration=' + $('select[name="duration"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('select[name="type"]').val() !== "") {
+        urlParams += '&type=' + $('select[name="type"]').val();
+      }
+      if ($('select[name="companies"]').val() !== "") {
+        urlParams += '&companies=' + $('select[name="companies"]').val();
+      }
+      window.history.pushState("", "", "?" + urlParams);
+      investorActivityTable.ajax.reload();
+    });
+    $('body').on('click', '.reset-activity-filters', function() {
+      $('select[name="duration"]').val('').attr('disabled', false);
+      $('input[name="duration_from"]').val('').attr('disabled', false);
+      $('input[name="duration_to"]').val('').attr('disabled', false);
+      $('select[name="type"]').val('');
+      $('select[name="companies"]').val('');
+      window.history.pushState("", "", "?");
+      investorActivityTable.ajax.reload();
+    });
+    $('body').on('change', 'select[name="duration"]', function() {
+      if ($(this).val()) {
+        $('input[name="duration_from"]').val('').attr('disabled', true);
+        return $('input[name="duration_to"]').val('').attr('disabled', true);
+      } else {
+        $('input[name="duration_from"]').val('').attr('disabled', false);
+        return $('input[name="duration_to"]').val('').attr('disabled', false);
+      }
+    });
+    $('body').on('change', '.date_range', function() {
+      if ($(this).val()) {
+        return $('select[name="duration"]').val('').attr('disabled', true);
+      } else {
+        return $('select[name="duration"]').val('').attr('disabled', false);
+      }
+    });
+    $('.download-investor-activity-report').click(function() {
+      var type, urlParams;
+      type = $(this).attr('report-type');
+      urlParams = '';
+      if ($('select[name="duration"]').val() !== "") {
+        urlParams += 'duration=' + $('select[name="duration"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('select[name="type"]').val() !== "") {
+        urlParams += '&type=' + $('select[name="type"]').val();
+      }
+      if ($('select[name="companies"]').val() !== "") {
+        urlParams += '&companies=' + $('select[name="companies"]').val();
+      }
+      if ($('select[name="user_id"]').val() !== "") {
+        urlParams += '&user_id=' + $('input[name="user_id"]').val();
+      }
+      if (type === 'csv') {
+        return window.open("/backoffice/investor/export-investors-activity?" + urlParams);
+      } else if (type === 'pdf') {
+        return window.open("/backoffice/investor/investors-activity-pdf?" + urlParams);
+      }
+    });
+    return $(document).on('click', '.save-onfido-report-status', function() {
+      var aml_report, btnObj, identity_report, investorId, watchlist_report;
+      btnObj = $(this);
+      investorId = $('input[name="investor_gi"]').val();
+      identity_report = $('select[name="identity_report"]').val();
+      aml_report = $('select[name="aml_report"]').val();
+      watchlist_report = $('select[name="watchlist_report"]').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/save-onfido-report-status',
+        data: {
+          'investor_id': investorId,
+          'identity_report_status': identity_report,
+          'aml_report_status': aml_report,
+          'watchlist_report_status': watchlist_report
+        },
+        success: function(data) {
+          if (!data.success) {
+            btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').addClass('d-none');
+            btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').removeClass('d-none');
+            btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').find('#message').html("Failed to update Status of the onfido reports");
+          } else {
+            btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').removeClass('d-none');
+            btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-danger').addClass('d-none');
+            btnObj.closest('.onfido-report-status-container').find('.onfido-report-status-success').find('#message').html("Status of the onfido reports updated successfully");
+          }
+        },
+        error: function(request, status, error) {
+          throwError();
+        }
+      });
     });
   });
 
