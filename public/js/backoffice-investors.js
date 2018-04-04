@@ -1028,8 +1028,8 @@
       if ($('select[name="companies"]').val() !== "") {
         urlParams += '&companies=' + $('select[name="companies"]').val();
       }
-      if ($('select[name="user_id"]').val() !== "") {
-        urlParams += '&user_id=' + $('select[name="user_id"]').val();
+      if ($('select[name="user"]').val() !== "") {
+        urlParams += '&user=' + $('select[name="user"]').val();
       }
       if (type === 'csv') {
         return window.open("/backoffice/investor/export-investors-activity?" + urlParams);
