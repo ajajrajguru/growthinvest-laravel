@@ -173,6 +173,9 @@ header.sticky {
     -ms-flex-preferred-size: 100%;
         flex-basis: 100%;
   }
+  .mx-xs-0 {
+    margin: auto 0;
+  }
 }
 .col-xs-12 {
   width: 100%;
@@ -764,6 +767,27 @@ div.dataTables_wrapper div.dataTables_info {
 }
 .gi-collapse .card-header a:hover {
   text-decoration: none;
+}
+.gi-collapse-2 .card-header {
+  position: relative;
+}
+.gi-collapse-2 .card-header button:before {
+  content: "\f054";
+  font-family: FontAwesome;
+  position: absolute;
+  right: 10px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  -webkit-transform: rotateZ(0deg);
+          transform: rotateZ(0deg);
+}
+.gi-collapse-2 .card-header button.collapsed:before {
+  content: "\f054";
+  font-family: FontAwesome;
+  position: absolute;
+  right: 10px;
+  -webkit-transform: rotateZ(90deg);
+          transform: rotateZ(90deg);
 }
 @media (max-width: 767px) {
   #giMenu {
