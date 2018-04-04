@@ -12,9 +12,9 @@
         @php
         $i = 1;
         @endphp
-        @foreach($activityCountSummary as $activityGroup)             
-            <td>{{ $activityGroup['group_name'] }}</td>
-            <td>{{ $activityGroup['count'] }}</td>  
+        @foreach($countData as $groupName => $count)             
+            <td>{{ $groupName }}</td>
+            <td>{{ $count }} </td>  
             @if($i % 2 == 0) 
                 </tr>
                 <tr>

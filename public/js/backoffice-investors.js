@@ -820,7 +820,6 @@
         urlParams += '&status=' + status;
       }
       window.history.pushState("", "", "?" + urlParams);
-      getActivitySummary();
       return investorInvestTable.ajax.reload();
     });
     $('body').on('click', '.reset-invest-filters', function() {
@@ -831,7 +830,6 @@
       $('input[name="tax_status[]"]').prop('checked', false);
       window.history.pushState("", "", "?");
       investorInvestTable.ajax.reload();
-      getActivitySummary();
     });
     investorActivityTable = $('#datatable-investor-activity').DataTable({
       'pageLength': 50,
@@ -924,7 +922,7 @@
           if (($('.activity-date-to').length)) {
             $('.activity-date-to').html(reponse.toDate);
           }
-          window.ajLineChart('activitysummarychart', reponse.dataProvider, reponse.graphs);
+          window.ajLineChart('activitysummarychart', reponse.dataProvider, reponse.graphs, 'activity');
           if (($('.activity-summary-count').length)) {
             $('.activity-summary-count').html(reponse.activityCountSummaryView);
           }
@@ -967,6 +965,7 @@
         urlParams += '&companies=' + $('select[name="companies"]').val();
       }
       window.history.pushState("", "", "?" + urlParams);
+      getActivitySummary();
       investorActivityTable.ajax.reload();
     });
     $('body').on('click', '.reset-activity-filters', function() {
@@ -982,6 +981,7 @@
         $('select[name="user"]').val('');
       }
       window.history.pushState("", "", "?");
+      getActivitySummary();
       investorActivityTable.ajax.reload();
     });
     $('body').on('change', 'select[name="duration"]', function() {

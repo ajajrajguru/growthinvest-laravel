@@ -1,7 +1,8 @@
 (function() {
-  window.ajLineChart = function(containerId, dataProvider, graphs) {
+  window.ajLineChart = function(containerId, dataProvider, graphs, categoryField) {
     var chart;
-    console.log(dataProvider);
+    dataProvider = $.parseJSON(dataProvider);
+    graphs = $.parseJSON(graphs);
     return chart = AmCharts.makeChart(containerId, {
       'type': 'serial',
       'theme': 'light',
@@ -21,17 +22,9 @@
         }
       ],
       'startDuration': 1,
-      'graphs': [
-        {
-          'balloonText': '<span style=\'font-size:13px;\'>[[title]] in [[category]]:<b>[[value]]</b></span>',
-          'title': 'Activity',
-          'type': 'column',
-          'fillAlphas': 0.8,
-          'valueField': 'activity'
-        }
-      ],
+      'graphs': graphs,
       'rotate': true,
-      'categoryField': 'year',
+      'categoryField': categoryField,
       'categoryAxis': {
         'gridPosition': 'start'
       },

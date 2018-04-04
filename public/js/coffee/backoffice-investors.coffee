@@ -762,7 +762,7 @@ $(document).ready ->
       urlParams +='&status='+status
 
     window.history.pushState("", "", "?"+urlParams);
-    getActivitySummary();
+    
     investorInvestTable.ajax.reload()
 
   $('body').on 'click', '.reset-invest-filters', ->
@@ -773,7 +773,7 @@ $(document).ready ->
     $('input[name="tax_status[]"]').prop('checked',false)
     window.history.pushState("", "", "?");
     investorInvestTable.ajax.reload()
-    getActivitySummary();
+    
     return
 
   investorActivityTable = $('#datatable-investor-activity').DataTable(
@@ -860,7 +860,7 @@ $(document).ready ->
 
           # if($('#activity-chart-div').length)
           # console.log 12121
-        window.ajLineChart('activitysummarychart',reponse.dataProvider,reponse.graphs)
+        window.ajLineChart('activitysummarychart',reponse.dataProvider,reponse.graphs,'activity')
 
         if($('.activity-summary-count').length)
            $('.activity-summary-count').html reponse.activityCountSummaryView
@@ -905,7 +905,7 @@ $(document).ready ->
 
  
     window.history.pushState("", "", "?"+urlParams);
-
+    getActivitySummary();
     investorActivityTable.ajax.reload()
     return
 
@@ -924,6 +924,7 @@ $(document).ready ->
 
 
     window.history.pushState("", "", "?");
+    getActivitySummary();
     investorActivityTable.ajax.reload()
     return
 

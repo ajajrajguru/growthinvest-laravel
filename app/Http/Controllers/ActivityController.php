@@ -10,9 +10,9 @@ use App\InvestorPdfHtml;
 use App\User;
 use Auth;
 use DB;
-use View;
 use Illuminate\Http\Request;
 use Spipu\Html2Pdf\Html2Pdf;
+use View;
 
 class ActivityController extends Controller
 {
@@ -142,18 +142,16 @@ class ActivityController extends Controller
         }
 
         $json_data = array(
-            "draw"                     => intval($requestData['draw']),
-            "recordsTotal"             => intval($totalActivityListings),
-            "recordsFiltered"          => intval($totalActivityListings),
-            "data"                     => $activityListingData,
-           
+            "draw"            => intval($requestData['draw']),
+            "recordsTotal"    => intval($totalActivityListings),
+            "recordsFiltered" => intval($totalActivityListings),
+            "data"            => $activityListingData,
+
         );
 
         return response()->json($json_data);
 
     }
-
-
 
     // public function getFilteredActivityListing($filters, $skip, $length, $orderDataBy){
 
@@ -204,7 +202,7 @@ class ActivityController extends Controller
     public function getActivitySummary(Request $request)
     {
 
-        $filters = $request->all(); 
+        $filters = $request->all();
 
         $whereStr         = '';
         $firmWhere        = '';
@@ -298,18 +296,19 @@ class ActivityController extends Controller
         $orderby    = " order by a1.type";
 
         $selectActivityLog = $mainselect . $compWhere . $whereStr . $parentChildFirms . $typeStr . $firmWhere . $companyWhere . $userWhere . $groupby . $orderby;
-
+         
         $groupActs        = $this->getActivitiesByGroup();
         $finalarr         = array();
         $activityTypeList = activityTypeList();
         $activityLogs     = DB::select($selectActivityLog);
-
+        
+        $ckIfAddedToList = [];
         foreach ($activityLogs as $activityLog) {
             if (array_key_exists($activityLog->type, $activityTypeList)) {
 
                 $groupname = (!isset($groupActs[$activityLog->type]) || $groupActs[$activityLog->type] == "") ? "Others" : $groupActs[$activityLog->type];
                 $typetitle = $activityTypeList[$activityLog->type];
-
+                $ckIfAddedToList[$activityLog->type] = $activityLog->type;
                 $finalarr[] = array('typetitle' => $typetitle,
                     'type'                          => $activityLog->type,
                     'count'                         => $activityLog->count,
@@ -327,10 +326,10 @@ class ActivityController extends Controller
 
         foreach ($activityTypeList as $typetitlekey => $typetitlevalue) {
 
-            if (is_in_array($finalarr, 'type', $typetitlekey) == 'no') {
+            if (!isset($ckIfAddedToList[$typetitlekey])) {
 
                 $groupname1 = (!isset($groupActs[$typetitlekey]) || $groupActs[$typetitlekey] == "") ? "Others" : $groupActs[$typetitlekey];
-
+                $ckIfAddedToList[$typetitlekey] = $typetitlekey;
                 $finalarr[] = array(
                     'typetitle'       => $typetitlevalue,
                     'type'            => $typetitlekey,
@@ -344,28 +343,38 @@ class ActivityController extends Controller
         asort($finalarr);
         $activityCountSummary = array_values($finalarr);
 
-        $activityCountSummaryView = View::make('backoffice.activity.activity-group-count', compact('activityCountSummary'))->render();
+
+        
 
         $dataProvider = [];
         $graphs       = [];
-
-        foreach ($activityCountSummary as  $activityCount) {
-            $dataProvider[] = ['activity'=>$activityCount['typetitle_count'] ,'count'=> $activityCount['count']];
+        $countData = [];
+        foreach ($activityCountSummary as $activityCount) {
+            if(isset($countData[$activityCount['group_name']])){
+                $countData[$activityCount['group_name']] += $activityCount['count'];
+            }
+            else{
+                $countData[$activityCount['group_name']] = $activityCount['count'];
+            }
+            
+            if($activityCount['count']>0)
+                $dataProvider[] = ['activity' => $activityCount['typetitle_count'], 'count' => $activityCount['count']];
         }
 
-        $graphs[] = [ 'balloonText' => '<span style=\'font-size:13px;\'>[[title]] in [[category]]:<b>[[value]]</b></span>',
-                    'title'=> 'Activity',
-                    'type'=> 'column',
-                    'fillAlphas'=> 0.8,
-                    'valueField'=> 'activity'
-                    ] ;
- 
+        $graphs[] = ['balloonText' => '<span style=\'font-size:13px;\'>[[title]] in [[category]]:<b>[[value]]</b></span>',
+            'title'                    => 'Count',
+            'type'                     => 'column',
+            'fillAlphas'               => 0.8,
+            'valueField'               => 'count',
+        ];
+        
+        $activityCountSummaryView = View::make('backoffice.activity.activity-group-count', compact('countData'))->render();
 
         $json_data = array(
             "activityCountSummaryView" => $activityCountSummaryView,
-            "dataProvider"             => json_encode($dataProvider),
+            "dataProvider"             => json_encode($dataProvider,true),
             "graphs"                   => json_encode($graphs),
-            "fromDate"                   => $fromDate,
+            "fromDate"                 => $fromDate,
             "toDate"                   => $toDate,
         );
 

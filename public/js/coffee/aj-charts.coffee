@@ -1,6 +1,8 @@
 
-window.ajLineChart = (containerId,dataProvider,graphs) ->  
-	console.log dataProvider
+window.ajLineChart = (containerId,dataProvider,graphs,categoryField) ->  
+	dataProvider = $.parseJSON(dataProvider)
+	graphs = $.parseJSON(graphs)
+ 
 	chart = AmCharts.makeChart(containerId,
 	  'type': 'serial'
 	  'theme': 'light'
@@ -17,15 +19,9 @@ window.ajLineChart = (containerId,dataProvider,graphs) ->
 	    'axisAlpha': 0
 	  } ]
 	  'startDuration': 1
-	  'graphs': [ {
-	    'balloonText': '<span style=\'font-size:13px;\'>[[title]] in [[category]]:<b>[[value]]</b></span>'
-	    'title': 'Activity'
-	    'type': 'column'
-	    'fillAlphas': 0.8
-	    'valueField': 'activity'
-	  } ]
+	  'graphs': graphs
 	  'rotate': true
-	  'categoryField': 'year'
+	  'categoryField': categoryField
 	  'categoryAxis': 'gridPosition': 'start'
 	  'export': 'enabled': true)
 
