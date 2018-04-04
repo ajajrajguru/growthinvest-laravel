@@ -33,3 +33,28 @@
 		}
 	}
 }
+
+.gi-collapse-2 {
+	.card-header {
+		position: relative;
+		button {
+			&:before {
+				content: "\f054";
+				font-family: FontAwesome;
+				position: absolute;
+				right: 10px;
+				transition: 0.5s;
+				transform: rotateZ(0deg);
+			}
+			&.collapsed {
+				&:before {
+					content: "\f054";
+					font-family: FontAwesome;
+					position: absolute;
+					right: 10px;
+					transform: rotateZ(90deg);
+				}
+			}
+		}
+	}
+}
