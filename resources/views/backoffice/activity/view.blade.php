@@ -195,7 +195,7 @@
                         <div class="tab-pane active p-3" id="activity-summary" role="tabpanel">
                              <div class="activity-summary-count"></div>
 
-                            <h4>Activity Summary (<span class="activity-date-from"></span> to <span class="activity-date-to"></span> )</h4>
+                            <h4 class="d-none">Activity Summary (<span class="activity-date-from"></span> to <span class="activity-date-to"></span> )</h4>
                             <div id="activitysummarychart"></div>
                         </div>  
                         <div class="tab-pane p-3" id="activity-details" role="tabpanel">

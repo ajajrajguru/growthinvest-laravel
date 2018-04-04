@@ -921,8 +921,11 @@
           }
           if (($('.activity-date-to').length)) {
             $('.activity-date-to').html(reponse.toDate);
+            $('.activity-date-to').closest('h4').removeClass('d-none');
           }
-          window.ajLineChart('activitysummarychart', reponse.dataProvider, reponse.graphs, 'activity');
+          if (($('#activitysummarychart').length)) {
+            window.ajLineChart('activitysummarychart', reponse.dataProvider, reponse.graphs, 'activity');
+          }
           if (($('.activity-summary-count').length)) {
             $('.activity-summary-count').html(reponse.activityCountSummaryView);
           }
@@ -963,6 +966,12 @@
       }
       if ($('select[name="companies"]').val() !== "") {
         urlParams += '&companies=' + $('select[name="companies"]').val();
+      }
+      if ($('select[name="firm"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm"]').val();
+      }
+      if ($('select[name="activity_group"]').val() !== "") {
+        urlParams += '&activity_group=' + $('select[name="activity_group"]').val();
       }
       window.history.pushState("", "", "?" + urlParams);
       getActivitySummary();
