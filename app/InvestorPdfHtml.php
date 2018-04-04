@@ -3682,9 +3682,18 @@ class InvestorPdfHtml
                     $userObj[$activityListing->user_id] = $user;
                 }
 
-                $userName = $activityListing->username;
-                $userName = explode(' ', $userName);
-                list($firstName,$lastName) = $userName;
+                $firstName = '';
+                $lastName = '';
+
+                $userName                   = $activityListing->username;
+                if(trim($userName)!=""){
+                    $userName                   = explode(' ', $userName);
+                    if(count($userName)>2)
+                        list($firstName, $lastName) = $userName;
+                    else
+                        $firstName  = $userName;
+
+                }
 
                 $activityId[$activityListing->id] = $activityListing->id;
                 $userActivity                     = Activity::find($activityListing->id);

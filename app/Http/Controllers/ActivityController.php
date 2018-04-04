@@ -684,10 +684,19 @@ class ActivityController extends Controller
                 $user                               = User::find($activityListing->user_id);
                 $userObj[$activityListing->user_id] = $user;
             }
+            $firstName = '';
+            $lastName = '';
 
             $userName                   = $activityListing->username;
-            $userName                   = explode(' ', $userName);
-            list($firstName, $lastName) = $userName;
+            if(trim($userName)!=""){
+                $userName                   = explode(' ', $userName);
+                if(count($userName)>2)
+                    list($firstName, $lastName) = $userName;
+                else
+                    $firstName  = $userName;
+
+            }
+            
 
             $activityId[] = $activityListing->id;
             $userActivity = Activity::find($activityListing->id);
