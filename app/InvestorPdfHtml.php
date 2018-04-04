@@ -3662,6 +3662,8 @@ class InvestorPdfHtml
         $activityData     = [];
         $activityTypeList = activityTypeList();
         $row_cnt = 0;
+        $userObj          = [];
+
         if (!empty($activityListings)) {
 
             foreach ($activityListings as $key => $activityListing) {
@@ -3672,14 +3674,23 @@ class InvestorPdfHtml
                     $bgcolor = '#f9fafb';
                 }
 
+                
+                if (isset($userObj[$activityListing->user_id])) {
+                    $user = $userObj[$activityListing->user_id];
+                } else {
+                    $user                               = User::find($activityListing->user_id);
+                    $userObj[$activityListing->user_id] = $user;
+                }
+
                 $userName = $activityListing->username;
                 $userName = explode(' ', $userName);
                 list($firstName,$lastName) = $userName;
 
                 $activityId[$activityListing->id] = $activityListing->id;
                 $userActivity                     = Activity::find($activityListing->id);
-                $investor                         = $userActivity->user;
-                $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
+                 
+                // $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
+                $userType = (!empty($user) && !empty($user->roles())) ? title_case($user->roles()->pluck('display_name')->implode(' ')) : '';
                 $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
                 $firstname                        = title_case($firstName);
                 $lastname                         = title_case($lastName);
@@ -3694,7 +3705,7 @@ class InvestorPdfHtml
                             <td  style='width: 15%;' align='center' ></td>
                             <td style='width: 10%;'>" . $firstname . "</td>
                             <td style='width: 10%;''>" . $lastname . "</td>
-                            <td style='width: 10%;'>" . $certificationName . "</td>
+                            <td style='width: 10%;'>" . $userType . "</td>
                             <td style='width: 15%;'>" . $activityName . "</td>
                             <td style='width: 15%;'>" . $date . "</td>
                             <td style='width: 15%;' align='center' >". $description ."</td>";

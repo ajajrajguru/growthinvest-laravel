@@ -762,7 +762,7 @@ $(document).ready ->
       urlParams +='&status='+status
 
     window.history.pushState("", "", "?"+urlParams);
-
+    getActivitySummary();
     investorInvestTable.ajax.reload()
 
   $('body').on 'click', '.reset-invest-filters', ->
@@ -773,6 +773,7 @@ $(document).ready ->
     $('input[name="tax_status[]"]').prop('checked',false)
     window.history.pushState("", "", "?");
     investorInvestTable.ajax.reload()
+    getActivitySummary();
     return
 
   investorActivityTable = $('#datatable-investor-activity').DataTable(
@@ -791,9 +792,15 @@ $(document).ready ->
         filters.duration = $('select[name="duration"]').val()
         filters.duration_from = $('input[name="duration_from"]').val()
         filters.duration_to = $('input[name="duration_to"]').val()
-        filters.user_id = $('input[name="user_id"]').val()
+        filters.user_id = $('select[name="user"]').val()
         filters.type = $('select[name="type"]').val()
-        filters.companies = $('select[name="companies"]').val()
+        filters.activity_group = $('select[name="activity_group"]').val()
+        filters.firmid = $('select[name="firm"]').val()
+        if $('input[name="exclude_platform_admin_activity"]').is(':checked')
+          filters.exclude_platform_admin_activity = 1
+        else
+          filters.exclude_platform_admin_activity = 0
+
 
         data.filters = filters
         data
@@ -805,11 +812,76 @@ $(document).ready ->
       { 'data': 'logo', "orderable": false }
       { 'data': 'proposal_funds' }
       { 'data': 'user'}
+      { 'data': 'user_type' }
+      { 'data': 'firm' }
+      { 'data': 'gi_code' , "orderable": false}
+      { 'data': 'email' }
+      { 'data': 'telephone' }
       { 'data': 'description' , "orderable": false}
       { 'data': 'date' }
       { 'data': 'activity' }
 
-    ])
+    ]
+    'columnDefs': [
+      {
+        'targets': 'col-visble'
+        'visible': false
+      }
+    ]
+
+    )
+
+
+  getActivitySummary = () -> 
+
+    filters = {}
+    filters.duration = $('select[name="duration"]').val()
+    filters.duration_from = $('input[name="duration_from"]').val()
+    filters.duration_to = $('input[name="duration_to"]').val()
+    filters.user_id = $('select[name="user"]').val()
+    filters.type = $('select[name="type"]').val()
+    filters.activity_group = $('select[name="activity_group"]').val()
+    filters.firmid = $('select[name="firm"]').val()
+    if $('input[name="exclude_platform_admin_activity"]').is(':checked')
+      filters.exclude_platform_admin_activity = 1
+    else
+      filters.exclude_platform_admin_activity = 0
+
+     $.ajax
+      type: 'post'
+      url: '/backoffice/activity/activity-summary'
+      data:filters
+      success: (reponse) ->
+        if($('.activity-date-from').length)
+          $('.activity-date-from').html reponse.fromDate
+
+        if($('.activity-date-to').length)
+          $('.activity-date-to').html reponse.toDate
+
+          # if($('#activity-chart-div').length)
+          # console.log 12121
+        window.ajLineChart('activitysummarychart',reponse.dataProvider,reponse.graphs)
+
+        if($('.activity-summary-count').length)
+           $('.activity-summary-count').html reponse.activityCountSummaryView
+
+        return
+      error: (request, status, error) ->
+        throwError()
+        return 
+  
+  if($('.activity-summary-count').length)    
+    getActivitySummary()
+
+
+
+  $('body').on 'click', '.alter-activity-table', ->
+    $('.activity-cols').each ->
+      colIndex = $(this).val()
+      if $(this).is(':checked')
+        investorActivityTable.column( colIndex ).visible( true );
+      else
+        investorActivityTable.column( colIndex ).visible( false );
 
 
   $('body').on 'click', '.apply-activity-filters', ->
@@ -843,6 +915,14 @@ $(document).ready ->
     $('input[name="duration_to"]').val('').attr('disabled',false)
     $('select[name="type"]').val('')
     $('select[name="companies"]').val('')
+    $('select[name="firm"]').val('')
+    $('select[name="activity_group"]').val('')
+    $('input[name="exclude_platform_admin_activity"]').prop('checked',true)
+
+    if $('select[name="user"]').attr('is-visible') == "true"
+      $('select[name="user"]').val('')
+
+
     window.history.pushState("", "", "?");
     investorActivityTable.ajax.reload()
     return
@@ -881,7 +961,7 @@ $(document).ready ->
       urlParams +='&companies='+$('select[name="companies"]').val()
 
     if($('select[name="user_id"]').val()!="")
-      urlParams +='&user_id='+$('input[name="user_id"]').val()
+      urlParams +='&user_id='+$('select[name="user_id"]').val()
     
     if(type == 'csv')  
       window.open("/backoffice/investor/export-investors-activity?"+urlParams)
