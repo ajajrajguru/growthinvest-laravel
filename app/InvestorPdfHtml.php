@@ -3688,7 +3688,7 @@ class InvestorPdfHtml
                 $userName                   = $activityListing->username;
                 if(trim($userName)!=""){
                     $splitUserName                   = explode(' ', $userName);
-                    if(count($splitUserName)>2)
+                    if(count($splitUserName)>=2)
                         list($firstName, $lastName) = $splitUserName;
                     else
                         $firstName  = $userName;
