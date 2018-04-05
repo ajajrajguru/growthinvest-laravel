@@ -109,7 +109,16 @@
 
                                 </select>
 
-                                <input type="hidden" name="user_id" value="{{ $investor->id }}">
+                                <select name="user" id="user" class="form-control d-none" is-visible="false">
+                                  <option value="{{ $investor->id }}" selected>{{ $investor->id }}</option>
+                                </select>
+
+                                 <select name="firm" id="firm" class="form-control d-none">
+                                </select>
+
+                                 <select name="activity_group" id="activity_group" class="form-control d-none">
+                                 </select>
+                                <input type="checkbox" name="exclude_platform_admin_activity" id="exclude_platform_admin_activity" class="d-none" value="1">
                             </div>
                         </div>
                     </div>
@@ -136,6 +145,11 @@
                                 <th></th>
                                 <th class="w-search">Business Proposals/Funds</th>
                                 <th class="w-search">User</th>
+                                <th class="col-visble">User Type</th>
+                                <th class="col-visble">Firm Name</th>
+                                <th class="col-visble">GI Code</th>
+                                <th class="col-visble">Email</th>
+                                <th class="col-visble">Telephone</th>
                                 <th>Description</th>
                                 <th class="w-search">Date</th>
                                 <th class="w-search">Activity</th>

@@ -44,8 +44,10 @@ class UserPermission
                 'backoffice/firms/{giCode}'                                   => ['edit_firm', 'edit_my_firm'],
 
                 'backoffice/manage-act-feed-group'                            => ['manage_options'],
-                'backoffice/activity-group/get-activity-type'                            => ['manage_options'],
-                'backoffice/activity-group/save-activity-type'                            => ['manage_options'],
+                'backoffice/activity-group/get-activity-type'                 => ['manage_options'],
+                'backoffice/activity-group/save-activity-type'                => ['manage_options'],
+                'backoffice/activity/summary'                                 => ['backoffice_access'],
+                'backoffice/activity/activity-summary'                                 => ['backoffice_access'],
 
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],

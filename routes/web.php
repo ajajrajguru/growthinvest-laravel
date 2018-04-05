@@ -45,6 +45,10 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('activity-group/get-activity-type', 'ActivityController@getActivityGroupType');
     Route::post('activity-group/save-activity-type', 'ActivityController@saveActivityGroupType');
 
+    Route::get('activity/summary', 'ActivityController@activitySummary');
+    Route::post('activity/activity-summary', 'ActivityController@getActivitySummary');
+
+
     //investors
     Route::get('investor/export-investors', 'InvestorController@exportInvestors');
     Route::get('investor/export-investors-activity', 'ActivityController@exportInvestorsActivity');

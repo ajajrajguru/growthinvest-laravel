@@ -783,7 +783,7 @@ function add_new_onfido_report_onplatform($investor, $args)
             'reports'                                         => $reports,
         ),
     );
-    
+
     if ($args['set_report_meta'] == false) {
         return $report_data;
     } else {
@@ -887,7 +887,7 @@ function get_onfido_reports_meta_by_applicant_id($applicant_id = '', $args = arr
         $new_aml_report_status = $args['aml_report_status'];
     }
 
-    $reports = array();
+    $reports            = array();
     $check_id           = '';
     $check_status       = '';
     $check_type         = '';
@@ -1010,39 +1010,72 @@ function retrieve_report_details($args = array())
  */
 }
 
-function createOnfidoReportObject($onfidoReports,$args){
+function createOnfidoReportObject($onfidoReports, $args)
+{
 
-    if(empty($onfidoReports)){
-        $identity_report_obj = new \stdClass;
-        $identity_report_obj->name = 'identity';
-        $identity_report_obj->variant = 'kyc';
-        $identity_report_obj->id = '';
+    if (empty($onfidoReports)) {
+        $identity_report_obj                      = new \stdClass;
+        $identity_report_obj->name                = 'identity';
+        $identity_report_obj->variant             = 'kyc';
+        $identity_report_obj->id                  = '';
         $identity_report_obj->status_growthinvest = $args['identity_report_status'];
 
-
-
-        $aml_report_obj = new \stdClass;
-        $aml_report_obj->name = 'anti_money_laundering';
-        $aml_report_obj->id = '';
+        $aml_report_obj                      = new \stdClass;
+        $aml_report_obj->name                = 'anti_money_laundering';
+        $aml_report_obj->id                  = '';
         $aml_report_obj->status_growthinvest = $args['aml_report_status'];
 
-
-        $watchlist_report_obj = new \stdClass;
-        $watchlist_report_obj->name = 'watchlist';
-        $watchlist_report_obj->variant = 'full';
-        $watchlist_report_obj->id = '';
+        $watchlist_report_obj                      = new \stdClass;
+        $watchlist_report_obj->name                = 'watchlist';
+        $watchlist_report_obj->variant             = 'full';
+        $watchlist_report_obj->id                  = '';
         $watchlist_report_obj->status_growthinvest = $args['watchlist_report_status'];
 
         $reports[] = $identity_report_obj;
         $reports[] = $aml_report_obj;
         $reports[] = $watchlist_report_obj;
-    }
-    else{
+    } else {
         $reports = $onfidoReports;
     }
 
-
-
     return $reports;
 
+}
+
+function groupTypeList($typeLists)
+{
+    $typeArr = [];
+    foreach ($typeLists as $typeList) {
+
+        if ($typeList->type == "") {
+            continue;
+        }
+        
+        if (in_array($typeList->type, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
+            'download_investor_csv', 'download_transfer_asset_guide',
+            'download_vct_asset_transfer_form', 'download_single_company_asset_transfer_form', 'download_iht_product_asset_transfer_form', 'download_portfolio_asset_transfer_form', 'download_stock_transfer_form', 'submitted_transfers',
+            'status_changes_for_asset_transfers', 'transfers_deleted',
+            'start_adobe_sign', 'completed_adobe_sign',
+            'external_downloads', 'stage_3_profile_details',
+            'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
+                $typeArr['section1'][] = $typeList->type;
+
+
+        } elseif (in_array($typeList->type, ['new_provider_added'])) {
+            $typeArr['section2'][] = $typeList->type;
+
+        } elseif (in_array($typeList->type, ['investor_message', 'entrepreneur_message'])) {
+            $typeArr['section3'][] = $typeList->type;
+
+        } elseif (in_array($typeList->type, ['proposal_details_update', 'fund_details_update'])) {
+            $typeArr['section4'][] = $typeList->type;
+        } elseif (in_array($typeList->type, ['invested'])) {
+          $typeArr['section5'][] = $typeList->type;
+        } else {
+            $typeArr['section6'][] = $typeList->type;
+
+        }
+    }
+
+    return $typeArr;
 }
