@@ -8,6 +8,7 @@ use App\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use View;
 
 class BusinessListingController extends Controller
 {
@@ -551,7 +552,7 @@ class BusinessListingController extends Controller
 
             if (in_array($business_data['data_key'], $serialized_meta_keys)) {
                 $business_data_ar[$business_data['data_key']] = @unserialize($business_data['data_value']);
-                if (in_array($business_data['data_key'], ['proposal_desc_details', 'company_details','fundvct_details','fundcharges_details'])) {
+                if (in_array($business_data['data_key'], ['proposal_desc_details', 'company_details', 'fundvct_details', 'fundcharges_details'])) {
                     $business_data_ar[$business_data['data_key']] = @unserialize($business_data_ar[$business_data['data_key']]);
 
                 }
@@ -585,14 +586,14 @@ class BusinessListingController extends Controller
 
         }
 
-        $round_parent = ($business_listing->parent==0)?$business_listing->id:$business_listing->parent;
-        $data['business_rounds'] = $business_listing->getAllNextProposalRounds($business_listing->id,$round_parent);
+        $round_parent            = ($business_listing->parent == 0) ? $business_listing->id : $business_listing->parent;
+        $data['business_rounds'] = $business_listing->getAllNextProposalRounds($business_listing->id, $round_parent);
 
         $data['management_team']    = $team_members;
         $data['approvers']          = $approvers;
         $data['milestones']         = $milestones;
         $data['stages_of_business'] = $stages_of_business;
-        $data['business_sectors'] = $business_sectors;
+        $data['business_sectors']   = $business_sectors;
 
         /*echo "<pre>";
         print_r($data);
@@ -625,6 +626,109 @@ class BusinessListingController extends Controller
         $data['activeMenu']                      = 'manage_clients';
 
         return view('backoffice.clients.current_business_valuation')->with($data);
+
+    }
+
+    public function investmentOpportunities(Request $request, $type)
+    {
+
+        if ($type == 'single-company') {
+            $businessListingType = 'proposal';
+        } elseif ($type == 'funds') {
+            $businessListingType = 'fund';
+        } elseif ($type == 'vct') {
+            $businessListingType = 'fund';
+        }
+
+        $sectors          = getBusinessSectors();
+
+        $data['business_listing_type'] = $businessListingType;
+        $data['sectors'] = $sectors;
+        return view('frontend.investment-opportunities')->with($data);
+    }
+
+    public function getFilteredInvestmentOpportunity(Request $request)
+    {
+        $filters = $request->all();
+        $listingTaxStatus = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
+        $businessListingType = $filters['business_listing_type'];
+
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id');
+        })->whereIn('business_investments.status', ['pledged', 'funded']);
+
+
+        if (isset($filters['sectors']) && $filters['sectors'] != "") {
+            $sectors = $filters['sectors'];
+            $sectors = explode(',', $sectors);
+            $sectors = array_filter($sectors);
+            
+            $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
+                $join->on('business_listings.id', 'business_has_defaults.business_id');
+            })->whereIn('business_has_defaults.default_id', $sectors);
+        }
+
+
+        $businessListingQuery->where('business_listings.type', $businessListingType);
+
+        if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
+            $taxStatus = $filters['tax_status'];
+            $taxStatus = explode(',', $taxStatus);
+            $taxStatus = array_filter($taxStatus);
+
+            if (in_array('all', $taxStatus)) {
+                if(count($taxStatus) == 1)
+                {
+                    $taxStatus        = $listingTaxStatus[$businessListingType];
+                }
+                else{
+                    if (($key = array_search('all', $taxStatus)) !== false) {
+                        unset($taxStatus[$key]);
+                    }
+                }
+            }
+
+        } else {
+            
+            $taxStatus        = $listingTaxStatus[$businessListingType];
+        }
+
+        $businessListingQuery->where(function ($bQuery) use ($taxStatus) {
+            foreach ($taxStatus as $key => $status) {
+                $statusArr   = [];
+                $statusArr[] = $status;
+                $taxStatus   = json_encode($statusArr); 
+                if ($key == 0) {
+                    $bQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '" . $taxStatus . "' )");
+                } else {
+                    $bQuery->orWhereRaw("JSON_CONTAINS(business_listings.tax_status, '" . $taxStatus . "' )");
+                }
+
+            }
+
+        });
+ 
+        if ($businessListingType == 'proposal') {
+            $cardName = 'single-company-card';
+        } elseif ($businessListingType == 'fund') {
+            $cardName = 'funds-card';
+        } elseif ($businessListingType == 'vct') {
+            $cardName = 'vct-card';
+        }
+
+        $businessListingQuery->groupBy('business_listings.id');
+        $businessListings      = $businessListingQuery->get();
+        $totalBusinessListings = $businessListingQuery->count();
+
+        $activityCountSummaryView = View::make('frontend.business-listings.' . $cardName, compact('businessListings'))->render();
+
+        $json_data = array(
+            "businesslistinghtml"   => $activityCountSummaryView,
+            "totalBusinessListings" => $totalBusinessListings,
+
+        );
+
+        return response()->json($json_data);
 
     }
 

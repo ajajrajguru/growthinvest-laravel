@@ -132,6 +132,7 @@ class BusinessListing extends Model
 
     }
 
+
     public function getStagesOfBusinessFromDefaultAr($business_default_ar)
     {
         $stages_of_business = $this->getDefaultFromDefaultsArByType($business_default_ar, 'stage_of_business');
@@ -218,6 +219,17 @@ class BusinessListing extends Model
         return $business_rounds;
     } 
 
+
+    public function getBusinessDefaultsData(){
+        $businessDefaults = $this->businessDefaults()->get(); 
+        $data = [];
+        foreach ($businessDefaults as $key => $businessDefault) {
+            $defaultData = $businessDefault->belongsDefault;
+            $data[$defaultData->type][] = $defaultData->name;
+        }
+
+        return $data;
+    }
 
 
 }
