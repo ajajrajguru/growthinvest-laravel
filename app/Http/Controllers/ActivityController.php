@@ -87,9 +87,14 @@ class ActivityController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
+            '1' => 'itemname',
             '2' => 'username',
-            '4' => 'date_recorded',
-            '5' => 'activitytype',
+            '4' => 'firm',
+            '5' => 'gi_code',
+            '6' => 'email',
+            '7' => 'telephone',
+            '9' => 'date_recorded',
+            '10' => 'activitytype',
         );
 
         $columnName = 'date_recorded';
@@ -126,7 +131,7 @@ class ActivityController extends Controller
 
             $activityListingData[] = [
                 'logo'           => '',
-                'proposal_funds' => '',
+                'proposal_funds' => $activityListing->itemname,
                 'user'           => (!empty($activityListing->username)) ? title_case($activityListing->username) : '',
                 'user_type'      => $userType,
                 'firm'           => (!empty($activityListing->firmname)) ? title_case($activityListing->firmname) : '',
@@ -532,7 +537,7 @@ class ActivityController extends Controller
                 } elseif (in_array($activityType, ['new_provider_added'])) {
 
                     $customfieldselect = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
-                    $customjoin        = " INNER JOIN users u1 on u1.ID=a1.user_id";
+                    $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
                     if (isset($filters['user_id']) && $filters['user_id'] != "") {
@@ -549,7 +554,7 @@ class ActivityController extends Controller
                 } elseif (in_array($activityType, ['investor_message', 'entrepreneur_message'])) {
 
                     $customfieldselect = " ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug";
-                    $customjoin        = " INNER JOIN users u1 on u1.ID=a1.item_id INNER JOIN users u2 on u2.ID=a1.user_id";
+                    $customjoin        = " INNER JOIN users u1 on u1.id=a1.item_id INNER JOIN users u2 on u2.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
 
                     //overide the condition
@@ -567,7 +572,7 @@ class ActivityController extends Controller
                 } elseif (in_array($activityType, ['proposal_details_update', 'fund_details_update'])) {
 
                     $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug";
-                    $customjoin        = " INNER JOIN  users u1 on u1.ID=a1.user_id INNER JOIN business_listings p1 on p1.ID=a1.item_id";
+                    $customjoin        = " INNER JOIN  users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere       = $parentChildFirms;
 
                     //overide the condition
@@ -588,8 +593,8 @@ class ActivityController extends Controller
                 } elseif (in_array($activityType, ['invested'])) {
 
                     $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug";
-                    $customjoin        = " LEFT JOIN users u1 on u1.ID=a1.user_id
-                             LEFT JOIN business_listings p1 on p1.ID=a1.item_id";
+                    $customjoin        = " LEFT JOIN users u1 on u1.id=a1.user_id
+                             LEFT JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere = $parentChildFirms;
 
                     //overide the condition
@@ -611,8 +616,7 @@ class ActivityController extends Controller
                 } else {
 
                     $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug";
-                    $customjoin        = " INNER JOIN users u1 on u1.ID=a1.user_id
-                             INNER JOIN business_listings p1 on p1.ID=a1.item_id";
+                    $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere = $parentChildFirms;
 
                     //overide the condition
@@ -638,7 +642,7 @@ class ActivityController extends Controller
                 $count++;
 
             }
-
+            
             if ($length > 1) {
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
                 $activityListQuery .= $orderby . " limit " . $skip . ", " . $length;
