@@ -68,7 +68,81 @@
 
 
                 <div class="gray-section border bg-gray p-3">
-                    <div class="row mb-3">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="bg-lightgray p-3">
+                                <div>
+                                    <select name="duration" class="form-control">
+                                      <option value="">Select Period</option>
+                                      @foreach($durationType as $durationKey=>$duration)
+                                        <option value="{{ $durationKey }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey) selected @endif>{{ $duration }}</option>
+                                      @endforeach
+
+                                    </select>
+                                </div>
+                                <p class="text-center mt-3 mb-2 font-weight-bold">OR</p>
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <div class="input-group border-bottom">
+                                          <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                                          <div class="input-group-append border-bottom">
+                                            <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="input-group border-bottom">
+                                          <input type="text"  placeholder="Select To Date" class="form-control datepicker date_range" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                                          <div class="input-group-append border-bottom">
+                                            <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row mt-3">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <select name="type" id="" class="form-control">
+                                          <option value="">View All Activity Type</option>
+                                          @foreach($activityTypes as $activityTypeKey=>$activityType)
+                                            <option value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
+                                          @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <select name="companies" id="" class="form-control">
+                                          <option value="">View All Companies</option>
+                                          @foreach($businessListings as $businessListing)
+                                            <option value="{{ $businessListing->id }}" @if(isset($requestFilters['companies']) && $requestFilters['companies'] == $businessListing->id) selected @endif>{{ $businessListing->title }}</option>
+                                          @endforeach
+                                        </select>
+                                    </div>
+
+                                    <select name="user" id="user" class="form-control d-none" is-visible="false">
+                                      <option value="{{ $investor->id }}" selected>{{ $investor->id }}</option>
+                                    </select>
+
+                                    <select name="firm" id="firm" class="form-control d-none"></select>
+
+                                    <select name="activity_group" id="activity_group" class="form-control d-none"></select>
+                                    <input type="checkbox" name="exclude_platform_admin_activity" id="exclude_platform_admin_activity" class="d-none" value="1">
+                                </div>
+                            </div>
+
+                            <div class="mt-sm-4 text-right">
+                                <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
+                                <button class="btn btn-default reset-activity-filters">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row mb-3">
                         <div class="col-md-3">
                             <div>
                                 <select name="duration" class="form-control">
@@ -121,14 +195,14 @@
                                 <input type="checkbox" name="exclude_platform_admin_activity" id="exclude_platform_admin_activity" class="d-none" value="1">
                             </div>
                         </div>
-                    </div>
-                    <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+                    </div> -->
+                    <!-- <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
 
                         <div class="mt-3 mt-sm-0">
                             <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
                             <button class="btn btn-default reset-activity-filters">Reset</button>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
 
