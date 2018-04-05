@@ -915,7 +915,7 @@ $(document).ready ->
     return
 
   $('body').on 'click', '.reset-activity-filters', ->
-    $('select[name="duration"]').val('').attr('disabled',false)
+    $('select[name="duration"]').val('lasttwomonth').attr('disabled',false)
     $('input[name="duration_from"]').val('').attr('disabled',false)
     $('input[name="duration_to"]').val('').attr('disabled',false)
     $('select[name="type"]').val('')

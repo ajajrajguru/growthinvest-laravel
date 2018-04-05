@@ -978,7 +978,7 @@
       investorActivityTable.ajax.reload();
     });
     $('body').on('click', '.reset-activity-filters', function() {
-      $('select[name="duration"]').val('').attr('disabled', false);
+      $('select[name="duration"]').val('lasttwomonth').attr('disabled', false);
       $('input[name="duration_from"]').val('').attr('disabled', false);
       $('input[name="duration_to"]').val('').attr('disabled', false);
       $('select[name="type"]').val('');
