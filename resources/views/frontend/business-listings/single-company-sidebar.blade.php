@@ -52,18 +52,12 @@
 	    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
 	      <div class="card-body ">
 	        <div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch2">
-				  <label class="custom-control-label" for="ch3">Generalist</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch4" >
-				  <label class="custom-control-label" for="ch4">AIM</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch5" >
-				  <label class="custom-control-label" for="ch5">Specialist</label>
-				</div>
+				@foreach($dueDeligence as $dueDeligenceValue)
+	                <div class="custom-control custom-checkbox">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="due_deligence[]" id="ch_{{ $dueDeligenceValue->id }}" value="{{ $dueDeligenceValue->id }}">
+					  <label class="custom-control-label" for="ch_{{ $dueDeligenceValue->id }}">{{ ucfirst($dueDeligenceValue->name) }}</label>
+					</div>
+	             @endforeach
 			</div>
 	      </div>
 	    </div>

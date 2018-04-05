@@ -19,6 +19,13 @@ $(document).ready ->
         sectors += $(this).val()+','
 
     filters.sectors = sectors
+
+    due_deligence = ''
+    $('input[name="due_deligence[]"]').each ->
+      if $(this).is(':checked')
+        due_deligence += $(this).val()+','
+
+    filters.due_deligence = due_deligence
     
     $.ajax
       type: 'post'

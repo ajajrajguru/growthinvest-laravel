@@ -641,15 +641,18 @@ class BusinessListingController extends Controller
         }
 
         $sectors          = getBusinessSectors();
+        $dueDeligence          = getDueDeligence();
 
         $data['business_listing_type'] = $businessListingType;
         $data['sectors'] = $sectors;
+        $data['dueDeligence'] = $dueDeligence;
         return view('frontend.investment-opportunities')->with($data);
     }
 
     public function getFilteredInvestmentOpportunity(Request $request)
     {
         $filters = $request->all();
+        $joinedBusinessDefaults = false;
         $listingTaxStatus = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
         $businessListingType = $filters['business_listing_type'];
 
@@ -662,10 +665,25 @@ class BusinessListingController extends Controller
             $sectors = $filters['sectors'];
             $sectors = explode(',', $sectors);
             $sectors = array_filter($sectors);
-            
+
             $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
                 $join->on('business_listings.id', 'business_has_defaults.business_id');
             })->whereIn('business_has_defaults.default_id', $sectors);
+            $joinedBusinessDefaults = true;
+        }
+
+        if (isset($filters['due_deligence']) && $filters['due_deligence'] != "") {
+            $dueDeligence = $filters['due_deligence'];
+            $dueDeligence = explode(',', $dueDeligence);
+            $dueDeligence = array_filter($dueDeligence);
+
+            if(!$joinedBusinessDefaults){
+                $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
+                    $join->on('business_listings.id', 'business_has_defaults.business_id');
+                });
+            }
+            
+            $businessListingQuery->whereIn('business_has_defaults.default_id', $dueDeligence);
         }
 
 

@@ -1124,6 +1124,11 @@ function getBusinessSectors()
     return \App\Defaults::where('type', 'business-sector')->get();
 }
 
+function getDueDeligence()
+{
+    return \App\Defaults::where('type', 'approver')->get();
+}
+
 /**
  * Gets the ordinal number. used for business round display
  *

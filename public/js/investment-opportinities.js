@@ -8,7 +8,7 @@
   $(document).ready(function() {
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
-      var filters, sectors, status;
+      var due_deligence, filters, sectors, status;
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       status = '';
@@ -25,6 +25,13 @@
         }
       });
       filters.sectors = sectors;
+      due_deligence = '';
+      $('input[name="due_deligence[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return due_deligence += $(this).val() + ',';
+        }
+      });
+      filters.due_deligence = due_deligence;
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',
