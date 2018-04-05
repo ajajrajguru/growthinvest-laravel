@@ -24,6 +24,20 @@
         $('.select2-single').select2({
             // placeholder: "Search here"
         });
+
+        $('input[name="duration_from"]').datepicker({
+          format: 'dd-mm-yyyy'
+        }).on('changeDate', function (selected) {
+          var minDate = new Date(selected.date.valueOf());
+          $('input[name="duration_to"]').datepicker('setStartDate', minDate);
+        });
+
+        $('input[name="duration_to"]').datepicker({
+          format: 'dd-mm-yyyy'
+        }).on('changeDate', function (selected) {
+          var maxDate = new Date(selected.date.valueOf());
+          $('input[name="duration_from"]').datepicker('setEndDate', maxDate);
+        });
        
     });
 
@@ -90,7 +104,133 @@
                 <h5 class="mt-2 mb-0">Selection Filters</h5>
                 
                 <div class="gray-section border bg-gray p-3">
-                    <div class="row mb-3">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="bg-lightgray p-3">
+                        <div class="form-group">
+                            <select name="duration" class="form-control">
+                              <option value="">Select Period</option>
+                              @foreach($durationType as $durationKey=>$duration)
+                                @php
+                                    if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey){
+                                        $selected = "selected";
+                                    } 
+                                    elseif(!isset($requestFilters['duration']) && 'lasttwomonth' == $durationKey){
+                                        $selected = "selected";
+                                    } 
+                                    else{
+                                        $selected = "";
+                                    }
+                                @endphp
+                                
+                                <option value="{{ $durationKey }}" {{ $selected }} >{{ $duration }}</option>
+                              @endforeach
+
+                            </select>
+                        </div>
+
+                        <p class="text-center mb-2 font-weight-bold">OR</p>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div class="input-group border-bottom">
+                                  <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                                  <div class="input-group-append border-bottom">
+                                    <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group border-bottom">
+                                  <input type="text"  placeholder="Select To Date" class="form-control datepicker date_range" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                                  <div class="input-group-append border-bottom">
+                                    <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div><!-- /bg-lightgray -->
+
+                      <div class="row mt-3">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                          <div class="">
+                              <label for="">Activity Groups</label>
+                              <select name="activity_group" id="" class="form-control">
+                                <option value="">View All groups</option>
+                                @foreach($activityGroups as $activityGroup)
+                                  <option value="{{ $activityGroup->id }}" @if(isset($requestFilters['activity_group']) && $requestFilters['activity_group'] == $activityGroup->id) selected @endif>{{ $activityGroup->group_name }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                          <div class="">
+                              <label for="">Activities</label>
+                              <select name="type" id="" class="form-control">
+                                <option value="">View All Activity Type</option>
+                                @foreach($activityTypes as $activityTypeKey=>$activityType)
+                                  <option value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="">Firms</label>
+                          <select name="firm" id="firm" class="form-control">
+                            <option value="">View All Firms</option>
+                            @foreach($firms as $firm)
+                              <option value="{{ $firm->id }}" @if(isset($requestFilters['firm']) && $requestFilters['firm'] == $firm->id) selected @endif>{{ $firm->name }}</option>
+                            @endforeach
+                          </select>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                              <label for="">Business Proposals/Funds</label>
+                              <select name="companies" id="" class="form-control">
+                                <option value="">View All Companies</option>
+                                @foreach($businessListings as $businessListing)
+                                  <option value="{{ $businessListing->id }}" @if(isset($requestFilters['companies']) && $requestFilters['companies'] == $businessListing->id) selected @endif>{{ $businessListing->title }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                              <label for="">Users</label>
+                              <select name="user" id="user" class="form-control" is-visible="true">
+                                <option value="">View All Users</option>
+                                @foreach($backofficeUsers as $backofficeUser)
+                                  <option value="{{ $backofficeUser->id }}" @if(isset($requestFilters['user']) && $requestFilters['user'] == $backofficeUser->id) selected @endif>{{ $backofficeUser->displayName() }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row mt-sm-4 mt-0 d-sm-flex align-items-sm-center">
+                        <div class="col-sm-7">
+                            <div class="custom-control custom-checkbox"> 
+                              <input type="checkbox" checked name="exclude_platform_admin_activity" id="exclude_platform_admin_activity" class="custom-control-input" value="1">
+                              <label class="custom-control-label" for="exclude_platform_admin_activity">Exclude platform admin activities</label> 
+                            </div> 
+                        </div>
+                        <div class="col-sm-5">
+                          <div class="">
+                              <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
+                              <button class="btn btn-default reset-activity-filters">Reset</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                    <!-- <div class="row mb-3">
                         <div class="col-md-3">
                             <div>
                                 <select name="duration" class="form-control">
@@ -194,7 +334,7 @@
                             <button class="btn btn-primary mr-1 apply-activity-filters">Apply</button>
                             <button class="btn btn-default reset-activity-filters">Reset</button>
                         </div>
-                    </div>
+                    </div> -->
 
                      
 
@@ -333,6 +473,31 @@
             visibility: hidden;
         }
     </style>
+
+    <script type="text/javascript">
+
+     $(document).ready(function() {
+
+       $('input[name="duration_from"]').datepicker({
+         format: 'dd-mm-yyyy'
+       }).on('changeDate', function (selected) {
+         var minDate = new Date(selected.date.valueOf());
+         $('input[name="duration_to"]').datepicker('setStartDate', minDate);
+       });
+
+       $('input[name="duration_to"]').datepicker({
+         format: 'dd-mm-yyyy'
+       }).on('changeDate', function (selected) {
+         var maxDate = new Date(selected.date.valueOf());
+         $('input[name="duration_from"]').datepicker('setEndDate', maxDate);
+       });
+
+
+
+     });
+
+
+   </script>
 
 @endsection
 
