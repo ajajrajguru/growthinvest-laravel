@@ -14,6 +14,9 @@
 <script type="text/javascript" src="{{ asset('/bower_components/select2/dist/js/select2.min.js') }}" ></script>
 <link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
+<!-- datepicker -->
+<link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
+
 
 
 <script type="text/javascript">
