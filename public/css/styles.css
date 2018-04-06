@@ -774,8 +774,11 @@ div.dataTables_wrapper div.dataTables_info {
 .gi-collapse-2 .card-header {
   position: relative;
 }
+.gi-collapse-2 .card-header button {
+  color: #333;
+}
 .gi-collapse-2 .card-header button:before {
-  content: "\f054";
+  content: "\f105";
   font-family: FontAwesome;
   position: absolute;
   right: 10px;
@@ -785,12 +788,20 @@ div.dataTables_wrapper div.dataTables_info {
           transform: rotateZ(0deg);
 }
 .gi-collapse-2 .card-header button.collapsed:before {
-  content: "\f054";
+  content: "\f105";
   font-family: FontAwesome;
   position: absolute;
   right: 10px;
   -webkit-transform: rotateZ(90deg);
           transform: rotateZ(90deg);
+}
+.gi-collapse-2 .card-header button:hover,
+.gi-collapse-2 .card-header button:focus {
+  text-decoration: none;
+}
+.gi-collapse-2 .card-body > div {
+  max-height: 170px;
+  overflow-y: auto;
 }
 @media (max-width: 767px) {
   #giMenu {

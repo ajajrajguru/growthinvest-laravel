@@ -20,7 +20,7 @@
 
 <div class="container pb-5">
 	 
-	<div class="row">
+	<div class="row mt-5">
 		@if($business_listing_type == 'proposal')
 			@include('frontend.business-listings.single-company-sidebar')
 		@endif
@@ -55,7 +55,12 @@
 				</div>
 			</div>
 			
-			<div class="business-listing"></div>	
+			<div class="business-listing">
+				<div class="d-flex justify-content-center align-items-center mh-150">
+					<h3 class="">No Data Found!</h3>
+				</div>
+				
+			</div>	
 			
 		</div>
 	</div>
