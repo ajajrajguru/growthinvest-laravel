@@ -620,6 +620,26 @@ label.required:after {
 .modal-open .mm-slideout {
   z-index: initial;
 }
+.inner-addon {
+  position: relative;
+}
+.inner-addon.left-addon .fa {
+  left: 0;
+}
+.inner-addon.left-addon input {
+  padding-left: 30px;
+}
+.inner-addon.right-addon .fa {
+  right: 0;
+}
+.inner-addon.right-addon input {
+  padding-right: 30px;
+}
+.inner-addon .fa {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
 .btn {
   font-size: 0.75rem;
   border-radius: 2px;
