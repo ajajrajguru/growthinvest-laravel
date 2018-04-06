@@ -49,11 +49,9 @@
 				</div>
 			</div>
 			
-			<div class="row">
-				<div class="col-sm-12 px-sm-0">
-					<div class="alert bg-primary text-uppercase text-white text-center rounded-0">open investment offers</div>
-				</div>
-			</div>
+			
+			<div class="alert bg-primary text-uppercase text-white text-center rounded-0">open investment offers</div>
+				
 			
 			<div class="business-listing">
 				<div class="d-flex justify-content-center align-items-center mh-150">

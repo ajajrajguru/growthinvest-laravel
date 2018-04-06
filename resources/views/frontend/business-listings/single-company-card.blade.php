@@ -7,7 +7,7 @@
 	
 	
 	@endphp
-<div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
+<div class="row d-sm-flex border mb-3 box-shadow-1 mx-0">
 	<div class="col-sm-4 border-right px-0">
 		<a href="">
 			<div style="background: url('https://dummyimage.com/1000x1000') no-repeat center; background-size: cover;" class="mh-150 position-relative">
