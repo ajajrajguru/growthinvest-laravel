@@ -83,19 +83,15 @@
                                 <p class="text-center mt-3 mb-2 font-weight-bold">OR</p>
                                 <div class="row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <div class="input-group border-bottom">
+                                        <div class="inner-addon right-addon">
+                                          <i class="fa fa-calendar"></i>
                                           <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
-                                          <div class="input-group-append border-bottom">
-                                            <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
-                                          </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <div class="input-group border-bottom">
+                                        <div class="inner-addon right-addon">
+                                          <i class="fa fa-calendar"></i>
                                           <input type="text"  placeholder="Select To Date" class="form-control datepicker date_range" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
-                                          <div class="input-group-append border-bottom">
-                                            <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
-                                          </div>
                                         </div>
                                     </div>
                                 </div>
