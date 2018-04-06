@@ -80,14 +80,6 @@
 					</div>
 	             @endforeach
 				
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch7" >
-				  <label class="custom-control-label" for="ch7">Top-Up</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch8" >
-				  <label class="custom-control-label" for="ch8">Multiple</label>
-				</div>
 			</div>
 	      </div>
 	    </div>
@@ -96,37 +88,19 @@
 	    <div class="card-header p-0" id="headingFour">
 	      <h5 class="mb-0">
 	        <button class="btn btn-link  w-100 text-left" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-	          AIC Sector
+	          Business Sector
 	        </button>
 	      </h5>
 	    </div>
 	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
 	      <div class="card-body ">
 	        <div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch9">
-				  <label class="custom-control-label" for="ch9">Generalist</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch10" >
-				  <label class="custom-control-label" for="ch10">Generalist Pre-Qualifying</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch11" >
-				  <label class="custom-control-label" for="ch11">AIM Quoted</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch12">
-				  <label class="custom-control-label" for="ch12">Specialist Environmental</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch13" >
-				  <label class="custom-control-label" for="ch13">Specialist Technology</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input" id="ch14" >
-				  <label class="custom-control-label" for="ch14">Specialist Infrastructure</label>
-				</div>
+				@foreach($stageOfBusiness as $stage)
+	                <div class="custom-control custom-checkbox">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_stage[]" id="ch_{{ $stage->id }}" value="{{ $stage->id }}">
+					  <label class="custom-control-label" for="ch_{{ $stage->id }}">{{ ucfirst($stage->name) }}</label>
+					</div>
+	             @endforeach
 			</div>
 	      </div>
 	    </div>
@@ -135,18 +109,64 @@
 	    <div class="card-header p-0" id="headingFive">
 	      <h5 class="mb-0">
 	        <button class="btn btn-link w-100 text-left" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-	          Fund Manager
+	          % Funded
 	        </button>
 	      </h5>
 	    </div>
 	    <div id="collapseFive" class="collapse show" aria-labelledby="headingFive" data-parent="#accordion">
 	      <div class="card-body ">
 	        <div class="">
-	        	<select name="" id="" class="form-control">
-	        		<option value="">1</option>
-	        		<option value="">2</option>
-	        		<option value="">3</option>
-	        	</select>
+	        	 
+                <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_below_25" value="below_25">
+				  <label class="custom-control-label" for="ch_below_25"> Below 25% </label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_25_50" value="25_50">
+				  <label class="custom-control-label" for="ch_25_50"> 25% to 50% </label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_50_75" value="50_75">
+				  <label class="custom-control-label" for="ch_50_75"> 50% to 75% </label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_75_above" value="75_above">
+				  <label class="custom-control-label" for="ch_75_above"> 75% and Above </label>
+				</div>
+	             
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="card rounded-0">
+	    <div class="card-header p-0" id="headingSix">
+	      <h5 class="mb-0">
+	        <button class="btn btn-link w-100 text-left" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+	          Investment Sought
+	        </button>
+	      </h5>
+	    </div>
+	    <div id="collapseSix" class="collapse show" aria-labelledby="headingSix" data-parent="#accordion">
+	      <div class="card-body ">
+	        <div class="">
+	        	 
+                <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_below_250k" value="below_250k">
+				  <label class="custom-control-label" for="ch_below_250k">< £250k </label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_251k_500k" value="251k_500k">
+				  <label class="custom-control-label" for="ch_251k_500k"> £251k - £500k </label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_501k_1m" value="501k_1m">
+				  <label class="custom-control-label" for="ch_501k_1m">  £501k - £1m </label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_1m_above" value="1m_above">
+				  <label class="custom-control-label" for="ch_1m_above"> > £1m </label>
+				</div>
+	             
 	        </div>
 	      </div>
 	    </div>

@@ -640,26 +640,28 @@ class BusinessListingController extends Controller
             $businessListingType = 'fund';
         }
 
-        $sectors          = getBusinessSectors();
-        $dueDeligence          = getDueDeligence();
+        $sectors         = getBusinessSectors();
+        $dueDeligence    = getDueDeligence();
+        $stageOfBusiness = getStageOfBusiness();
 
+        $data['stageOfBusiness']       = $stageOfBusiness;
         $data['business_listing_type'] = $businessListingType;
-        $data['sectors'] = $sectors;
-        $data['dueDeligence'] = $dueDeligence;
+        $data['sectors']               = $sectors;
+        $data['dueDeligence']          = $dueDeligence;
         return view('frontend.investment-opportunities')->with($data);
     }
 
     public function getFilteredInvestmentOpportunity(Request $request)
     {
-        $filters = $request->all();
-        $joinedBusinessDefaults = false;
-        $listingTaxStatus = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
-        $businessListingType = $filters['business_listing_type'];
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
+        $filters                = $request->all();
+        $joinedBusinessDefaults = false;
+        $listingTaxStatus       = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
+        $businessListingType    = $filters['business_listing_type'];
+
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage'))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id');
         })->whereIn('business_investments.status', ['pledged', 'funded']);
-
 
         if (isset($filters['sectors']) && $filters['sectors'] != "") {
             $sectors = $filters['sectors'];
@@ -677,15 +679,30 @@ class BusinessListingController extends Controller
             $dueDeligence = explode(',', $dueDeligence);
             $dueDeligence = array_filter($dueDeligence);
 
-            if(!$joinedBusinessDefaults){
+            if (!$joinedBusinessDefaults) {
                 $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
                     $join->on('business_listings.id', 'business_has_defaults.business_id');
                 });
             }
-            
+            $joinedBusinessDefaults = true;
             $businessListingQuery->whereIn('business_has_defaults.default_id', $dueDeligence);
         }
 
+        if (isset($filters['business_stage']) && $filters['business_stage'] != "") {
+            $businessStage = $filters['business_stage'];
+            $businessStage = explode(',', $businessStage);
+            $businessStage = array_filter($businessStage);
+
+            if (!$joinedBusinessDefaults) {
+                $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
+                    $join->on('business_listings.id', 'business_has_defaults.business_id');
+                });
+            }
+            $joinedBusinessDefaults = true;
+            $businessListingQuery->whereIn('business_has_defaults.default_id', $businessStage);
+        }
+
+       
 
         $businessListingQuery->where('business_listings.type', $businessListingType);
 
@@ -695,11 +712,9 @@ class BusinessListingController extends Controller
             $taxStatus = array_filter($taxStatus);
 
             if (in_array('all', $taxStatus)) {
-                if(count($taxStatus) == 1)
-                {
-                    $taxStatus        = $listingTaxStatus[$businessListingType];
-                }
-                else{
+                if (count($taxStatus) == 1) {
+                    $taxStatus = $listingTaxStatus[$businessListingType];
+                } else {
                     if (($key = array_search('all', $taxStatus)) !== false) {
                         unset($taxStatus[$key]);
                     }
@@ -707,15 +722,15 @@ class BusinessListingController extends Controller
             }
 
         } else {
-            
-            $taxStatus        = $listingTaxStatus[$businessListingType];
+
+            $taxStatus = $listingTaxStatus[$businessListingType];
         }
 
         $businessListingQuery->where(function ($bQuery) use ($taxStatus) {
             foreach ($taxStatus as $key => $status) {
                 $statusArr   = [];
                 $statusArr[] = $status;
-                $taxStatus   = json_encode($statusArr); 
+                $taxStatus   = json_encode($statusArr);
                 if ($key == 0) {
                     $bQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '" . $taxStatus . "' )");
                 } else {
@@ -725,7 +740,7 @@ class BusinessListingController extends Controller
             }
 
         });
- 
+
         if ($businessListingType == 'proposal') {
             $cardName = 'single-company-card';
         } elseif ($businessListingType == 'fund') {
@@ -736,7 +751,117 @@ class BusinessListingController extends Controller
 
         $businessListingQuery->groupBy('business_listings.id');
         $businessListings      = $businessListingQuery->get();
-        $totalBusinessListings = $businessListingQuery->count();
+        $totalBusinessListings = $businessListings->count();
+
+         if (isset($filters['investment_sought']) && $filters['investment_sought'] != "") {
+            $investmentSought = $filters['investment_sought'];
+            $investmentSought = explode(',', $investmentSought);
+            $investmentSought = array_filter($investmentSought);
+
+
+            $filteredInvestmentSought = collect([]);
+            if (in_array('below_250k', $investmentSought)) {
+                $below250kbusinessListings = $businessListings->where('target_amount', '<=', 250000);
+                $filteredInvestmentSought = $filteredInvestmentSought->merge($below250kbusinessListings);
+                
+            }
+
+            if (in_array('251k_500k', $investmentSought)) {
+                $from251kTo500kbusinessListings = $businessListings->where('target_amount', '>=', 251000)->where('target_amount', '<', 500000);
+                $filteredInvestmentSought = $filteredInvestmentSought->merge($from251kTo500kbusinessListings);
+            }
+
+            if (in_array('501k_1m', $investmentSought)) {
+                $from501To1mbusinessListings = $businessListings->where('target_amount', '>=', 501000)->where('target_amount', '<', 1000000);
+                $filteredInvestmentSought =$filteredInvestmentSought->merge($from501To1mbusinessListings);
+
+            }
+
+            if (in_array('1m_above', $investmentSought)) {
+                $above1mbusinessListings = $businessListings->where('target_amount', '>=', 1000000);
+                $filteredInvestmentSought =$filteredInvestmentSought->merge($above1mbusinessListings);
+            }
+            $businessListings = $filteredInvestmentSought;
+            $totalBusinessListings = $businessListings->count();
+
+
+            
+        }
+
+        if (isset($filters['funded_per']) && $filters['funded_per'] != "") {
+            $fundedPer = $filters['funded_per'];
+            $fundedPer = explode(',', $fundedPer);
+            $fundedPer = array_filter($fundedPer);
+
+            // $lessFlag = false;
+            // $aboveFlag = false;
+            // $min      = 0;
+            // $max      = 0;
+            // if (in_array('below_25', $fundedPer)) {
+            //     $lessFlag = true;
+            //     $min      = 0;
+            //     $max      = 25;
+            // }
+
+            // if (in_array('25_50', $fundedPer)) {
+            //     if (!$lessFlag) {
+            //         $lessFlag = true;
+            //         $min      = 25;
+            //     }
+
+            //     $max = 50;
+            // }
+
+            // if (in_array('50_75', $fundedPer)) {
+            //     if (!$lessFlag) {
+            //         $lessFlag = true;
+            //         $min      = 50;
+            //     }
+
+            //     $max = 75;
+
+            // }
+
+            // if (in_array('75_above', $fundedPer)) {
+            //     $aboveFlag = true;               
+            //     $max = 75;
+            // }
+
+            // if($lessFlag){
+            //     $businessListings = $businessListings->where('percentage', '>=', $min);
+            // }
+
+            // if ($max) {
+            //     if(!$aboveFlag)
+            //         $businessListings = $businessListings->where('percentage', '<=', $max);
+            //     else
+            //         $businessListings = $businessListings->where('percentage', '>=', $max);
+            // }
+            $filteredFundedPer = collect([]);
+            if (in_array('below_25', $fundedPer)) {
+                $below25businessListings = $businessListings->where('percentage', '<=', 25);
+                $filteredFundedPer = $filteredFundedPer->merge($below25businessListings);
+                
+            }
+
+            if (in_array('25_50', $fundedPer)) {
+                $from25To50businessListings = $businessListings->where('percentage', '>=', 25)->where('percentage', '<', 50);
+                $filteredFundedPer = $filteredFundedPer->merge($from25To50businessListings);
+            }
+
+            if (in_array('50_75', $fundedPer)) {
+                $from50To75businessListings = $businessListings->where('percentage', '>=', 50)->where('percentage', '<', 75);
+                $filteredFundedPer =$filteredFundedPer->merge($from50To75businessListings);
+
+            }
+
+            if (in_array('75_above', $fundedPer)) {
+                $above75businessListings = $businessListings->where('percentage', '>=', 75);
+                $filteredFundedPer =$filteredFundedPer->merge($above75businessListings);
+            }
+            $businessListings = $filteredFundedPer;
+            $totalBusinessListings = $businessListings->count();
+        }
 
         $activityCountSummaryView = View::make('frontend.business-listings.' . $cardName, compact('businessListings'))->render();
 

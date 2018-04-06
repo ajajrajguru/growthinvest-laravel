@@ -8,7 +8,7 @@
   $(document).ready(function() {
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
-      var due_deligence, filters, sectors, status;
+      var business_stage, due_deligence, filters, funded_per, investment_sought, sectors, status;
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       status = '';
@@ -32,6 +32,27 @@
         }
       });
       filters.due_deligence = due_deligence;
+      business_stage = '';
+      $('input[name="business_stage[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return business_stage += $(this).val() + ',';
+        }
+      });
+      filters.business_stage = business_stage;
+      funded_per = '';
+      $('input[name="funded_per[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return funded_per += $(this).val() + ',';
+        }
+      });
+      filters.funded_per = funded_per;
+      investment_sought = '';
+      $('input[name="investment_sought[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return investment_sought += $(this).val() + ',';
+        }
+      });
+      filters.investment_sought = investment_sought;
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',

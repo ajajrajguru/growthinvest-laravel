@@ -26,6 +26,28 @@ $(document).ready ->
         due_deligence += $(this).val()+','
 
     filters.due_deligence = due_deligence
+
+    business_stage = ''
+    $('input[name="business_stage[]"]').each ->
+      if $(this).is(':checked')
+        business_stage += $(this).val()+','
+
+    filters.business_stage = business_stage
+
+    funded_per = ''
+    $('input[name="funded_per[]"]').each ->
+      if $(this).is(':checked')
+        funded_per += $(this).val()+','
+
+    filters.funded_per = funded_per
+
+    investment_sought = ''
+    $('input[name="investment_sought[]"]').each ->
+      if $(this).is(':checked')
+        investment_sought += $(this).val()+','
+
+    filters.investment_sought = investment_sought
+
     
     $.ajax
       type: 'post'
