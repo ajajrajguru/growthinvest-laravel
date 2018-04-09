@@ -52,7 +52,7 @@
 			@if($dueDeligence!='Platform Listing')
 			<div class="col-sm-4 text-center">
 				<div class="mt-2">
-					<input type="text" class="knob animated" data-width="70" data-height="70" data-cursor="false" data-thickness=".2" rel=" " value="{{ $businessListing->percentage }}">
+					<input type="text" class="knob animated" data-width="70" data-height="70" data-cursor="false" data-thickness=".2" rel=" " value="{{ round($businessListing->percentage) }}">
 				</div>
 				<h4 class="mb-0"> {{ format_amount($businessListing->target_amount, 0, true) }}</h4>
 				<div>Investment Sought</div>
