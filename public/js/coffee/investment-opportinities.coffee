@@ -51,6 +51,7 @@ $(document).ready ->
 
     filters.investment_sought = investment_sought
 
+    filters.search_title = $('input[name="search_title"]').val()
     
     $.ajax
       type: 'post'
@@ -82,6 +83,23 @@ $(document).ready ->
   if($('.business-listing').length)    
     getInvestmentOpportunity()
 
+
     
   $(document).on 'change', '.filter-business-list', ->
     getInvestmentOpportunity()
+
+  $(document).on 'click', '.search-by-title', ->
+    getInvestmentOpportunity()
+
+  $(document).on 'click', '.reset-investment-opportunity', ->
+    $('input[name="tax_status[]"]').prop('checked',false)
+    $('input[name="business_sector[]"]').prop('checked',false)
+    $('input[name="due_deligence[]"]').prop('checked',false)
+    $('input[name="business_stage[]"]').prop('checked',false)
+    $('input[name="funded_per[]"]').prop('checked',false)
+    $('input[name="investment_sought[]"]').prop('checked',false)
+    $('input[name="search_title"]').val('')
+    getInvestmentOpportunity()
+    return
+
+    

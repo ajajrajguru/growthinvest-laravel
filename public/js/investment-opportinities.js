@@ -55,6 +55,7 @@
         }
       });
       filters.investment_sought = investment_sought;
+      filters.search_title = $('input[name="search_title"]').val();
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',
@@ -83,8 +84,21 @@
     if (($('.business-listing').length)) {
       getInvestmentOpportunity();
     }
-    return $(document).on('change', '.filter-business-list', function() {
+    $(document).on('change', '.filter-business-list', function() {
       return getInvestmentOpportunity();
+    });
+    $(document).on('click', '.search-by-title', function() {
+      return getInvestmentOpportunity();
+    });
+    return $(document).on('click', '.reset-investment-opportunity', function() {
+      $('input[name="tax_status[]"]').prop('checked', false);
+      $('input[name="business_sector[]"]').prop('checked', false);
+      $('input[name="due_deligence[]"]').prop('checked', false);
+      $('input[name="business_stage[]"]').prop('checked', false);
+      $('input[name="funded_per[]"]').prop('checked', false);
+      $('input[name="investment_sought[]"]').prop('checked', false);
+      $('input[name="search_title"]').val('');
+      getInvestmentOpportunity();
     });
   });
 
