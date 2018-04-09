@@ -659,7 +659,11 @@ class BusinessListingController extends Controller
         $listingTaxStatus       = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
         $businessListingType    = $filters['business_listing_type'];
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage'))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
+        // SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged,
+
+        // SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage
+
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id');
         })->whereIn('business_investments.status', ['pledged', 'funded']);
 
@@ -750,8 +754,20 @@ class BusinessListingController extends Controller
         }
 
         $businessListingQuery->groupBy('business_listings.id');
-        $businessListings      = $businessListingQuery->get();
+        $businessListings      = $businessListingQuery->get();  
         $totalBusinessListings = $businessListings->count();
+
+        $businessListings = $businessListings->map(function ($businessListing, $key) {
+            $businessDefaults = $businessListing->getBusinessDefaultsData(); 
+            $businessListing['business_defaults'] = $businessDefaults;
+            $fundRaised = $businessListing->invested + $businessListing->pledged; //display fund raised as sum of pledged and invested
+            $fundRaisedPercentage = ($businessListing->target_amount != 0) ? ($fundRaised / $businessListing->target_amount) * 100 : 0; //display fund raised as sum of pledged and invested
+            $businessListing['amount_raised'] = $fundRaised;
+            $businessListing['fund_raised_percentage'] = $fundRaisedPercentage;
+
+            return $businessListing; 
+        });
+
 
          if (isset($filters['investment_sought']) && $filters['investment_sought'] != "") {
             $investmentSought = $filters['investment_sought'];
@@ -839,24 +855,24 @@ class BusinessListingController extends Controller
             // }
             $filteredFundedPer = collect([]);
             if (in_array('below_25', $fundedPer)) {
-                $below25businessListings = $businessListings->where('percentage', '<=', 25);
+                $below25businessListings = $businessListings->where('fund_raised_percentage', '<=', 25);
                 $filteredFundedPer = $filteredFundedPer->merge($below25businessListings);
                 
             }
 
             if (in_array('25_50', $fundedPer)) {
-                $from25To50businessListings = $businessListings->where('percentage', '>=', 25)->where('percentage', '<', 50);
+                $from25To50businessListings = $businessListings->where('fund_raised_percentage', '>=', 25)->where('fund_raised_percentage', '<', 50);
                 $filteredFundedPer = $filteredFundedPer->merge($from25To50businessListings);
             }
 
             if (in_array('50_75', $fundedPer)) {
-                $from50To75businessListings = $businessListings->where('percentage', '>=', 50)->where('percentage', '<', 75);
+                $from50To75businessListings = $businessListings->where('fund_raised_percentage', '>=', 50)->where('fund_raised_percentage', '<', 75);
                 $filteredFundedPer =$filteredFundedPer->merge($from50To75businessListings);
 
             }
 
             if (in_array('75_above', $fundedPer)) {
-                $above75businessListings = $businessListings->where('percentage', '>=', 75);
+                $above75businessListings = $businessListings->where('fund_raised_percentage', '>=', 75);
                 $filteredFundedPer =$filteredFundedPer->merge($above75businessListings);
             }
             $businessListings = $filteredFundedPer;
@@ -866,20 +882,14 @@ class BusinessListingController extends Controller
 
         // //platform listings
         $platformListings = $businessListings->filter(function ($businessListing, $key) {
-            $businessDefaults = $businessListing->getBusinessDefaultsData(); 
-            $businessListing['business_defaults'] = $businessDefaults;
-
+            $businessDefaults = $businessListing->business_defaults;
             if((isset($businessDefaults['approver'])) && in_array('Platform Listing', $businessDefaults['approver']))
                 return $businessListing; 
         });
 
-        
-
         //business listings
         $businessListings = $businessListings->filter(function ($businessListing, $key) {
-            $businessDefaults = $businessListing->getBusinessDefaultsData(); 
-            $businessListing['business_defaults'] = $businessDefaults;
-
+            $businessDefaults = $businessListing->business_defaults;
             if((isset($businessDefaults['approver'])) && !in_array('Platform Listing', $businessDefaults['approver']))
                 return $businessListing; 
         });
