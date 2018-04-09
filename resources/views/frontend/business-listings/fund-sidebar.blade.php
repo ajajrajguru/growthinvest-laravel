@@ -18,25 +18,18 @@
 	      <div class="card-body ">
 	        <div class="filter-options">
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_all" value="all">
-				  <label class="custom-control-label" for="ch_all">All</label>
-				</div>
-				<div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_esis" value="eis" >
-				  <label class="custom-control-label" for="ch_esis">EIS Qualifying</label>
+				  <label class="custom-control-label" for="ch_esis">EIS</label>
 				</div>
 				<div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_sesis" value="seis">
-				  <label class="custom-control-label" for="ch_sesis">SEIS Qualifying</label>
+				  <label class="custom-control-label" for="ch_sesis">SEIS</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_tier1" value="tier1">
-				  <label class="custom-control-label" for="ch_tier1">Tier1 Visa</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_combined" value="combined">
+				  <label class="custom-control-label" for="ch_combined">Combined</label>
 				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_previously_funded" value="previously_funded">
-				  <label class="custom-control-label" for="ch_previously_funded">Previously Funded</label>
-				</div>
+			 
 			</div>
 	      </div>
 	    </div>
@@ -66,7 +59,7 @@
 	    <div class="card-header p-0" id="headingThree">
 	      <h5 class="mb-0">
 	        <button class="btn btn-link w-100 text-left" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-	          Business Sector
+	          Sector Focus
 	        </button>
 	      </h5>
 	    </div>
@@ -88,19 +81,29 @@
 	    <div class="card-header p-0" id="headingFour">
 	      <h5 class="mb-0">
 	        <button class="btn btn-link  w-100 text-left" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-	          Business Stage
+	          Fund Regulatory Status
 	        </button>
 	      </h5>
 	    </div>
 	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
 	      <div class="card-body ">
 	        <div class="filter-options">
-				@foreach($stageOfBusiness as $stage)
-	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_stage[]" id="ch_{{ $stage->id }}" value="{{ $stage->id }}">
-					  <label class="custom-control-label" for="ch_{{ $stage->id }}">{{ ucfirst($stage->name) }}</label>
-					</div>
-	             @endforeach
+				 
+                <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Approved_Fund" value="Approved_Fund">
+				  <label class="custom-control-label" for="ch_Approved_Fund">Approved Fund</label>
+				</div>
+
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Unapproved_Fund" value="Unapproved_Fund">
+				  <label class="custom-control-label" for="ch_Unapproved_Fund">Unapproved Fund</label>
+				</div>
+
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Managed_portfolio" value="Managed_portfolio">
+				  <label class="custom-control-label" for="ch_Managed_portfolio">Managed portfolio</label>
+				</div>
+	              
 			</div>
 	      </div>
 	    </div>
@@ -109,7 +112,7 @@
 	    <div class="card-header p-0" id="headingFive">
 	      <h5 class="mb-0">
 	        <button class="btn btn-link w-100 text-left" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-	          % Funded
+	          Open Status
 	        </button>
 	      </h5>
 	    </div>
@@ -118,20 +121,16 @@
 	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_below_25" value="below_25">
-				  <label class="custom-control-label" for="ch_below_25"> Below 25% </label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_open" value="open">
+				  <label class="custom-control-label" for="ch_open"> Single/Non Evergreen </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_25_50" value="25_50">
-				  <label class="custom-control-label" for="ch_25_50"> 25% to 50% </label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_closed" value="closed">
+				  <label class="custom-control-label" for="ch_closed"> Closed </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_50_75" value="50_75">
-				  <label class="custom-control-label" for="ch_50_75"> 50% to 75% </label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_75_above" value="75_above">
-				  <label class="custom-control-label" for="ch_75_above"> 75% and Above </label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_evergreen" value="evergreen">
+				  <label class="custom-control-label" for="ch_evergreen"> Evergreen </label>
 				</div>
 	             
 	        </div>
@@ -142,7 +141,7 @@
 	    <div class="card-header p-0" id="headingSix">
 	      <h5 class="mb-0">
 	        <button class="btn btn-link w-100 text-left" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-	          Investment Sought
+	          Investment Focus
 	        </button>
 	      </h5>
 	    </div>
@@ -151,21 +150,18 @@
 	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_below_250k" value="below_250k">
-				  <label class="custom-control-label" for="ch_below_250k">< £250k </label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Capital_Preservation" value="Capital Preservation">
+				  <label class="custom-control-label" for="ch_Capital_Preservation">Capital Preservation</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_251k_500k" value="251k_500k">
-				  <label class="custom-control-label" for="ch_251k_500k"> £251k - £500k </label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Mixed" value="Mixed (Preservation & Growth)">
+				  <label class="custom-control-label" for="ch_Mixed"> Mixed </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_501k_1m" value="501k_1m">
-				  <label class="custom-control-label" for="ch_501k_1m">  £501k - £1m </label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Growth" value="Growth">
+				  <label class="custom-control-label" for="ch_Growth">  Growth </label>
 				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_1m_above" value="1m_above">
-				  <label class="custom-control-label" for="ch_1m_above"> > £1m </label>
-				</div>
+			 
 	             
 	        </div>
 	      </div>

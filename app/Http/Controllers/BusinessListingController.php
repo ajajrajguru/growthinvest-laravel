@@ -637,7 +637,7 @@ class BusinessListingController extends Controller
         } elseif ($type == 'funds') {
             $businessListingType = 'fund';
         } elseif ($type == 'vct') {
-            $businessListingType = 'fund';
+            $businessListingType = 'vct';
         }
 
         $sectors         = getBusinessSectors();
@@ -654,8 +654,9 @@ class BusinessListingController extends Controller
     public function getFilteredInvestmentOpportunity(Request $request)
     {
 
-        $filters                = $request->all();
+        $filters                = $request->all(); 
         $joinedBusinessDefaults = false;
+        $joinedBusinessData = false;
         $listingTaxStatus       = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
         $businessListingType    = $filters['business_listing_type'];
 
@@ -711,7 +712,55 @@ class BusinessListingController extends Controller
             $businessListingQuery->whereIn('business_has_defaults.default_id', $businessStage);
         }
 
-       
+        if (isset($filters['fund_type']) && $filters['fund_type'] != "") {
+            $fundTypes = $filters['fund_type'];
+            $fundTypes = explode(',', $fundTypes);
+            $fundTypes = array_filter($fundTypes);
+
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+            
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $fundTypes)->where('business_listing_datas.data_key', 'fund_typeoffund');
+        }
+
+        if (isset($filters['fund_status']) && $filters['fund_status'] != "") {
+            $fundStatus = $filters['fund_status'];
+            $fundStatus = explode(',', $fundStatus);
+            $fundStatus = array_filter($fundStatus);
+
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+            
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $fundStatus)->where('business_listing_datas.data_key', 'fund_openclosed');
+        }
+
+        if (isset($filters['fund_investmentobjective']) && $filters['fund_investmentobjective'] != "") {
+            $fundInvestmentObjective = $filters['fund_investmentobjective'];
+            $fundInvestmentObjective = explode(',', $fundInvestmentObjective);
+            $fundInvestmentObjective = array_filter($fundInvestmentObjective);
+
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+            
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $fundInvestmentObjective)->where('business_listing_datas.data_key', 'fund_investmentobjective');
+        }
+
+ 
 
         $businessListingQuery->where('business_listings.type', $businessListingType);
 
@@ -730,8 +779,18 @@ class BusinessListingController extends Controller
                 }
             }
 
-        } else {
+            if (in_array('combined', $taxStatus)) {
+                if (count($taxStatus) == 1) {
+                    $taxStatus = $listingTaxStatus[$businessListingType];
+                } else {
+                    if (($key = array_search('combined', $taxStatus)) !== false) {
+                        unset($taxStatus[$key]);
+                    }
+                }
+            }
 
+        } else {
+            
             $taxStatus = $listingTaxStatus[$businessListingType];
         }
 
@@ -740,6 +799,7 @@ class BusinessListingController extends Controller
                 $statusArr   = [];
                 $statusArr[] = $status;
                 $taxStatus   = json_encode($statusArr);
+                  
                 if ($key == 0) {
                     $bQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '" . $taxStatus . "' )");
                 } else {

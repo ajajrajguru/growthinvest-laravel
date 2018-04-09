@@ -231,5 +231,14 @@ class BusinessListing extends Model
         return $data;
     }
 
+    public function businessFundType(){
+        $businessListingData = $this->businessListingData()->where('data_key','fund_typeoffund')->first();
+        $fundType = (!empty($businessListingData)) ? $businessListingData->data_value :'';
+        $fundType = str_replace('_', ' ', $fundType);
+        
+
+        return $fundType;
+    }
+
 
 }

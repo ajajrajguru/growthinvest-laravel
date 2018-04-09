@@ -135,7 +135,7 @@ class ActivityController extends Controller
                 'user'           => (!empty($activityListing->username)) ? title_case($activityListing->username) : '',
                 'user_type'      => $userType,
                 'firm'           => (!empty($activityListing->firmname)) ? title_case($activityListing->firmname) : '',
-                'gi_code'        => (!empty($activityListing->gi_platform_code)) ? title_case($activityListing->gi_platform_code) : '',
+                'gi_code'        => (!empty($activityListing->gi_platform_code)) ? strtoupper($activityListing->gi_platform_code) : '',
                 'email'          => (!empty($activityListing->email)) ? $activityListing->email : '',
                 'telephone'      => (!empty($user)) ? title_case($user->telephone_no) : '',
                 'description'    => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
@@ -642,6 +642,8 @@ class ActivityController extends Controller
                 $count++;
 
             }
+
+     
             
             if ($length > 1) {
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
@@ -650,7 +652,7 @@ class ActivityController extends Controller
 
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
             }
-
+ 
             $activityListings = DB::select(DB::raw($activityListQuery));
         }
 

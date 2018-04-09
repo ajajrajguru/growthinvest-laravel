@@ -1,3 +1,13 @@
+@foreach($businessListings as $businessListing)
+	@php
+
+	$businessDefaults = $businessListing->business_defaults; 
+	$dueDeligence = (isset($businessDefaults['approver']))? implode('',$businessDefaults['approver']) : '';
+	$stageOfBusiness = (isset($businessDefaults['stage_of_business']))? implode('',$businessDefaults['stage_of_business']) : '';
+	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
+ 
+	
+	@endphp
 <div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
 	<div class="col-sm-4 border-right px-0">
 		<a href="">
@@ -11,24 +21,27 @@
 		<div class="d-flex justify-content-between mt-5 px-3 mb-3">
 			<div data-toggle="tooltip" title="221 B, Baker Street, London"><i class="fa fa-map-marker"></i> LOCATION</div>
 			<div>
-				<span class="badge bg-primary text-white mr-1 py-1">SEIS</span>
-				<span class="badge bg-primary text-white mr-1 py-1">EIS</span>
+				@foreach($businessListing->tax_status as $taxStatus)
+				<span class="badge bg-primary text-white mr-1 py-1">{{ $taxStatus }}</span>
+				@endforeach
 			</div>
 		</div>
 	</div>
 	<div class="col-sm-8">
-		<h5 class="mt-3"><a href="" class="text-primary">Fund</a></h5>
-		<p class="mb-2"><strong>Fund Type:</strong> Establisehd - Growth</p>
-		<p>Recyclabox has developed the first, and only self-service machine in the UK that allows consumers to sell their old phones, DVDs,</p>
+		<h5 class="mt-3"><a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="text-primary">{{ $businessListing->title }}</a></h5>
+		<p class="mb-2"><strong>Fund Type:</strong> {{ $businessListing->businessFundType() }}</p>
+		<p>{{ $businessListing->short_content }}</p>
 		<hr class="mt-2 mb-2">
 		<div><strong>Investment Sector:</strong></div>
 		<div class="mb-3 d-sm-flex justify-content-sm-between align-items-sm-center">
 			<div>
-				<span class="badge bg-dark text-white mr-1 py-1">Technology</span>
-				<span class="badge bg-dark text-white mr-1 py-1">Utopia</span>
+				@foreach($sectors as $sector)
+				<span class="badge bg-dark text-white mr-1 py-1">{!! $sector !!}</span>
+				@endforeach
 			</div>
 			
-			<div><a href="" class="btn btn-sm btn-link">View Details &raquo;</a></div>
+			<div><a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="btn btn-sm btn-link">View Details &raquo;</a></div>
 		</div>
 	</div>
 </div>
+@endforeach

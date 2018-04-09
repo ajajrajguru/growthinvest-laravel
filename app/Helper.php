@@ -1347,6 +1347,9 @@ function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
 
 function saveActivityLog($component, $userId, $type, $itemId, $action, $content = '', $secItemId = 0, $primaryLink = "")
 {
+    $giArgs = array('prefix' => "GIAC", 'min'=>90000001,'max' => 100000000);
+    $giCode              = generateGICode($user, 'gi_code', $giArgs);
+
     $activity                    = new \App\Activity;
     $activity->user_id           = $userId;
     $activity->component         = $component;
@@ -1356,6 +1359,7 @@ function saveActivityLog($component, $userId, $type, $itemId, $action, $content 
     $activity->primary_link      = $primaryLink;
     $activity->item_id           = $itemId;
     $activity->secondary_item_id = $secItemId;
+    $activity->gi_platform_code = $secItemId;
     $activity->date_recorded     = date('Y-m-d H:i:s');
     $activity->save();
 

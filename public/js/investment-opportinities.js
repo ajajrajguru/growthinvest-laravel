@@ -8,9 +8,9 @@
   $(document).ready(function() {
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
-      var business_stage, due_deligence, filters, funded_per, investment_sought, sectors, status;
-      $('.investment-loader').removeClass('d-none');
-      $('.no-data-conatiner').addClass('d-none');
+      var business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status;
+      $('.investment-loader').addClass('d-flex').removeClass('d-none');
+      $('.no-data-conatiner').removeClass('d-flex').addClass('d-none');
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       status = '';
@@ -56,12 +56,32 @@
       });
       filters.investment_sought = investment_sought;
       filters.search_title = $('input[name="search_title"]').val();
+      fund_type = '';
+      $('input[name="fund_type[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return fund_type += $(this).val() + ',';
+        }
+      });
+      filters.fund_type = fund_type;
+      fund_status = '';
+      $('input[name="fund_status[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return fund_status += $(this).val() + ',';
+        }
+      });
+      filters.fund_status = fund_status;
+      fund_investmentobjective = '';
+      $('input[name="fund_investmentobjective[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return fund_investmentobjective += $(this).val() + ',';
+        }
+      });
+      filters.fund_investmentobjective = fund_investmentobjective;
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',
         data: filters,
         success: function(reponse) {
-          $('.investment-loader').addClass('d-none');
           if (($('.business-listing').length)) {
             $('.business-listing').html(reponse.businesslistingHtml);
           }
@@ -72,8 +92,9 @@
           }
           $('.platform-listing').html(reponse.platformListingHtml);
           $(".knob").knob();
+          $('.investment-loader').removeClass('d-flex').addClass('d-none');
           if (reponse.totalBusinessListings === 0) {
-            $('.no-data-conatiner').removeClass('d-none');
+            $('.no-data-conatiner').addClass('d-flex').removeClass('d-none');
           }
         },
         error: function(request, status, error) {

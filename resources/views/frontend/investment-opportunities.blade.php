@@ -51,6 +51,10 @@
 	<div class="row mt-5">
 		@if($business_listing_type == 'proposal')
 			@include('frontend.business-listings.single-company-sidebar')
+		@elseif($business_listing_type == 'fund')
+			@include('frontend.business-listings.fund-sidebar')
+		@elseif($business_listing_type == 'vct')
+			@include('frontend.business-listings.vct-sidebar')
 		@endif
 		<div class="col-sm-9">
 			<!-- card -->
@@ -87,11 +91,11 @@
 			<div class="platform-listing">
 			</div>
 
-			<div class="d-sm-flex justify-content-center align-items-center mh-150 investment-loader d-none">
+			<div class=" justify-content-center align-items-center mh-150 investment-loader d-none">
 				<h1><i class="fa fa-spinner fa-spin"></i></h1>
 			</div>
 
-			<div class="d-flex justify-content-center align-items-center mh-150 no-data-conatiner d-none">
+			<div class=" justify-content-center align-items-center mh-150 no-data-conatiner d-none">
 				<h3 class="">No Data Found!</h3>
 			</div>
 	</div>

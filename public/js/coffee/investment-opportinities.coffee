@@ -3,8 +3,8 @@ $.ajaxSetup headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'
 $(document).ready ->
   getInvestmentOpportunity = () -> 
 
-    $('.investment-loader').removeClass('d-none')
-    $('.no-data-conatiner').addClass('d-none')
+    $('.investment-loader').addClass('d-flex').removeClass('d-none')
+    $('.no-data-conatiner').removeClass('d-flex').addClass('d-none')
 
     filters = {}
     filters.business_listing_type = $('input[name="business_listing_type"]').val();
@@ -16,6 +16,7 @@ $(document).ready ->
 
     filters.tax_status = status
 
+    ######***##### 
     sectors = ''
     $('input[name="business_sector[]"]').each ->
       if $(this).is(':checked')
@@ -23,6 +24,7 @@ $(document).ready ->
 
     filters.sectors = sectors
 
+    ######***##### 
     due_deligence = ''
     $('input[name="due_deligence[]"]').each ->
       if $(this).is(':checked')
@@ -30,6 +32,7 @@ $(document).ready ->
 
     filters.due_deligence = due_deligence
 
+    ######***##### 
     business_stage = ''
     $('input[name="business_stage[]"]').each ->
       if $(this).is(':checked')
@@ -37,6 +40,7 @@ $(document).ready ->
 
     filters.business_stage = business_stage
 
+    ######***##### 
     funded_per = ''
     $('input[name="funded_per[]"]').each ->
       if $(this).is(':checked')
@@ -44,6 +48,7 @@ $(document).ready ->
 
     filters.funded_per = funded_per
 
+    ######***##### 
     investment_sought = ''
     $('input[name="investment_sought[]"]').each ->
       if $(this).is(':checked')
@@ -51,15 +56,42 @@ $(document).ready ->
 
     filters.investment_sought = investment_sought
 
+    ######***##### 
     filters.search_title = $('input[name="search_title"]').val()
     
+    ######***##### 
+    
+    fund_type = ''
+    $('input[name="fund_type[]"]').each ->
+      if $(this).is(':checked')
+        fund_type += $(this).val()+','
+
+    filters.fund_type = fund_type
+
+    ######***##### 
+    
+    fund_status = ''
+    $('input[name="fund_status[]"]').each ->
+      if $(this).is(':checked')
+        fund_status += $(this).val()+','
+
+    filters.fund_status = fund_status
+
+    ######***##### 
+    
+    fund_investmentobjective = ''
+    $('input[name="fund_investmentobjective[]"]').each ->
+      if $(this).is(':checked')
+        fund_investmentobjective += $(this).val()+','
+
+    filters.fund_investmentobjective = fund_investmentobjective
+
     $.ajax
       type: 'post'
       url: '/investment-opportunities/filter-listings'
       data:filters
       success: (reponse) ->
-        $('.investment-loader').addClass('d-none')
-
+        
         if($('.business-listing').length)
            $('.business-listing').html reponse.businesslistingHtml
 
@@ -72,8 +104,9 @@ $(document).ready ->
 
           $(".knob").knob();
 
+          $('.investment-loader').removeClass('d-flex').addClass('d-none')
           if(reponse.totalBusinessListings==0)
-            $('.no-data-conatiner').removeClass('d-none')
+            $('.no-data-conatiner').addClass('d-flex').removeClass('d-none')
 
         return
       error: (request, status, error) ->

@@ -432,27 +432,31 @@
                   <label class="custom-control-label" for="ch_it">User Type</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input activity-cols" value="4" id="ch_if" >
+                  <input type="checkbox" class="custom-control-input activity-cols" value="4" id="ch_fi" checked>
+                  <label class="custom-control-label" for="ch_fi">Firm</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input activity-cols" value="5" id="ch_if" >
                   <label class="custom-control-label" for="ch_if">GI Code</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input activity-cols" value="5" id="ch_tr" >
+                  <input type="checkbox" class="custom-control-input activity-cols" value="6" id="ch_tr" >
                   <label class="custom-control-label" for="ch_tr">Email</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input activity-cols" value="6" id="ch_mi" >
+                  <input type="checkbox" class="custom-control-input activity-cols" value="7" id="ch_mi" >
                   <label class="custom-control-label" for="ch_mi">Telephone</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input activity-cols" value="7" id="ch_amtr" >
+                  <input type="checkbox" class="custom-control-input activity-cols" value="8" id="ch_amtr" >
                   <label class="custom-control-label" for="ch_amtr">Description</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input activity-cols" value="8" id="ch_inv" checked>
+                  <input type="checkbox" class="custom-control-input activity-cols" value="9" id="ch_inv" checked>
                   <label class="custom-control-label" for="ch_inv">Date</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input activity-cols" value="9" id="ch_dwn" checked>
+                  <input type="checkbox" class="custom-control-input activity-cols" value="10" id="ch_dwn" checked>
                   <label class="custom-control-label" for="ch_dwn">Activity</label>
                 </div>
             </div>
