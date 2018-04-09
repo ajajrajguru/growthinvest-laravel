@@ -93,6 +93,14 @@
           $('.platform-listing').html(reponse.platformListingHtml);
           $(".knob").knob();
           $('.investment-loader').removeClass('d-flex').addClass('d-none');
+          $('[data-toggle="tooltip"]').tooltip();
+          $('[data-toggle="popover"]').popover({
+            trigger: 'hover',
+            html: true,
+            content: function() {
+              return $('#popover-content').html();
+            }
+          });
           if (reponse.totalBusinessListings === 0) {
             $('.no-data-conatiner').addClass('d-flex').removeClass('d-none');
           }

@@ -103,8 +103,18 @@ $(document).ready ->
           $('.platform-listing').html reponse.platformListingHtml
 
           $(".knob").knob();
-
           $('.investment-loader').removeClass('d-flex').addClass('d-none')
+
+          #tooltip
+          $('[data-toggle="tooltip"]').tooltip(); 
+
+          #due diligence popover
+          $('[data-toggle="popover"]').popover
+            trigger: 'hover'
+            html: true
+            content: ->
+              $('#popover-content').html()
+
           if(reponse.totalBusinessListings==0)
             $('.no-data-conatiner').addClass('d-flex').removeClass('d-none')
 
