@@ -40,6 +40,15 @@
 
 	    // tooltip
 	    $('[data-toggle="tooltip"]').tooltip(); 
+
+	    //popover
+	    $('[data-toggle="popover"]').popover({
+	    	trigger: 'hover',
+	    	html: true,
+	    	content: function() {
+	          return $('#popover-content').html();
+	        }
+	    });
 	});
 
 
