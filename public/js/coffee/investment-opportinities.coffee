@@ -55,7 +55,14 @@ $(document).ready ->
       data:filters
       success: (reponse) ->
         if($('.business-listing').length)
-           $('.business-listing').html reponse.businesslistinghtml
+           $('.business-listing').html reponse.businesslistingHtml
+
+          if reponse.businesslistingHtml !=""
+            $('.platform-listing-section').removeClass('d-none')
+          else
+            $('.platform-listing-section').addClass('d-none')
+          
+          $('.platform-listing').html reponse.platformListingHtml
 
         return
       error: (request, status, error) ->

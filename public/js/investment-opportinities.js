@@ -59,8 +59,14 @@
         data: filters,
         success: function(reponse) {
           if (($('.business-listing').length)) {
-            $('.business-listing').html(reponse.businesslistinghtml);
+            $('.business-listing').html(reponse.businesslistingHtml);
           }
+          if (reponse.businesslistingHtml !== "") {
+            $('.platform-listing-section').removeClass('d-none');
+          } else {
+            $('.platform-listing-section').addClass('d-none');
+          }
+          $('.platform-listing').html(reponse.platformListingHtml);
         },
         error: function(request, status, error) {
           throwError();

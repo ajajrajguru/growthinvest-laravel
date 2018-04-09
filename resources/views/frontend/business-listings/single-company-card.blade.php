@@ -1,15 +1,17 @@
 @foreach($businessListings as $businessListing)
 	@php
 
-	$businessDefaults = $businessListing->getBusinessDefaultsData(); 
+	$businessDefaults = $businessListing->business_defaults; 
+	$dueDeligence = (isset($businessDefaults['approver']))? implode('',$businessDefaults['approver']) : '';
 	$stageOfBusiness = (isset($businessDefaults['stage_of_business']))? implode('',$businessDefaults['stage_of_business']) : '';
 	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
-	
+ 
 	
 	@endphp
 <div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
 	<div class="col-sm-4 border-right px-0">
 		<a href="">
+			{{ $dueDeligence }}
 			<div style="background: url('https://dummyimage.com/1000x1000') no-repeat center; background-size: cover;" class="mh-150 position-relative">
 				<div class="position-absolute text-center w-100" style="bottom: -30px;">
 					<img src="https://dummyimage.com/60x60" alt="" class="img-fluid border">
@@ -42,6 +44,7 @@
 				</div>
 
 			</div>
+			@if($dueDeligence!='Platform Listing')
 			<div class="col-sm-4 text-center">
 				<div class="mt-2">
 					<input type="text" class="knob animated" data-width="70" data-height="70" data-cursor="false" data-thickness=".2" rel=" " value="{{ $businessListing->percentage }}">
@@ -53,6 +56,7 @@
 				<div>funded</div>
 				<div class="mt-2"><a href="" class="btn btn-sm btn-link">View Details &raquo;</a></div>
 			</div>
+		@endif
 		</div>
 	</div>
 </div>
