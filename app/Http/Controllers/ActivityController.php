@@ -131,7 +131,7 @@ class ActivityController extends Controller
 
             $activityListingData[] = [
                 'logo'           => '',
-                'proposal_funds' => $activityListing->itemname,
+                'proposal_funds' => title_case($activityListing->itemname),
                 'user'           => (!empty($activityListing->username)) ? title_case($activityListing->username) : '',
                 'user_type'      => $userType,
                 'firm'           => (!empty($activityListing->firmname)) ? title_case($activityListing->firmname) : '',
@@ -711,7 +711,7 @@ class ActivityController extends Controller
 
             $activityData[] = [
                 $activityListing->gi_platform_code,
-                '',
+                title_case($activityListing->itemname),
                 title_case($firstName),
                 title_case($lastName),
                 $userType,

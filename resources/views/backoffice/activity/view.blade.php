@@ -14,6 +14,9 @@
 <script type="text/javascript" src="{{ asset('/bower_components/select2/dist/js/select2.min.js') }}" ></script>
 <link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
+<!-- datepicker -->
+<link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
+
 
 
 <script type="text/javascript">
@@ -133,19 +136,15 @@
                         
                         <div class="row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <div class="input-group border-bottom">
-                                  <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
-                                  <div class="input-group-append border-bottom">
-                                    <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
-                                  </div>
+                                <div class="inner-addon right-addon">
+                                  <i class="fa fa-calendar"></i>
+                                  <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range rounded-0" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="input-group border-bottom">
-                                  <input type="text"  placeholder="Select To Date" class="form-control datepicker date_range" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
-                                  <div class="input-group-append border-bottom">
-                                    <span class="input-group-text border-0 bg-transparent" id="basic-addon2"><i class="fa fa-calendar"></i></span>
-                                  </div>
+                                <div class="inner-addon right-addon">
+                                  <i class="fa fa-calendar"></i>
+                                  <input type="text"  placeholder="Select To Date" class="form-control datepicker date_range rounded-0" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
                                 </div>
                             </div>
                         </div>
