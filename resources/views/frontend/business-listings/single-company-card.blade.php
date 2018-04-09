@@ -59,7 +59,7 @@
 				<hr class="mt-2 mb-2">
 				<h4 class="mb-0"> {{ format_amount($businessListing->amount_raised, 0, true) }}</h4>
 				<div>funded</div>
-				<div class="mt-2"><a href="" class="btn btn-sm btn-link">View Details &raquo;</a></div>
+				<div class="mt-2"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link">View Details &raquo;</a></div>
 			</div>
 		@endif
 		</div>
