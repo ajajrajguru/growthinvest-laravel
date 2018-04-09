@@ -37,7 +37,7 @@
 	<div class="col-sm-8">
 		<div class="row d-sm-flex">
 			<div class="@if($dueDeligence!='Platform Listing') col-sm-8 @else col-sm-12 @endif border-right">
-				<h5 class="mt-3"><a href="" class="text-primary">{{ $businessListing->title }}</a></h5>
+				<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="text-primary">{{ $businessListing->title }}</a></h5>
 				<p class="mb-2"><strong>Stage of Business:</strong> {{ $stageOfBusiness }}</p>
 				<p>{{ $businessListing->short_content }}</p>
 				<hr>
@@ -52,7 +52,7 @@
 			@if($dueDeligence!='Platform Listing')
 			<div class="col-sm-4 text-center">
 				<div class="mt-2">
-					<input type="text" class="knob animated" data-width="70" data-height="70" data-cursor="false" data-thickness=".2" rel=" " value="{{ round($businessListing->percentage) }}">
+					<input type="text" class="knob animated" data-width="70" data-height="70" data-cursor="false" data-thickness=".2" rel=" " value="{{ round($businessListing->fund_raised_percentage) }}">
 				</div>
 				<h4 class="mb-0"> {{ format_amount($businessListing->target_amount, 0, true) }}</h4>
 				<div>Investment Sought</div>
