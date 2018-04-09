@@ -8,7 +8,7 @@
  
 	
 	@endphp
-<div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
+<div class="row d-sm-flex border mb-3 box-shadow-1 mx-0">
 	<div class="col-sm-4 border-right px-0">
 		<a href="">
 			{{ $dueDeligence }}
@@ -31,7 +31,7 @@
 	</div>
 	<div class="col-sm-8">
 		<div class="row d-sm-flex">
-			<div class="col-sm-8 border-right">
+			<div class="@if($dueDeligence!='Platform Listing') col-sm-8 @else col-sm-12 @endif border-right">
 				<h5 class="mt-3"><a href="" class="text-primary">{{ $businessListing->title }}</a></h5>
 				<p class="mb-2"><strong>Stage of Business:</strong> {{ $stageOfBusiness }}</p>
 				<p>{{ $businessListing->short_content }}</p>

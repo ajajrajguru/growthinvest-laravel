@@ -20,7 +20,7 @@
 
 <div class="container pb-5">
 	 
-	<div class="row">
+	<div class="row mt-5">
 		@if($business_listing_type == 'proposal')
 			@include('frontend.business-listings.single-company-sidebar')
 		@endif
@@ -49,23 +49,15 @@
 				</div>
 			</div>
 			
-			<div class="row">
-				<div class="col-sm-12 px-sm-0">
-					<div class="alert bg-primary text-uppercase text-white text-center rounded-0">open investment offers</div>
-				</div>
-			</div>
-			
+			<div class="alert bg-primary text-uppercase text-white text-center rounded-0">open investment offers</div>
 			<div class="business-listing"></div>
-			<div class="row platform-listing-section d-none">
-				<div class="col-sm-12 px-sm-0">
+			<div class="platform-listing-section d-none">
+				
 					<div class="alert bg-primary text-uppercase text-white text-center rounded-0">PLATFORM LISTINGS</div>
-				</div>
-			</div>	
-			<div class="platform-listing">
 				
 			</div>	
-			
-		</div>
+			<div class="platform-listing">
+			</div>
 	</div>
 	 
  
