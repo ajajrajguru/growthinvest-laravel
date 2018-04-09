@@ -20,20 +20,29 @@
 
 <script>
 	$(document).ready(function() {
+		// custom scrollbar
 		$(".filter-options").mCustomScrollbar({
 			theme:"dark"
 		});
+
+
+		// mobile filter - floating btn
+		$( ".mobile-filter-btn" ).click(function() { 
+	      $( ".mobile-filters" ).toggleClass( "slideIn SlideOut" ); 
+	      $( "body" ).toggleClass( "modal-open" ); 
+	    }); 
+	 
+	    $( ".mobile-filter-btn" ).on( "click", function( event ) { 
+	      $( this ).removeClass('pulse'); 
+	      $( this ).off( event ); 
+	    });
+	    
+
+	    // tooltip
+	    $('[data-toggle="tooltip"]').tooltip(); 
 	});
 
-	$( ".mobile-filter-btn" ).click(function() { 
-      $( ".mobile-filters" ).toggleClass( "slideIn SlideOut" ); 
-      $( "body" ).toggleClass( "modal-open" ); 
-    }); 
- 
-    $( ".mobile-filter-btn" ).on( "click", function( event ) { 
-      $( this ).removeClass('pulse'); 
-      $( this ).off( event ); 
-    }); 
+
 </script>
 
  
@@ -77,12 +86,10 @@
 				</div>
 			</div>
 			
-			<div class="alert bg-primary text-uppercase text-white text-center rounded-0">open investment offers</div>
+			<div class="alert bg-primary text-uppercase text-white text-center rounded-0 mb-4">open investment offers</div>
 			<div class="business-listing"></div>
-			<div class="platform-listing-section d-none">
-				
-					<div class="alert bg-primary text-uppercase text-white text-center rounded-0">PLATFORM LISTINGS</div>
-				
+			<div class="platform-listing-section d-none mb-4">
+				<div class="alert bg-primary text-uppercase text-white text-center rounded-0">PLATFORM LISTINGS</div>
 			</div>	
 			<div class="platform-listing">
 			</div>
