@@ -9,6 +9,7 @@
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
       var business_stage, due_deligence, filters, funded_per, investment_sought, sectors, status;
+      $('.investment-loader').removeClass('d-none');
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       status = '';
@@ -58,6 +59,7 @@
         url: '/investment-opportunities/filter-listings',
         data: filters,
         success: function(reponse) {
+          $('.investment-loader').addClass('d-none');
           if (($('.business-listing').length)) {
             $('.business-listing').html(reponse.businesslistingHtml);
           }

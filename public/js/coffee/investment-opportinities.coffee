@@ -3,6 +3,7 @@ $.ajaxSetup headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'
 $(document).ready ->
   getInvestmentOpportunity = () -> 
 
+    $('.investment-loader').removeClass('d-none')
     filters = {}
     filters.business_listing_type = $('input[name="business_listing_type"]').val();
 
@@ -54,6 +55,7 @@ $(document).ready ->
       url: '/investment-opportunities/filter-listings'
       data:filters
       success: (reponse) ->
+        $('.investment-loader').addClass('d-none')
         if($('.business-listing').length)
            $('.business-listing').html reponse.businesslistingHtml
 

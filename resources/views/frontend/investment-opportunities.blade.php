@@ -86,6 +86,10 @@
 			</div>	
 			<div class="platform-listing">
 			</div>
+
+			<div class="d-sm-flex justify-content-center align-items-center mh-150 investment-loader d-none">
+				<h1><i class="fa fa-spinner fa-spin"></i></h1>
+			</div>
 	</div>
 	 
  
