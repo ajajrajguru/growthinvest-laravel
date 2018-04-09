@@ -49,18 +49,15 @@
 				</div>
 			</div>
 			
-			
 			<div class="alert bg-primary text-uppercase text-white text-center rounded-0">open investment offers</div>
+			<div class="business-listing"></div>
+			<div class="platform-listing-section d-none">
 				
-			
-			<div class="business-listing">
-				<div class="d-flex justify-content-center align-items-center mh-150">
-					<h3 class="">No Data Found!</h3>
-				</div>
+					<div class="alert bg-primary text-uppercase text-white text-center rounded-0">PLATFORM LISTINGS</div>
 				
 			</div>	
-			
-		</div>
+			<div class="platform-listing">
+			</div>
 	</div>
 	 
  

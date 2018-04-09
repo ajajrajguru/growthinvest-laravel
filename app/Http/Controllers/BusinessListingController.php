@@ -863,10 +863,36 @@ class BusinessListingController extends Controller
             $totalBusinessListings = $businessListings->count();
         }
 
-        $activityCountSummaryView = View::make('frontend.business-listings.' . $cardName, compact('businessListings'))->render();
+
+        // //platform listings
+        $platformListings = $businessListings->filter(function ($businessListing, $key) {
+            $businessDefaults = $businessListing->getBusinessDefaultsData(); 
+            $businessListing['business_defaults'] = $businessDefaults;
+
+            if((isset($businessDefaults['approver'])) && in_array('Platform Listing', $businessDefaults['approver']))
+                return $businessListing; 
+        });
+
+        
+
+        //business listings
+        $businessListings = $businessListings->filter(function ($businessListing, $key) {
+            $businessDefaults = $businessListing->getBusinessDefaultsData(); 
+            $businessListing['business_defaults'] = $businessDefaults;
+
+            if((isset($businessDefaults['approver'])) && !in_array('Platform Listing', $businessDefaults['approver']))
+                return $businessListing; 
+        });
+
+        $businesslistingHtml = View::make('frontend.business-listings.' . $cardName, compact('businessListings'))->render();
+        $businessListings = $platformListings;
+        $platformListingHtml = View::make('frontend.business-listings.' . $cardName, compact('businessListings'))->render();
+
+        
 
         $json_data = array(
-            "businesslistinghtml"   => $activityCountSummaryView,
+            "businesslistingHtml"   => $businesslistingHtml,
+            "platformListingHtml"   => $platformListingHtml,
             "totalBusinessListings" => $totalBusinessListings,
 
         );
