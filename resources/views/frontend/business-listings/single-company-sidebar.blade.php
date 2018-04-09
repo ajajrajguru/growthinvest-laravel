@@ -4,7 +4,7 @@
 		<a href="javascript:void(0)" class="btn btn-sm btn-outline-primary reset-investment-opportunity">RESET</a>
 	</div>
 	<!-- accordion -->
-	<div id="accordion" class="gi-collapse-2 pb-3 pb-sm-0">
+	<div id="accordion" class="gi-collapse-2 pb-3">
 	  <div class="card rounded-0">
 	    <div class="card-header p-0" id="headingOne">
 	      <h5 class="mb-0">
@@ -173,5 +173,12 @@
 	  </div>
 	</div>
 	<!-- /accordion -->
+
+	<div class="card text-center p-3">
+		<div class="h1"><i class="fa fa-phone"></i></h3></div>
+		<div>Need Help?</div>
+		<a href="" class="h3">020 7071 3945</a>
+		<div><p>Mail us at:<br><a href="mailto:enquiries@growthinvest.com">enquiries@growthinvest.com</a></p></div>
+	</div>
 	<input type="hidden" name="business_listing_type" value="{{ $business_listing_type }}">
 </div>
