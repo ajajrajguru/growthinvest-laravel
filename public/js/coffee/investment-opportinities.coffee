@@ -4,6 +4,8 @@ $(document).ready ->
   getInvestmentOpportunity = () -> 
 
     $('.investment-loader').removeClass('d-none')
+    $('.no-data-conatiner').addClass('d-none')
+
     filters = {}
     filters.business_listing_type = $('input[name="business_listing_type"]').val();
 
@@ -56,6 +58,7 @@ $(document).ready ->
       data:filters
       success: (reponse) ->
         $('.investment-loader').addClass('d-none')
+
         if($('.business-listing').length)
            $('.business-listing').html reponse.businesslistingHtml
 
@@ -67,6 +70,9 @@ $(document).ready ->
           $('.platform-listing').html reponse.platformListingHtml
 
           $(".knob").knob();
+
+          if(reponse.totalBusinessListings==0)
+            $('.no-data-conatiner').removeClass('d-none')
 
         return
       error: (request, status, error) ->

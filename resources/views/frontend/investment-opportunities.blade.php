@@ -90,6 +90,10 @@
 			<div class="d-sm-flex justify-content-center align-items-center mh-150 investment-loader d-none">
 				<h1><i class="fa fa-spinner fa-spin"></i></h1>
 			</div>
+
+			<div class="d-flex justify-content-center align-items-center mh-150 no-data-conatiner d-none">
+				<h3 class="">No Data Found!</h3>
+			</div>
 	</div>
 	 
  

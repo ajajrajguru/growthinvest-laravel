@@ -10,6 +10,7 @@
     getInvestmentOpportunity = function() {
       var business_stage, due_deligence, filters, funded_per, investment_sought, sectors, status;
       $('.investment-loader').removeClass('d-none');
+      $('.no-data-conatiner').addClass('d-none');
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       status = '';
@@ -70,6 +71,9 @@
           }
           $('.platform-listing').html(reponse.platformListingHtml);
           $(".knob").knob();
+          if (reponse.totalBusinessListings === 0) {
+            $('.no-data-conatiner').removeClass('d-none');
+          }
         },
         error: function(request, status, error) {
           throwError();
