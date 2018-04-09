@@ -9,9 +9,14 @@
 	@endphp
 <div class="row d-sm-flex border mb-3 box-shadow-1 mx-0">
 	<div class="col-sm-4 border-right px-0">
+		
+		<!-- due diligence -->
+		<div class="position-absolute mw-150 mh-60" style="top: -10px; left: -10px; z-index: 1;">
+    		<img src="https://dummyimage.com/150x60" alt="" class="img-fluid border">
+    	</div>
 		<a href="">
 			<div style="background: url('https://dummyimage.com/1000x1000') no-repeat center; background-size: cover;" class="mh-150 position-relative">
-				<div class="position-absolute text-center w-100" style="bottom: -30px;">
+				<div class="position-absolute m-auto left-0 right-0 mw-60 mh-60" style="bottom: -30px;">
 					<img src="https://dummyimage.com/60x60" alt="" class="img-fluid border">
 				</div>
 			</div>
