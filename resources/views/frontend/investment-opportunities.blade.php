@@ -14,6 +14,7 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script> -->
 <script src="{{ asset('/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/investment-opportinities.js') }}"></script>
+
  
 @endsection
 
