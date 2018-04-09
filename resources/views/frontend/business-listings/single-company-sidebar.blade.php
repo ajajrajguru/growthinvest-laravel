@@ -175,10 +175,10 @@
 	<!-- /accordion -->
 
 	<div class="card text-center p-3">
-		<div class="h1"><i class="fa fa-phone"></i></h3></div>
-		<div>Need Help?</div>
-		<a href="" class="h3">020 7071 3945</a>
-		<div><p>Mail us at:<br><a href="mailto:enquiries@growthinvest.com">enquiries@growthinvest.com</a></p></div>
+		<div class="h1 mb-0"><i class="fa fa-phone"></i></h3></div>
+		<h5>Need Help?</h5>
+		<a href="" class="h3 card-link d-block">020 7071 3945</a>
+		<div><p>Mail us at:<br><a class="card-link" href="mailto:enquiries@growthinvest.com">enquiries@growthinvest.com</a></p></div>
 	</div>
 	<input type="hidden" name="business_listing_type" value="{{ $business_listing_type }}">
 </div>
