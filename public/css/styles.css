@@ -934,7 +934,7 @@ div.dataTables_wrapper div.dataTables_info {
 .gi-collapse-2 .card-header button:focus {
   text-decoration: none;
 }
-.gi-collapse-2 .card-body > div {
+.gi-collapse-2 .card-body .filter-options {
   max-height: 170px;
   overflow-y: auto;
 }

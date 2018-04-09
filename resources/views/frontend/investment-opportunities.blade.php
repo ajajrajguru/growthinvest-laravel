@@ -7,13 +7,24 @@
 
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css" /> -->
+<link rel="stylesheet" href="{{ asset('/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}" />
 @endsection
 
 
 @section('js')
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script> -->
 <script src="{{ asset('/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
+<script src="{{ asset('/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/investment-opportinities.js') }}"></script>
+
+
+<script>
+	$(document).ready(function() {
+		$(".filter-options").mCustomScrollbar({
+			theme:"dark"
+		});
+	});
+</script>
 
  
 @endsection
