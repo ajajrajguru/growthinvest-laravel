@@ -24,6 +24,16 @@
 			theme:"dark"
 		});
 	});
+
+	$( ".mobile-filter-btn" ).click(function() { 
+      $( ".mobile-filters" ).toggleClass( "slideIn SlideOut" ); 
+      $( "body" ).toggleClass( "modal-open" ); 
+    }); 
+ 
+    $( ".mobile-filter-btn" ).on( "click", function( event ) { 
+      $( this ).removeClass('pulse'); 
+      $( this ).off( event ); 
+    }); 
 </script>
 
  
@@ -31,7 +41,13 @@
 
 
 <div class="container pb-5">
-	 
+
+<!-- mobile filter --> 
+<div class="mobile-filter-btn rounded-circle pulse"> 
+	<i class="fa fa-filter"></i> 
+</div> 
+<!-- /mobile filter -->
+
 	<div class="row mt-5">
 		@if($business_listing_type == 'proposal')
 			@include('frontend.business-listings.single-company-sidebar')

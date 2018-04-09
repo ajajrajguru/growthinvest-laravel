@@ -1,10 +1,10 @@
-<div class="col-sm-3">
+<div class="col-sm-3 mobile-filters slideIn pt-3 pt-sm-0 border-xs-right">
 	<div class="d-flex justify-content-between mb-3">
 		<div class="text-uppercase">refine your search</div>
 		<a href="" class="btn btn-sm btn-outline-primary">RESET</a>
 	</div>
 	<!-- accordion -->
-	<div id="accordion" class="gi-collapse-2">
+	<div id="accordion" class="gi-collapse-2 pb-3 pb-sm-0">
 	  <div class="card rounded-0">
 	    <div class="card-header p-0" id="headingOne">
 	      <h5 class="mb-0">
