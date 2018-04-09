@@ -16,7 +16,7 @@
 
 	    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
 	      <div class="card-body ">
-	        <div>
+	        <div class="filter-options">
 				<div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_all" value="all">
 				  <label class="custom-control-label" for="ch_all">All</label>
@@ -51,7 +51,7 @@
 	    </div>
 	    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
 	      <div class="card-body ">
-	        <div>
+	        <div class="filter-options">
 				@foreach($dueDeligence as $dueDeligenceValue)
 	                <div class="custom-control custom-checkbox">
 					  <input type="checkbox" class="custom-control-input filter-business-list" name="due_deligence[]" id="ch_{{ $dueDeligenceValue->id }}" value="{{ $dueDeligenceValue->id }}">
@@ -72,7 +72,7 @@
 	    </div>
 	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
 	      <div class="card-body ">
-	        <div>
+	        <div class="filter-options">
 	        	@foreach($sectors as $sector)
 	                <div class="custom-control custom-checkbox">
 					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_sector[]" id="ch_{{ $sector->id }}" value="{{ $sector->id }}">
@@ -94,7 +94,7 @@
 	    </div>
 	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
 	      <div class="card-body ">
-	        <div>
+	        <div class="filter-options">
 				@foreach($stageOfBusiness as $stage)
 	                <div class="custom-control custom-checkbox">
 					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_stage[]" id="ch_{{ $stage->id }}" value="{{ $stage->id }}">
@@ -115,7 +115,7 @@
 	    </div>
 	    <div id="collapseFive" class="collapse show" aria-labelledby="headingFive" data-parent="#accordion">
 	      <div class="card-body ">
-	        <div class="">
+	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="funded_per[]" id="ch_below_25" value="below_25">
@@ -148,7 +148,7 @@
 	    </div>
 	    <div id="collapseSix" class="collapse show" aria-labelledby="headingSix" data-parent="#accordion">
 	      <div class="card-body ">
-	        <div class="">
+	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="investment_sought[]" id="ch_below_250k" value="below_250k">
