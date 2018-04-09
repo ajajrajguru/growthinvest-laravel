@@ -664,8 +664,8 @@ class BusinessListingController extends Controller
 
         // SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
-            $join->on('business_listings.id', 'business_investments.business_id');
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status','listed')->where('business_listings.status','publish')->leftjoin('business_investments', function ($join) {
+            $join->on('business_listings.id','business_investments.business_id');
         })->whereIn('business_investments.status', ['pledged', 'funded']);
 
         if (isset($filters['search_title']) && $filters['search_title'] != "") {
@@ -790,7 +790,7 @@ class BusinessListingController extends Controller
             }
 
         } else {
-            
+
             $taxStatus = $listingTaxStatus[$businessListingType];
         }
 
@@ -799,7 +799,7 @@ class BusinessListingController extends Controller
                 $statusArr   = [];
                 $statusArr[] = $status;
                 $taxStatus   = json_encode($statusArr);
-                  
+
                 if ($key == 0) {
                     $bQuery->whereRaw("JSON_CONTAINS(business_listings.tax_status, '" . $taxStatus . "' )");
                 } else {
@@ -818,8 +818,8 @@ class BusinessListingController extends Controller
             $cardName = 'vct-card';
         }
 
-        $businessListingQuery->groupBy('business_listings.id');
-        $businessListings      = $businessListingQuery->get();  
+        $businessListingQuery->groupBy('business_listings.id');   
+        $businessListings      = $businessListingQuery->get(); 
         $totalBusinessListings = $businessListings->count();
 
         $businessListings = $businessListings->map(function ($businessListing, $key) {
@@ -944,7 +944,7 @@ class BusinessListingController extends Controller
             $totalBusinessListings = $businessListings->count();
         }
 
-
+ 
         // //platform listings
         $platformListings = $businessListings->filter(function ($businessListing, $key) {
             $businessDefaults = $businessListing->business_defaults;
@@ -955,7 +955,7 @@ class BusinessListingController extends Controller
         //business listings
         $businessListings = $businessListings->filter(function ($businessListing, $key) {
             $businessDefaults = $businessListing->business_defaults;
-            if((isset($businessDefaults['approver'])) && !in_array('Platform Listing', $businessDefaults['approver']))
+            if((!isset($businessDefaults['approver'])) || (isset($businessDefaults['approver'])) && !in_array('Platform Listing', $businessDefaults['approver']))
                 return $businessListing; 
         });
 
