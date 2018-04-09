@@ -49,7 +49,7 @@
 <div class="container pb-5">
 
 <!-- mobile filter --> 
-<div class="mobile-filter-btn rounded-circle pulse"> 
+<div class="mobile-filter-btn rounded-circle pulse d-md-none"> 
 	<i class="fa fa-filter"></i> 
 </div> 
 <!-- /mobile filter -->

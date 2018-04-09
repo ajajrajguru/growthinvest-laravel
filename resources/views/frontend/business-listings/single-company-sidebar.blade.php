@@ -174,7 +174,7 @@
 	</div>
 	<!-- /accordion -->
 
-	<div class="card text-center p-3">
+	<div class="card text-center p-3 mb-3 mb-sm-0">
 		<div class="h1 mb-0"><i class="fa fa-phone"></i></h3></div>
 		<h5>Need Help?</h5>
 		<a href="" class="h3 card-link d-block">020 7071 3945</a>
