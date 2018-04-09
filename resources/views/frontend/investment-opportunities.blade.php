@@ -66,9 +66,9 @@
 
 			<div class="d-sm-flex justify-content-sm-between mb-3">
 				<div class="input-group mt-3 mt-sm-0 mb-3 mb-sm-0 mr-sm-5 media-body">
-					<input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2">
+					<input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" name="search_title" aria-describedby="basic-addon2">
 				  	<div class="input-group-append">
-				    	<button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
+				    	<button class="btn btn-outline-secondary search-by-title" type="button"><i class="fa fa-search"></i></button>
 				  	</div>
 				</div>
 
@@ -92,6 +92,14 @@
 				<div class="alert bg-primary text-uppercase text-white text-center rounded-0">PLATFORM LISTINGS</div>
 			</div>	
 			<div class="platform-listing">
+			</div>
+
+			<div class="d-sm-flex justify-content-center align-items-center mh-150 investment-loader d-none">
+				<h1><i class="fa fa-spinner fa-spin"></i></h1>
+			</div>
+
+			<div class="d-flex justify-content-center align-items-center mh-150 no-data-conatiner d-none">
+				<h3 class="">No Data Found!</h3>
 			</div>
 	</div>
 	 

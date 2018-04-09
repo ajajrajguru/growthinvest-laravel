@@ -19,7 +19,7 @@
           <a href="#">Investments</a>
           <ul class="submenu">
             <li>
-              <a href="/investment-opportunities/#single-companies">EIS &amp; SEIS - Single Companies</a>
+              <a href="{{ url('investment-opportunities/single-company/') }}">EIS &amp; SEIS - Single Companies</a>
             </li>
             <li>
               <a href="/investment-opportunities/#funds">EIS &amp; SEIS - Funds &amp; Portfolios</a>

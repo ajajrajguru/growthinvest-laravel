@@ -9,6 +9,8 @@
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
       var business_stage, due_deligence, filters, funded_per, investment_sought, sectors, status;
+      $('.investment-loader').removeClass('d-none');
+      $('.no-data-conatiner').addClass('d-none');
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       status = '';
@@ -53,11 +55,13 @@
         }
       });
       filters.investment_sought = investment_sought;
+      filters.search_title = $('input[name="search_title"]').val();
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',
         data: filters,
         success: function(reponse) {
+          $('.investment-loader').addClass('d-none');
           if (($('.business-listing').length)) {
             $('.business-listing').html(reponse.businesslistingHtml);
           }
@@ -68,6 +72,9 @@
           }
           $('.platform-listing').html(reponse.platformListingHtml);
           $(".knob").knob();
+          if (reponse.totalBusinessListings === 0) {
+            $('.no-data-conatiner').removeClass('d-none');
+          }
         },
         error: function(request, status, error) {
           throwError();
@@ -77,8 +84,21 @@
     if (($('.business-listing').length)) {
       getInvestmentOpportunity();
     }
-    return $(document).on('change', '.filter-business-list', function() {
+    $(document).on('change', '.filter-business-list', function() {
       return getInvestmentOpportunity();
+    });
+    $(document).on('click', '.search-by-title', function() {
+      return getInvestmentOpportunity();
+    });
+    return $(document).on('click', '.reset-investment-opportunity', function() {
+      $('input[name="tax_status[]"]').prop('checked', false);
+      $('input[name="business_sector[]"]').prop('checked', false);
+      $('input[name="due_deligence[]"]').prop('checked', false);
+      $('input[name="business_stage[]"]').prop('checked', false);
+      $('input[name="funded_per[]"]').prop('checked', false);
+      $('input[name="investment_sought[]"]').prop('checked', false);
+      $('input[name="search_title"]').val('');
+      getInvestmentOpportunity();
     });
   });
 

@@ -667,6 +667,11 @@ class BusinessListingController extends Controller
             $join->on('business_listings.id', 'business_investments.business_id');
         })->whereIn('business_investments.status', ['pledged', 'funded']);
 
+        if (isset($filters['search_title']) && $filters['search_title'] != "") {
+            $searchTitle = $filters['search_title'];
+            $businessListingQuery->where('business_listings.title', 'like', '%'.$searchTitle.'%'); 
+        }
+
         if (isset($filters['sectors']) && $filters['sectors'] != "") {
             $sectors = $filters['sectors'];
             $sectors = explode(',', $sectors);

@@ -3,6 +3,9 @@ $.ajaxSetup headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'
 $(document).ready ->
   getInvestmentOpportunity = () -> 
 
+    $('.investment-loader').removeClass('d-none')
+    $('.no-data-conatiner').addClass('d-none')
+
     filters = {}
     filters.business_listing_type = $('input[name="business_listing_type"]').val();
 
@@ -48,12 +51,15 @@ $(document).ready ->
 
     filters.investment_sought = investment_sought
 
+    filters.search_title = $('input[name="search_title"]').val()
     
     $.ajax
       type: 'post'
       url: '/investment-opportunities/filter-listings'
       data:filters
       success: (reponse) ->
+        $('.investment-loader').addClass('d-none')
+
         if($('.business-listing').length)
            $('.business-listing').html reponse.businesslistingHtml
 
@@ -66,6 +72,9 @@ $(document).ready ->
 
           $(".knob").knob();
 
+          if(reponse.totalBusinessListings==0)
+            $('.no-data-conatiner').removeClass('d-none')
+
         return
       error: (request, status, error) ->
         throwError()
@@ -74,6 +83,23 @@ $(document).ready ->
   if($('.business-listing').length)    
     getInvestmentOpportunity()
 
+
     
   $(document).on 'change', '.filter-business-list', ->
     getInvestmentOpportunity()
+
+  $(document).on 'click', '.search-by-title', ->
+    getInvestmentOpportunity()
+
+  $(document).on 'click', '.reset-investment-opportunity', ->
+    $('input[name="tax_status[]"]').prop('checked',false)
+    $('input[name="business_sector[]"]').prop('checked',false)
+    $('input[name="due_deligence[]"]').prop('checked',false)
+    $('input[name="business_stage[]"]').prop('checked',false)
+    $('input[name="funded_per[]"]').prop('checked',false)
+    $('input[name="investment_sought[]"]').prop('checked',false)
+    $('input[name="search_title"]').val('')
+    getInvestmentOpportunity()
+    return
+
+    
