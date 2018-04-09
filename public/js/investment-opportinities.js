@@ -67,6 +67,7 @@
             $('.platform-listing-section').addClass('d-none');
           }
           $('.platform-listing').html(reponse.platformListingHtml);
+          $(".knob").knob();
         },
         error: function(request, status, error) {
           throwError();

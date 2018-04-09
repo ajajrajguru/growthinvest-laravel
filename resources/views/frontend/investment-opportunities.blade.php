@@ -17,6 +17,7 @@
 <script src="{{ asset('/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/investment-opportinities.js') }}"></script>
 
+
 <script>
 	$(document).ready(function() {
 		$(".filter-options").mCustomScrollbar({
@@ -24,6 +25,7 @@
 		});
 	});
 </script>
+
  
 @endsection
 

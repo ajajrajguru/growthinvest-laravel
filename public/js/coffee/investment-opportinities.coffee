@@ -64,6 +64,8 @@ $(document).ready ->
           
           $('.platform-listing').html reponse.platformListingHtml
 
+          $(".knob").knob();
+
         return
       error: (request, status, error) ->
         throwError()
