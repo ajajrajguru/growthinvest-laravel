@@ -750,7 +750,7 @@ function add_new_onfido_report_onplatform($investor, $args)
 
     $identity_report_status  = $args['identity_report_status'];
     $aml_report_status       = $args['aml_report_status'];
-    $watchlist_report_status = $data['watchlist_report_status'];
+    $watchlist_report_status = $args['watchlist_report_status'];
     $reports                 = array();
 
     $identity_report_obj                      = new stdClass;
@@ -806,7 +806,7 @@ function update_onfido_reports_status($investor, $args)
 
     $identity_report_status  = $args['identity_report_status'];
     $aml_report_status       = $args['aml_report_status'];
-    $watchlist_report_status = $data['watchlist_report_status'];
+    $watchlist_report_status = $args['watchlist_report_status'];
     $reports                 = array();
 
     $args['set_report_meta'] = false;
