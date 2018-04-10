@@ -360,7 +360,7 @@ function createOnfidoApplicant($investor)
     // $objectData =  (object) $objectData;
 
     $reports[] = array('name' => 'identity');
-    // $reports[] = array('name' => 'anti_money_laundering');
+    $reports[] = array('name' => 'anti_money_laundering');
     // $reports[] = array('name' => 'watchlist');
     // 
     // commented on 26april2016 $reports[] = array('name'=>'anti_money_laundering');
@@ -627,6 +627,12 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
 
             $new_object_name          = str_replace(' ', '_', $value_report['name']) . '_obj';
             $$new_object_name['name'] = $value_report['name'];
+            if($value_report['name'] == 'identity')
+                $$new_object_name['variant'] =  'kyc';
+            elseif($value_report['name']=="anti_money_laundering" || $value_report['name']=="watchlist"){
+                $value_report['name']="watchlist";
+                $$new_object_name['variant'] = 'full';
+           }
             //$$new_object_name->status = 'awaiting_data';
             $check_reports[] = $$new_object_name;
         }
@@ -636,7 +642,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
     }
 
     $applicant_details_json = json_encode($checkobj);
-
+ 
     $ch          = curl_init();
     $curlopt_url = "https://api.onfido.com/v2/applicants/" . $applicantId . "/checks";
     curl_setopt($ch, CURLOPT_URL, $curlopt_url);
@@ -650,7 +656,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
     curl_setopt($ch, CURLOPT_POSTFIELDS, $applicant_details_json); // Commented not to include reports for check
 
     $result = curl_exec($ch);
-
+    dd($result);
     return $result;
 
 }
