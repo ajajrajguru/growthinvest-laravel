@@ -590,6 +590,8 @@ function onfidoApplicantionApi($applicantDetails = array(), $reports = array())
     $result                  = curl_exec($ch);
     $create_applicant_result = json_decode($result);
 
+ 
+    $create_check_report_result = [];
     if (!isset($create_applicant_result->error)) {
 
         if (count($reports) > 0) {
@@ -629,7 +631,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
             if($value_report['name'] == 'identity')
                 $$new_object_name['variant'] =  'kyc';
             elseif($value_report['name']=="anti_money_laundering" || $value_report['name']=="watchlist"){
-                $value_report['name']="watchlist";
+                $$new_object_name['name'] ="watchlist";
                 $$new_object_name['variant'] = 'full';
            }
             //$$new_object_name->status = 'awaiting_data';
@@ -655,7 +657,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
     curl_setopt($ch, CURLOPT_POSTFIELDS, $applicant_details_json); // Commented not to include reports for check
 
     $result = curl_exec($ch);
-    
+   
     return $result;
 
 }
@@ -663,7 +665,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
 function addUpdateOnfidoReportsMeta($applicant_id = '', $investor = [], $check_report_result)
 {
 
-    if ($applicant_id != '' && empty($investor)) {
+    if ($applicant_id != '' && !empty($investor)) {
 
         $reports = array();
         $args    = array();
@@ -748,6 +750,7 @@ function addUpdateOnfidoReportsMeta($applicant_id = '', $investor = [], $check_r
         $onfido_report_meta->data_value = $report_data;
         $onfido_report_meta->save();
 
+
     }
 
 }
@@ -813,7 +816,7 @@ function update_onfido_reports_status($investor, $args)
 
     $identity_report_status  = $args['identity_report_status'];
     $aml_report_status       = $args['aml_report_status'];
-    $watchlist_report_status = $args['watchlist_report_status'];
+    // $watchlist_report_status = $args['watchlist_report_status'];
     $reports                 = array();
 
     $args['set_report_meta'] = false;

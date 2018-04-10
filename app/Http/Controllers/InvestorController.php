@@ -1668,7 +1668,7 @@ class InvestorController extends Controller
         }
 
         $investorCertification = $investor->getActiveCertification(); 
-        $onfidoReportMeta = $investor->userOnfidoApplicationReports(); 
+        $onfidoReportMeta = $investor->userOnfidoApplicationReports();
         $onfidoReport = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value:[];
         
 
@@ -1681,7 +1681,7 @@ class InvestorController extends Controller
 
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['onfidoReports']      = (isset($onfidoReport['reports']) && !empty($onfidoReport['reports'])  ) ? $onfidoReport['reports'] : [];
+        $data['onfidoReports']      = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])  ) ? $onfidoReport['check']['reports'] : [];
         $data['breadcrumbs']           = $breadcrumbs;
         $data['pageTitle']             = 'View Profile';
         $data['activeMenu']            = 'manage_clients';
