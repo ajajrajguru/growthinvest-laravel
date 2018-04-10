@@ -631,7 +631,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
             if($value_report['name'] == 'identity')
                 $$new_object_name['variant'] =  'kyc';
             elseif($value_report['name']=="anti_money_laundering" || $value_report['name']=="watchlist"){
-                $value_report['name']="watchlist";
+                $$new_object_name['name'] ="watchlist";
                 $$new_object_name['variant'] = 'full';
            }
             //$$new_object_name->status = 'awaiting_data';
