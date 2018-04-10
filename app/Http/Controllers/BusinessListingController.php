@@ -629,9 +629,13 @@ class BusinessListingController extends Controller
 
     }
 
+    public function migratteVctData(){
+        updateVCTData();
+    }
+
     public function investmentOpportunities(Request $request, $type)
     {
-
+        
         if ($type == 'single-company') {
             $businessListingType = 'proposal';
         } elseif ($type == 'funds') {
@@ -654,7 +658,7 @@ class BusinessListingController extends Controller
     public function getFilteredInvestmentOpportunity(Request $request)
     {
 
-        $filters                = $request->all(); 
+        $filters                = $request->all();  
         $joinedBusinessDefaults = false;
         $joinedBusinessData = false;
         $listingTaxStatus       = ['proposal' => ['eis', 'seis'], 'fund' => ['eis', 'seis'], 'vct' => ['vct']];
@@ -760,9 +764,58 @@ class BusinessListingController extends Controller
             $businessListingQuery->whereIn('business_listing_datas.data_value', $fundInvestmentObjective)->where('business_listing_datas.data_key', 'fund_investmentobjective');
         }
 
- 
+        if (isset($filters['vct_type']) && $filters['vct_type'] != "") {
+            $vctType = $filters['vct_type'];
+            $vctType = explode(',', $vctType);
+            $vctType = array_filter($vctType);
 
-        $businessListingQuery->where('business_listings.type', $businessListingType);
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+            
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $vctType)->where('business_listing_datas.data_key', 'vcttype');
+        }
+
+        if (isset($filters['vct_investmentstrategy']) && $filters['vct_investmentstrategy'] != "") {
+            $vctInvestmentstrategy = $filters['vct_investmentstrategy'];
+            $vctInvestmentstrategy = explode(',', $vctInvestmentstrategy);
+            $vctInvestmentstrategy = array_filter($vctInvestmentstrategy);
+
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+            
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $vctInvestmentstrategy)->where('business_listing_datas.data_key', 'investmentstrategy');
+        }
+
+        if (isset($filters['vct_offeringtype']) && $filters['vct_offeringtype'] != "") {
+            $vctOfferingtype = $filters['vct_offeringtype'];
+            $vctOfferingtype = explode(',', $vctOfferingtype);
+            $vctOfferingtype = array_filter($vctOfferingtype);
+
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+            
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $vctOfferingtype)->where('business_listing_datas.data_key', 'offeringtype');
+        }
+
+        if($businessListingType == 'vct')
+            $businessListingQuery->where('business_listings.type', 'fund');
+        else
+            $businessListingQuery->where('business_listings.type', $businessListingType);
 
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
             $taxStatus = $filters['tax_status'];

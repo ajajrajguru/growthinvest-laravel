@@ -86,6 +86,35 @@ $(document).ready ->
 
     filters.fund_investmentobjective = fund_investmentobjective
 
+    ######***##### 
+    vct_type = ''
+    $('input[name="vct_type[]"]').each ->
+      if $(this).is(':checked')
+        vct_type += $(this).val()+','
+
+    filters.vct_type = vct_type
+
+     ######***##### 
+    vct_investmentstrategy = ''
+    $('input[name="vct_investmentstrategy[]"]').each ->
+      if $(this).is(':checked')
+        vct_investmentstrategy += $(this).val()+','
+
+    filters.vct_investmentstrategy = vct_investmentstrategy
+
+     ######***##### 
+    vct_offeringtype = ''
+    $('input[name="vct_offeringtype[]"]').each ->
+      if $(this).is(':checked')
+        vct_offeringtype += $(this).val()+','
+
+    filters.vct_offeringtype = vct_offeringtype
+
+
+
+
+
+
     $.ajax
       type: 'post'
       url: '/investment-opportunities/filter-listings'

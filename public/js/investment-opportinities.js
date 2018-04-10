@@ -8,7 +8,7 @@
   $(document).ready(function() {
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
-      var business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status;
+      var business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status, vct_investmentstrategy, vct_offeringtype, vct_type;
       $('.investment-loader').addClass('d-flex').removeClass('d-none');
       $('.no-data-conatiner').removeClass('d-flex').addClass('d-none');
       filters = {};
@@ -77,6 +77,27 @@
         }
       });
       filters.fund_investmentobjective = fund_investmentobjective;
+      vct_type = '';
+      $('input[name="vct_type[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return vct_type += $(this).val() + ',';
+        }
+      });
+      filters.vct_type = vct_type;
+      vct_investmentstrategy = '';
+      $('input[name="vct_investmentstrategy[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return vct_investmentstrategy += $(this).val() + ',';
+        }
+      });
+      filters.vct_investmentstrategy = vct_investmentstrategy;
+      vct_offeringtype = '';
+      $('input[name="vct_offeringtype[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return vct_offeringtype += $(this).val() + ',';
+        }
+      });
+      filters.vct_offeringtype = vct_offeringtype;
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',

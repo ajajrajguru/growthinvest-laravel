@@ -140,6 +140,12 @@ Route::resource('permissions', 'PermissionController');
 Route::group(['middleware' => ['auth']], function () {
 });
 
+
+//migration
+Route::group(['middleware' => ['auth'],'prefix' => 'migration'], function () {
+    Route::get('fund-vct-data', 'BusinessListingController@migratteVctData');
+});
+
 Auth::routes();
 
 Route::get('/', 'UserController@index')->name('home');

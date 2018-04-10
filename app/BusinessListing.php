@@ -235,10 +235,38 @@ class BusinessListing extends Model
         $businessListingData = $this->businessListingData()->where('data_key','fund_typeoffund')->first();
         $fundType = (!empty($businessListingData)) ? $businessListingData->data_value :'';
         $fundType = str_replace('_', ' ', $fundType);
-        
+
 
         return $fundType;
     }
+
+    public function businessInvestmentStrategy(){
+        $businessListingData = $this->businessListingData()->where('data_key','investmentstrategy')->first();
+        $investmentStrategy = (!empty($businessListingData)) ? $businessListingData->data_value :'';
+        $investmentStrategy = strtoupper($investmentStrategy);
+
+
+        return $investmentStrategy;
+    }
+
+    public function businessFundVctDetails(){
+        $businessListingData = $this->businessListingData()->where('data_key','fundvct_details')->first();
+        $fundvctDetails = (!empty($businessListingData)) ? unserialize($businessListingData->data_value) :[];
+    
+        return $fundvctDetails;
+    }
+
+
+    public function businessFundCloseDate(){
+        $businessListingData = $this->businessListingData()->where('data_key','fund_closedate')->first();
+        $closedate = (!empty($businessListingData)) ? $businessListingData->data_value :'';
+    
+        return $closedate;
+    }
+
+
+
+
 
 
 }
