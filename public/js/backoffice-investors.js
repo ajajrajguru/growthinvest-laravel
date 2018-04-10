@@ -939,7 +939,7 @@
       getActivitySummary();
     }
     $('body').on('click', '.alter-activity-table', function() {
-      return $('.activity-cols').each(function() {
+      $('.activity-cols').each(function() {
         var colIndex;
         colIndex = $(this).val();
         if ($(this).is(':checked')) {
@@ -948,6 +948,7 @@
           return investorActivityTable.column(colIndex).visible(false);
         }
       });
+      $('#columnVisibility').modal('hide');
     });
     $('body').on('click', '.apply-activity-filters', function() {
       var urlParams;
@@ -993,6 +994,18 @@
       getActivitySummary();
       investorActivityTable.ajax.reload();
     });
+    $('body').on('change', 'select[name="activity_group"]', function() {
+      var group;
+      group = $("option:selected", this).text();
+      $('select[name="type" ]').find('option').each(function() {
+        $(this).removeClass('d-none');
+        console.log(group);
+        console.log($(this).attr('activity-group'));
+        if (group !== $(this).attr('activity-group')) {
+          return $(this).addClass('d-none');
+        }
+      });
+    });
     $('body').on('change', 'select[name="duration"]', function() {
       if ($(this).val()) {
         $('input[name="duration_from"]').val('').attr('disabled', true);
@@ -1030,6 +1043,9 @@
       }
       if ($('select[name="user"]').val() !== "") {
         urlParams += '&user=' + $('select[name="user"]').val();
+      }
+      if ($('input[name="exclude_platform_admin_activity"]').is(':checked')) {
+        urlParams += '&exclude_platform_admin_activity=1';
       }
       if (type === 'csv') {
         return window.open("/backoffice/investor/export-investors-activity?" + urlParams);

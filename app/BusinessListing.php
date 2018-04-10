@@ -264,6 +264,13 @@ class BusinessListing extends Model
         return $closedate;
     }
 
+    public function businessProposalDetails(){
+        $businessListingData = $this->businessListingData()->where('data_key','proposal_details')->first();
+        $data = (!empty($businessListingData)) ?  unserialize($businessListingData->data_value) :[];
+        
+        return $data;
+    }
+
 
 
 

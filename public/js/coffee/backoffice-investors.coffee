@@ -873,7 +873,7 @@ $(document).ready ->
   if($('.activity-summary-count').length)    
     getActivitySummary()
 
-
+  
 
   $('body').on 'click', '.alter-activity-table', ->
     $('.activity-cols').each ->
@@ -882,6 +882,9 @@ $(document).ready ->
         investorActivityTable.column( colIndex ).visible( true );
       else
         investorActivityTable.column( colIndex ).visible( false );
+
+    $('#columnVisibility').modal('hide')
+    return
 
 
   $('body').on 'click', '.apply-activity-filters', ->
@@ -933,6 +936,18 @@ $(document).ready ->
     investorActivityTable.ajax.reload()
     return
 
+  $('body').on 'change', 'select[name="activity_group"]', ->
+    group =$("option:selected", this).text()
+    $('select[name="type" ]').find('option').each ->
+      $(this).removeClass('d-none')
+      console.log group
+      console.log $(this).attr('activity-group')
+      if(group != $(this).attr('activity-group'))
+        $(this).addClass('d-none')
+  
+    return    
+      
+
   $('body').on 'change', 'select[name="duration"]', ->
     if($(this).val())
       $('input[name="duration_from"]').val('').attr('disabled',true)
@@ -968,6 +983,9 @@ $(document).ready ->
 
     if($('select[name="user"]').val()!="")
       urlParams +='&user='+$('select[name="user"]').val()
+
+    if($('input[name="exclude_platform_admin_activity"]').is(':checked'))
+      urlParams +='&exclude_platform_admin_activity=1'
     
     if(type == 'csv')  
       window.open("/backoffice/investor/export-investors-activity?"+urlParams)

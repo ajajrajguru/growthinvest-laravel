@@ -5,8 +5,9 @@
 	$dueDeligence = (isset($businessDefaults['approver']))? implode('',$businessDefaults['approver']) : '';
 	$stageOfBusiness = (isset($businessDefaults['stage_of_business']))? implode('',$businessDefaults['stage_of_business']) : '';
 	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
+	$proposalDetails = $businessListing->businessProposalDetails();
  
-	
+	 
 	@endphp
 <div class="row d-sm-flex border mb-4 box-shadow-1 mx-0">
 	<div class="col-sm-4 border-right px-0">
@@ -18,22 +19,24 @@
     	<!-- popover markup -->
     	<div id="popover-content" class="d-none">
 
+    		@if($dueDeligence == 'Independent Report')
 			<!-- Independent Report -->
 	      	<h6>Independent Report</h6><hr class="mb-2 mt-2">
 	      	<div>The Gold tier requires the provision of information in accordance with the Bronze tier and for the investment opportunity to be subjected to an independent third party review and reporting process. The Gold Tier report will be written by an independent leading analyst and will contain a review of the efficacy of the investment proposition relative to others in the market, while also identifying key factors that will impact upon the successful outcome of the investment. Overall the Gold Tier report is designed to provide investors and advisers with high quality research to allow them to make informed decisions with greater confidence and reassurance.</div>
 
+	      	@elseif($dueDeligence == 'Analyst Report')
     		<!-- Analyst Report	 -->
-	      	<!-- <h6>Analyst Report</h6><hr class="mb-2 mt-2">
-	      	<div> The Silver tier requires the provision of information in accordance with the Bronze tier and for the business to provide a report prepared by a business analyst appointed by us. The Analyst Report is designed to provide additional information and the businesses response to key characteristics and potential risks and opportunities contained within the investment proposal.</div> -->
-
+	      	<h6>Analyst Report</h6><hr class="mb-2 mt-2">
+	      	<div> The Silver tier requires the provision of information in accordance with the Bronze tier and for the business to provide a report prepared by a business analyst appointed by us. The Analyst Report is designed to provide additional information and the businesses response to key characteristics and potential risks and opportunities contained within the investment proposal.</div>
+	      	@elseif($dueDeligence == 'Initial Due Diligence')
 	      	<!-- Initial Due Diligence -->
-	      	<!-- <h6>Initial Due Diligence</h6><hr class="mb-2 mt-2">
-	      	<div>The Bronze tier is designed to confirm that the investment strategy is in compliance with HMRC rules for SEIS or EIS eligibility , test the rationale of the business proposition and also includes a third party check on the creditworthiness of the business and its directors. The GrowthInvest in-house analyst will review the business plan and financial projections and collect a list of statutory and business related documents related to the companies good standing and the investment proposition. This is the minimum stage of due diligence that must be completed for a business to become live on our platform in order to receive investments.</div> -->
-
+	      	<h6>Initial Due Diligence</h6><hr class="mb-2 mt-2">
+	      	<div>The Bronze tier is designed to confirm that the investment strategy is in compliance with HMRC rules for SEIS or EIS eligibility , test the rationale of the business proposition and also includes a third party check on the creditworthiness of the business and its directors. The GrowthInvest in-house analyst will review the business plan and financial projections and collect a list of statutory and business related documents related to the companies good standing and the investment proposition. This is the minimum stage of due diligence that must be completed for a business to become live on our platform in order to receive investments.</div>
+	      	@elseif($dueDeligence == 'Platform Listing')
 	      	<!-- Platform Listing -->
-	      	<!-- <h6>Platform Listing</h6><hr class="mb-2 mt-2">
-	      	<div>Once a business has successfully answered the business profile and due diligence questionnaires, and provided related information , we will place the business onto the Listings tier. This allows the business to be visible to investors, however investments cannot be received until a further level of due diligence has been completed in accordance with one of the tiers below.</div> -->
-
+	      	<h6>Platform Listing</h6><hr class="mb-2 mt-2">
+	      	<div>Once a business has successfully answered the business profile and due diligence questionnaires, and provided related information , we will place the business onto the Listings tier. This allows the business to be visible to investors, however investments cannot be received until a further level of due diligence has been completed in accordance with one of the tiers below.</div>
+	      	@endif
 
 	    </div>
 		<a href="">
@@ -46,7 +49,7 @@
 		</a>
 
 		<div class="d-flex justify-content-between mt-5 px-3 mb-3">
-			<div data-toggle="tooltip" title="221 B, Baker Street, London"><i class="fa fa-map-marker"></i> LOCATION</div>
+			<div data-toggle="tooltip" title="{{ (isset($proposalDetails['address'])) ? $proposalDetails['address'] :'' }}"><i class="fa fa-map-marker"></i> LOCATION</div>
 			<div>
 				@foreach($businessListing->tax_status as $taxStatus)
 				<span class="badge bg-primary text-white mr-1 py-1">{{ $taxStatus }}</span>
