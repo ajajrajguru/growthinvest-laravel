@@ -696,7 +696,7 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing($filters, 0, 0, $orderDataBy); 
+        $filterActivityListing = $this->getFilteredActivityListing($filters, 0, 0, $orderDataBy);  
         $activityListings      = $filterActivityListing['list'];
 
         $fileName = 'all_investors_as_on_' . date('d-m-Y');
@@ -748,7 +748,7 @@ class ActivityController extends Controller
         }
 
 
-
+       
         foreach ($activityListings as $key => $activityListing) {
 
             if (isset($userObj[$activityListing->user_id])) {
