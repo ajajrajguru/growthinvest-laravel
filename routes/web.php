@@ -15,6 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('investment-opportunities/{type}', 'BusinessListingController@investmentOpportunities');
+Route::post('investment-opportunities/filter-listings', 'BusinessListingController@getFilteredInvestmentOpportunity');
+
+
+
 Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffice'], function () {
     //firms
     Route::get('firms/add', 'FirmController@create');

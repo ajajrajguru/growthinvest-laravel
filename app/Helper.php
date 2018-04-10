@@ -1121,7 +1121,17 @@ function getSectors()
 
 function getBusinessSectors()
 {
-    return \App\Defaults::where('type', 'business-sector')->get();
+    return \App\Defaults::where('type', 'business-sector')->where('status', '1')->get();
+}
+
+function getDueDeligence()
+{
+    return \App\Defaults::where('type', 'approver')->where('status', '1')->get();
+}
+
+function getStageOfBusiness()
+{
+    return \App\Defaults::where('type', 'stage_of_business')->where('status', '1')->get();
 }
 
 /**

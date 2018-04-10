@@ -36,7 +36,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-
+        
         $user      = new User;
         $investors = $user->getInvestorUsers();
 

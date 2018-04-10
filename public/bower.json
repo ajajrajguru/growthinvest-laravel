@@ -22,6 +22,8 @@
     "owl.carousel": "^2.2.1",
     "bootstrap-datepicker": "^1.7.1",
     "jquery-knob": "^1.2.13",
-    "amcharts3": "^3.21.12"
+    "amcharts3": "^3.21.12",
+    "jquery-custom-scrollbar": "~0.5.5",
+    "malihu-custom-scrollbar-plugin": "~3.1.5"
   }
 }

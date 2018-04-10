@@ -38,8 +38,9 @@
 	.card-header {
 		position: relative;
 		button {
+			color: #333;
 			&:before {
-				content: "\f054";
+				content: "\f105";
 				font-family: FontAwesome;
 				position: absolute;
 				right: 10px;
@@ -48,13 +49,23 @@
 			}
 			&.collapsed {
 				&:before {
-					content: "\f054";
+					content: "\f105";
 					font-family: FontAwesome;
 					position: absolute;
 					right: 10px;
 					transform: rotateZ(90deg);
 				}
 			}
+			&:hover,
+			&:focus {
+				text-decoration: none;
+			}
+		}
+	}
+	.card-body {
+		.filter-options {
+			max-height: 170px;
+			overflow-y: auto;
 		}
 	}
 }
