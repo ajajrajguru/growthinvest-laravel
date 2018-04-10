@@ -550,7 +550,7 @@
                                             <div class="form-group">
                                                 <label>Sort Code <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
                                                 <input type="text" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" placeholder="" name="bankaccntsortcode" data-parsley-required data-parsley-required-message="Please enter the sort code." value="@if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif">
-                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif</div>
+                                                <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif" data-parsley-maxlength="6" data-parsley-maxlength-message="The Sort Code must be 6 characters long!"> @if(!empty($nomineeDetails) && isset($nomineeDetails['bankaccntsortcode'])){{ $nomineeDetails['bankaccntsortcode'] }}@endif</div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">

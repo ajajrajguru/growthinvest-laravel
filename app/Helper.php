@@ -1347,7 +1347,11 @@ function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
 
 function saveActivityLog($component, $userId, $type, $itemId, $action, $content = '', $secItemId = 0, $primaryLink = "")
 {
+    $giArgs = array('prefix' => "GIAC", 'min' => 90000001, 'max' => 100000000);
+    
     $activity                    = new \App\Activity;
+    $giCode = generateGICode($activity, 'gi_platform_code', $giArgs);
+    
     $activity->user_id           = $userId;
     $activity->component         = $component;
     $activity->type              = $type;
@@ -1356,6 +1360,7 @@ function saveActivityLog($component, $userId, $type, $itemId, $action, $content 
     $activity->primary_link      = $primaryLink;
     $activity->item_id           = $itemId;
     $activity->secondary_item_id = $secItemId;
+    $activity->gi_platform_code  = $secItemId;
     $activity->date_recorded     = date('Y-m-d H:i:s');
     $activity->save();
 
@@ -1375,7 +1380,7 @@ function saveActivityMeta($activityId, $key, $value = [])
 function activityQueryBuilder()
 {
 
-    $type_lists = \App\Actvity::select('distinct type')->get()->toArray(); ("select distinct type from activity " . $typewhere . "");
+    $type_lists = \App\Actvity::select('distinct type')->get()->toArray(); //("select distinct type from activity " . $typewhere . "");
 
     $count               = 0;
     $union               = '';
@@ -1557,20 +1562,56 @@ function activityQueryBuilder()
     }
 }
 
-function is_in_array($array, $key, $key_value){
-      $within_array = 'no';
-      foreach( $array as $k=>$v ){
-        if( is_array($v) ){
+function is_in_array($array, $key, $key_value)
+{
+    $within_array = 'no';
+    foreach ($array as $k => $v) {
+        if (is_array($v)) {
             $within_array = is_in_array($v, $key, $key_value);
-            if( $within_array == 'yes' ){
+            if ($within_array == 'yes') {
                 break;
             }
         } else {
-                if( $v == $key_value && $k == $key ){
-                        $within_array = 'yes';
-                        break;
-                }
+            if ($v == $key_value && $k == $key) {
+                $within_array = 'yes';
+                break;
+            }
         }
-      }
-      return $within_array;
+    }
+    return $within_array;
+}
+
+function updateVCTData()
+{
+    $vctData = \App\BusinessListingData::where('data_key', 'fundvct_details')->get();
+    foreach ($vctData as $key => $vct) {
+        $dataValue = $vct->data_value;
+
+        $dataValue = unserialize($dataValue);
+        if (!empty($dataValue) && !is_array($dataValue)) {
+            $dataValue = unserialize($dataValue);
+
+            $vctType              = new \App\BusinessListingData;
+            $vctType->business_id = $vct->business_id;
+            $vctType->data_key    = 'vcttype';
+            $vctType->data_value  = (isset($dataValue['vcttype'])) ? $dataValue['vcttype'] : '';
+            $vctType->save();
+
+            $investmentstrategy              = new \App\BusinessListingData;
+            $investmentstrategy->business_id = $vct->business_id;
+            $investmentstrategy->data_key    = 'investmentstrategy';
+            $investmentstrategy->data_value  = (isset($dataValue['investmentstrategy'])) ? $dataValue['investmentstrategy'] : '';
+            $investmentstrategy->save();
+
+            $offeringtype              = new \App\BusinessListingData;
+            $offeringtype->business_id = $vct->business_id;
+            $offeringtype->data_key    = 'offeringtype';
+            $offeringtype->data_value  = (isset($dataValue['offeringtype'])) ? $dataValue['offeringtype'] : '';
+            $offeringtype->save();
+
+            $vct->data_value = serialize($dataValue);
+            $vct->save();
+
+        }
+    }
 }

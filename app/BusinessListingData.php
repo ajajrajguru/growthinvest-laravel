@@ -22,6 +22,22 @@ class BusinessListingData extends Model
      * @var        array
      */
     protected $fillable = ['business_id', 'data_key', 'data_value']; 
+
+
+    /**
+    serialization removed as filters are applied on some data_value 
+    */
+
+    // public function getDataValueAttribute( $value ) { 
+    //     $value = unserialize( $value );
+         
+    //     return $value;
+    // }
+
+    // public function setDataValueAttribute( $value ) { 
+    //     $this->attributes['data_value'] = serialize( $value );
+
+    // }
    
 
 }

@@ -3699,7 +3699,7 @@ class InvestorPdfHtml
                 $userActivity                     = Activity::find($activityListing->id);
 
                 // $certificationName                = (!empty($investor) && !empty($investor->userCertification()) && !empty($investor->getLastActiveCertification())) ? $investor->getLastActiveCertification()->certification()->name : '';
-                $businessProposal     = title_case($activityListing->itemname),
+                $businessProposal     = title_case($activityListing->itemname);
                 $userType     = (!empty($user) && !empty($user->roles())) ? title_case($user->roles()->pluck('display_name')->implode(' ')) : '';
                 $activityMeta = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
                 $firstname    = title_case($firstName);

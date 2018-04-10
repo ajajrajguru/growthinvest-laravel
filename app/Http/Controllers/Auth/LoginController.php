@@ -71,8 +71,11 @@ class LoginController extends Controller
     {
         $email = $request->email;
         $user = \App\User::where('email',$email)->first();
-        $action = 'Login Failed';
-        $activity = saveActivityLog('User',$user->id,'auth_fail',$user->id,$action,'',$user->firm_id);
+        if(!empty($user)){
+            $action = 'Login Failed';
+            $activity = saveActivityLog('User',$user->id,'auth_fail',$user->id,$action,'',$user->firm_id);
+        }
+        
 
 
         throw ValidationException::withMessages([

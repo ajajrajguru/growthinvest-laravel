@@ -644,6 +644,10 @@ class InvestorController extends Controller
         $hasCertification->created_at    = $certificationDate;
         $hasCertification->save();
 
+        $investor->current_certification = $hasCertification->id;
+        $investor->save();
+        
+
         if (!$investor->hasRole('investor')) {
             $investor->removeRole('yet_to_be_approved_investor');
             $investor->assignRole('investor');
