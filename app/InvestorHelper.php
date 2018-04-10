@@ -655,7 +655,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
     curl_setopt($ch, CURLOPT_POSTFIELDS, $applicant_details_json); // Commented not to include reports for check
 
     $result = curl_exec($ch);
-    dd($result);
+    
     return $result;
 
 }
