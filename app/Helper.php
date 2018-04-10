@@ -1360,7 +1360,7 @@ function saveActivityLog($component, $userId, $type, $itemId, $action, $content 
     $activity->primary_link      = $primaryLink;
     $activity->item_id           = $itemId;
     $activity->secondary_item_id = $secItemId;
-    $activity->gi_platform_code  = $secItemId;
+    $activity->gi_platform_code  = $giCode;
     $activity->date_recorded     = date('Y-m-d H:i:s');
     $activity->save();
 
