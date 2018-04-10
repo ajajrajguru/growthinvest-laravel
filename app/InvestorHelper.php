@@ -360,8 +360,8 @@ function createOnfidoApplicant($investor)
     // $objectData =  (object) $objectData;
 
     $reports[] = array('name' => 'identity');
-    $reports[] = array('name' => 'watchlist');
     // $reports[] = array('name' => 'anti_money_laundering');
+    // $reports[] = array('name' => 'watchlist');
     // 
     // commented on 26april2016 $reports[] = array('name'=>'anti_money_laundering');
     /*There was a validation error on this request","The following reports have not been enabled for your account: anti_money_laundering. You can see the list of enabled reports using the /report_type_groups API endpoint. Please contact client-support@onfido.com if you have questions regarding your account setup.*/
