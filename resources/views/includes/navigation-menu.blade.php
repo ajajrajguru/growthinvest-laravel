@@ -22,10 +22,10 @@
               <a href="{{ url('investment-opportunities/single-company/') }}">EIS &amp; SEIS - Single Companies</a>
             </li>
             <li>
-              <a href="/investment-opportunities/#funds">EIS &amp; SEIS - Funds &amp; Portfolios</a>
+              <a href="{{ url('investment-opportunities/funds/') }}">EIS &amp; SEIS - Funds &amp; Portfolios</a>
             </li>
             <li>
-              <a href="/investment-opportunities/#vcts">VCTs</a>
+              <a href="{{ url('investment-opportunities/vct/') }}">VCTs</a>
             </li>
           </ul>
         </li>
