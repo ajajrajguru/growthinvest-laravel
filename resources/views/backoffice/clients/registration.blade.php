@@ -113,7 +113,7 @@
 
                     <div class="d-sm-flex justify-content-sm-between align-items-sm-center mt-3">
                         <h5 class="mt-0 mb-0">
-                            1: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client asRegistration</span>
+                            1: <i class="fa fa-pencil text-primary"> </i> <span class="text-primary">  Client Registration</span>
                         </h5>
                         <div class="">
                             @if($investor->id)

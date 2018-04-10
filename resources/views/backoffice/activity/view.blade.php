@@ -100,8 +100,16 @@
         </div>
 
         <div class="col-md-10 bg-white border border-gray border-left-0 border-right-0">
-            <div class="">
-                <h1 class="section-title font-weight-medium text-primary mb-0">Activity Analysis</h1>
+            <div class="mt-4 p-2">
+              <div class="row align-items-center mb-4">
+                <div class="col-sm-1">
+                  <img src="{{ url('img/diversity.png') }}" width="" height="" class="img-fluid" alt="Activity Analysis">
+                </div>
+                <div class="col-sm-11">
+                  <h1 class="section-title font-weight-medium text-primary mb-0">Activity Analysis</h1>
+                </div>
+              </div>
+                
  
 
                 <h5 class="mt-2 mb-0">Selection Filters</h5>
