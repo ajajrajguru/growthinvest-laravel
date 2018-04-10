@@ -54,6 +54,50 @@
 </div> 
 <!-- /mobile filter -->
 
+<!-- test -->
+<!-- <p class="mb-3 h6">Tax efficient investments offer various tax benefits to qualifying investments whilst simultaneously encouraging investment into the UK entrepreneurial business scene and are made through government-backed schemes such as <strong>SEIS, EIS &amp; VCTs</strong>. The benefits of these types of investments vary from income tax relief to capital gains relief, through to loss relief and inheritance tax relief.</p>
+
+<p class="mb-3 h6">We offer a range of tax efficient investments on GrowthInvest. Further information on each type is included on the dedicated sections below:</p>
+
+<div class="card-deck">
+  	<div class="card card-animated">
+  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+	  		<div class="animate-border">SEIS <span class="slideInLeft">»</span></div>
+  		</a>
+  	</div>
+
+  	<div class="card card-animated">
+  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+	  		<div class="animate-border">EIS <span class="slideInLeft">»</span></div>
+  		</a>
+  	</div>
+
+  	<div class="card card-animated">
+  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+	  		<div class="animate-border">VCT <span class="slideInLeft">»</span></div>
+  		</a>
+  	</div>
+</div> -->
+<!-- /test -->
+
+<!-- tabs -->
+<div class="squareline-tabs mt-5">
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+	   		<a class="nav-link active d-none d-sm-block px-5" data-toggle="tab" href="">Single Companies</a>
+		</li>
+		<li class="nav-item">
+	    	<a class="nav-link d-none d-sm-block px-5" data-toggle="tab" href="">Funds</a>
+		</li>
+		<li class="nav-item">
+	    	<a class="nav-link d-none d-sm-block px-5" data-toggle="tab" href="">VCTs</a>
+		</li>
+						
+		
+	</ul>
+</div>
+<!-- /tabs -->
+
 	<div class="row mt-5">
 		@if($business_listing_type == 'proposal')
 			@include('frontend.business-listings.single-company-sidebar')

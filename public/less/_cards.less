@@ -1,0 +1,114 @@
+.card-animated {
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.2);
+	min-height: 400px;
+	transition: 0.3s;
+	&:nth-of-type(1) {
+		background: url('../img/seis-listing.jpeg') no-repeat center;
+	}
+	&:nth-of-type(2) {
+		background: url('../img/eis-listing.jpeg') no-repeat center;
+	}
+	&:nth-of-type(3) {
+		background: url('../img/vct-listing.jpeg') no-repeat center;
+	}
+    &:after {
+    	position: absolute;
+	  	content: "";
+	  	width: 100%;
+	  	height: 100%;
+	  	right: 15px;
+	  	bottom: 15px;
+	  	z-index: 1;
+	  	border-right: 2px solid #fff;
+	  	border-bottom: 2px solid #fff;
+    }
+    &:before {
+    	position: absolute;
+		content: "";
+		width: 100%;
+		height: 100%;
+		top: 15px;
+		left: 15px;
+		z-index: 1;
+		border-left: 2px solid #fff;
+		border-top: 2px solid #fff;
+    }
+    .card-link {
+    	content: "";
+    	background: rgba(0, 0, 0, 0.1);
+    	font-size: 24px;
+    	color: #fff;
+    	font-weight: 600;
+    	transition: 0.3s;
+    }
+	&:hover {
+		.card-link {
+			background: rgba(0, 0, 0, 0.3);
+		}
+	    .slideInLeft {
+	    	display: inline-block;
+	        transform: translateX(8px);
+	    }
+	    .animate-border:before {
+	        transition: .1s transform linear, .1s height linear .1s;
+	        transform: translateX(0);
+	        height: 100%;
+	        border-color: #fff;
+	    }
+	    .animate-border:after {
+	        transition: .1s transform linear .2s, .1s height linear .3s;
+	        transform: translateX(0);
+	        height: 100%;
+	        border-color: #fff;
+	    }
+	}
+	a {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 2;
+	}
+}
+
+.slideInLeft {
+    transform: perspective(1px) translateZ(0);
+    transition: 0.3s;
+    padding-right: 1.25rem;
+}
+
+.animate-border {
+	position: relative;
+    display: block;
+    margin: 0 2px;
+    padding: 0.625rem 1.25rem;
+    text-transform: uppercase;
+    overflow: hidden;
+    &:after {
+    	box-sizing: border-box;
+	    transform: translateX(-100%);
+	    content: '';
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    width: 99.5%;
+	    height: 2px;
+	    border-top: 2px solid transparent;
+	    border-right: 2px solid transparent;
+    }
+    &:before {
+    	box-sizing: border-box;
+	    transform: translateX(100%);
+	    content: '';
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    width: 99.5%;
+	    height: 2px;
+	    border-bottom: 2px solid transparent;
+	    border-left: 2px solid transparent;
+    }
+}
