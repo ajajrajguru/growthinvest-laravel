@@ -360,7 +360,7 @@ function createOnfidoApplicant($investor)
     // $objectData =  (object) $objectData;
 
     $reports[] = array('name' => 'identity');
-    $reports[] = array('name' => 'anti_money_laundering');
+    // $reports[] = array('name' => 'anti_money_laundering');
     // commented on 26april2016 $reports[] = array('name'=>'anti_money_laundering');
     /*There was a validation error on this request","The following reports have not been enabled for your account: anti_money_laundering. You can see the list of enabled reports using the /report_type_groups API endpoint. Please contact client-support@onfido.com if you have questions regarding your account setup.*/
 
@@ -1008,6 +1008,37 @@ function retrieve_report_details($args = array())
     /* Example response
 
  */
+}
+
+function list_report_type_groups(){
+
+    $token = env('ONFIDO_ACCESS_TOKEN');
+    
+
+    //$auth = base64_encode( 'token='.$token );
+    $ch = curl_init();
+    $curlopt_url = "https://api.onfido.com/v2/report_type_groups";
+    curl_setopt($ch, CURLOPT_URL, $curlopt_url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+    'Authorization: Token token='.$token));
+    curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/3.0');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+
+    $result = curl_exec($ch); 
+    $result_json_decoded = json_decode($result);
+    echo "<pre>";
+    print_r($result);
+    echo "</pre>";
+
+    return $result_json_decoded;
+
+    /* Example response 
+
+    <pre>{"report_type_groups":[{"id":"1685","name":"Seed EIS Platform 1","group_only":true,"report_types":[{"id":"10","name":"identity","variant":null,"options":[]},{"id":"25","name":"credit","variant":null,"options":[]},{"id":"13","name":"criminal_history","variant":null,"options":[]}]},{"id":"1768","name":"Seed EIS Platform 2","group_only":false,"report_types":[{"id":"10","name":"identity","variant":null,"options":[]},{"id":"25","name":"credit","variant":null,"options":[]},{"id":"13","name":"criminal_history","variant":null,"options":[]}]},{"id":"2004","name":"KYC and AML","group_only":false,"report_types":[{"id":"29","name":"document","variant":null,"options":[]},{"id":"34","name":"anti_money_laundering","variant":null,"options":[]}]}]}</pre>
+
+    */
 }
 
 function createOnfidoReportObject($onfidoReports, $args)
