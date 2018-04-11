@@ -31,6 +31,11 @@ class ActivityController extends Controller
         $user           = new User;
         $backofficeUser = $user->backofficeUsers();
 
+        $groupActivities = [];
+        foreach ($activityGroups as $key => $activityGroup) {
+            $groupActivities[$activityGroup->group_name] = $activityGroup->activity_type_value;
+        }
+        
         $businessListing          = BusinessListing::where('status', 'publish')->where('status', 'publish')->get();
         $data['businessListings'] = $businessListing;
         $data['activityTypes']    = activityTypeList();
@@ -38,6 +43,7 @@ class ActivityController extends Controller
         $data['breadcrumbs']      = $breadcrumbs;
         $data['requestFilters']   = $requestFilters;
         $data['activityGroups']   = $activityGroups;
+        $data['groupActivities']   = $groupActivities;
         $data['backofficeUsers']  = $backofficeUser;
         $data['firms']            = $firms;
         $data['pageTitle']        = 'View Activity';
@@ -98,7 +104,7 @@ class ActivityController extends Controller
         );
 
         $columnName = 'date_recorded';
-        $orderBy    = 'asc';
+        $orderBy    = 'desc';
 
         if (isset($columnOrder[$orderValue['column']])) {
             $columnName = $columnOrder[$orderValue['column']];
@@ -129,6 +135,16 @@ class ActivityController extends Controller
             $userActivity                     = Activity::find($activityListing->id);
             $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
 
+            if(isset($activityTypeList[$activityListing->type])){
+                $activity = $activityTypeList[$activityListing->type];
+
+                if($activityListing->type=='certification' && !empty($activityMeta)){
+                    $activity .= ' '. title_case($activityMeta['certification']);
+                }
+            }
+            else{
+                $activity = '';
+            }
             $activityListingData[] = [
                 'logo'           => '',
                 'proposal_funds' => title_case($activityListing->itemname),
@@ -140,7 +156,7 @@ class ActivityController extends Controller
                 'telephone'      => (!empty($user)) ? title_case($user->telephone_no) : '',
                 'description'    => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
                 'date'           => (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
-                'activity'       => (isset($activityTypeList[$activityListing->type])) ? $activityTypeList[$activityListing->type] : '',
+                'activity'       => $activity,
 
             ];
 
@@ -235,6 +251,7 @@ class ActivityController extends Controller
         }
 
         $isTypeInWhere = false;
+        $activityGroupName  = '';
         if (isset($filters['activity_group']) && $filters['activity_group'] != "") {
 
             $activityGroup = ActivityGroup::find($filters['activity_group']);
@@ -246,6 +263,8 @@ class ActivityController extends Controller
                 }
                 $typeStr .= (!empty($actTypes)) ? " and a1.type IN ('" . implode("','", $actTypes) . "')" : '';
             }
+
+            $activityGroupName  = $activityGroup->group_name;
 
         }
 
@@ -301,6 +320,7 @@ class ActivityController extends Controller
         $orderby    = " order by a1.type";
 
         $selectActivityLog = $mainselect . $compWhere . $whereStr . $parentChildFirms . $typeStr . $firmWhere . $companyWhere . $userWhere . $groupby . $orderby;
+
          
         $groupActs        = $this->getActivitiesByGroup();
         $finalarr         = array();
@@ -312,14 +332,17 @@ class ActivityController extends Controller
             if (array_key_exists($activityLog->type, $activityTypeList)) {
 
                 $groupname = (!isset($groupActs[$activityLog->type]) || $groupActs[$activityLog->type] == "") ? "Others" : $groupActs[$activityLog->type];
-                $typetitle = $activityTypeList[$activityLog->type];
-                $ckIfAddedToList[$activityLog->type] = $activityLog->type;
-                $finalarr[] = array('typetitle' => $typetitle,
-                    'type'                          => $activityLog->type,
-                    'count'                         => $activityLog->count,
-                    'typetitle_count'               => $typetitle . ' (' . $activityLog->count . ')',
-                    'group_name'                    => $groupname,
-                );
+
+                if($activityGroupName==$groupname || $activityGroupName==''){
+                    $typetitle = $activityTypeList[$activityLog->type];
+                    $ckIfAddedToList[$activityLog->type] = $activityLog->type;
+                    $finalarr[] = array('typetitle' => $typetitle,
+                        'type'                          => $activityLog->type,
+                        'count'                         => $activityLog->count,
+                        'typetitle_count'               => $typetitle . ' (' . $activityLog->count . ')',
+                        'group_name'                    => $groupname,
+                    );
+                }
 
             }
         }
@@ -334,14 +357,16 @@ class ActivityController extends Controller
             if (!isset($ckIfAddedToList[$typetitlekey])) {
 
                 $groupname1 = (!isset($groupActs[$typetitlekey]) || $groupActs[$typetitlekey] == "") ? "Others" : $groupActs[$typetitlekey];
-                $ckIfAddedToList[$typetitlekey] = $typetitlekey;
-                $finalarr[] = array(
-                    'typetitle'       => $typetitlevalue,
-                    'type'            => $typetitlekey,
-                    'count'           => 0,
-                    'typetitle_count' => $typetitlevalue . '(0)',
-                    'group_name'      => (!isset($groupActs[$typetitlekey]) || $groupActs[$typetitlekey] == "") ? "Others" : $groupActs[$typetitlekey],
-                );
+                if($activityGroupName==$groupname1 || $activityGroupName==''){
+                    $ckIfAddedToList[$typetitlekey] = $typetitlekey;
+                    $finalarr[] = array(
+                        'typetitle'       => $typetitlevalue,
+                        'type'            => $typetitlekey,
+                        'count'           => 0,
+                        'typetitle_count' => $typetitlevalue . '(0)',
+                        'group_name'      => (!isset($groupActs[$typetitlekey]) || $groupActs[$typetitlekey] == "") ? "Others" : $groupActs[$typetitlekey],
+                    );
+                }
 
             }
         }
@@ -664,14 +689,14 @@ class ActivityController extends Controller
     {
 
         $data    = [];
-        $filters = $request->all();
+        $filters = $request->all(); 
 
         $columnName = 'activity.date_recorded';
-        $orderBy    = 'asc';
+        $orderBy    = 'desc';
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing($filters, 0, 0, $orderDataBy);
+        $filterActivityListing = $this->getFilteredActivityListing($filters, 0, 0, $orderDataBy);  
         $activityListings      = $filterActivityListing['list'];
 
         $fileName = 'all_investors_as_on_' . date('d-m-Y');
@@ -682,6 +707,48 @@ class ActivityController extends Controller
         $activityTypeList = activityTypeList();
         $userObj          = [];
 
+        foreach ($activityListings as $key => $activityListing) {
+            if (isset($userObj[$activityListing->user_id])) {
+                $user = $userObj[$activityListing->user_id];
+            } else {
+                $user                               = User::find($activityListing->user_id);
+                $userObj[$activityListing->user_id] = $user;
+            }
+            $userType = (!empty($user) && !empty($user->roles())) ? title_case($user->roles()->pluck('display_name')->implode(' ')) : '';
+
+            $activityId[$activityListing->id] = $activityListing->id;
+            $userActivity                     = Activity::find($activityListing->id);
+            $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
+
+            if(isset($activityTypeList[$activityListing->type])){
+                $activity = $activityTypeList[$activityListing->type];
+
+                if($activityListing->type=='certification' && !empty($activityMeta)){
+                    $activity .= ' '. title_case($activityMeta['certification']);
+                }
+            }
+            else{
+                $activity = '';
+            }
+            $activityListingData[] = [
+                'logo'           => '',
+                'proposal_funds' => title_case($activityListing->itemname),
+                'user'           => (!empty($activityListing->username)) ? title_case($activityListing->username) : '',
+                'user_type'      => $userType,
+                'firm'           => (!empty($activityListing->firmname)) ? title_case($activityListing->firmname) : '',
+                'gi_code'        => (!empty($activityListing->gi_platform_code)) ? strtoupper($activityListing->gi_platform_code) : '',
+                'email'          => (!empty($activityListing->email)) ? $activityListing->email : '',
+                'telephone'      => (!empty($user)) ? title_case($user->telephone_no) : '',
+                'description'    => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
+                'date'           => (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
+                'activity'       => $activity,
+
+            ];
+
+        }
+
+
+       
         foreach ($activityListings as $key => $activityListing) {
 
             if (isset($userObj[$activityListing->user_id])) {

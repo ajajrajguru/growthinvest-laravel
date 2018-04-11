@@ -164,19 +164,47 @@
                               <label for="">Activity Groups</label>
                               <select name="activity_group" id="" class="form-control">
                                 <option value="">View All groups</option>
+                                @php
+                                $filteredGroup = '';
+                                @endphp
                                 @foreach($activityGroups as $activityGroup)
-                                  <option value="{{ $activityGroup->id }}" @if(isset($requestFilters['activity_group']) && $requestFilters['activity_group'] == $activityGroup->id) selected @endif>{{ $activityGroup->group_name }}</option>
+                                  
+                                  @php
+                                    $selected = '';
+                                    if(isset($requestFilters['activity_group']) && $requestFilters['activity_group'] == $activityGroup->id){
+                                      $selected = 'selected'; 
+                                      $filteredGroup = $activityGroup->group_name;
+                                    }
+                                    
+                                   
+                                  @endphp
+                                  <option value="{{ $activityGroup->id }}" {{ $selected }}>{{ $activityGroup->group_name }}</option>
                                 @endforeach
                               </select>
                           </div>
                         </div>
+
                         <div class="col-sm-6 mb-3 mb-sm-0">
                           <div class="">
                               <label for="">Activities</label>
                               <select name="type" id="" class="form-control">
                                 <option value="">View All Activity Type</option>
                                 @foreach($activityTypes as $activityTypeKey=>$activityType)
-                                  <option value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
+                                  @php
+                                     $activityGroupName ='';
+                                      foreach($groupActivities as $group=> $activities){
+                                        if(in_array($activityTypeKey,$activities)){
+                                          $activityGroupName = $group;
+                                        }
+                                      }
+                                      
+                                    $dNone = '';
+                                    if($filteredGroup!=''){
+                                      $dNone = ($filteredGroup == $activityGroupName) ? '' : 'd-none';
+                                    }
+                                    
+                                  @endphp
+                                  <option class="{{ $dNone}}" activity-group="{{ $activityGroupName }}" value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
                                 @endforeach
                               </select>
                           </div>
@@ -485,30 +513,7 @@
         }
     </style>
 
-    <script type="text/javascript">
-
-     $(document).ready(function() {
-
-       $('input[name="duration_from"]').datepicker({
-         format: 'dd-mm-yyyy'
-       }).on('changeDate', function (selected) {
-         var minDate = new Date(selected.date.valueOf());
-         $('input[name="duration_to"]').datepicker('setStartDate', minDate);
-       });
-
-       $('input[name="duration_to"]').datepicker({
-         format: 'dd-mm-yyyy'
-       }).on('changeDate', function (selected) {
-         var maxDate = new Date(selected.date.valueOf());
-         $('input[name="duration_from"]').datepicker('setEndDate', maxDate);
-       });
-
-
-
-     });
-
-
-   </script>
+    
 
 @endsection
 
