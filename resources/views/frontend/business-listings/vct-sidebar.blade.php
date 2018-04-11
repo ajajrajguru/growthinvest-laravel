@@ -106,8 +106,8 @@
 	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist" value="generalist">
-				  <label class="custom-control-label" for="ch_generalist">Generalist</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist1" value="generalist">
+				  <label class="custom-control-label" for="ch_generalist1">Generalist</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist_pre_qualifying" value="generalist_pre_qualifying">

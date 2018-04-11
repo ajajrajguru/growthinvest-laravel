@@ -271,6 +271,13 @@ class BusinessListing extends Model
         return $data;
     }
 
+    public function businessAicSector(){
+        $businessListingData = $this->businessListingData()->where('data_key','aicsector')->first();
+        $data = (!empty($businessListingData)) ?  unserialize($businessListingData->data_value) :[];
+        
+        return $data;
+    }
+
 
 
 
