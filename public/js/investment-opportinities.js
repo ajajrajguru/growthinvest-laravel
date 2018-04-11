@@ -13,6 +13,7 @@
       $('.no-data-conatiner').removeClass('d-flex').addClass('d-none');
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
+      filters.order_by = $('select[name="order_by"]').val();
       status = '';
       $('input[name="tax_status[]"]').each(function() {
         if ($(this).is(':checked')) {
@@ -134,6 +135,9 @@
     if (($('.business-listing').length)) {
       getInvestmentOpportunity();
     }
+    $(document).on('change', 'select[name="order_by"]', function() {
+      return getInvestmentOpportunity();
+    });
     $(document).on('change', '.filter-business-list', function() {
       return getInvestmentOpportunity();
     });
