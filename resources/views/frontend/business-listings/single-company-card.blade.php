@@ -9,7 +9,7 @@
  
 	 
 	@endphp
-<div class="row d-sm-flex border mb-4 box-shadow-1 mx-0">
+<div class="row d-sm-flex border mb-4 box-shadow-1 mx-0 is-hovered">
 	<div class="col-sm-4 border-right px-0">
 		
 		<!-- due diligence -->
@@ -48,7 +48,7 @@
 			</div>
 		</a>
 
-		<div class="d-flex justify-content-between mt-5 px-3 mb-3">
+		<div class="d-flex justify-content-between mt-5 px-3 pb-3 border-xs-bottom">
 			<div data-toggle="tooltip" title="{{ (isset($proposalDetails['address'])) ? $proposalDetails['address'] :'' }}"><i class="fa fa-map-marker"></i> LOCATION</div>
 			<div>
 				@foreach($businessListing->tax_status as $taxStatus)
@@ -60,7 +60,7 @@
 	</div>
 	<div class="col-sm-8">
 		<div class="row d-sm-flex h-100">
-			<div class="@if($dueDeligence!='Platform Listing') col-sm-8 @else col-sm-12 @endif border-right">
+			<div class="@if($dueDeligence!='Platform Listing') col-sm-8 @else col-sm-12 @endif">
 				<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
 				<p class="mb-2"><strong>Stage of Business:</strong> {{ $stageOfBusiness }}</p>
 				<p>{{ $businessListing->short_content }}</p>
@@ -74,16 +74,28 @@
 
 			</div>
 			@if($dueDeligence!='Platform Listing')
-			<div class="col-sm-4 text-center">
+			<div class="col-sm-4 text-center bg-gray">
 				<div class="mt-2">
 					<input type="text" class="knob animated" data-width="70" data-height="70" data-cursor="false" data-thickness=".2" rel=" " value="{{ round($businessListing->fund_raised_percentage) }}">
 				</div>
-				<h4 class="mb-0"> {{ format_amount($businessListing->target_amount, 0, true) }}</h4>
-				<div>Investment Sought</div>
-				<hr class="mt-2 mb-2">
-				<h4 class="mb-0"> {{ format_amount($businessListing->amount_raised, 0, true) }}</h4>
-				<div>funded</div>
-				<div class="mt-2"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link">View Details &raquo;</a></div>
+
+				<div class="d-sm-block d-flex">
+					<div class="media-body">
+						<h4 class="mb-0"> {{ format_amount($businessListing->target_amount, 0, true) }}</h4>
+						<div>Investment Sought</div>
+					</div>
+
+					<hr class="mt-2 mb-2 d-sm-block d-none">
+
+					<div class="media-body">
+						<h4 class="mb-0"> {{ format_amount($businessListing->amount_raised, 0, true) }}</h4>
+						<div>funded</div>
+					</div>
+				</div>
+				
+				
+				
+				<div class="mt-3 mb-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link">View Details &raquo;</a></div>
 			</div>
 		@endif
 		</div>

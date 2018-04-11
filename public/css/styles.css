@@ -188,6 +188,9 @@ header.sticky {
   .border-xs-right {
     border-right: 1px solid #dee2e6 !important;
   }
+  .border-xs-bottom {
+    border-bottom: 1px solid #dee2e6 !important;
+  }
 }
 .col-xs-12 {
   width: 100%;
@@ -224,6 +227,10 @@ header.sticky {
     -webkit-transform: translateX(80%);
             transform: translateX(80%);
   }
+}
+.is-hovered:hover {
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 body {
   font-family: 'Source Sans Pro', sans-serif;
