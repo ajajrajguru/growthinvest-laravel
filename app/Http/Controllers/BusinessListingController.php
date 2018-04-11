@@ -636,7 +636,7 @@ class BusinessListingController extends Controller
         } elseif ($type == 'investors-certification') {
             // updateInvestorsCurrentCerification();
         }
-
+        
     }
 
     public function investmentOpportunities(Request $request, $type)
