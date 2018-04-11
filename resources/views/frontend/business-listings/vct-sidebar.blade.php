@@ -106,28 +106,27 @@
 	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="generalist">
-				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Generalist</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist" value="generalist">
+				  <label class="custom-control-label" for="ch_generalist">Generalist</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="generalist_pre_qualifying">
-				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Generalist Pre-Qualifying</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist_pre_qualifying" value="generalist_pre_qualifying">
+				  <label class="custom-control-label" for="ch_generalist_pre_qualifying">Generalist Pre-Qualifying</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="aim_quoted">
-				  <label class="custom-control-label" for="ch_{{ $sector->id }}">AIM Quoted</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_aim_quoted" value="aim_quoted">
+				  <label class="custom-control-label" for="ch_aim_quoted">AIM Quoted</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="specialist_environmental">
-				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Specialist: Environmental</label>
+				  <input type="checkbox" class="custom-control-input filter-busspecialist_environmental{{ $sector->id }}">Specialist: Environmental</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="specialist_technology">
-				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Specialist: Technology</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_technology" value="specialist_technology">
+				  <label class="custom-control-label" for="ch_specialist_technology">Specialist: Technology</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="specialist_infrastructure">
-				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Specialist: Infrastructure</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_infrastructure" value="specialist_infrastructure">
+				  <label class="custom-control-label" for="ch_specialist_infrastructure">Specialist: Infrastructure</label>
 				</div>
 	             
 				
