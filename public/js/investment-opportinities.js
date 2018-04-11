@@ -113,7 +113,13 @@
             $('.platform-listing-section').addClass('d-none');
           }
           $('.platform-listing').html(reponse.platformListingHtml);
-          $(".knob").knob();
+          $('.knob').each(function() {
+            var $this;
+            $this = $(this);
+            $this.knob({
+              'readOnly': true
+            });
+          });
           $('.investment-loader').removeClass('d-flex').addClass('d-none');
           $('[data-toggle="tooltip"]').tooltip();
           $('[data-toggle="popover"]').popover({
