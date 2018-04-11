@@ -83,15 +83,21 @@
 <!-- tabs -->
 <div class="squareline-tabs mt-5">
 	<ul class="nav nav-tabs">
+		@if($business_listing_type != 'proposal')
 		<li class="nav-item">
-	   		<a class="nav-link active d-none d-sm-block px-5" data-toggle="tab" href="">Single Companies</a>
+	   		<a class="nav-link active d-none d-sm-block px-5" data-toggle="tab" href="{{ url('investment-opportunities/single-company/') }}">Single Companies</a>
 		</li>
+		@endif
+		@if($business_listing_type != 'fund')
 		<li class="nav-item">
-	    	<a class="nav-link d-none d-sm-block px-5" data-toggle="tab" href="">Funds</a>
+	    	<a class="nav-link d-none d-sm-block px-5" data-toggle="tab" href="{{ url('investment-opportunities/funds/') }}">Funds</a>
 		</li>
+		@endif
+		@if($business_listing_type != 'vct')
 		<li class="nav-item">
-	    	<a class="nav-link d-none d-sm-block px-5" data-toggle="tab" href="">VCTs</a>
+	    	<a class="nav-link d-none d-sm-block px-5" data-toggle="tab" href="{{ url('investment-opportunities/vct/') }}">VCTs</a>
 		</li>
+		@endif
 						
 		
 	</ul>
