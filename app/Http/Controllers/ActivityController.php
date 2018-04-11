@@ -113,7 +113,7 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing($filters, $skip, $length, $orderDataBy);
+        $filterActivityListing = $this->getFilteredActivityListing('list',$filters, $skip, $length, $orderDataBy);
 
         $activityListings      = $filterActivityListing['list'];
         $totalActivityListings = $filterActivityListing['totalActivityListings'];
@@ -225,29 +225,15 @@ class ActivityController extends Controller
 
         $filters = $request->all();
 
-        $whereStr         = '';
-        $firmWhere        = '';
-        $userWhere        = '';
-        $parentChildFirms = '';
-        $companyWhere     = '';
-        $compWhere        = '';
-        $mainjoin         = '';
-        $typeStr          = '';
-
         if (isset($filters['duration']) && $filters['duration'] != "") {
             $durationDates = getDateByPeriod($filters['duration']);
             $fromDate      = $durationDates['fromDate'];
             $toDate        = $durationDates['toDate'];
-            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') >= '" . $durationDates['fromDate'] . "'";
-            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') <= '" . $durationDates['toDate'] . "'";
-
         }
 
         if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != "")) {
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
-            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') >= '" . $fromDate . "'";
-            $whereStr .= " and DATE_FORMAT(a1.date_recorded, '%Y-%m-%d') <= '" . $toDate . "'";
         }
 
         $isTypeInWhere = false;
@@ -255,77 +241,20 @@ class ActivityController extends Controller
         if (isset($filters['activity_group']) && $filters['activity_group'] != "") {
 
             $activityGroup = ActivityGroup::find($filters['activity_group']);
-            if (!empty($activityGroup)) {
-                $actTypes = $activityGroup->activity_type_value;
-                if (isset($filters['type']) && $filters['type'] != "") {
-                    $actTypes[]    = $filters['type'];
-                    $isTypeInWhere = true;
-                }
-                $typeStr .= (!empty($actTypes)) ? " and a1.type IN ('" . implode("','", $actTypes) . "')" : '';
-            }
-
             $activityGroupName  = $activityGroup->group_name;
 
         }
-
-        if (isset($filters['type']) && $filters['type'] != "" && !$isTypeInWhere) {
-            $typeStr .= " and a1.type = '" . $filters['type'] . "'";
-        }
-
-        if (isset($filters['firmid']) && $filters['firmid'] != "") {
-            $firmWhere = " and a1.secondary_item_id=" . $filters['firmid'];
-        }
-
-        if (isset($filters['component']) && $filters['component'] != "") {
-            $compWhere = " and component='" . $filters['component'] . "' ";
-        }
-
-        if (isset($filters['companies']) && $filters['companies'] != "") {
-            $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
-        }
-
-        if (isset($filters['user_id']) && $filters['user_id'] != "") {
-            $userWhere = " and a1.user_id='" . $filters['user_id'] . "' ";
-        }
-
-        if (Auth::user()->hasPermissionTo('site_level_activity_feed')) {
-            $parentChildFirms = '';
-        } else if (Auth::user()->hasPermissionTo('firm_level_activity_feed')) {
-            $userFirm = Auth::user()->firm_id;
-            $firms    = Firm::where('parent_id', $userFirm)->pluck('id')->toArray();
-            $firms[]  = $userFirm;
-
-            if (count($firms) > 0) {
-                $firmIds          = implode(',', $firms);
-                $parentChildFirms = " and a1.secondary_item_id in (" . $firmIds . ") ";
-            }
-
-        }
-
-        if (!Auth::user()->hasPermissionTo('manage_options')) {
-            if ($typewhere == "") {
-                $actret = $this->actGroupCapability();
-
-                if ($actret != "") {
-                    $typewhere = " and " . $actret;
-                } else {
-                    return array();
-                }
-
-            }
-        }
-
-        $mainselect = "select count(*) as count,a1.type as type from activity a1 where a1.type!='' ";
-        $groupby    = " group by a1.type";
-        $orderby    = " order by a1.type";
-
-        $selectActivityLog = $mainselect . $compWhere . $whereStr . $parentChildFirms . $typeStr . $firmWhere . $companyWhere . $userWhere . $groupby . $orderby;
+        
+        $columnName = 'date_recorded';
+        $orderBy    = 'desc';
+        $orderDataBy = [$columnName => $orderBy];
+        $filterActivityListing = $this->getFilteredActivityListing('summary',$filters, 0, 0, $orderDataBy);
 
          
         $groupActs        = $this->getActivitiesByGroup();
         $finalarr         = array();
         $activityTypeList = activityTypeList();
-        $activityLogs     = DB::select($selectActivityLog);
+        $activityLogs     = $filterActivityListing['list'];
         
         $ckIfAddedToList = [];
         foreach ($activityLogs as $activityLog) {
@@ -430,7 +359,7 @@ class ActivityController extends Controller
         return $activitiesWithGroup;
     }
 
-    public function getFilteredActivityListing($filters, $skip, $length, $orderDataBy)
+    public function getFilteredActivityListing($type,$filters, $skip, $length, $orderDataBy)
     {
 
         $whereStr         = '';
@@ -530,7 +459,13 @@ class ActivityController extends Controller
                     $union = " union ";
                 }
 
-                $mainselect = "select a1.gi_platform_code,a1.id,a1.component,a1.type,a1.type as activitytype,a1.action,a1.content,a1.primary_link,f1.name as firmname,a1.secondary_item_id";
+                if($type == 'list'){
+                    $mainselect = "select a1.gi_platform_code,a1.id,a1.component,a1.type,a1.type as activitytype,a1.action,a1.content,a1.primary_link,f1.name as firmname,a1.secondary_item_id";
+                }
+                else{
+                    $mainselect = "select count(*) as count,a1.type as type ";
+                }
+                
                 $maintable  = " from activity a1 ";
                 $mainjoin   = " INNER JOIN firms f1 on f1.id=a1.secondary_item_id";
 
@@ -542,7 +477,7 @@ class ActivityController extends Controller
                     'external_downloads', 'stage_3_profile_details',
                     'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
 
-                    $customfieldselect = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
+                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" :'';
                     $customjoin        = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
@@ -557,11 +492,11 @@ class ActivityController extends Controller
 
                     $mainjoin  = " LEFT OUTER JOIN firms f1 on f1.id=a1.secondary_item_id";
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = "";
+                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
 
                 } elseif (in_array($activityType, ['new_provider_added'])) {
 
-                    $customfieldselect = " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug";
+                    $customfieldselect = ($type == 'list') ?" ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug":'';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
@@ -574,11 +509,11 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = "";
+                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
 
                 } elseif (in_array($activityType, ['investor_message', 'entrepreneur_message'])) {
 
-                    $customfieldselect = " ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug";
+                    $customfieldselect = ($type == 'list') ?" ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug":'';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.item_id INNER JOIN users u2 on u2.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
 
@@ -592,11 +527,11 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = "";
+                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
 
                 } elseif (in_array($activityType, ['proposal_details_update', 'fund_details_update'])) {
 
-                    $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug";
+                    $customfieldselect = ($type == 'list') ?" ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug":'';
                     $customjoin        = " INNER JOIN  users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere       = $parentChildFirms;
 
@@ -614,10 +549,10 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id";
+                    $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" :"group by a1.type";
                 } elseif (in_array($activityType, ['invested'])) {
 
-                    $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug";
+                    $customfieldselect = ($type == 'list') ?" ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug":'';
                     $customjoin        = " LEFT JOIN users u1 on u1.id=a1.user_id
                              LEFT JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere = $parentChildFirms;
@@ -637,10 +572,10 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = "";
+                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
                 } else {
 
-                    $customfieldselect = " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug";
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug":'';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere = $parentChildFirms;
 
@@ -659,7 +594,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = "";
+                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
                 }
 
                 $activityListQuery .= $union . $mainselect . $customfieldselect . $maintable . $mainjoin . $customjoin . $mainwhere . $customwhere . $groupby;
@@ -668,7 +603,7 @@ class ActivityController extends Controller
 
             }
 
-     
+             
             
             if ($length > 1) {
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
@@ -696,7 +631,7 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing($filters, 0, 0, $orderDataBy);  
+        $filterActivityListing = $this->getFilteredActivityListing('list',$filters, 0, 0, $orderDataBy);  
         $activityListings      = $filterActivityListing['list'];
 
         $fileName = 'all_investors_as_on_' . date('d-m-Y');
@@ -809,7 +744,7 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing($filters, 0, 0, $orderDataBy);
+        $filterActivityListing = $this->getFilteredActivityListing('list',$filters, 0, 0, $orderDataBy);
         $activityListings      = $filterActivityListing['list'];
 
         $args                     = array();
