@@ -632,7 +632,7 @@ class BusinessListingController extends Controller
     public function migratteVctData($type)
     {
         if ($type == 'fund-vct-data') {
-            // updateVCTData();
+            updateVCTData();
         } elseif ($type == 'investors-certification') {
             // updateInvestorsCurrentCerification();
         }
@@ -675,7 +675,7 @@ class BusinessListingController extends Controller
 
         // SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id');
         })->whereIn('business_investments.status', ['pledged', 'funded']);
 
@@ -812,6 +812,23 @@ class BusinessListingController extends Controller
 
             $businessListingQuery->whereIn('business_listing_datas.data_value', $vctOfferingtype)->where('business_listing_datas.data_key', 'offeringtype');
         }
+
+        if (isset($filters['aicsector']) && $filters['aicsector'] != "") {
+            $aicsector = $filters['aicsector'];
+            $aicsector = explode(',', $aicsector);
+            $aicsector = array_filter($aicsector);
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $aicsector)->where('business_listing_datas.data_key', 'offeringtype');
+        }
+
+        
 
         if ($businessListingType == 'vct') {
             $businessListingQuery->where('business_listings.type', 'fund');

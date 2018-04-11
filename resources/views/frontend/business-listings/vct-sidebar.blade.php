@@ -104,12 +104,32 @@
 	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
 	      <div class="card-body ">
 	        <div class="filter-options">
-	        	@foreach($sectors as $sector)
-	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_sector[]" id="ch_{{ $sector->id }}" value="{{ $sector->id }}">
-					  <label class="custom-control-label" for="ch_{{ $sector->id }}">{{ ucfirst($sector->name) }}</label>
-					</div>
-	             @endforeach
+	        	 
+                <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="generalist">
+				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Generalist</label>
+				</div>
+				 <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="generalist_pre_qualifying">
+				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Generalist Pre-Qualifying</label>
+				</div>
+				 <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="aim_quoted">
+				  <label class="custom-control-label" for="ch_{{ $sector->id }}">AIM Quoted</label>
+				</div>
+				 <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="specialist_environmental">
+				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Specialist: Environmental</label>
+				</div>
+				 <div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="specialist_technology">
+				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Specialist: Technology</label>
+				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_{{ $sector->id }}" value="specialist_infrastructure">
+				  <label class="custom-control-label" for="ch_{{ $sector->id }}">Specialist: Infrastructure</label>
+				</div>
+	             
 				
 			</div>
 	      </div>

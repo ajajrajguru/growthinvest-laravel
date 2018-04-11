@@ -1589,7 +1589,7 @@ function updateVCTData()
 
         $dataValue = unserialize($dataValue);
         if (!empty($dataValue) && !is_array($dataValue)) {
-            $dataValue = unserialize($dataValue);
+            $dataValue = unserialize($dataValue); 
 
             $vctType              = new \App\BusinessListingData;
             $vctType->business_id = $vct->business_id;
@@ -1608,6 +1608,12 @@ function updateVCTData()
             $offeringtype->data_key    = 'offeringtype';
             $offeringtype->data_value  = (isset($dataValue['offeringtype'])) ? $dataValue['offeringtype'] : '';
             $offeringtype->save();
+
+            $aicsector              = new \App\BusinessListingData;
+            $aicsector->business_id = $vct->business_id;
+            $aicsector->data_key    = 'aicsector';
+            $aicsector->data_value  = (isset($dataValue['aicsector'])) ? $dataValue['aicsector'] : '';
+            $aicsector->save();
 
             $vct->data_value = serialize($dataValue);
             $vct->save();

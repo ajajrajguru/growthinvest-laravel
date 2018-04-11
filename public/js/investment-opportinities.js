@@ -8,7 +8,7 @@
   $(document).ready(function() {
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
-      var business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status, vct_investmentstrategy, vct_offeringtype, vct_type;
+      var aic_sector, business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status, vct_investmentstrategy, vct_offeringtype, vct_type;
       $('.investment-loader').addClass('d-flex').removeClass('d-none');
       $('.no-data-conatiner').removeClass('d-flex').addClass('d-none');
       filters = {};
@@ -99,6 +99,13 @@
         }
       });
       filters.vct_offeringtype = vct_offeringtype;
+      aic_sector = '';
+      $('input[name="aic_sector[]"]').each(function() {
+        if ($(this).is(':checked')) {
+          return aic_sector += $(this).val() + ',';
+        }
+      });
+      filters.aic_sector = aic_sector;
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',
