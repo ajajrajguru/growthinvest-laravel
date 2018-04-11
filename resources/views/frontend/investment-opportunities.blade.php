@@ -61,19 +61,19 @@
 
 <div class="card-deck">
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/single-company/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">SEIS <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
 
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/funds/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">EIS <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
 
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/vct/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">VCT <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
