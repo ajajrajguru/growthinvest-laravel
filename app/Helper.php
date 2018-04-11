@@ -1615,3 +1615,25 @@ function updateVCTData()
         }
     }
 }
+
+function updateInvestorsCurrentCerification(){
+    $users = \App\User::whereNotNull('current_certification')->get(); 
+    $notUpdatedUser = [];
+    foreach ($users as $key => $user) { 
+        $userCertification = $user->userCertification()->where('certification_default_id',$user->current_certification)->first();
+        if(!empty($userCertification)){
+            $userCertification->last_active = 1;
+            $userCertification->save();
+        }
+        else{
+            $notUpdatedUser[] = $user->email;
+        }
+        
+    }
+
+ 
+
+    // $userHasCer = \App\UserHasCertification::where('active','1')->where('last_active','0')->get(); dd($userHasCer);
+
+    dd($notUpdatedUser);
+}

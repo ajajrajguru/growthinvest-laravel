@@ -629,8 +629,14 @@ class BusinessListingController extends Controller
 
     }
 
-    public function migratteVctData(){
-        updateVCTData();
+    public function migratteVctData($type){
+        if($type == 'fund-vct-data'){
+            // updateVCTData();
+        }
+        elseif($type == 'investors-certification'){
+            updateInvestorsCurrentCerification()
+        }
+        
     }
 
     public function investmentOpportunities(Request $request, $type)
