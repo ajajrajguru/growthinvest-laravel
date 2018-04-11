@@ -118,15 +118,15 @@
 				</div>
 
 				<div class="media-body mb-3 mb-sm-0">
-					<select name="" id="" class="form-control">
+					<select name="order_by" id="" class="form-control">
 						<option value="">All</option>
-						<option value="">Most Active</option>
-						<option value="">Least Active</option>
-						<option value="">Most Funded</option>
-						<option value="">Least Funded</option>
-						<option value="">Newest First</option>
-						<option value="">Oldest First</option>
-						<option value="">Sort A-Z</option>
+						<option value="most_active">Most Active</option>
+						<option value="least_active">Least Active</option>
+						<option value="most_funded">Most Funded</option>
+						<option value="least_funded">Least Funded</option>
+						<option value="newest_first">Newest First</option>
+						<option value="oldest_first">Oldest First</option>
+						<option value="a_z">Sort A-Z</option>
 					</select>
 				</div>
 			</div>

@@ -35,7 +35,7 @@ class ActivityController extends Controller
         foreach ($activityGroups as $key => $activityGroup) {
             $groupActivities[$activityGroup->group_name] = $activityGroup->activity_type_value;
         }
-        
+
         $businessListing          = BusinessListing::where('status', 'publish')->where('status', 'publish')->get();
         $data['businessListings'] = $businessListing;
         $data['activityTypes']    = activityTypeList();
@@ -43,7 +43,7 @@ class ActivityController extends Controller
         $data['breadcrumbs']      = $breadcrumbs;
         $data['requestFilters']   = $requestFilters;
         $data['activityGroups']   = $activityGroups;
-        $data['groupActivities']   = $groupActivities;
+        $data['groupActivities']  = $groupActivities;
         $data['backofficeUsers']  = $backofficeUser;
         $data['firms']            = $firms;
         $data['pageTitle']        = 'View Activity';
@@ -93,13 +93,13 @@ class ActivityController extends Controller
         $filters     = $requestData['filters'];
 
         $columnOrder = array(
-            '1' => 'itemname',
-            '2' => 'username',
-            '4' => 'firm',
-            '5' => 'gi_code',
-            '6' => 'email',
-            '7' => 'telephone',
-            '9' => 'date_recorded',
+            '1'  => 'itemname',
+            '2'  => 'username',
+            '4'  => 'firm',
+            '5'  => 'gi_code',
+            '6'  => 'email',
+            '7'  => 'telephone',
+            '9'  => 'date_recorded',
             '10' => 'activitytype',
         );
 
@@ -113,7 +113,7 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing('list',$filters, $skip, $length, $orderDataBy);
+        $filterActivityListing = $this->getFilteredActivityListing('list', $filters, $skip, $length, $orderDataBy);
 
         $activityListings      = $filterActivityListing['list'];
         $totalActivityListings = $filterActivityListing['totalActivityListings'];
@@ -135,14 +135,13 @@ class ActivityController extends Controller
             $userActivity                     = Activity::find($activityListing->id);
             $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
 
-            if(isset($activityTypeList[$activityListing->type])){
+            if (isset($activityTypeList[$activityListing->type])) {
                 $activity = $activityTypeList[$activityListing->type];
 
-                if($activityListing->type=='certification' && !empty($activityMeta)){
-                    $activity .= ' '. title_case($activityMeta['certification']);
+                if ($activityListing->type == 'certification' && !empty($activityMeta)) {
+                    $activity .= ' ' . title_case($activityMeta['certification']);
                 }
-            }
-            else{
+            } else {
                 $activity = '';
             }
             $activityListingData[] = [
@@ -236,40 +235,39 @@ class ActivityController extends Controller
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
         }
 
-        $isTypeInWhere = false;
-        $activityGroupName  = '';
+        $isTypeInWhere     = false;
+        $activityGroupName = '';
         if (isset($filters['activity_group']) && $filters['activity_group'] != "") {
 
-            $activityGroup = ActivityGroup::find($filters['activity_group']);
-            $activityGroupName  = $activityGroup->group_name;
+            $activityGroup     = ActivityGroup::find($filters['activity_group']);
+            $activityGroupName = $activityGroup->group_name;
 
         }
-        
-        $columnName = 'date_recorded';
-        $orderBy    = 'desc';
-        $orderDataBy = [$columnName => $orderBy];
-        $filterActivityListing = $this->getFilteredActivityListing('summary',$filters, 0, 0, $orderDataBy);
 
-         
+        $columnName            = 'date_recorded';
+        $orderBy               = 'desc';
+        $orderDataBy           = [$columnName => $orderBy];
+        $filterActivityListing = $this->getFilteredActivityListing('summary', $filters, 0, 0, $orderDataBy);
+
         $groupActs        = $this->getActivitiesByGroup();
         $finalarr         = array();
         $activityTypeList = activityTypeList();
         $activityLogs     = $filterActivityListing['list'];
-        
+
         $ckIfAddedToList = [];
         foreach ($activityLogs as $activityLog) {
             if (array_key_exists($activityLog->type, $activityTypeList)) {
 
                 $groupname = (!isset($groupActs[$activityLog->type]) || $groupActs[$activityLog->type] == "") ? "Others" : $groupActs[$activityLog->type];
 
-                if($activityGroupName==$groupname || $activityGroupName==''){
-                    $typetitle = $activityTypeList[$activityLog->type];
+                if ($activityGroupName == $groupname || $activityGroupName == '') {
+                    $typetitle                           = $activityTypeList[$activityLog->type];
                     $ckIfAddedToList[$activityLog->type] = $activityLog->type;
-                    $finalarr[] = array('typetitle' => $typetitle,
-                        'type'                          => $activityLog->type,
-                        'count'                         => $activityLog->count,
-                        'typetitle_count'               => $typetitle . ' (' . $activityLog->count . ')',
-                        'group_name'                    => $groupname,
+                    $finalarr[]                          = array('typetitle' => $typetitle,
+                        'type'                                                   => $activityLog->type,
+                        'count'                                                  => $activityLog->count,
+                        'typetitle_count'                                        => $typetitle . ' (' . $activityLog->count . ')',
+                        'group_name'                                             => $groupname,
                     );
                 }
 
@@ -286,9 +284,9 @@ class ActivityController extends Controller
             if (!isset($ckIfAddedToList[$typetitlekey])) {
 
                 $groupname1 = (!isset($groupActs[$typetitlekey]) || $groupActs[$typetitlekey] == "") ? "Others" : $groupActs[$typetitlekey];
-                if($activityGroupName==$groupname1 || $activityGroupName==''){
+                if ($activityGroupName == $groupname1 || $activityGroupName == '') {
                     $ckIfAddedToList[$typetitlekey] = $typetitlekey;
-                    $finalarr[] = array(
+                    $finalarr[]                     = array(
                         'typetitle'       => $typetitlevalue,
                         'type'            => $typetitlekey,
                         'count'           => 0,
@@ -302,22 +300,20 @@ class ActivityController extends Controller
         asort($finalarr);
         $activityCountSummary = array_values($finalarr);
 
-
-        
-
         $dataProvider = [];
         $graphs       = [];
-        $countData = [];
+        $countData    = [];
         foreach ($activityCountSummary as $activityCount) {
-            if(isset($countData[$activityCount['group_name']])){
+            if (isset($countData[$activityCount['group_name']])) {
                 $countData[$activityCount['group_name']] += $activityCount['count'];
-            }
-            else{
+            } else {
                 $countData[$activityCount['group_name']] = $activityCount['count'];
             }
-            
-            if($activityCount['count']>0)
+
+            if ($activityCount['count'] > 0) {
                 $dataProvider[] = ['activity' => $activityCount['typetitle_count'], 'count' => $activityCount['count']];
+            }
+
         }
 
         $graphs[] = ['balloonText' => '<span style=\'font-size:13px;\'>[[title]] in [[category]]:<b>[[value]]</b></span>',
@@ -326,12 +322,12 @@ class ActivityController extends Controller
             'fillAlphas'               => 0.8,
             'valueField'               => 'count',
         ];
-        
+
         $activityCountSummaryView = View::make('backoffice.activity.activity-group-count', compact('countData'))->render();
 
         $json_data = array(
             "activityCountSummaryView" => $activityCountSummaryView,
-            "dataProvider"             => json_encode($dataProvider,true),
+            "dataProvider"             => json_encode($dataProvider, true),
             "graphs"                   => json_encode($graphs),
             "fromDate"                 => $fromDate,
             "toDate"                   => $toDate,
@@ -359,7 +355,7 @@ class ActivityController extends Controller
         return $activitiesWithGroup;
     }
 
-    public function getFilteredActivityListing($type,$filters, $skip, $length, $orderDataBy)
+    public function getFilteredActivityListing($type, $filters, $skip, $length, $orderDataBy)
     {
 
         $whereStr         = '';
@@ -459,15 +455,14 @@ class ActivityController extends Controller
                     $union = " union ";
                 }
 
-                if($type == 'list'){
+                if ($type == 'list') {
                     $mainselect = "select a1.gi_platform_code,a1.id,a1.component,a1.type,a1.type as activitytype,a1.action,a1.content,a1.primary_link,f1.name as firmname,a1.secondary_item_id";
-                }
-                else{
+                } else {
                     $mainselect = "select count(*) as count,a1.type as type ";
                 }
-                
-                $maintable  = " from activity a1 ";
-                $mainjoin   = " INNER JOIN firms f1 on f1.id=a1.secondary_item_id";
+
+                $maintable = " from activity a1 ";
+                $mainjoin  = " INNER JOIN firms f1 on f1.id=a1.secondary_item_id";
 
                 if (in_array($activityType, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
                     'download_investor_csv', 'download_transfer_asset_guide',
@@ -477,7 +472,7 @@ class ActivityController extends Controller
                     'external_downloads', 'stage_3_profile_details',
                     'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" :'';
+                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
@@ -492,11 +487,11 @@ class ActivityController extends Controller
 
                     $mainjoin  = " LEFT OUTER JOIN firms f1 on f1.id=a1.secondary_item_id";
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
+                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
 
                 } elseif (in_array($activityType, ['new_provider_added'])) {
 
-                    $customfieldselect = ($type == 'list') ?" ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug":'';
+                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
@@ -509,11 +504,11 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
+                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
 
                 } elseif (in_array($activityType, ['investor_message', 'entrepreneur_message'])) {
 
-                    $customfieldselect = ($type == 'list') ?" ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug":'';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.item_id INNER JOIN users u2 on u2.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
 
@@ -527,11 +522,11 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
+                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
 
                 } elseif (in_array($activityType, ['proposal_details_update', 'fund_details_update'])) {
 
-                    $customfieldselect = ($type == 'list') ?" ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug":'';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug" : '';
                     $customjoin        = " INNER JOIN  users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere       = $parentChildFirms;
 
@@ -549,10 +544,10 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" :"group by a1.type";
+                    $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" : "group by a1.type";
                 } elseif (in_array($activityType, ['invested'])) {
 
-                    $customfieldselect = ($type == 'list') ?" ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug":'';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
                     $customjoin        = " LEFT JOIN users u1 on u1.id=a1.user_id
                              LEFT JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere = $parentChildFirms;
@@ -572,12 +567,12 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
+                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
                 } else {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug":'';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
-                    $customwhere = $parentChildFirms;
+                    $customwhere       = $parentChildFirms;
 
                     //overide the condition
                     if (isset($filters['user_id']) && $filters['user_id'] != "") {
@@ -594,7 +589,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" :"group by a1.type";
+                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
                 }
 
                 $activityListQuery .= $union . $mainselect . $customfieldselect . $maintable . $mainjoin . $customjoin . $mainwhere . $customwhere . $groupby;
@@ -603,8 +598,6 @@ class ActivityController extends Controller
 
             }
 
-             
-            
             if ($length > 1) {
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
                 $activityListQuery .= $orderby . " limit " . $skip . ", " . $length;
@@ -612,7 +605,7 @@ class ActivityController extends Controller
 
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
             }
- 
+
             $activityListings = DB::select(DB::raw($activityListQuery));
         }
 
@@ -624,14 +617,14 @@ class ActivityController extends Controller
     {
 
         $data    = [];
-        $filters = $request->all(); 
+        $filters = $request->all();
 
         $columnName = 'activity.date_recorded';
         $orderBy    = 'desc';
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing('list',$filters, 0, 0, $orderDataBy);  
+        $filterActivityListing = $this->getFilteredActivityListing('list', $filters, 0, 0, $orderDataBy);
         $activityListings      = $filterActivityListing['list'];
 
         $fileName = 'all_investors_as_on_' . date('d-m-Y');
@@ -655,14 +648,13 @@ class ActivityController extends Controller
             $userActivity                     = Activity::find($activityListing->id);
             $activityMeta                     = (!empty($userActivity->meta()->first())) ? $userActivity->meta()->first()->meta_value : '';
 
-            if(isset($activityTypeList[$activityListing->type])){
+            if (isset($activityTypeList[$activityListing->type])) {
                 $activity = $activityTypeList[$activityListing->type];
 
-                if($activityListing->type=='certification' && !empty($activityMeta)){
-                    $activity .= ' '. title_case($activityMeta['certification']);
+                if ($activityListing->type == 'certification' && !empty($activityMeta)) {
+                    $activity .= ' ' . title_case($activityMeta['certification']);
                 }
-            }
-            else{
+            } else {
                 $activity = '';
             }
             $activityListingData[] = [
@@ -682,8 +674,6 @@ class ActivityController extends Controller
 
         }
 
-
-       
         foreach ($activityListings as $key => $activityListing) {
 
             if (isset($userObj[$activityListing->user_id])) {
@@ -693,18 +683,18 @@ class ActivityController extends Controller
                 $userObj[$activityListing->user_id] = $user;
             }
             $firstName = '';
-            $lastName = '';
+            $lastName  = '';
 
-            $userName                   = $activityListing->username;
-            if(trim($userName)!=""){
-                $splitUserName                   = explode(' ', $userName);
-                if(count($splitUserName)>=2)
+            $userName = $activityListing->username;
+            if (trim($userName) != "") {
+                $splitUserName = explode(' ', $userName);
+                if (count($splitUserName) >= 2) {
                     list($firstName, $lastName) = $splitUserName;
-                else
-                    $firstName  = $userName;
+                } else {
+                    $firstName = $userName;
+                }
 
             }
-            
 
             $activityId[] = $activityListing->id;
             $userActivity = Activity::find($activityListing->id);
@@ -744,7 +734,7 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing('list',$filters, 0, 0, $orderDataBy);
+        $filterActivityListing = $this->getFilteredActivityListing('list', $filters, 0, 0, $orderDataBy);
         $activityListings      = $filterActivityListing['list'];
 
         $args                     = array();

@@ -8,6 +8,7 @@ $(document).ready ->
 
     filters = {}
     filters.business_listing_type = $('input[name="business_listing_type"]').val();
+    filters.order_by = $('select[name="order_by"]').val();
 
     status = ''
     $('input[name="tax_status[]"]').each ->
@@ -154,8 +155,9 @@ $(document).ready ->
   
   if($('.business-listing').length)    
     getInvestmentOpportunity()
-
-
+ 
+  $(document).on 'change', 'select[name="order_by"]', ->
+    getInvestmentOpportunity()
     
   $(document).on 'change', '.filter-business-list', ->
     getInvestmentOpportunity()
