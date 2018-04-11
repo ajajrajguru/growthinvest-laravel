@@ -111,6 +111,7 @@ $(document).ready ->
 
     filters.vct_offeringtype = vct_offeringtype
 
+     ######***##### 
     aic_sector = ''
     $('input[name="aic_sector[]"]').each ->
       if $(this).is(':checked')
