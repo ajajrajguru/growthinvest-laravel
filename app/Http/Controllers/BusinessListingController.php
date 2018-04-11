@@ -634,7 +634,7 @@ class BusinessListingController extends Controller
             // updateVCTData();
         }
         elseif($type == 'investors-certification'){
-            updateInvestorsCurrentCerification()
+            updateInvestorsCurrentCerification();
         }
         
     }
