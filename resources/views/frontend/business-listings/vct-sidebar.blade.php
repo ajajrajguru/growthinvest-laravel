@@ -118,7 +118,8 @@
 				  <label class="custom-control-label" for="ch_aim_quoted">AIM Quoted</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-busspecialist_environmental{{ $sector->id }}">Specialist: Environmental</label>
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_environmental" value="specialist_environmental">
+				  <label class="custom-control-label" for="ch_specialist_environmental">Specialist: Environmental</label>
 				</div>
 				 <div class="custom-control custom-checkbox">
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_technology" value="specialist_technology">
