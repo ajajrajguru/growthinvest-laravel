@@ -126,7 +126,7 @@
                                     if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey){
                                         $selected = "selected";
                                     } 
-                                    elseif(!isset($requestFilters['duration']) && 'lasttwomonth' == $durationKey){
+                                    elseif(!isset($requestFilters['duration_from']) && !isset($requestFilters['duration']) && 'lasttwomonth' == $durationKey){
                                         $selected = "selected";
                                     } 
                                     else{

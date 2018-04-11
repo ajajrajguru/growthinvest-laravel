@@ -833,7 +833,7 @@
     });
     investorActivityTable = $('#datatable-investor-activity').DataTable({
       'pageLength': 50,
-      'processing': false,
+      'processing': true,
       'serverSide': true,
       'bAutoWidth': false,
       "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>',
@@ -1046,6 +1046,12 @@
       }
       if ($('input[name="exclude_platform_admin_activity"]').is(':checked')) {
         urlParams += '&exclude_platform_admin_activity=1';
+      }
+      if ($('select[name="activity_group"]').val() !== "") {
+        urlParams += '&activity_group=' + $('select[name="activity_group"]').val();
+      }
+      if ($('select[name="firm"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm"]').val();
       }
       if (type === 'csv') {
         return window.open("/backoffice/investor/export-investors-activity?" + urlParams);

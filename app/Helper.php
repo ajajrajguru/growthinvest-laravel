@@ -1360,7 +1360,7 @@ function saveActivityLog($component, $userId, $type, $itemId, $action, $content 
     $activity->primary_link      = $primaryLink;
     $activity->item_id           = $itemId;
     $activity->secondary_item_id = $secItemId;
-    $activity->gi_platform_code  = $secItemId;
+    $activity->gi_platform_code  = $giCode;
     $activity->date_recorded     = date('Y-m-d H:i:s');
     $activity->save();
 
@@ -1614,4 +1614,26 @@ function updateVCTData()
 
         }
     }
+}
+
+function updateInvestorsCurrentCerification(){
+    $users = \App\User::whereNotNull('current_certification')->get(); 
+    $notUpdatedUser = [];
+    foreach ($users as $key => $user) { 
+        $userCertification = $user->userCertification()->where('certification_default_id',$user->current_certification)->first();
+        if(!empty($userCertification)){
+            $userCertification->last_active = 1;
+            $userCertification->save();
+        }
+        else{
+            $notUpdatedUser[] = $user->email;
+        }
+        
+    }
+
+ 
+
+    // $userHasCer = \App\UserHasCertification::where('active','1')->where('last_active','0')->get(); dd($userHasCer);
+
+    dd($notUpdatedUser);
 }

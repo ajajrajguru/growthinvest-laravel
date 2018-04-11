@@ -143,7 +143,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 //migration
 Route::group(['middleware' => ['auth'],'prefix' => 'migration'], function () {
-    Route::get('fund-vct-data', 'BusinessListingController@migratteVctData');
+    Route::get('run/{type}', 'BusinessListingController@migratteVctData');
 });
 
 Auth::routes();
