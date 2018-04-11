@@ -105,30 +105,13 @@
 	      <div class="card-body ">
 	        <div class="filter-options">
 	        	 
-                <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist1" value="generalist">
-				  <label class="custom-control-label" for="ch_generalist1">Generalist</label>
-				</div>
-				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_generalist_pre_qualifying" value="generalist_pre_qualifying">
-				  <label class="custom-control-label" for="ch_generalist_pre_qualifying">Generalist Pre-Qualifying</label>
-				</div>
-				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_aim_quoted" value="aim_quoted">
-				  <label class="custom-control-label" for="ch_aim_quoted">AIM Quoted</label>
-				</div>
-				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_environmental" value="specialist_environmental">
-				  <label class="custom-control-label" for="ch_specialist_environmental">Specialist: Environmental</label>
-				</div>
-				 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_technology" value="specialist_technology">
-				  <label class="custom-control-label" for="ch_specialist_technology">Specialist: Technology</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_specialist_infrastructure" value="specialist_infrastructure">
-				  <label class="custom-control-label" for="ch_specialist_infrastructure">Specialist: Infrastructure</label>
-				</div>
+               	@foreach(aicSectors() as $sectorId => $sector)
+	                <div class="custom-control custom-checkbox">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_sector[]" id="ch_{{ $sectorId }}" value="{{ $sectorId }}">
+					  <label class="custom-control-label" for="ch_{{ $sectorId }}">{{ ucfirst($sector) }}</label>
+					</div>
+	             @endforeach
+				  
 	             
 				
 			</div>

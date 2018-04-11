@@ -1124,6 +1124,15 @@ function getBusinessSectors()
     return \App\Defaults::where('type', 'business-sector')->where('status', '1')->get();
 }
 
+function aicSectors(){
+    return ['generalist'=>'Generalist',
+    'generalist_pre_qualifying'=>'Generalist Pre-Qualifying',
+    'aim_quoted'=>'AIM Quoted',
+    'specialist_environmental'=>'Specialist: Environmental',
+    'specialist_technology'=>'Specialist: Technology',
+    'specialist_infrastructure'=>'Specialist: Infrastructure'];
+}
+
 function getDueDeligence()
 {
     return \App\Defaults::where('type', 'approver')->where('status', '1')->get();
