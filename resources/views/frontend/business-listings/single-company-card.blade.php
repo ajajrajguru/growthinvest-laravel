@@ -63,7 +63,7 @@
 			<div class="@if($dueDeligence!='Platform Listing') col-sm-8 @else col-sm-12 @endif">
 				<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
 				<p class="mb-2"><strong>Stage of Business:</strong> {{ $stageOfBusiness }}</p>
-				<p>{{ $businessListing->short_content }}</p>
+				<p>{{ (isset($proposalDetails['business_proposal_details'])) ? $proposalDetails['business_proposal_details'] : '' }}</p>
 				<hr>
 				<div><strong>Business Sector:</strong></div>
 				<div class="mb-3">

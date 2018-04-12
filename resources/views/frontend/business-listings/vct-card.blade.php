@@ -11,7 +11,7 @@
 	
 	@endphp
 <!-- VCT -->
-<div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
+<div class="row d-sm-flex border mb-4 box-shadow-1 mx-0 is-hovered">
 	<div class="col-sm-4 border-right px-0">
 		<a href="">
 			<div style="background: url('https://dummyimage.com/1000x1000') no-repeat center; background-size: cover;" class="mh-150 position-relative">
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div class="col-sm-8">
-		<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" class="text-primary">{{ $businessListing->title }}</a></h5>
+		<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
 		<p class="mb-2"><strong>Investment Strategy:</strong> {{ $businessListing->businessInvestmentStrategy() }}</p>
 		<p>{{ $businessListing->short_content }}</p>
 		<hr class="mt-2 mb-2">

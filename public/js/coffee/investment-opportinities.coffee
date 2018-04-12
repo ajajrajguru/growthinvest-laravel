@@ -5,6 +5,8 @@ $(document).ready ->
 
     $('.investment-loader').addClass('d-flex').removeClass('d-none')
     $('.no-data-conatiner').removeClass('d-flex').addClass('d-none')
+    $('.business-listing').html ''
+    $('.platform-listing').html ''
 
     filters = {}
     filters.business_listing_type = $('input[name="business_listing_type"]').val();
@@ -129,6 +131,8 @@ $(document).ready ->
       url: '/investment-opportunities/filter-listings'
       data:filters
       success: (reponse) ->
+        $('.business-listing').html ''
+        $('.platform-listing').html ''
         
         if($('.business-listing').length)
           if reponse.businesslistingHtml !=""

@@ -44,6 +44,7 @@
 
  
 @endsection
+@section('frontend-content')
 
 
 <div class="container pb-5">
@@ -105,6 +106,30 @@
 </div>
 <!-- /tabs -->
 
+<div class="mt-4">
+@if($business_listing_type == 'proposal')	 
+
+	<b>EIS & SEIS - Single Companies</b> <br>
+	The Enterprise Investment Scheme (EIS) was introduced by the government in 1994 to promote investment into smaller, and therefore typically higher risk, companies. To encourage such investment, there is a range of tax reliefs available to qualifying investors.  <br> <br>
+
+	The Seed Enterprise Investment Scheme was introduced in 2012, and is similar to the EIS, though to qualify the companies must be smaller and earlier stage than for EIS. As these are therefore typically riskier investments, there are more substantial reliefs available. <br> <br>
+	NOTE: Investments of this nature carry risks to your capital as well as potential rewards. Please read our risk warning before deciding to invest.
+
+@elseif($business_listing_type == 'fund')
+	<b>EIS & SEIS - Funds</b> <br>
+	The Enterprise Investment Scheme (EIS) was introduced by the government in 1994 to promote investment into smaller, and therefore typically higher risk, companies. To encourage such investment, there is a range of tax reliefs available to qualifying investors.  <br> <br>
+
+	The Seed Enterprise Investment Scheme was introduced in 2012, and is similar to the EIS, though to qualify the companies must be smaller and earlier stage than for EIS. As these are therefore typically riskier investments, there are more substantial reliefs available.  <br> <br>
+
+	Whilst the original schemes were intended to encourage investments into direct companies, there are now a number of Funds and Portfolio services run by professional fund managers, providing a portfolio.of earlier stage UK companies. <br> <br>
+	NOTE: Investments of this nature carry risks to your capital as well as potential rewards. Please read our risk warning before deciding to invest.
+@elseif($business_listing_type == 'vct')
+	<b>VCTs</b> <br>
+	A Venture Capital Trust (VCT) is a publicly listed company. The company, run by a fund manager, invests in a number of small unquoted companies. <br> <br>Therefore an investor into a VCT is investing in the fund manager’s selected portfolio of earlier stage UK companies, and thereby helps them to grow. To encourage investment of this sort, the government provides a number of tax benefits to qualifying UK investors.<br> <br>
+	NOTE: Investments of this nature carry risks to your capital as well as potential rewards. Please read our risk warning before deciding to invest.
+@endif
+</div>
+
 	<div class="row mt-5">
 		@if($business_listing_type == 'proposal')
 			@include('frontend.business-listings.single-company-sidebar')
@@ -113,6 +138,8 @@
 		@elseif($business_listing_type == 'vct')
 			@include('frontend.business-listings.vct-sidebar')
 		@endif
+
+			
 		<div class="col-sm-9">
 			<!-- card -->
 
@@ -158,6 +185,7 @@
 				<h3 class="">No Data Found!</h3>
 			</div>
 	</div>
+</div>
 	 
  
  
@@ -167,5 +195,5 @@
  
 
 
-
+@include('includes.footer')
 @endsection
