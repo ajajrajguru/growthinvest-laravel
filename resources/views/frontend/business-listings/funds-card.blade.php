@@ -5,7 +5,7 @@
 	$dueDeligence = (isset($businessDefaults['approver']))? implode('',$businessDefaults['approver']) : '';
 	$stageOfBusiness = (isset($businessDefaults['stage_of_business']))? implode('',$businessDefaults['stage_of_business']) : '';
 	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
- 
+ 	$proposalDetails = $businessListing->businessProposalDetails();
 	
 	@endphp
 <div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
@@ -19,7 +19,7 @@
 		</a>
 
 		<div class="d-flex justify-content-between mt-5 px-3 mb-3">
-			<div data-toggle="tooltip" title="221 B, Baker Street, London"><i class="fa fa-map-marker"></i> LOCATION</div>
+			<div data-toggle="tooltip" title="{{ (isset($proposalDetails['address'])) ? $proposalDetails['address'] :'' }}"><i class="fa fa-map-marker"></i> LOCATION</div>
 			<div>
 				@foreach($businessListing->tax_status as $taxStatus)
 				<span class="badge bg-primary text-white mr-1 py-1">{{ $taxStatus }}</span>

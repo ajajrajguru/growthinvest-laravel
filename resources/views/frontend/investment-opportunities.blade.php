@@ -61,19 +61,19 @@
 
 <div class="card-deck">
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/single-company/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">SEIS <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
 
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/funds/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">EIS <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
 
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/vct/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">VCT <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
@@ -83,21 +83,22 @@
 <!-- tabs -->
 <div class="squareline-tabs mt-5">
 	<ul class="nav nav-tabs">
-		@if($business_listing_type != 'proposal')
-		<li class="nav-item">
-	   		<a class="nav-link d-none d-sm-block px-5"  href="{{ url('investment-opportunities/single-company/') }}">Single Companies</a>
+ 
+		
+		<li class="nav-item ">
+	   		<a class="nav-link px-sm-5 @if($business_listing_type == 'proposal') active @endif"  href="{{ url('investment-opportunities/single-company/') }}">Single Companies</a>
 		</li>
-		@endif
-		@if($business_listing_type != 'fund')
-		<li class="nav-item">
-	    	<a class="nav-link d-none d-sm-block px-5"  href="{{ url('investment-opportunities/funds/') }}">Funds</a>
+		
+ 
+		<li class="nav-item ">
+	    	<a class="nav-link px-sm-5 @if($business_listing_type == 'fund') active @endif"  href="{{ url('investment-opportunities/funds/') }}">Funds</a>
 		</li>
-		@endif
-		@if($business_listing_type != 'vct')
-		<li class="nav-item">
-	    	<a class="nav-link d-none d-sm-block px-5"  href="{{ url('investment-opportunities/vct/') }}">VCTs</a>
+ 
+		<li class="nav-item ">
+	    	<a class="nav-link px-sm-5 @if($business_listing_type == 'vct') active @endif"  href="{{ url('investment-opportunities/vct/') }}">VCTs</a>
+ 
 		</li>
-		@endif
+		 
 						
 		
 	</ul>
@@ -137,10 +138,14 @@
 				</div>
 			</div>
 			
-			<div class="alert bg-primary text-uppercase text-white text-center rounded-0 mb-4">open investment offers</div>
+			<div class="alert bg-primary text-uppercase text-white text-center rounded-0 mb-4 open-investment-offers">open investment offers</div>
 			<div class="business-listing"></div>
 			<div class="platform-listing-section d-none mb-4">
+				@if($business_listing_type == 'vct')
+				<div class="alert bg-primary text-uppercase text-white text-center rounded-0">LIVE MARKET OFFERS</div>
+				@else
 				<div class="alert bg-primary text-uppercase text-white text-center rounded-0">PLATFORM LISTINGS</div>
+				@endif 
 			</div>	
 			<div class="platform-listing">
 			</div>

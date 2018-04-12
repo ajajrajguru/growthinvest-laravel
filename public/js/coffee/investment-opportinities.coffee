@@ -131,16 +131,32 @@ $(document).ready ->
       success: (reponse) ->
         
         if($('.business-listing').length)
-           $('.business-listing').html reponse.businesslistingHtml
-
           if reponse.businesslistingHtml !=""
+            $('.open-investment-offers').removeClass('d-none')
+          else
+            $('.open-investment-offers').addClass('d-none')
+
+          $('.business-listing').html reponse.businesslistingHtml
+
+          if reponse.platformListingHtml !=""
             $('.platform-listing-section').removeClass('d-none')
           else
             $('.platform-listing-section').addClass('d-none')
           
           $('.platform-listing').html reponse.platformListingHtml
 
-          $(".knob").knob();
+          $('.knob').each ->
+            $this = $(this)
+            myVal = $this.attr('value')
+            $this.knob 'readOnly': true
+            $(value: 0).animate { value: myVal },
+              duration: 1000
+              easing: 'swing'
+              step: ->
+                $this.val(Math.ceil(@value)).trigger 'change'
+                return
+            return
+
           $('.investment-loader').removeClass('d-flex').addClass('d-none')
 
           #tooltip
@@ -180,8 +196,20 @@ $(document).ready ->
     $('input[name="business_stage[]"]').prop('checked',false)
     $('input[name="funded_per[]"]').prop('checked',false)
     $('input[name="investment_sought[]"]').prop('checked',false)
+    $('input[name="aic_sector[]"]').prop('checked',false)
+    $('input[name="fund_type[]"]').prop('checked',false)
+    $('input[name="fund_status[]"]').prop('checked',false)
+    $('input[name="fund_investmentobjective[]"]').prop('checked',false)
+    $('input[name="vct_investmentstrategy[]"]').prop('checked',false)
+    $('input[name="vct_type[]"]').prop('checked',false)
+    $('input[name="vct_investmentstrategy[]"]').prop('checked',false)
+    $('input[name="vct_offeringtype[]"]').prop('checked',false)
     $('input[name="search_title"]').val('')
-    getInvestmentOpportunity()
+    $('select[name="order_by"]').val('')
+    getInvestmentOpportunity() 
+
+
+
     return
 
     

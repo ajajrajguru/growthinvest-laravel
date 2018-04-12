@@ -1,12 +1,13 @@
 @foreach($businessListings as $businessListing)
 	@php
 
-	$businessDefaults = $businessListing->business_defaults; 
-	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
- 	
- 	 $fundVctDetails = $businessListing->businessFundVctDetails();  
- 	 $fundCloseDate = $businessListing->businessFundCloseDate();  
- 	 $aicsector = $businessListing->businessAicSector();  
+		$businessDefaults = $businessListing->business_defaults; 
+		$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
+
+		$fundVctDetails = $businessListing->businessFundVctDetails();  
+		$fundCloseDate = $businessListing->businessFundCloseDate();  
+		$proposalDetails = $businessListing->businessProposalDetails();
+		$aicsector = $businessListing->businessAicSector();  
 	
 	@endphp
 <!-- VCT -->
@@ -21,7 +22,7 @@
 		</a>
 
 		<div class="d-flex justify-content-between mt-5 px-3 mb-3">
-			<div data-toggle="tooltip" title="221 B, Baker Street, London"><i class="fa fa-map-marker"></i> LOCATION</div>
+			<div data-toggle="tooltip" title="{{ (isset($proposalDetails['address'])) ? $proposalDetails['address'] :'' }}"><i class="fa fa-map-marker"></i> LOCATION</div>
 			<div>
 				@foreach($businessListing->tax_status as $taxStatus)
 				<span class="badge bg-primary text-white mr-1 py-1">{{ $taxStatus }}</span>

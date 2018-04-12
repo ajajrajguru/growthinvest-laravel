@@ -105,10 +105,11 @@
 	      <div class="card-body ">
 	        <div class="filter-options">
 	        	 
-               	@foreach(aicSectors() as $sectorId => $sector)
+               	@foreach($aicsector as $sectorId => $sector)
 	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_sector[]" id="ch_{{ $sectorId }}" value="{{ $sectorId }}">
-					  <label class="custom-control-label" for="ch_{{ $sectorId }}">{{ ucfirst($sector) }}</label>
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_aic_{{ $sectorId }}" value="{{ $sectorId }}">
+					  <label class="custom-control-label" for="ch_aic_{{ $sectorId }}">{{ ucfirst($sector) }}</label>
+ 
 					</div>
 	             @endforeach
 				  

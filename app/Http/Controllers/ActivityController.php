@@ -487,7 +487,7 @@ class ActivityController extends Controller
 
                     $mainjoin  = " LEFT OUTER JOIN firms f1 on f1.id=a1.secondary_item_id";
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
+                    $groupby   = ($type == 'list') ? " " : " group by a1.type";
 
                 } elseif (in_array($activityType, ['new_provider_added'])) {
 
@@ -504,7 +504,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
+                    $groupby   = ($type == 'list') ? " " : " group by a1.type";
 
                 } elseif (in_array($activityType, ['investor_message', 'entrepreneur_message'])) {
 
@@ -522,7 +522,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
+                    $groupby   = ($type == 'list') ? " " : " group by a1.type";
 
                 } elseif (in_array($activityType, ['proposal_details_update', 'fund_details_update'])) {
 
@@ -544,7 +544,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" : "group by a1.type";
+                    $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" : " group by a1.type";
                 } elseif (in_array($activityType, ['invested'])) {
 
                     $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
@@ -567,7 +567,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
+                    $groupby   = ($type == 'list') ? " " : " group by a1.type";
                 } else {
 
                     $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
@@ -589,7 +589,7 @@ class ActivityController extends Controller
                     }
 
                     $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
-                    $groupby   = ($type == 'list') ? "" : "group by a1.type";
+                    $groupby   = ($type == 'list') ? " " : " group by a1.type";
                 }
 
                 $activityListQuery .= $union . $mainselect . $customfieldselect . $maintable . $mainjoin . $customjoin . $mainwhere . $customwhere . $groupby;

@@ -112,26 +112,49 @@
         data: filters,
         success: function(reponse) {
           if (($('.business-listing').length)) {
-            $('.business-listing').html(reponse.businesslistingHtml);
-          }
-          if (reponse.businesslistingHtml !== "") {
-            $('.platform-listing-section').removeClass('d-none');
-          } else {
-            $('.platform-listing-section').addClass('d-none');
-          }
-          $('.platform-listing').html(reponse.platformListingHtml);
-          $(".knob").knob();
-          $('.investment-loader').removeClass('d-flex').addClass('d-none');
-          $('[data-toggle="tooltip"]').tooltip();
-          $('[data-toggle="popover"]').popover({
-            trigger: 'hover',
-            html: true,
-            content: function() {
-              return $('#popover-content').html();
+            if (reponse.businesslistingHtml !== "") {
+              $('.open-investment-offers').removeClass('d-none');
+            } else {
+              $('.open-investment-offers').addClass('d-none');
             }
-          });
-          if (reponse.totalBusinessListings === 0) {
-            $('.no-data-conatiner').addClass('d-flex').removeClass('d-none');
+            $('.business-listing').html(reponse.businesslistingHtml);
+            if (reponse.platformListingHtml !== "") {
+              $('.platform-listing-section').removeClass('d-none');
+            } else {
+              $('.platform-listing-section').addClass('d-none');
+            }
+            $('.platform-listing').html(reponse.platformListingHtml);
+            $('.knob').each(function() {
+              var $this, myVal;
+              $this = $(this);
+              myVal = $this.attr('value');
+              $this.knob({
+                'readOnly': true
+              });
+              $({
+                value: 0
+              }).animate({
+                value: myVal
+              }, {
+                duration: 1000,
+                easing: 'swing',
+                step: function() {
+                  $this.val(Math.ceil(this.value)).trigger('change');
+                }
+              });
+            });
+            $('.investment-loader').removeClass('d-flex').addClass('d-none');
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover({
+              trigger: 'hover',
+              html: true,
+              content: function() {
+                return $('#popover-content').html();
+              }
+            });
+            if (reponse.totalBusinessListings === 0) {
+              $('.no-data-conatiner').addClass('d-flex').removeClass('d-none');
+            }
           }
         },
         error: function(request, status, error) {
@@ -158,7 +181,16 @@
       $('input[name="business_stage[]"]').prop('checked', false);
       $('input[name="funded_per[]"]').prop('checked', false);
       $('input[name="investment_sought[]"]').prop('checked', false);
+      $('input[name="aic_sector[]"]').prop('checked', false);
+      $('input[name="fund_type[]"]').prop('checked', false);
+      $('input[name="fund_status[]"]').prop('checked', false);
+      $('input[name="fund_investmentobjective[]"]').prop('checked', false);
+      $('input[name="vct_investmentstrategy[]"]').prop('checked', false);
+      $('input[name="vct_type[]"]').prop('checked', false);
+      $('input[name="vct_investmentstrategy[]"]').prop('checked', false);
+      $('input[name="vct_offeringtype[]"]').prop('checked', false);
       $('input[name="search_title"]').val('');
+      $('select[name="order_by"]').val('');
       getInvestmentOpportunity();
     });
   });
