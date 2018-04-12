@@ -11,6 +11,8 @@
       var aic_sector, business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status, vct_investmentstrategy, vct_offeringtype, vct_type;
       $('.investment-loader').addClass('d-flex').removeClass('d-none');
       $('.no-data-conatiner').removeClass('d-flex').addClass('d-none');
+      $('.business-listing').html('');
+      $('.platform-listing').html('');
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       filters.order_by = $('select[name="order_by"]').val();
@@ -111,6 +113,8 @@
         url: '/investment-opportunities/filter-listings',
         data: filters,
         success: function(reponse) {
+          $('.business-listing').html('');
+          $('.platform-listing').html('');
           if (($('.business-listing').length)) {
             if (reponse.businesslistingHtml !== "") {
               $('.open-investment-offers').removeClass('d-none');
