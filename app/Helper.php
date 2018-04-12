@@ -1124,6 +1124,15 @@ function getBusinessSectors()
     return \App\Defaults::where('type', 'business-sector')->where('status', '1')->get();
 }
 
+function aicSectors(){
+    return ['generalist'=>'Generalist',
+    'generalist_pre_qualifying'=>'Generalist Pre-Qualifying',
+    'aim_quoted'=>'AIM Quoted',
+    'specialist_environmental'=>'Specialist: Environmental',
+    'specialist_technology'=>'Specialist: Technology',
+    'specialist_infrastructure'=>'Specialist: Infrastructure'];
+}
+
 function getDueDeligence()
 {
     return \App\Defaults::where('type', 'approver')->where('status', '1')->get();
@@ -1589,7 +1598,7 @@ function updateVCTData()
 
         $dataValue = unserialize($dataValue);
         if (!empty($dataValue) && !is_array($dataValue)) {
-            $dataValue = unserialize($dataValue);
+            $dataValue = unserialize($dataValue); 
 
             $vctType              = new \App\BusinessListingData;
             $vctType->business_id = $vct->business_id;
@@ -1608,6 +1617,12 @@ function updateVCTData()
             $offeringtype->data_key    = 'offeringtype';
             $offeringtype->data_value  = (isset($dataValue['offeringtype'])) ? $dataValue['offeringtype'] : '';
             $offeringtype->save();
+
+            $aicsector              = new \App\BusinessListingData;
+            $aicsector->business_id = $vct->business_id;
+            $aicsector->data_key    = 'aicsector';
+            $aicsector->data_value  = (isset($dataValue['aicsector'])) ? $dataValue['aicsector'] : '';
+            $aicsector->save();
 
             $vct->data_value = serialize($dataValue);
             $vct->save();

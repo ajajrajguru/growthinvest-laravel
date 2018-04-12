@@ -104,14 +104,16 @@
 	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
 	      <div class="card-body ">
 	        <div class="filter-options">
- 
 	        	 
                	@foreach($aicsector as $sectorId => $sector)
 	                <div class="custom-control custom-checkbox">
 					  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_aic_{{ $sectorId }}" value="{{ $sectorId }}">
 					  <label class="custom-control-label" for="ch_aic_{{ $sectorId }}">{{ ucfirst($sector) }}</label>
+ 
 					</div>
 	             @endforeach
+				  
+	             
 				
 			</div>
 	      </div>

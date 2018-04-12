@@ -1,12 +1,14 @@
 @foreach($businessListings as $businessListing)
 	@php
 
-	$businessDefaults = $businessListing->business_defaults; 
-	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
- 	
- 	 $fundVctDetails = $businessListing->businessFundVctDetails();  
- 	 $fundCloseDate = $businessListing->businessFundCloseDate();  
-	$proposalDetails = $businessListing->businessProposalDetails();
+		$businessDefaults = $businessListing->business_defaults; 
+		$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
+
+		$fundVctDetails = $businessListing->businessFundVctDetails();  
+		$fundCloseDate = $businessListing->businessFundCloseDate();  
+		$proposalDetails = $businessListing->businessProposalDetails();
+		$aicsector = $businessListing->businessAicSector();  
+	
 	@endphp
 <!-- VCT -->
 <div class="row d-sm-flex border mb-3 box-shadow-1 mx-xs-0">
@@ -37,9 +39,9 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<p class="mb-2"><strong>AIC Sector:</strong> 
-					@foreach($sectors as $sector)
-					 {!! $sector !!} 
-					@endforeach
+					 
+					 {!! $aicsector !!} 
+					 
 				</p>
 				<p class="mb-2"><strong>Close Date:</strong> {{ $fundCloseDate }}</p>
 			</div>

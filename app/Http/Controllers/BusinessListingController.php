@@ -676,7 +676,7 @@ class BusinessListingController extends Controller
 
         // SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id');
         })->whereIn('business_investments.status', ['pledged', 'funded']);
 
@@ -827,8 +827,10 @@ class BusinessListingController extends Controller
             }
             $joinedBusinessData = true;
 
+ 
             $businessListingQuery->whereIn('business_listing_datas.data_value', $aicsector)->where('business_listing_datas.data_key', 'aicsector');
         }
+ 
  
         if ($businessListingType == 'vct') {
             $businessListingQuery->where('business_listings.type', 'fund');

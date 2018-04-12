@@ -271,7 +271,7 @@ class BusinessListing extends Model
         return $data;
     }
 
- 
+  
     public function businessAicSector(){
         $aicsector = aicSectors();
         $businessListingData = $this->businessListingData()->where('data_key','aicsector')->first(); 
@@ -279,6 +279,7 @@ class BusinessListing extends Model
         
         return $data;
     }
+ 
  
 
 
