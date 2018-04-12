@@ -147,7 +147,14 @@ $(document).ready ->
 
           $('.knob').each ->
             $this = $(this)
+            myVal = $this.attr('value')
             $this.knob 'readOnly': true
+            $(value: 0).animate { value: myVal },
+              duration: 1000
+              easing: 'swing'
+              step: ->
+                $this.val(Math.ceil(@value)).trigger 'change'
+                return
             return
 
           $('.investment-loader').removeClass('d-flex').addClass('d-none')
