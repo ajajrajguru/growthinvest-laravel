@@ -181,7 +181,16 @@
       $('input[name="business_stage[]"]').prop('checked', false);
       $('input[name="funded_per[]"]').prop('checked', false);
       $('input[name="investment_sought[]"]').prop('checked', false);
+      $('input[name="aic_sector[]"]').prop('checked', false);
+      $('input[name="fund_type[]"]').prop('checked', false);
+      $('input[name="fund_status[]"]').prop('checked', false);
+      $('input[name="fund_investmentobjective[]"]').prop('checked', false);
+      $('input[name="vct_investmentstrategy[]"]').prop('checked', false);
+      $('input[name="vct_type[]"]').prop('checked', false);
+      $('input[name="vct_investmentstrategy[]"]').prop('checked', false);
+      $('input[name="vct_offeringtype[]"]').prop('checked', false);
       $('input[name="search_title"]').val('');
+      $('select[name="order_by"]').val('');
       getInvestmentOpportunity();
     });
   });

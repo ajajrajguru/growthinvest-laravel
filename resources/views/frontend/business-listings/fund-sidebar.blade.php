@@ -161,6 +161,10 @@
 				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Growth" value="Growth">
 				  <label class="custom-control-label" for="ch_Growth">  Growth </label>
 				</div>
+				<div class="custom-control custom-checkbox">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_High Growth" value="High Growth">
+				  <label class="custom-control-label" for="ch_High Growth">  High Growth </label>
+				</div>
 			 
 	             
 	        </div>
