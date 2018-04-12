@@ -6,6 +6,7 @@
  	
  	 $fundVctDetails = $businessListing->businessFundVctDetails();  
  	 $fundCloseDate = $businessListing->businessFundCloseDate();  
+ 	 $aicsector = $businessListing->businessAicSector();  
 	
 	@endphp
 <!-- VCT -->
@@ -37,9 +38,9 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<p class="mb-2"><strong>AIC Sector:</strong> 
-					@foreach($sectors as $sector)
-					 {!! $sector !!} 
-					@endforeach
+					 
+					 {!! $aicsector !!} 
+					 
 				</p>
 				<p class="mb-2"><strong>Close Date:</strong> {{ $fundCloseDate }}</p>
 			</div>
