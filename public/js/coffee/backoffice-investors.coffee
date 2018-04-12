@@ -966,6 +966,8 @@ $(document).ready ->
     type = $(this).attr('report-type')
     urlParams = ''
 
+
+    
     if($('select[name="duration"]').val()!="")
       urlParams +='duration='+$('select[name="duration"]').val() 
 
@@ -991,9 +993,9 @@ $(document).ready ->
       urlParams +='&activity_group='+$('select[name="activity_group"]').val()
 
     if($('select[name="firm"]').val()!="")
-      urlParams +='&firm='+$('select[name="firm"]').val()
+      urlParams +='&firmid='+$('select[name="firm"]').val()
        
-    
+
     if(type == 'csv')  
       window.open("/backoffice/investor/export-investors-activity?"+urlParams)
     else if(type == 'pdf')  
