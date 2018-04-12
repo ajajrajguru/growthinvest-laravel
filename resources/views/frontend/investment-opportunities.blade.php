@@ -61,19 +61,19 @@
 
 <div class="card-deck">
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/single-company/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">SEIS <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
 
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/funds/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">EIS <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
 
   	<div class="card card-animated">
-  		<a href="" class="d-flex justify-content-center align-items-center card-link">
+  		<a href="{{ url('investment-opportunities/vct/') }}" class="d-flex justify-content-center align-items-center card-link">
 	  		<div class="animate-border">VCT <span class="slideInLeft">»</span></div>
   		</a>
   	</div>
@@ -83,18 +83,20 @@
 <!-- tabs -->
 <div class="squareline-tabs mt-5">
 	<ul class="nav nav-tabs">
+ 
 		
 		<li class="nav-item @if($business_listing_type == 'proposal') active @endif">
-	   		<a class="nav-link d-none d-sm-block px-5"  href="{{ url('investment-opportunities/single-company/') }}">Single Companies</a>
+	   		<a class="nav-link px-sm-5"  href="{{ url('investment-opportunities/single-company/') }}">Single Companies</a>
 		</li>
 		
  
 		<li class="nav-item @if($business_listing_type == 'fund') active @endif">
-	    	<a class="nav-link d-none d-sm-block px-5"  href="{{ url('investment-opportunities/funds/') }}">Funds</a>
+	    	<a class="nav-link px-sm-5"  href="{{ url('investment-opportunities/funds/') }}">Funds</a>
 		</li>
  
 		<li class="nav-item @if($business_listing_type == 'vct') active @endif">
-	    	<a class="nav-link d-none d-sm-block px-5"  href="{{ url('investment-opportunities/vct/') }}">VCTs</a>
+	    	<a class="nav-link px-sm-5"  href="{{ url('investment-opportunities/vct/') }}">VCTs</a>
+ 
 		</li>
 		 
 						

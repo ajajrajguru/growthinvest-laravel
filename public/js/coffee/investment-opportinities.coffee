@@ -137,7 +137,11 @@ $(document).ready ->
           
           $('.platform-listing').html reponse.platformListingHtml
 
-          $(".knob").knob();
+          $('.knob').each ->
+            $this = $(this)
+            $this.knob 'readOnly': true
+            return
+
           $('.investment-loader').removeClass('d-flex').addClass('d-none')
 
           #tooltip
