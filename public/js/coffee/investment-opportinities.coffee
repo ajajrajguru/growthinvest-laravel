@@ -123,9 +123,14 @@ $(document).ready ->
       success: (reponse) ->
         
         if($('.business-listing').length)
-           $('.business-listing').html reponse.businesslistingHtml
-
           if reponse.businesslistingHtml !=""
+            $('.open-investment-offers').removeClass('d-none')
+          else
+            $('.open-investment-offers').addClass('d-none')
+
+          $('.business-listing').html reponse.businesslistingHtml
+
+          if reponse.platformListingHtml !=""
             $('.platform-listing-section').removeClass('d-none')
           else
             $('.platform-listing-section').addClass('d-none')

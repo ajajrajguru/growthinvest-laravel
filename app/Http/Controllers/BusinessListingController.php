@@ -636,7 +636,7 @@ class BusinessListingController extends Controller
         } elseif ($type == 'investors-certification') {
             // updateInvestorsCurrentCerification();
         }
-        
+
     }
 
     public function investmentOpportunities(Request $request, $type)
@@ -654,6 +654,7 @@ class BusinessListingController extends Controller
         $dueDeligence    = getDueDeligence();
         $stageOfBusiness = getStageOfBusiness();
 
+        $data['aicsector']             = aicsectors();
         $data['stageOfBusiness']       = $stageOfBusiness;
         $data['business_listing_type'] = $businessListingType;
         $data['sectors']               = $sectors;
@@ -813,6 +814,22 @@ class BusinessListingController extends Controller
             $businessListingQuery->whereIn('business_listing_datas.data_value', $vctOfferingtype)->where('business_listing_datas.data_key', 'offeringtype');
         }
 
+ 
+        if (isset($filters['aic_sector']) && $filters['aic_sector'] != "") {
+            $aicsector = $filters['aic_sector'];
+            $aicsector = explode(',', $aicsector);
+            $aicsector = array_filter($aicsector);
+
+            if (!$joinedBusinessData) {
+                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
+                    $join->on('business_listings.id', 'business_listing_datas.business_id');
+                });
+            }
+            $joinedBusinessData = true;
+
+            $businessListingQuery->whereIn('business_listing_datas.data_value', $aicsector)->where('business_listing_datas.data_key', 'aicsector');
+        }
+ 
         if ($businessListingType == 'vct') {
             $businessListingQuery->where('business_listings.type', 'fund');
         } else {
