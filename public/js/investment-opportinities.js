@@ -118,10 +118,22 @@
             }
             $('.platform-listing').html(reponse.platformListingHtml);
             $('.knob').each(function() {
-              var $this;
+              var $this, myVal;
               $this = $(this);
+              myVal = $this.attr('value');
               $this.knob({
                 'readOnly': true
+              });
+              $({
+                value: 0
+              }).animate({
+                value: myVal
+              }, {
+                duration: 1000,
+                easing: 'swing',
+                step: function() {
+                  $this.val(Math.ceil(this.value)).trigger('change');
+                }
               });
             });
             $('.investment-loader').removeClass('d-flex').addClass('d-none');
