@@ -187,7 +187,11 @@ $(document).ready ->
   $(document).on 'change', 'select[name="order_by"]', ->
     getInvestmentOpportunity()
     
-  $(document).on 'change', '.filter-business-list', ->
+  # $(document).on 'change', '.filter-business-list', ->
+  #   getInvestmentOpportunity()
+  
+  
+  $(document).on 'click', '.apply-investment-opportunity', ->
     getInvestmentOpportunity()
 
   $(document).on 'click', '.search-by-title', ->
