@@ -44,6 +44,7 @@
 
  
 @endsection
+@section('frontend-content')
 
 
 <div class="container pb-5">
@@ -158,6 +159,7 @@
 				<h3 class="">No Data Found!</h3>
 			</div>
 	</div>
+</div>
 	 
  
  
@@ -167,5 +169,5 @@
  
 
 
-
+@include('includes.footer')
 @endsection
