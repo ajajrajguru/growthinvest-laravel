@@ -15,7 +15,7 @@
 	      </h5>
 	    </div>
 
-	    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+	    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 				<div class="custom-control custom-checkbox">
@@ -40,7 +40,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+	    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 				 
@@ -71,7 +71,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
+	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 				 
@@ -102,7 +102,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 	        	 

@@ -10,7 +10,7 @@
 	if(isset($proposalDetails['business_proposal_details']) && $proposalDetails['business_proposal_details']!=''){
 		if(strlen($proposalDetails['business_proposal_details']) > 153){
 			$description = substr($proposalDetails['business_proposal_details'],0,150) ;
-			$description .= '<a href="'.url('investment-opportunities/single-company/'.$businessListing->slug).'" target="_blank" class="btn btn-sm btn-link">more...</a>' ;
+			$description .= '<a href="'.url('investment-opportunities/single-company/'.$businessListing->slug).'" target="_blank" class="btn btn-sm btn-link text-lowercase card-link">... more</a>' ;
 		}
 		else{
 		 	$description = $proposalDetails['business_proposal_details'];
@@ -106,7 +106,7 @@
 				
 				
 				
-				<div class="mt-3 mb-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link">View Details &raquo;</a></div>
+				<div class="mt-3 mb-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link card-link">View Details &raquo;</a></div>
 			</div>
 		@endif
 		</div>

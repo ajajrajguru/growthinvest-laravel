@@ -15,7 +15,7 @@
 	      </h5>
 	    </div>
 
-	    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+	    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 				<div class="custom-control custom-checkbox">
@@ -50,7 +50,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+	    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 				@foreach($dueDeligence as $dueDeligenceValue)
@@ -71,7 +71,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+	    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 	        	@foreach($sectors as $sector)
@@ -93,7 +93,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
+	    <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 				@foreach($stageOfBusiness as $stage)
@@ -114,7 +114,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseFive" class="collapse show" aria-labelledby="headingFive" data-parent="#accordion">
+	    <div id="collapseFive" class="collapse show" aria-labelledby="headingFive" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 	        	 
@@ -147,7 +147,7 @@
 	        </button>
 	      </h5>
 	    </div>
-	    <div id="collapseSix" class="collapse show" aria-labelledby="headingSix" data-parent="#accordion">
+	    <div id="collapseSix" class="collapse show" aria-labelledby="headingSix" data-parent="">
 	      <div class="card-body ">
 	        <div class="filter-options">
 	        	 
