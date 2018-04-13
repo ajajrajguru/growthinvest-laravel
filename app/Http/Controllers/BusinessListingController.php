@@ -652,7 +652,7 @@ class BusinessListingController extends Controller
 
         $sectors         = getBusinessSectors();
         $dueDeligence    = getDueDeligence();
-        $stageOfBusiness = getStageOfBusiness();
+        $stageOfBusiness = getStageOfBusiness(); 
 
         $data['aicsector']             = aicsectors();
         $data['stageOfBusiness']       = $stageOfBusiness;
@@ -676,9 +676,13 @@ class BusinessListingController extends Controller
 
         // SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->leftjoin('business_investments', function ($join) {
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['pledged', 'funded']);
-        });
+        })->where('business_listings.business_status', 'listed')->where('business_listings.investment_opportunities', 'yes');
+ 
+        if(!Auth::check()){
+            $businessListingQuery->where('business_listings.disp_to_nonloggedin', 'yes');
+        }
 
         if (isset($filters['search_title']) && $filters['search_title'] != "") {
             $searchTitle = $filters['search_title'];
@@ -868,7 +872,7 @@ class BusinessListingController extends Controller
             $taxStatus = $listingTaxStatus[$businessListingType];
         }
 
-        $businessListingQuery->where(function ($bQuery) use ($taxStatus) {
+        $businessListingQuery->where(function ($bQuery) use ($taxStatus,$businessListingType) {
             foreach ($taxStatus as $key => $status) {
                 $statusArr   = [];
                 $statusArr[] = $status;
@@ -879,6 +883,14 @@ class BusinessListingController extends Controller
                 } else {
                     $bQuery->orWhereRaw("JSON_CONTAINS(business_listings.tax_status, '" . $taxStatus . "' )");
                 }
+
+                if ($businessListingType == 'fund') {
+                    $fundstaxStatusNotIn =  ['vct','iht','sitr','tier1'] ;
+                    foreach ($fundstaxStatusNotIn as $key => $taxStatusNotIn) {
+                        $bQuery->whereRaw("JSON_SEARCH(business_listings.tax_status, 'one', '" . $taxStatusNotIn . "' )  IS NULL");
+                    }
+         
+                } 
 
             }
 
