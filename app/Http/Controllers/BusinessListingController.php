@@ -677,8 +677,8 @@ class BusinessListingController extends Controller
         // SUM(business_investments.amount) as amount_raised, ((SUM(business_investments.amount) / business_listings.target_amount)*100) as percentage
 
         $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->where('business_listings.business_status', 'listed')->leftjoin('business_investments', function ($join) {
-            $join->on('business_listings.id', 'business_investments.business_id');
-        })->whereIn('business_investments.status', ['pledged', 'funded']);
+            $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['pledged', 'funded']);
+        });
 
         if (isset($filters['search_title']) && $filters['search_title'] != "") {
             $searchTitle = $filters['search_title'];
@@ -910,7 +910,7 @@ class BusinessListingController extends Controller
 
         $businessListings      = $businessListingQuery->get();
         $totalBusinessListings = $businessListings->count();
-
+        
         $businessListings = $businessListings->map(function ($businessListing, $key) {
             $businessDefaults                          = $businessListing->getBusinessDefaultsData();
             $businessListing['business_defaults']      = $businessDefaults;

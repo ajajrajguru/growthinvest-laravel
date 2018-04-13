@@ -391,6 +391,8 @@ class ActivityController extends Controller
                     $actTypes[]    = $filters['type'];
                     $isTypeInWhere = true;
                 }
+                $actTypes = array_unique($actTypes);
+                 
                 $typeStr .= (!empty($actTypes)) ? " and a1.type IN ('" . implode("','", $actTypes) . "')" : '';
             }
 
@@ -444,10 +446,13 @@ class ActivityController extends Controller
         $activityListQuery     = '';
         $totalActivityListings = 0;
         $activityListings      = [];
+        $excludeUserIds = [];
 
         $queryCheck = [];
         if (!empty($groupTypeList)) {
-
+            if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
+                $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
+            }
             foreach ($groupTypeList as $typeList) {
                 $activityType = $typeList[0];
 
@@ -464,13 +469,7 @@ class ActivityController extends Controller
                 $maintable = " from activity a1 ";
                 $mainjoin  = " INNER JOIN firms f1 on f1.id=a1.secondary_item_id";
 
-                if (in_array($activityType, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
-                    'download_investor_csv', 'download_transfer_asset_guide',
-                    'download_vct_asset_transfer_form', 'download_single_company_asset_transfer_form', 'download_iht_product_asset_transfer_form', 'download_portfolio_asset_transfer_form', 'download_stock_transfer_form', 'submitted_transfers',
-                    'status_changes_for_asset_transfers', 'transfers_deleted',
-                    'start_adobe_sign', 'completed_adobe_sign',
-                    'external_downloads', 'stage_3_profile_details',
-                    'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
+                if (in_array($activityType, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide','download_investor_csv', 'download_transfer_asset_guide','download_vct_asset_transfer_form', 'download_single_company_asset_transfer_form', 'download_iht_product_asset_transfer_form', 'download_portfolio_asset_transfer_form', 'download_stock_transfer_form', 'submitted_transfers','status_changes_for_asset_transfers', 'transfers_deleted','start_adobe_sign', 'completed_adobe_sign','external_downloads', 'stage_3_profile_details','auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
 
                     $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
@@ -481,7 +480,6 @@ class ActivityController extends Controller
                     }
 
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
                         $userWhere .= " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
@@ -499,7 +497,6 @@ class ActivityController extends Controller
                         $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                     }
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
                         $userWhere .= " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
@@ -517,7 +514,6 @@ class ActivityController extends Controller
                         $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                     }
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
                         $userWhere .= " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
@@ -535,7 +531,6 @@ class ActivityController extends Controller
                         $userWhere = " and a1.user_id='" . $filters['user_id'] . "' ";
                     }
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
                         $userWhere .= " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
@@ -558,7 +553,6 @@ class ActivityController extends Controller
                     }
 
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
                         $userWhere .= " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
@@ -580,7 +574,6 @@ class ActivityController extends Controller
                     }
 
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
                         $userWhere .= " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 

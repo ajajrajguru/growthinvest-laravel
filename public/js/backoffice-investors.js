@@ -1051,7 +1051,7 @@
         urlParams += '&activity_group=' + $('select[name="activity_group"]').val();
       }
       if ($('select[name="firm"]').val() !== "") {
-        urlParams += '&firm=' + $('select[name="firm"]').val();
+        urlParams += '&firmid=' + $('select[name="firm"]').val();
       }
       if (type === 'csv') {
         return window.open("/backoffice/investor/export-investors-activity?" + urlParams);
