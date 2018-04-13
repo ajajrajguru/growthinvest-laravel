@@ -990,18 +990,22 @@
       if ($('select[name="user"]').attr('is-visible') === "true") {
         $('select[name="user"]').val('');
       }
+      $('select[name="type" ]').find('option').each(function() {
+        return $(this).removeClass('d-none');
+      });
       window.history.pushState("", "", "?");
       getActivitySummary();
       investorActivityTable.ajax.reload();
     });
     $('body').on('change', 'select[name="activity_group"]', function() {
-      var group;
-      group = $("option:selected", this).text();
+      var activityTypes, activityTypesArray;
+      activityTypes = $("option:selected", this).attr('actvity-types');
+      activityTypesArray = activityTypes.split(',');
       $('select[name="type" ]').find('option').each(function() {
+        var optionValue;
+        optionValue = $(this).attr('value');
         $(this).removeClass('d-none');
-        console.log(group);
-        console.log($(this).attr('activity-group'));
-        if (group !== $(this).attr('activity-group')) {
+        if ($.inArray(optionValue, activityTypesArray) === -1) {
           return $(this).addClass('d-none');
         }
       });

@@ -166,6 +166,7 @@
                                 <option value="">View All groups</option>
                                 @php
                                 $filteredGroup = '';
+                                $activityTypeGroup = [];
                                 @endphp
                                 @foreach($activityGroups as $activityGroup)
                                   
@@ -174,11 +175,12 @@
                                     if(isset($requestFilters['activity_group']) && $requestFilters['activity_group'] == $activityGroup->id){
                                       $selected = 'selected'; 
                                       $filteredGroup = $activityGroup->group_name;
+                                      $activityTypeGroup = $activityGroup->activity_type_value;
                                     }
                                     
-                                   
+                                    
                                   @endphp
-                                  <option value="{{ $activityGroup->id }}" {{ $selected }}>{{ $activityGroup->group_name }}</option>
+                                  <option actvity-types="{{ implode(',',$activityGroup->activity_type_value) }}" value="{{ $activityGroup->id }}" {{ $selected }}>{{ $activityGroup->group_name }}</option>
                                 @endforeach
                               </select>
                           </div>
@@ -189,22 +191,8 @@
                               <label for="">Activities</label>
                               <select name="type" id="" class="form-control">
                                 <option value="">View All Activity Type</option>
-                                @foreach($activityTypes as $activityTypeKey=>$activityType)
-                                  @php
-                                     $activityGroupName ='';
-                                      foreach($groupActivities as $group=> $activities){
-                                        if(in_array($activityTypeKey,$activities)){
-                                          $activityGroupName = $group;
-                                        }
-                                      }
-                                      
-                                    $dNone = '';
-                                    if($filteredGroup!=''){
-                                      $dNone = ($filteredGroup == $activityGroupName) ? '' : 'd-none';
-                                    }
-                                    
-                                  @endphp
-                                  <option class="{{ $dNone}}" activity-group="{{ $activityGroupName }}" value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
+                                @foreach($activityTypes as $activityTypeKey=>$activityType)                                   
+                                  <option @if(!empty($activityTypeGroup) && !in_array($activityTypeKey,$activityTypeGroup)) class="d-none" @endif  value="{{ $activityTypeKey }}" @if(isset($requestFilters['type']) && $requestFilters['type'] == $activityTypeKey) selected @endif>{{ $activityType }}</option>
                                 @endforeach
                               </select>
                           </div>

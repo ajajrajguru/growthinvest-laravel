@@ -930,6 +930,8 @@ $(document).ready ->
     if $('select[name="user"]').attr('is-visible') == "true"
       $('select[name="user"]').val('')
 
+    $('select[name="type" ]').find('option').each ->
+      $(this).removeClass('d-none')
 
     window.history.pushState("", "", "?");
     getActivitySummary();
@@ -937,13 +939,25 @@ $(document).ready ->
     return
 
   $('body').on 'change', 'select[name="activity_group"]', ->
-    group =$("option:selected", this).text()
+    activityTypes = $("option:selected", this).attr 'actvity-types'
+    # console.log activityTypes
+    activityTypesArray = activityTypes.split(',')
     $('select[name="type" ]').find('option').each ->
+      optionValue = $(this).attr('value')
       $(this).removeClass('d-none')
-      console.log group
-      console.log $(this).attr('activity-group')
-      if(group != $(this).attr('activity-group'))
+      if($.inArray(optionValue, activityTypesArray) == -1) 
         $(this).addClass('d-none')
+     
+      
+
+
+    # group =$("option:selected", this).text()
+    # $('select[name="type" ]').find('option').each ->
+    #   $(this).removeClass('d-none')
+    #   console.log group
+    #   console.log $(this).attr('activity-group')
+    #   if(group != $(this).attr('activity-group'))
+    #     $(this).addClass('d-none')
   
     return    
       
