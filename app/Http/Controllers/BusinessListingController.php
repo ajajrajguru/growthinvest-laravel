@@ -885,11 +885,11 @@ class BusinessListingController extends Controller
                 }
 
                 if ($businessListingType == 'fund') {
-                    $taxStatusNotIn =  ['vct','iht','sitr','tier1'] ;
-                    $bQuery->whereRaw("JSON_SEARCH(business_listings.tax_status, 'one', 'iht' )  IS NULL");
-                    $bQuery->whereRaw("JSON_SEARCH(business_listings.tax_status, 'one', 'sitr' )  IS NULL");
-                    $bQuery->whereRaw("JSON_SEARCH(business_listings.tax_status, 'one', 'tier1' )  IS NULL");
-                    $bQuery->whereRaw("JSON_SEARCH(business_listings.tax_status, 'one', 'vct' )  IS NULL");
+                    $fundstaxStatusNotIn =  ['vct','iht','sitr','tier1'] ;
+                    foreach ($fundstaxStatusNotIn as $key => $taxStatusNotIn) {
+                        $bQuery->whereRaw("JSON_SEARCH(business_listings.tax_status, 'one', '" . $taxStatusNotIn . "' )  IS NULL");
+                    }
+         
                 } 
 
             }
