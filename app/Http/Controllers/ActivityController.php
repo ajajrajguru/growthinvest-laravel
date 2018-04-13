@@ -399,7 +399,7 @@ class ActivityController extends Controller
 
         }
 
-        if (isset($filters['type']) && $filters['type'] != "" && !$isTypeInWhere) {
+        if (isset($filters['type']) && $filters['type'] != "" ) {
             $typeStr .= " and a1.type = '" . $filters['type'] . "'";
         }
 
