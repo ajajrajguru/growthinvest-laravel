@@ -113,6 +113,7 @@
         url: '/investment-opportunities/filter-listings',
         data: filters,
         success: function(reponse) {
+          var api;
           $('.business-listing').html('');
           $('.platform-listing').html('');
           if (($('.business-listing').length)) {
@@ -154,6 +155,32 @@
               html: true,
               content: function() {
                 return $('#popover-content').html();
+              }
+            });
+            $('#giMenu').mmenu({
+              navbar: {
+                title: false
+              },
+              extensions: ['pagedim-black', 'theme-dark']
+            }, {
+              clone: true
+            });
+            api = $('#mm-giMenu').data('mmenu');
+            api.bind('open:start', function() {
+              return $('.mobile-menu-toggle').addClass('is-active');
+            });
+            api.bind('close:start', function() {
+              return $('.mobile-menu-toggle').removeClass('is-active');
+            });
+            $(window).scroll(function() {
+              var scroll;
+              scroll = $(window).scrollTop();
+              if (scroll >= 1) {
+                $('header').addClass('sticky');
+                return $('.navbar-menu').addClass('dark');
+              } else {
+                $('header').removeClass('sticky');
+                return $('.navbar-menu').removeClass('dark');
               }
             });
             if (reponse.totalBusinessListings === 0) {

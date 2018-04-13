@@ -8,6 +8,7 @@
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css" /> -->
 <link rel="stylesheet" href="{{ asset('/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/hamburgers.css') }}">
 @endsection
 
 
@@ -28,7 +29,8 @@
 
 		// mobile filter - floating btn
 		$( ".mobile-filter-btn" ).click(function() { 
-	      $( ".mobile-filters" ).toggleClass( "slideIn SlideOut" ); 
+	      $( ".mobile-filters" ).toggleClass( "slideIn slideOut" ); 
+	      $( ".mobile-filters" ).toggleClass( "d-none position-fixed" ); 
 	      $( "body" ).toggleClass( "modal-open" ); 
 	    }); 
 	 
