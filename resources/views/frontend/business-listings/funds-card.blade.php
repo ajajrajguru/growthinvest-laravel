@@ -27,21 +27,24 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-8">
-		<h5 class="mt-3"><a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
-		<p class="mb-2"><strong>Fund Type:</strong> {{ $businessListing->businessFundType() }}</p>
-		<p>{{ $businessListing->short_content }}</p>
-		<hr class="mt-2 mb-2">
-		<div><strong>Investment Sector:</strong></div>
-		<div class="mb-3 d-sm-flex justify-content-sm-between align-items-sm-center">
-			<div>
+	<div class="col-sm-8 d-sm-flex flex-sm-wrap">
+		<div class="w-100">
+			<h5 class="mt-3"><a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
+			<p class="mb-2"><strong>Fund Type:</strong> {{ $businessListing->businessFundType() }}</p>
+			<p>{{ $businessListing->short_content }}</p>
+			<hr class="mt-2 mb-2">
+			<div><strong>Investment Sector:</strong></div>
+			<div class="mb-3">
 				@foreach($sectors as $sector)
 				<span class="badge bg-dark text-white mr-1 py-1">{!! $sector !!}</span>
 				@endforeach
 			</div>
-			
-			<div><a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="btn btn-sm btn-link">View Details &raquo;</a></div>
 		</div>
+
+		<div class="w-100 text-center mt-sm-0 mb-sm-0 d-sm-flex flex-sm-wrap flex-sm-column justify-content-sm-end align-items-sm-end">
+			<a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="btn btn-sm btn-link mt-3 mb-3 card-link">View Details &raquo;</a>
+		</div>
+		
 	</div>
 </div>
 @endforeach

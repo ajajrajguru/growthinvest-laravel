@@ -172,7 +172,7 @@
     $(document).on('change', 'select[name="order_by"]', function() {
       return getInvestmentOpportunity();
     });
-    $(document).on('change', '.filter-business-list', function() {
+    $(document).on('click', '.apply-investment-opportunity', function() {
       return getInvestmentOpportunity();
     });
     $(document).on('click', '.search-by-title', function() {

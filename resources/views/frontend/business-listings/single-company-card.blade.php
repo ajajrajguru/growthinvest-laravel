@@ -6,7 +6,17 @@
 	$stageOfBusiness = (isset($businessDefaults['stage_of_business']))? implode('',$businessDefaults['stage_of_business']) : '';
 	$sectors = (isset($businessDefaults['business-sector']))? $businessDefaults['business-sector'] : [];
 	$proposalDetails = $businessListing->businessProposalDetails();
- 
+	$description = '';
+	if(isset($proposalDetails['business_proposal_details']) && $proposalDetails['business_proposal_details']!=''){
+		if(strlen($proposalDetails['business_proposal_details']) > 153){
+			$description = substr($proposalDetails['business_proposal_details'],0,150) ;
+			$description .= '<a href="'.url('investment-opportunities/single-company/'.$businessListing->slug).'" target="_blank" class="btn btn-sm btn-link text-lowercase card-link">... more</a>' ;
+		}
+		else{
+		 	$description = $proposalDetails['business_proposal_details'];
+		}
+	}
+ 	
 	 
 	@endphp
 <div class="row d-sm-flex border mb-4 box-shadow-1 mx-0 is-hovered">
@@ -63,7 +73,8 @@
 			<div class="@if($dueDeligence!='Platform Listing') col-sm-8 @else col-sm-12 @endif">
 				<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
 				<p class="mb-2"><strong>Stage of Business:</strong> {{ $stageOfBusiness }}</p>
-				<p>{{ (isset($proposalDetails['business_proposal_details'])) ? $proposalDetails['business_proposal_details'] : '' }}</p>
+
+				<p>{!! $description !!}</p>
 				<hr>
 				<div><strong>Business Sector:</strong></div>
 				<div class="mb-3">
@@ -95,7 +106,7 @@
 				
 				
 				
-				<div class="mt-3 mb-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link">View Details &raquo;</a></div>
+				<div class="mt-3 mb-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" target="_blank" class="btn btn-sm btn-link card-link">View Details &raquo;</a></div>
 			</div>
 		@endif
 		</div>
