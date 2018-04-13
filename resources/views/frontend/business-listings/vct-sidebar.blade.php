@@ -1,4 +1,4 @@
-<div class="col-sm-3 mobile-filters slideIn pt-3 pt-sm-0 border-xs-right">
+<div class="col-sm-3 mobile-filters slideIn pt-3 pt-sm-0 border-xs-right d-none d-sm-block">
 	<div class="d-flex justify-content-between mb-3">
 		<div class="text-uppercase">refine your search</div>
 		<a href="javascript:void(0)" class="btn btn-primary btn-sm apply-investment-opportunity">Apply</a>
@@ -125,5 +125,12 @@
 	   
 	</div>
 	<!-- /accordion -->
+
+	<div class="card text-center p-3 mb-3 mb-sm-0">
+		<div class="h1 mb-0"><i class="fa fa-phone"></i></h3></div>
+		<h5>Need Help?</h5>
+		<a href="" class="h3 card-link d-block">020 7071 3945</a>
+		<div><p>Mail us at:<br><a class="card-link" href="mailto:enquiries@growthinvest.com">enquiries@growthinvest.com</a></p></div>
+	</div>
 	<input type="hidden" name="business_listing_type" value="{{ $business_listing_type }}">
 </div>
