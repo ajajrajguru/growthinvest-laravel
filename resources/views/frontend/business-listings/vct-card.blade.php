@@ -30,28 +30,32 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-8">
-		<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
-		<p class="mb-2"><strong>Investment Strategy:</strong> {{ $businessListing->businessInvestmentStrategy() }}</p>
-		<p>{{ $businessListing->short_content }}</p>
-		<hr class="mt-2 mb-2">
-		
-		<div class="row">
-			<div class="col-sm-6">
-				<p class="mb-2"><strong>AIC Sector:</strong> 
-					 
-					 {!! $aicsector !!} 
-					 
-				</p>
-				<p class="mb-2"><strong>Close Date:</strong> {{ $fundCloseDate }}</p>
-			</div>
-			<div class="col-sm-6">
-				<p class="mb-2"><strong>Overall Offer Size:</strong> @if(isset($fundVctDetails['overalloffersize'])) {{ $fundVctDetails['overalloffersize'] }} @endif</p>
-				<p class="mb-2"><strong>Funds Raised to Date :</strong> @if(isset($fundVctDetails['fundstaisedtodate'])) {{ $fundVctDetails['fundstaisedtodate'] }} @endif</p>
+	<div class="col-sm-8 d-sm-flex flex-sm-wrap">
+		<div class="w-100">
+			<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
+			<p class="mb-2"><strong>Investment Strategy:</strong> {{ $businessListing->businessInvestmentStrategy() }}</p>
+			<p>{{ $businessListing->short_content }}</p>
+			<hr class="mt-2 mb-2">
+			
+			<div class="row">
+				<div class="col-sm-6">
+					<p class="mb-2"><strong>AIC Sector:</strong> 
+						 
+						 {!! $aicsector !!} 
+						 
+					</p>
+					<p class="mb-2"><strong>Close Date:</strong> {{ $fundCloseDate }}</p>
+				</div>
+				<div class="col-sm-6">
+					<p class="mb-2"><strong>Overall Offer Size:</strong> @if(isset($fundVctDetails['overalloffersize'])) {{ $fundVctDetails['overalloffersize'] }} @endif</p>
+					<p class="mb-2"><strong>Funds Raised to Date :</strong> @if(isset($fundVctDetails['fundstaisedtodate'])) {{ $fundVctDetails['fundstaisedtodate'] }} @endif</p>
+				</div>
 			</div>
 		</div>
-
-		<div class="text-right"><a href="" class="btn btn-sm btn-link mb-3">View Details &raquo;</a></div>
+		
+		<div class="w-100 text-center mt-sm-0 mb-sm-0 d-sm-flex flex-sm-wrap flex-sm-column justify-content-sm-end align-items-sm-end">
+			<a href="" class="btn btn-sm btn-link mt-3 mb-3">View Details &raquo;</a>
+		</div>
 	</div>
 </div>
 @endforeach
