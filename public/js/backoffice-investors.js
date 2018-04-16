@@ -1010,6 +1010,13 @@
         }
       });
     });
+    $('body').on('click', '.filter-activity-name', function() {
+      var activitySlug;
+      activitySlug = $(this).attr('activity-slug');
+      $('select[name="type"]').val(activitySlug);
+      investorActivityTable.ajax.reload();
+      return $('.activity-detail-tab').click();
+    });
     $('body').on('change', 'select[name="duration"]', function() {
       if ($(this).val()) {
         $('input[name="duration_from"]').val('').attr('disabled', true);

@@ -369,10 +369,10 @@
                     <div class="squareline-tabs mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#activity-summary">Activity Summary</a>
+                                <a class="nav-link active d-none d-sm-block activity-summary-tab" data-toggle="tab" href="#activity-summary">Activity Summary</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-none d-sm-block" data-toggle="tab" href="#activity-details">Activity Details</a>
+                                <a class="nav-link d-none d-sm-block activity-detail-tab" data-toggle="tab" href="#activity-details">Activity Details</a>
                             </li>
                         </ul>
                     </div>

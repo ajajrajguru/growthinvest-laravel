@@ -962,6 +962,15 @@ $(document).ready ->
     return    
       
 
+  $('body').on 'click', '.filter-activity-name', ->
+    activitySlug = $(this).attr 'activity-slug'
+    $('select[name="type"]').val(activitySlug)
+    # getActivitySummary();
+    investorActivityTable.ajax.reload()
+    $('.activity-detail-tab').click()
+
+
+
   $('body').on 'change', 'select[name="duration"]', ->
     if($(this).val())
       $('input[name="duration_from"]').val('').attr('disabled',true)
