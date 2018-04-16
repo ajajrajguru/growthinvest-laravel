@@ -361,6 +361,7 @@ class ActivityController extends Controller
         $whereStr         = '';
         $firmWhere        = '';
         $userWhere        = '';
+        $userNotInWhere        = '';
         $parentChildFirms = '';
         $companyWhere     = '';
         $compWhere        = '';
@@ -398,7 +399,7 @@ class ActivityController extends Controller
 
         }
 
-        if (isset($filters['type']) && $filters['type'] != "" && !$isTypeInWhere) {
+        if (isset($filters['type']) && $filters['type'] != "" ) {
             $typeStr .= " and a1.type = '" . $filters['type'] . "'";
         }
 
@@ -453,6 +454,7 @@ class ActivityController extends Controller
             if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
                 $excludeUserIds = User::permission('manage_options')->pluck('id')->toArray();
             }
+           
             foreach ($groupTypeList as $typeList) {
                 $activityType = $typeList[0];
 
@@ -480,11 +482,11 @@ class ActivityController extends Controller
                     }
 
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $userWhere .= " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
+                        $userNotInWhere = " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
                     $mainjoin  = " LEFT OUTER JOIN firms f1 on f1.id=a1.secondary_item_id";
-                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
+                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $userNotInWhere . $whereStr . $firmWhere;
                     $groupby   = ($type == 'list') ? " " : " group by a1.type";
 
                 } elseif (in_array($activityType, ['new_provider_added'])) {
@@ -497,10 +499,10 @@ class ActivityController extends Controller
                         $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                     }
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $userWhere .= " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
+                        $userNotInWhere = " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
-                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
+                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $userNotInWhere . $whereStr . $firmWhere;
                     $groupby   = ($type == 'list') ? " " : " group by a1.type";
 
                 } elseif (in_array($activityType, ['investor_message', 'entrepreneur_message'])) {
@@ -514,10 +516,10 @@ class ActivityController extends Controller
                         $userWhere = " and a1.item_id='" . $filters['user_id'] . "' ";
                     }
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $userWhere .= " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
+                        $userNotInWhere = " and a1.item_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
-                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $whereStr . $firmWhere;
+                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $userNotInWhere . $whereStr . $firmWhere;
                     $groupby   = ($type == 'list') ? " " : " group by a1.type";
 
                 } elseif (in_array($activityType, ['proposal_details_update', 'fund_details_update'])) {
@@ -531,14 +533,14 @@ class ActivityController extends Controller
                         $userWhere = " and a1.user_id='" . $filters['user_id'] . "' ";
                     }
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $userWhere .= " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
+                        $userNotInWhere = " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
                     if (isset($filters['companies']) && $filters['companies'] != "") {
                         $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                     }
 
-                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
+                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $userNotInWhere . $companyWhere . $whereStr . $firmWhere;
                     $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" : " group by a1.type";
                 } elseif (in_array($activityType, ['invested'])) {
 
@@ -553,14 +555,14 @@ class ActivityController extends Controller
                     }
 
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $userWhere .= " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
+                        $userNotInWhere = " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
                     if (isset($filters['companies']) && $filters['companies'] != "") {
                         $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                     }
 
-                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
+                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $userNotInWhere . $companyWhere . $whereStr . $firmWhere;
                     $groupby   = ($type == 'list') ? " " : " group by a1.type";
                 } else {
 
@@ -574,23 +576,23 @@ class ActivityController extends Controller
                     }
 
                     if (isset($filters['exclude_platform_admin_activity']) && $filters['exclude_platform_admin_activity'] == "1") {
-                        $userWhere .= " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
+                        $userNotInWhere = " and a1.user_id NOT IN (" . implode(",", $excludeUserIds) . ")";
                     }
 
                     if (isset($filters['companies']) && $filters['companies'] != "") {
                         $companyWhere = " and a1.item_id='" . $filters['companies'] . "' ";
                     }
 
-                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $companyWhere . $whereStr . $firmWhere;
+                    $mainwhere = " where a1.type IN ('" . implode("','", $typeList) . "') " . $userWhere . $userNotInWhere . $companyWhere . $whereStr . $firmWhere;
                     $groupby   = ($type == 'list') ? " " : " group by a1.type";
                 }
 
                 $activityListQuery .= $union . $mainselect . $customfieldselect . $maintable . $mainjoin . $customjoin . $mainwhere . $customwhere . $groupby;
-
+                
                 $count++;
 
             }
-
+            
             if ($length > 1) {
                 $totalActivityListings = count(DB::select(DB::raw($activityListQuery)));
                 $activityListQuery .= $orderby . " limit " . $skip . ", " . $length;

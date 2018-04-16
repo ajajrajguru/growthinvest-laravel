@@ -173,6 +173,27 @@ $(document).ready ->
             content: ->
               $('#popover-content').html()
 
+          # Menu JS
+          $('#giMenu').mmenu {
+            navbar: title: false
+            extensions: [ 'pagedim-black', 'theme-dark' ]
+          }, clone: true
+          api = $('#mm-giMenu').data('mmenu')
+          api.bind 'open:start', ->
+            $('.mobile-menu-toggle').addClass 'is-active'
+          api.bind 'close:start', ->
+            $('.mobile-menu-toggle').removeClass 'is-active'
+            
+          #sticky header - white bg
+          $(window).scroll ->
+            scroll = $(window).scrollTop()
+            if scroll >= 1
+              $('header').addClass 'sticky'
+              $('.navbar-menu').addClass 'dark'
+            else
+              $('header').removeClass 'sticky'
+              $('.navbar-menu').removeClass 'dark'    
+
           if(reponse.totalBusinessListings==0)
             $('.no-data-conatiner').addClass('d-flex').removeClass('d-none')
 

@@ -1,4 +1,4 @@
-<div class="col-sm-3 mobile-filters slideIn pt-3 pt-sm-0 border-xs-right">
+<div class="col-sm-3 mobile-filters slideIn pt-3 pt-sm-0 border-xs-right d-none d-sm-block">
 	<div class="d-flex justify-content-between mb-3">
 		<div class="text-uppercase">refine your search</div>
 		<a href="javascript:void(0)" class="btn btn-primary btn-sm apply-investment-opportunity">Apply</a>

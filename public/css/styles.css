@@ -208,7 +208,6 @@ header.sticky {
 }
 @media (max-width: 767px) {
   .mobile-filters {
-    position: fixed;
     -webkit-transition: 0.5s;
     transition: 0.5s;
     z-index: 9999;
@@ -216,7 +215,7 @@ header.sticky {
     left: 0;
     bottom: 0;
     background: #fff;
-    width: 80%;
+    width: 300px;
     overflow-y: auto;
   }
   .slideIn {
@@ -224,8 +223,8 @@ header.sticky {
             transform: translateX(-100%);
   }
   .slideOut {
-    -webkit-transform: translateX(80%);
-            transform: translateX(80%);
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%);
   }
 }
 .is-hovered:hover {
