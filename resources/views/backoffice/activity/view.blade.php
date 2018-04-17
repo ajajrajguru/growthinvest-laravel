@@ -379,9 +379,9 @@
                         </ul>
                     </div>
                     <!-- /tabs -->
-                    <br>
-                    <div class="activity-summary-count"></div>
-                    <br>
+                    
+                    <div class="activity-summary-count m-3"></div>
+
                     <div class="tab-content">
                         <div class="tab-pane active p-3" id="activity-summary" role="tabpanel">
                              
