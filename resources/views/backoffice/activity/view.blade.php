@@ -1,5 +1,19 @@
 @extends('layouts.backoffice')
 
+@section('css')
+@parent
+<link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
+
+<style>
+#activitysummarychart {
+    width   : 100%;
+    height  : 800px;
+}                                       
+</style>
+
+
+@endsection
+
 @section('js')
   @parent
 <!-- amcharts -->
@@ -12,11 +26,8 @@
 <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
 
 <script type="text/javascript" src="{{ asset('/bower_components/select2/dist/js/select2.min.js') }}" ></script>
-<link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
-<!-- datepicker -->
-<link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
-
+ 
 
 
 <script type="text/javascript">
@@ -76,16 +87,7 @@
   </script>
 @endsection
 
-@section('css')
-<style>
-#activitysummarychart {
-    width   : 100%;
-    height  : 700px;
-}                                       
-</style>
 
-
-@endsection
 
 
 @section('backoffice-content')

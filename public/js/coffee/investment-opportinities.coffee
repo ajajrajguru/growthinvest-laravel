@@ -149,17 +149,47 @@ $(document).ready ->
           
           $('.platform-listing').html reponse.platformListingHtml
 
+          # $('.knob').each ->
+          #   $this = $(this)
+          #   myVal = $this.attr('value')
+          #   $this.knob 'readOnly': true
+          #   $this.knob 'min': 0
+          #   $this.knob 'max': 100
+          #   $(value: 0).animate { value: myVal },
+          #     duration: 1000
+          #     easing: 'swing'
+          #     step: ->
+          #       $this.val(Math.ceil(@value)).trigger 'change'
+          #       return
+          #   return
+          #   
+          
           $('.knob').each ->
             $this = $(this)
             myVal = $this.attr('value')
-            $this.knob 'readOnly': true
+
+            if(parseFloat(myVal)>100)
+              $(this).attr('data-bgColor','#74b9eb')
+              $(this).attr('data-fgColor','#E9D460')
+
+            $(this).knob
+              'min': 0
+              'max': 100
+              'readOnly': true
+              'dynamicDraw': true
+              'tickColorizeValues': true
+              'skin': 'tron'
+              'draw': ->
+                $(@i).val myVal + '%'
+                return
+
             $(value: 0).animate { value: myVal },
               duration: 1000
               easing: 'swing'
               step: ->
                 $this.val(Math.ceil(@value)).trigger 'change'
                 return
-            return
+
 
           $('.investment-loader').removeClass('d-flex').addClass('d-none')
 
