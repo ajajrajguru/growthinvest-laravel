@@ -9,6 +9,7 @@
         @php
             $i = 0;
             $activityTypeList = activityTypeList();
+            $countData2 = [];
         @endphp
         @foreach($countData as $groupName => $count)
          
