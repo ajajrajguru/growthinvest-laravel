@@ -779,6 +779,8 @@ $(document).ready ->
   investorActivityTable = $('#datatable-investor-activity').DataTable(
     'pageLength': 50
     'processing': true
+    'language' :
+      processing : '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="">Loading...</span> '
     'serverSide': true
     'bAutoWidth': false
     "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>' 
@@ -961,6 +963,15 @@ $(document).ready ->
   
     return    
       
+
+  $('body').on 'click', '.filter-activity-name', ->
+    activitySlug = $(this).attr 'activity-slug'
+    $('select[name="type"]').val(activitySlug)
+    # getActivitySummary();
+    investorActivityTable.ajax.reload()
+    $('.activity-detail-tab').click()
+
+
 
   $('body').on 'change', 'select[name="duration"]', ->
     if($(this).val())

@@ -1,5 +1,19 @@
 @extends('layouts.backoffice')
 
+@section('css')
+@parent
+<link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
+
+<style>
+#activitysummarychart {
+    width   : 100%;
+    height  : 700px;
+}                                       
+</style>
+
+
+@endsection
+
 @section('js')
   @parent
 <!-- amcharts -->
@@ -12,11 +26,8 @@
 <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
 
 <script type="text/javascript" src="{{ asset('/bower_components/select2/dist/js/select2.min.js') }}" ></script>
-<link rel="stylesheet" href="{{ asset('/bower_components/select2/dist/css/select2.min.css') }}" >
 
-<!-- datepicker -->
-<link href="{{ asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
-
+ 
 
 
 <script type="text/javascript">
@@ -76,16 +87,7 @@
   </script>
 @endsection
 
-@section('css')
-<style>
-#activitysummarychart {
-    width   : 100%;
-    height  : 700px;
-}                                       
-</style>
 
-
-@endsection
 
 
 @section('backoffice-content')
@@ -369,23 +371,26 @@
                     <div class="squareline-tabs mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#activity-summary">Activity Summary</a>
+                                <a class="nav-link active d-none d-sm-block activity-summary-tab" data-toggle="tab" href="#activity-summary">Activity Summary</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-none d-sm-block" data-toggle="tab" href="#activity-details">Activity Details</a>
+                                <a class="nav-link d-none d-sm-block activity-detail-tab" data-toggle="tab" href="#activity-details">Activity Details</a>
                             </li>
                         </ul>
                     </div>
                     <!-- /tabs -->
+                    <br>
+                    <div class="activity-summary-count"></div>
+                    <br>
                     <div class="tab-content">
                         <div class="tab-pane active p-3" id="activity-summary" role="tabpanel">
-                             <div class="activity-summary-count"></div>
+                             
 
                             <h4 class="d-none">Activity Summary (<span class="activity-date-from"></span> to <span class="activity-date-to"></span> )</h4>
                             <div id="activitysummarychart"></div>
                         </div>  
                         <div class="tab-pane p-3" id="activity-details" role="tabpanel">
-                             <div class="activity-summary-count"></div> 
+                             
 
                              <div class="text-right mt-3 mb-2">
                                 <div class="">

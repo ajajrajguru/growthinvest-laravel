@@ -1138,7 +1138,7 @@ function getDueDeligence()
     // return \App\Defaults::where('type', 'approver')->where('status', '1')->get();
     return \App\Defaults::join('business_has_defaults', function ($join) {
             $join->on('defaults.id', '=', 'business_has_defaults.default_id');
-            })->where('defaults.type', 'approver')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->get();
+            })->where('defaults.type', 'approver')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
 
 }
 
@@ -1146,7 +1146,7 @@ function getStageOfBusiness()
 {
     return \App\Defaults::join('business_has_defaults', function ($join) {
             $join->on('defaults.id', '=', 'business_has_defaults.default_id');
-            })->where('defaults.type', 'stage_of_business')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->get();
+            })->where('defaults.type', 'stage_of_business')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
 
     // return \App\Defaults::where('type', 'stage_of_business')->where('status', '1')->get();
 }

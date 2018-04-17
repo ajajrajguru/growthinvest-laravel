@@ -254,20 +254,22 @@ class ActivityController extends Controller
         $activityTypeList = activityTypeList();
         $activityLogs     = $filterActivityListing['list'];
 
-        $ckIfAddedToList = [];
+        $ckIfAddedToList    = [];
+        $groupActivityCount = [];
         foreach ($activityLogs as $activityLog) {
             if (array_key_exists($activityLog->type, $activityTypeList)) {
 
                 $groupname = (!isset($groupActs[$activityLog->type]) || $groupActs[$activityLog->type] == "") ? "Others" : $groupActs[$activityLog->type];
 
                 if ($activityGroupName == $groupname || $activityGroupName == '') {
-                    $typetitle                           = $activityTypeList[$activityLog->type];
-                    $ckIfAddedToList[$activityLog->type] = $activityLog->type;
-                    $finalarr[]                          = array('typetitle' => $typetitle,
-                        'type'                                                   => $activityLog->type,
-                        'count'                                                  => $activityLog->count,
-                        'typetitle_count'                                        => $typetitle . ' (' . $activityLog->count . ')',
-                        'group_name'                                             => $groupname,
+                    $typetitle                                  = $activityTypeList[$activityLog->type];
+                    $ckIfAddedToList[$activityLog->type]        = $activityLog->type;
+                    $groupActivityCount[$groupname][$activityLog->type] = $activityLog->count;
+                    $finalarr[]                                 = array('typetitle' => $typetitle,
+                        'type'                                                          => $activityLog->type,
+                        'count'                                                         => $activityLog->count,
+                        'typetitle_count'                                               => $typetitle . ' (' . $activityLog->count . ')',
+                        'group_name'                                                    => $groupname,
                     );
                 }
 
@@ -293,12 +295,19 @@ class ActivityController extends Controller
                         'typetitle_count' => $typetitlevalue . '(0)',
                         'group_name'      => (!isset($groupActs[$typetitlekey]) || $groupActs[$typetitlekey] == "") ? "Others" : $groupActs[$typetitlekey],
                     );
+
+                    if(!isset($groupActivityCount[$groupname1][$typetitlekey])){
+                        $groupActivityCount[$groupname1][$typetitlekey] = 0;
+                    }
                 }
 
             }
         }
+
+        
         asort($finalarr);
         $activityCountSummary = array_values($finalarr);
+         
 
         $dataProvider = [];
         $graphs       = [];
@@ -324,7 +333,7 @@ class ActivityController extends Controller
             'fixedColumnWidth'         => 50,
         ];
 
-        $activityCountSummaryView = View::make('backoffice.activity.activity-group-count', compact('countData'))->render();
+        $activityCountSummaryView = View::make('backoffice.activity.activity-group-count', compact('countData'))->with('groupActivityCount',$groupActivityCount)->render();
 
         $json_data = array(
             "activityCountSummaryView" => $activityCountSummaryView,

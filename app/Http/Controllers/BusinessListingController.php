@@ -679,7 +679,7 @@ class BusinessListingController extends Controller
         $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['pledged', 'funded']);
         })->where('business_listings.business_status', 'listed')->where('business_listings.investment_opportunities', 'yes');
- 
+        
         if(!Auth::check()){
             $businessListingQuery->where('business_listings.disp_to_nonloggedin', 'yes');
         }
