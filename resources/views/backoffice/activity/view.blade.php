@@ -7,7 +7,7 @@
 <style>
 #activitysummarychart {
     width   : 100%;
-    height  : 800px;
+    height  : 700px;
 }                                       
 </style>
 
@@ -379,15 +379,18 @@
                         </ul>
                     </div>
                     <!-- /tabs -->
+                    <br>
+                    <div class="activity-summary-count"></div>
+                    <br>
                     <div class="tab-content">
                         <div class="tab-pane active p-3" id="activity-summary" role="tabpanel">
-                             <div class="activity-summary-count"></div>
+                             
 
                             <h4 class="d-none">Activity Summary (<span class="activity-date-from"></span> to <span class="activity-date-to"></span> )</h4>
                             <div id="activitysummarychart"></div>
                         </div>  
                         <div class="tab-pane p-3" id="activity-details" role="tabpanel">
-                             <div class="activity-summary-count"></div> 
+                             
 
                              <div class="text-right mt-3 mb-2">
                                 <div class="">
