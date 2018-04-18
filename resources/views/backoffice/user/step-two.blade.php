@@ -1,9 +1,27 @@
 @extends('layouts.backoffice')
 
-@section('js')
+@section('css')
   @parent
 
+ 
+    <link  href="{{ asset('bower_components/cropper/dist/cropper.css') }}" rel="stylesheet">
+ 
+@endsection
+
+@section('js')
+  @parent
+ 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bower_components/cropper/dist/cropper.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bower_components/plupload/js/plupload.full.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/aj-uploads.js') }}"></script>
+  
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+             uploadCropImage('profile-picture','pickfiles','upload-image','{{ url("upload-cropper-image") }}');
+        });
+    </script>
 
 @endsection
 @section('backoffice-content')
@@ -56,7 +74,11 @@
                 <div class="row">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Profile Picture</label>
-                        <div><img src="{{ url('img/dummy/avatar.png')}}" alt="..." class="img-thumbnail"></div>
+                        <div id="profile-picture">
+                            <img src="{{ url('img/dummy/avatar.png')}}" id="upload-image" alt="..." class="img-thumbnail">
+                            <br>
+                            <a id="pickfiles" href="javascript:;">[Select files]</a>
+                        </div>
                     </div>
                     <div class="col-sm-8">
                         <div class="row align-items-end">
@@ -709,9 +731,41 @@
     </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="crop-image-container" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Crop Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body m-auto d-block">
+            <form name="cropImage" id="cropImage" enctype="multipart/form-data" >
+            <div>
+                 <img src="" style="">
+                 <input type="hidden" name="aspect_ratio" value="1">
+                 <input type="hidden" name="original_image" value="">
+                 <input type="hidden" name="crop_data" value="">
+ 
+            </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            <button type="button" class="btn btn-primary crop-image">Crop</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <style type="text/css">
         #datatable-users_filter{
             display: none;
+        }
+        #crop-image-container img {
+          max-width: 100%; /* This rule is very important, please do not ignore this! */
         }
     </style>
 

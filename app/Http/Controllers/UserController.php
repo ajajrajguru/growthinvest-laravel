@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\UserData;
+use App\Cropper;
 use Auth;
+use File;
+use Storage;
 use Illuminate\Http\Request;
 
 //Importing laravel-permission models
@@ -139,10 +142,10 @@ class UserController extends Controller
 
         $sendmail = false;
         if ($giCode == '') {
-            $sendmail = true;
+            $sendmail  = true;
             $userExist = User::where('email', $email)->first();
-            if(!empty($userExist)){
-                Session::flash('error_message', 'User with '.$email.' already exist.');
+            if (!empty($userExist)) {
+                Session::flash('error_message', 'User with ' . $email . ' already exist.');
                 return redirect()->back()->withInput();
             }
 
@@ -186,7 +189,7 @@ class UserController extends Controller
         $user->firm_id      = $firm;
         $user->deleted      = 0;
         $user->lgbr         = 'No';
-        $user->suspended = $isSuspended;
+        $user->suspended    = $isSuspended;
         $user->save();
 
         $userId = $user->id;
@@ -214,9 +217,9 @@ class UserController extends Controller
             $user->assignRole($role);
         }
 
-        if($sendmail){
+        if ($sendmail) {
 
-            $firmName = (!empty($user->firm)) ? $user->firm->name : 'N/A';
+            $firmName              = (!empty($user->firm)) ? $user->firm->name : 'N/A';
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
@@ -226,29 +229,27 @@ class UserController extends Controller
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'accountType' => ''];
             sendEmail('add-intermediary', $data);
 
-            $registeredBy          = (!empty($user->registeredBy)) ? $user->registeredBy->displayName() : 'N/A';
-            $role = title_case($user->roles()->pluck('display_name')->implode(' '));
-            $recipients = getRecipientsByCapability([],array('manage_backoffice'));
-            $data                  = [];
-            $data['from']          = config('constants.email_from');
-            $data['name']          = config('constants.email_from_name');
-            $data['cc']            = [];
-            $data['subject']       = 'Notification: New User account created for '.$user->displayName().' by '.$registeredBy.' in firm '.$firmName.' with the role '.$role.'.';
+            $registeredBy    = (!empty($user->registeredBy)) ? $user->registeredBy->displayName() : 'N/A';
+            $role            = title_case($user->roles()->pluck('display_name')->implode(' '));
+            $recipients      = getRecipientsByCapability([], array('manage_backoffice'));
+            $data            = [];
+            $data['from']    = config('constants.email_from');
+            $data['name']    = config('constants.email_from_name');
+            $data['cc']      = [];
+            $data['subject'] = 'Notification: New User account created for ' . $user->displayName() . ' by ' . $registeredBy . ' in firm ' . $firmName . ' with the role ' . $role . '.';
 
             foreach ($recipients as $recipientEmail => $recipientName) {
                 $data['to']            = $recipientEmail;
-                $data['template_data'] = ['toName'=>$recipientName,'name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1,'registeredBy' => $registeredBy,'role' => $role,'giCode' => $user->gi_code];
+                $data['template_data'] = ['toName' => $recipientName, 'name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1, 'registeredBy' => $registeredBy, 'role' => $role, 'giCode' => $user->gi_code];
                 sendEmail('intermediary-register-notification', $data);
             }
-            
-
 
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
             $data['to']            = ['x+52703011248957@mail.asana.com'];
             $data['cc']            = [];
-            $data['subject']       = $user->displayName().' New from '.$firmName;
+            $data['subject']       = $user->displayName() . ' New from ' . $firmName;
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'registeredBy' => $registeredBy];
             sendEmail('intermediary-reg-automated', $data);
 
@@ -261,11 +262,10 @@ class UserController extends Controller
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'password' => $password];
             sendEmail('intermediary-changed-password', $data);
 
-            $action="New Registration on ".$firmName;
-            saveActivityLog('User',Auth::user()->id,'registration',$userId,$action,'',$user->firm_id);
+            $action = "New Registration on " . $firmName;
+            saveActivityLog('User', Auth::user()->id, 'registration', $userId, $action, '', $user->firm_id);
 
         }
-
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
         return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));
@@ -711,6 +711,70 @@ class UserController extends Controller
         }
 
         return view('backoffice.dashboard-coming-soon.manage')->with($data);
+    }
+
+    public function uploadTempImage(Request $request)
+    {
+        if (!File::exists(public_path() . '/uploads/tmp')) {
+            File::makeDirectory(public_path() . '/uploads/tmp', 0777);
+        }
+
+        $image         = $request->file('file');
+        $imageFileName = 'temp_profile_pic_' . date('YmdHis') . '.' . $image->getClientOriginalExtension();
+
+        $destinationPath = public_path() . '/uploads/tmp/';
+        $url             = url('/uploads/tmp/'); //dd($url);
+        $fileUrl         = url('/uploads/tmp/' . $imageFileName); //dd($url);
+        $request->file('file')->move($destinationPath, $imageFileName);
+
+        return response()->json([
+            'code'    => 'image_uploaded',
+            'message' => 'success',
+            'data'    => [
+                'image_path' => $fileUrl,
+            ],
+        ], 200);
+
+    }
+
+    public function uploadCroppedImage(Request $request)
+    {
+        if (!File::exists(public_path() . '/uploads/img')) {
+            File::makeDirectory(public_path() . '/uploads/img', 0777);
+        }
+
+        $requestData = $request->all();
+        // dd($requestData);
+        $crop = new Cropper(
+          isset($requestData['original_image']) ? $requestData['original_image'] : null,
+          isset($requestData['crop_data']) ? $requestData['crop_data'] : null,
+          isset($requestData['crop_file']) ? $requestData['crop_file'] : null
+        );
+        
+        $destinationUrl ='';
+
+        $url = $crop -> getResult(); 
+
+        if($crop -> getMsg() !=null) {
+            //move from temp dir
+            // $source    = pathinfo($url);
+            // $basename  = $source['basename'];
+
+            // $currentPath = public_path() . '/uploads/tmp/' . $basename;
+            // $destinationPath = public_path() . '/uploads/img/' . $basename;
+            // $destinationUrl =url('/uploads/img/' . $basename);
+ 
+            // Storage::move($currentPath, $destinationPath);
+            
+
+        } 
+
+        return response()->json([
+            'code'    => 'image_uploaded',
+            'message' => 'success',
+            'image_path' => $url,
+        ], 200);
+
     }
 
 }

@@ -19,6 +19,11 @@ Route::get('investment-opportunities/{type}', 'BusinessListingController@investm
 Route::post('investment-opportunities/filter-listings', 'BusinessListingController@getFilteredInvestmentOpportunity');
 
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('upload-cropper-image', 'UserController@uploadTempImage');
+    Route::post('crop-image', 'UserController@uploadCroppedImage');
+});
+
 
 Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffice'], function () {
     //firms
@@ -136,9 +141,6 @@ Route::post('onfido-webhook', 'InvestorController@onfidoWebhook');
 Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController');
 Route::resource('permissions', 'PermissionController');
-
-Route::group(['middleware' => ['auth']], function () {
-});
 
 
 //migration
