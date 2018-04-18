@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\BusinessListing;
+use App\BusinessInvestment;
 use App\Firm;
 use App\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use View;
 
 class BusinessListingController extends Controller
 {
@@ -627,6 +629,8 @@ class BusinessListingController extends Controller
         return view('backoffice.clients.current_business_valuation')->with($data);
 
     }
+
+    
 
 /**
  * Show the form for creating a new resource.

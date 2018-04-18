@@ -1535,3 +1535,58 @@ function activityQueryBuilder(){
             $count++;
     }
 }
+
+/**
+ * Gets the remaining certification expirydisplay time.
+ *
+ * @param      <type>  $certification_date  d/m/Y or d-m-Y format date 
+ *
+ * @return     string  The remaining certification expirydisplay time. (ex:  valid for 3 months 29 days)
+ */
+function getRemainingCertificationExpirydisplayTime($certification_date){ 
+
+
+
+
+    $today = new DateTime(date(date('d-m-Y')));
+
+    if (strpos($certification_date, '/') !== false) { // comvert d/m/Y formating to d-m-Y      
+      $cert_date_wit_hyphens = str_replace('/','-',$certification_date);
+    }
+    else{      
+      $cert_date_wit_hyphens = $certification_date;
+    }
+
+    $valid_for ="";
+
+
+   /* $unix_timestamp = strtotime($cert_date_wit_hyphens);
+    $unix_timestamp_str = (string)$unix_timestamp. " + 1 year";
+
+    $calc_cert_exp_date = date('d-m-Y', $unix_timestamp_str);*/
+
+    $calc_cert_exp_date = date("d-m-Y",strtotime(date("d-m-Y", strtotime($cert_date_wit_hyphens)) . " +1 year"));
+
+    $valid_for ="";
+    if(strtotime($calc_cert_exp_date) < strtotime(date('d-m-Y'))){ //certification date expired
+        $valid_for =" - "; 
+    }
+
+    $appt                               = new DateTime( date($calc_cert_exp_date) );
+    $days_until_appt                    = $appt->diff($today)->d;                                                   
+    $months_until_appt                  = $appt->diff($today)->m;
+    $years_until_appt                   = $appt->diff($today)->y;
+
+    
+    if($years_until_appt>0){
+      $valid_for.=" ".$years_until_appt." years";
+    }
+    if($months_until_appt>0){
+      $valid_for.=" ".$months_until_appt." months"; 
+    }
+    if($days_until_appt>0){
+      $valid_for.=" ".$days_until_appt." days";  
+    }
+
+    return $valid_for;
+}

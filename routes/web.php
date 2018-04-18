@@ -121,6 +121,16 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 
 });
 
+
+
+Route::group(['prefix' => 'frontoffice'], function () {
+
+    Route::post('show-invest-in-business-modal', 'InvestModalController@showInvestInBusinessModal');
+    Route::post('save-pledge-in-business', 'InvestModalController@savePledgeInBusiness');
+   
+
+});
+
 Route::post('investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf');
 Route::post('onfido-webhook', 'InvestorController@onfidoWebhook');
 
