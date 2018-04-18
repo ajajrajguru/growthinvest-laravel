@@ -36,7 +36,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-
+       
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -186,7 +186,7 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
-            $investorQuery->where('users.current_certification', $filters['client_category']);
+            $investorQuery->where('user_has_certifications.last_active','1')->where('user_has_certifications.certification_default_id', $filters['client_category']);
 
             // $investorQuery->whereIn('users.id', function ($query) use ($filters) {
             //     $query->select('user_id')
@@ -201,7 +201,7 @@ class InvestorController extends Controller
         if (isset($filters['client_certification']) && $filters['client_certification'] != "") {
             if ($filters['client_certification'] == 'uncertified') {
                 $investorQuery->where(function ($query) {
-                    $query->whereNull('user_has_certifications.certification')->orWhere('user_has_certifications.certification', '');
+                    $query->whereNull('user_has_certifications.certification');
                 });
                 // $investorQuery->whereNull('users.current_certification');
 
@@ -643,6 +643,10 @@ class InvestorController extends Controller
         $hasCertification->details       = $details;
         $hasCertification->created_at    = $certificationDate;
         $hasCertification->save();
+
+        $investor->current_certification = $hasCertification->certification_default_id;
+        $investor->save();
+        
 
         if (!$investor->hasRole('investor')) {
             $investor->removeRole('yet_to_be_approved_investor');
@@ -1664,7 +1668,7 @@ class InvestorController extends Controller
         }
 
         $investorCertification = $investor->getActiveCertification(); 
-        $onfidoReportMeta = $investor->userOnfidoApplicationReports(); 
+        $onfidoReportMeta = $investor->userOnfidoApplicationReports();
         $onfidoReport = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value:[];
         
 
@@ -1677,7 +1681,7 @@ class InvestorController extends Controller
 
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['onfidoReports']      = (isset($onfidoReport['reports']) && !empty($onfidoReport['reports'])  ) ? $onfidoReport['reports'] : [];
+        $data['onfidoReports']      = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])  ) ? $onfidoReport['check']['reports'] : [];
         $data['breadcrumbs']           = $breadcrumbs;
         $data['pageTitle']             = 'View Profile';
         $data['activeMenu']            = 'manage_clients';

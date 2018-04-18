@@ -132,6 +132,7 @@ class BusinessListing extends Model
 
     }
 
+
     public function getStagesOfBusinessFromDefaultAr($business_default_ar)
     {
         $stages_of_business = $this->getDefaultFromDefaultsArByType($business_default_ar, 'stage_of_business');
@@ -217,6 +218,71 @@ class BusinessListing extends Model
        // dd($business_rounds);
         return $business_rounds;
     } 
+
+
+    public function getBusinessDefaultsData(){
+        $businessDefaults = $this->businessDefaults()->get(); 
+        $data = [];
+        foreach ($businessDefaults as $key => $businessDefault) {
+            $defaultData = $businessDefault->belongsDefault;
+            $data[$defaultData->type][] = $defaultData->name;
+        }
+
+        return $data;
+    }
+
+    public function businessFundType(){
+        $businessListingData = $this->businessListingData()->where('data_key','fund_typeoffund')->first();
+        $fundType = (!empty($businessListingData)) ? $businessListingData->data_value :'';
+        $fundType = str_replace('_', ' ', $fundType);
+
+
+        return $fundType;
+    }
+
+    public function businessInvestmentStrategy(){
+        $businessListingData = $this->businessListingData()->where('data_key','investmentstrategy')->first();
+        $investmentStrategy = (!empty($businessListingData)) ? $businessListingData->data_value :'';
+        $investmentStrategy = strtoupper($investmentStrategy);
+
+
+        return $investmentStrategy;
+    }
+
+    public function businessFundVctDetails(){
+        $businessListingData = $this->businessListingData()->where('data_key','fundvct_details')->first();
+        $fundvctDetails = (!empty($businessListingData)) ? unserialize($businessListingData->data_value) :[];
+    
+        return $fundvctDetails;
+    }
+
+
+    public function businessFundCloseDate(){
+        $businessListingData = $this->businessListingData()->where('data_key','fund_closedate')->first();
+        $closedate = (!empty($businessListingData)) ? $businessListingData->data_value :'';
+    
+        return $closedate;
+    }
+
+    public function businessProposalDetails(){
+        $businessListingData = $this->businessListingData()->where('data_key','proposal_details')->first();
+        $data = (!empty($businessListingData)) ?  unserialize($businessListingData->data_value) :[];
+        
+        return $data;
+    }
+
+  
+    public function businessAicSector(){
+        $aicsector = aicSectors();
+        $businessListingData = $this->businessListingData()->where('data_key','aicsector')->first(); 
+        $data = (!empty($businessListingData) && isset($aicsector[$businessListingData->data_value])) ?  $aicsector[$businessListingData->data_value] :'';
+        
+        return $data;
+    }
+ 
+ 
+
+
 
 
 

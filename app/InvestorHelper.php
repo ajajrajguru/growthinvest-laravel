@@ -361,6 +361,8 @@ function createOnfidoApplicant($investor)
 
     $reports[] = array('name' => 'identity');
     $reports[] = array('name' => 'anti_money_laundering');
+    // $reports[] = array('name' => 'watchlist');
+    // 
     // commented on 26april2016 $reports[] = array('name'=>'anti_money_laundering');
     /*There was a validation error on this request","The following reports have not been enabled for your account: anti_money_laundering. You can see the list of enabled reports using the /report_type_groups API endpoint. Please contact client-support@onfido.com if you have questions regarding your account setup.*/
 
@@ -588,6 +590,7 @@ function onfidoApplicantionApi($applicantDetails = array(), $reports = array())
     $result                  = curl_exec($ch);
     $create_applicant_result = json_decode($result);
 
+ 
     $create_check_report_result = [];
     if (!isset($create_applicant_result->error)) {
 
@@ -625,6 +628,12 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
 
             $new_object_name          = str_replace(' ', '_', $value_report['name']) . '_obj';
             $$new_object_name['name'] = $value_report['name'];
+            if($value_report['name'] == 'identity')
+                $$new_object_name['variant'] =  'kyc';
+            elseif($value_report['name']=="anti_money_laundering" || $value_report['name']=="watchlist"){
+                $$new_object_name['name'] ="watchlist";
+                $$new_object_name['variant'] = 'full';
+           }
             //$$new_object_name->status = 'awaiting_data';
             $check_reports[] = $$new_object_name;
         }
@@ -634,7 +643,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
     }
 
     $applicant_details_json = json_encode($checkobj);
-
+ 
     $ch          = curl_init();
     $curlopt_url = "https://api.onfido.com/v2/applicants/" . $applicantId . "/checks";
     curl_setopt($ch, CURLOPT_URL, $curlopt_url);
@@ -648,7 +657,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
     curl_setopt($ch, CURLOPT_POSTFIELDS, $applicant_details_json); // Commented not to include reports for check
 
     $result = curl_exec($ch);
-
+   
     return $result;
 
 }
@@ -656,7 +665,7 @@ function createOnfidoApplicantCheck($applicantId, $reports = array())
 function addUpdateOnfidoReportsMeta($applicant_id = '', $investor = [], $check_report_result)
 {
 
-    if ($applicant_id != '' && empty($investor)) {
+    if ($applicant_id != '' && !empty($investor)) {
 
         $reports = array();
         $args    = array();
@@ -741,6 +750,7 @@ function addUpdateOnfidoReportsMeta($applicant_id = '', $investor = [], $check_r
         $onfido_report_meta->data_value = $report_data;
         $onfido_report_meta->save();
 
+
     }
 
 }
@@ -750,7 +760,7 @@ function add_new_onfido_report_onplatform($investor, $args)
 
     $identity_report_status  = $args['identity_report_status'];
     $aml_report_status       = $args['aml_report_status'];
-    $watchlist_report_status = $data['watchlist_report_status'];
+    $watchlist_report_status = $args['watchlist_report_status'];
     $reports                 = array();
 
     $identity_report_obj                      = new stdClass;
@@ -783,7 +793,7 @@ function add_new_onfido_report_onplatform($investor, $args)
             'reports'                                         => $reports,
         ),
     );
-    
+
     if ($args['set_report_meta'] == false) {
         return $report_data;
     } else {
@@ -806,7 +816,7 @@ function update_onfido_reports_status($investor, $args)
 
     $identity_report_status  = $args['identity_report_status'];
     $aml_report_status       = $args['aml_report_status'];
-    $watchlist_report_status = $data['watchlist_report_status'];
+    // $watchlist_report_status = $args['watchlist_report_status'];
     $reports                 = array();
 
     $args['set_report_meta'] = false;
@@ -887,7 +897,7 @@ function get_onfido_reports_meta_by_applicant_id($applicant_id = '', $args = arr
         $new_aml_report_status = $args['aml_report_status'];
     }
 
-    $reports = array();
+    $reports            = array();
     $check_id           = '';
     $check_status       = '';
     $check_type         = '';
@@ -1010,39 +1020,103 @@ function retrieve_report_details($args = array())
  */
 }
 
-function createOnfidoReportObject($onfidoReports,$args){
+function list_report_type_groups(){
 
-    if(empty($onfidoReports)){
-        $identity_report_obj = new \stdClass;
-        $identity_report_obj->name = 'identity';
-        $identity_report_obj->variant = 'kyc';
-        $identity_report_obj->id = '';
+    $token = env('ONFIDO_ACCESS_TOKEN');
+    
+
+    //$auth = base64_encode( 'token='.$token );
+    $ch = curl_init();
+    $curlopt_url = "https://api.onfido.com/v2/report_type_groups";
+    curl_setopt($ch, CURLOPT_URL, $curlopt_url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+    'Authorization: Token token='.$token));
+    curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-MCAPI/3.0');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+
+    $result = curl_exec($ch); 
+    $result_json_decoded = json_decode($result);
+    echo "<pre>";
+    print_r($result);
+    echo "</pre>";
+
+    return $result_json_decoded;
+
+    /* Example response 
+
+    <pre>{"report_type_groups":[{"id":"1685","name":"Seed EIS Platform 1","group_only":true,"report_types":[{"id":"10","name":"identity","variant":null,"options":[]},{"id":"25","name":"credit","variant":null,"options":[]},{"id":"13","name":"criminal_history","variant":null,"options":[]}]},{"id":"1768","name":"Seed EIS Platform 2","group_only":false,"report_types":[{"id":"10","name":"identity","variant":null,"options":[]},{"id":"25","name":"credit","variant":null,"options":[]},{"id":"13","name":"criminal_history","variant":null,"options":[]}]},{"id":"2004","name":"KYC and AML","group_only":false,"report_types":[{"id":"29","name":"document","variant":null,"options":[]},{"id":"34","name":"anti_money_laundering","variant":null,"options":[]}]}]}</pre>
+
+    */
+}
+
+function createOnfidoReportObject($onfidoReports, $args)
+{
+
+    if (empty($onfidoReports)) {
+        $identity_report_obj                      = new \stdClass;
+        $identity_report_obj->name                = 'identity';
+        $identity_report_obj->variant             = 'kyc';
+        $identity_report_obj->id                  = '';
         $identity_report_obj->status_growthinvest = $args['identity_report_status'];
 
-
-
-        $aml_report_obj = new \stdClass;
-        $aml_report_obj->name = 'anti_money_laundering';
-        $aml_report_obj->id = '';
+        $aml_report_obj                      = new \stdClass;
+        $aml_report_obj->name                = 'anti_money_laundering';
+        $aml_report_obj->id                  = '';
         $aml_report_obj->status_growthinvest = $args['aml_report_status'];
 
-
-        $watchlist_report_obj = new \stdClass;
-        $watchlist_report_obj->name = 'watchlist';
-        $watchlist_report_obj->variant = 'full';
-        $watchlist_report_obj->id = '';
+        $watchlist_report_obj                      = new \stdClass;
+        $watchlist_report_obj->name                = 'watchlist';
+        $watchlist_report_obj->variant             = 'full';
+        $watchlist_report_obj->id                  = '';
         $watchlist_report_obj->status_growthinvest = $args['watchlist_report_status'];
 
         $reports[] = $identity_report_obj;
         $reports[] = $aml_report_obj;
         $reports[] = $watchlist_report_obj;
-    }
-    else{
+    } else {
         $reports = $onfidoReports;
     }
 
-
-
     return $reports;
 
+}
+
+function groupTypeList($typeLists)
+{
+    $typeArr = [];
+    foreach ($typeLists as $typeList) {
+
+        if ($typeList->type == "") {
+            continue;
+        }
+        
+        if (in_array($typeList->type, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide',
+            'download_investor_csv', 'download_transfer_asset_guide',
+            'download_vct_asset_transfer_form', 'download_single_company_asset_transfer_form', 'download_iht_product_asset_transfer_form', 'download_portfolio_asset_transfer_form', 'download_stock_transfer_form', 'submitted_transfers',
+            'status_changes_for_asset_transfers', 'transfers_deleted',
+            'start_adobe_sign', 'completed_adobe_sign',
+            'external_downloads', 'stage_3_profile_details',
+            'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
+                $typeArr['section1'][] = $typeList->type;
+
+
+        } elseif (in_array($typeList->type, ['new_provider_added'])) {
+            $typeArr['section2'][] = $typeList->type;
+
+        } elseif (in_array($typeList->type, ['investor_message', 'entrepreneur_message'])) {
+            $typeArr['section3'][] = $typeList->type;
+
+        } elseif (in_array($typeList->type, ['proposal_details_update', 'fund_details_update'])) {
+            $typeArr['section4'][] = $typeList->type;
+        } elseif (in_array($typeList->type, ['invested'])) {
+          $typeArr['section5'][] = $typeList->type;
+        } else {
+            $typeArr['section6'][] = $typeList->type;
+
+        }
+    }
+
+    return $typeArr;
 }

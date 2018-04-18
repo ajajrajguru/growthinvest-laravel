@@ -185,7 +185,7 @@ class User extends Authenticatable
                     })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
                              ->where('roles.name', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
-                    })->where($cond)->select('users.*')->get();
+                    })->where($cond)->select('users.*')->orderBy('first_name','asc')->get();
 
         return $users; 
     }
@@ -200,7 +200,22 @@ class User extends Authenticatable
                     })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
                             ->where('roles.name','!=', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
-                    })->where($cond)->select('users.*')->get();
+                    })->where($cond)->select('users.*')->orderBy('first_name','asc')->get();
+
+        return $users; 
+      
+    }
+
+
+    public function backofficeUsers($cond=[]){
+        $backOfficeRoleIds = $this->getbackOfficeAccessRoleIds();
+
+        $users = User::join('model_has_roles', function ($join) {
+                        $join->on('users.id', '=', 'model_has_roles.model_id')
+                             ->where('model_has_roles.model_type', 'App\User');
+                    })->join('roles', function ($join)use($backOfficeRoleIds) {
+                        $join->on('model_has_roles.role_id', '=', 'roles.id')->whereIn('roles.id',$backOfficeRoleIds);
+                    })->where($cond)->select('users.*')->orderBy('first_name','asc')->get();
 
         return $users; 
       

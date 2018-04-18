@@ -1,6 +1,6 @@
 (function() {
   $(document).ready(function() {
-    var investorActivityTable, investorInvestTable, investorTable, scrollTopContainer, validateQuiz;
+    var getActivitySummary, investorActivityTable, investorInvestTable, investorTable, scrollTopContainer, validateQuiz;
     investorTable = $('#datatable-investors').DataTable({
       'pageLength': 50,
       'processing': false,
@@ -833,7 +833,10 @@
     });
     investorActivityTable = $('#datatable-investor-activity').DataTable({
       'pageLength': 50,
-      'processing': false,
+      'processing': true,
+      'language': {
+        processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="">Loading...</span> '
+      },
       'serverSide': true,
       'bAutoWidth': false,
       "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between flex-sm-row-reverse w-100"ip>',
@@ -847,9 +850,15 @@
           filters.duration = $('select[name="duration"]').val();
           filters.duration_from = $('input[name="duration_from"]').val();
           filters.duration_to = $('input[name="duration_to"]').val();
-          filters.user_id = $('input[name="user_id"]').val();
+          filters.user_id = $('select[name="user"]').val();
           filters.type = $('select[name="type"]').val();
-          filters.companies = $('select[name="companies"]').val();
+          filters.activity_group = $('select[name="activity_group"]').val();
+          filters.firmid = $('select[name="firm"]').val();
+          if ($('input[name="exclude_platform_admin_activity"]').is(':checked')) {
+            filters.exclude_platform_admin_activity = 1;
+          } else {
+            filters.exclude_platform_admin_activity = 0;
+          }
           data.filters = filters;
           return data;
         },
@@ -864,6 +873,17 @@
         }, {
           'data': 'user'
         }, {
+          'data': 'user_type'
+        }, {
+          'data': 'firm'
+        }, {
+          'data': 'gi_code',
+          "orderable": false
+        }, {
+          'data': 'email'
+        }, {
+          'data': 'telephone'
+        }, {
           'data': 'description',
           "orderable": false
         }, {
@@ -871,7 +891,67 @@
         }, {
           'data': 'activity'
         }
+      ],
+      'columnDefs': [
+        {
+          'targets': 'col-visble',
+          'visible': false
+        }
       ]
+    });
+    getActivitySummary = function() {
+      var filters;
+      filters = {};
+      filters.duration = $('select[name="duration"]').val();
+      filters.duration_from = $('input[name="duration_from"]').val();
+      filters.duration_to = $('input[name="duration_to"]').val();
+      filters.user_id = $('select[name="user"]').val();
+      filters.type = $('select[name="type"]').val();
+      filters.activity_group = $('select[name="activity_group"]').val();
+      filters.firmid = $('select[name="firm"]').val();
+      if ($('input[name="exclude_platform_admin_activity"]').is(':checked')) {
+        filters.exclude_platform_admin_activity = 1;
+      } else {
+        filters.exclude_platform_admin_activity = 0;
+      }
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/activity/activity-summary',
+        data: filters,
+        success: function(reponse) {
+          if (($('.activity-date-from').length)) {
+            $('.activity-date-from').html(reponse.fromDate);
+          }
+          if (($('.activity-date-to').length)) {
+            $('.activity-date-to').html(reponse.toDate);
+            $('.activity-date-to').closest('h4').removeClass('d-none');
+          }
+          if (($('#activitysummarychart').length)) {
+            window.ajLineChart('activitysummarychart', reponse.dataProvider, reponse.graphs, 'activity');
+          }
+          if (($('.activity-summary-count').length)) {
+            $('.activity-summary-count').html(reponse.activityCountSummaryView);
+          }
+        },
+        error: function(request, status, error) {
+          throwError();
+        }
+      });
+    };
+    if (($('.activity-summary-count').length)) {
+      getActivitySummary();
+    }
+    $('body').on('click', '.alter-activity-table', function() {
+      $('.activity-cols').each(function() {
+        var colIndex;
+        colIndex = $(this).val();
+        if ($(this).is(':checked')) {
+          return investorActivityTable.column(colIndex).visible(true);
+        } else {
+          return investorActivityTable.column(colIndex).visible(false);
+        }
+      });
+      $('#columnVisibility').modal('hide');
     });
     $('body').on('click', '.apply-activity-filters', function() {
       var urlParams;
@@ -891,17 +971,54 @@
       if ($('select[name="companies"]').val() !== "") {
         urlParams += '&companies=' + $('select[name="companies"]').val();
       }
+      if ($('select[name="firm"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm"]').val();
+      }
+      if ($('select[name="activity_group"]').val() !== "") {
+        urlParams += '&activity_group=' + $('select[name="activity_group"]').val();
+      }
       window.history.pushState("", "", "?" + urlParams);
+      getActivitySummary();
       investorActivityTable.ajax.reload();
     });
     $('body').on('click', '.reset-activity-filters', function() {
-      $('select[name="duration"]').val('').attr('disabled', false);
+      $('select[name="duration"]').val('lasttwomonth').attr('disabled', false);
       $('input[name="duration_from"]').val('').attr('disabled', false);
       $('input[name="duration_to"]').val('').attr('disabled', false);
       $('select[name="type"]').val('');
       $('select[name="companies"]').val('');
+      $('select[name="firm"]').val('');
+      $('select[name="activity_group"]').val('');
+      $('input[name="exclude_platform_admin_activity"]').prop('checked', true);
+      if ($('select[name="user"]').attr('is-visible') === "true") {
+        $('select[name="user"]').val('');
+      }
+      $('select[name="type" ]').find('option').each(function() {
+        return $(this).removeClass('d-none');
+      });
       window.history.pushState("", "", "?");
+      getActivitySummary();
       investorActivityTable.ajax.reload();
+    });
+    $('body').on('change', 'select[name="activity_group"]', function() {
+      var activityTypes, activityTypesArray;
+      activityTypes = $("option:selected", this).attr('actvity-types');
+      activityTypesArray = activityTypes.split(',');
+      $('select[name="type" ]').find('option').each(function() {
+        var optionValue;
+        optionValue = $(this).attr('value');
+        $(this).removeClass('d-none');
+        if ($.inArray(optionValue, activityTypesArray) === -1) {
+          return $(this).addClass('d-none');
+        }
+      });
+    });
+    $('body').on('click', '.filter-activity-name', function() {
+      var activitySlug;
+      activitySlug = $(this).attr('activity-slug');
+      $('select[name="type"]').val(activitySlug);
+      investorActivityTable.ajax.reload();
+      return $('.activity-detail-tab').click();
     });
     $('body').on('change', 'select[name="duration"]', function() {
       if ($(this).val()) {
@@ -938,8 +1055,17 @@
       if ($('select[name="companies"]').val() !== "") {
         urlParams += '&companies=' + $('select[name="companies"]').val();
       }
-      if ($('select[name="user_id"]').val() !== "") {
-        urlParams += '&user_id=' + $('input[name="user_id"]').val();
+      if ($('select[name="user"]').val() !== "") {
+        urlParams += '&user=' + $('select[name="user"]').val();
+      }
+      if ($('input[name="exclude_platform_admin_activity"]').is(':checked')) {
+        urlParams += '&exclude_platform_admin_activity=1';
+      }
+      if ($('select[name="activity_group"]').val() !== "") {
+        urlParams += '&activity_group=' + $('select[name="activity_group"]').val();
+      }
+      if ($('select[name="firm"]').val() !== "") {
+        urlParams += '&firmid=' + $('select[name="firm"]').val();
       }
       if (type === 'csv') {
         return window.open("/backoffice/investor/export-investors-activity?" + urlParams);

@@ -159,3 +159,29 @@ label {
 		z-index: initial;
 	}
 }
+
+
+.inner-addon {
+	position: relative;
+	&.left-addon {
+		.fa {
+			left: 0;
+		}
+		input {
+			padding-left: 30px;
+		}
+	}
+	&.right-addon {
+		.fa {
+			right: 0;
+		}
+		input {
+			padding-right: 30px;
+		}
+	}
+	.fa {
+		position: absolute;
+		padding: 10px;
+		pointer-events: none;
+	}
+}

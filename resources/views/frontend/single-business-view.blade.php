@@ -1611,5 +1611,5 @@ if (Auth::check()) {
 @endphp
 
 
-
+@include('includes.footer')
 @endsection

@@ -19,7 +19,7 @@
         <a href="{{url('backoffice/dashboard/transferasset')}}" class="nav-link @if($activeMenu == 'transferassets') active @endif"   role="tab">Transfer Assets<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
-        <a href="{{url('backoffice/dashboard/activity_feed/summary')}}" class="nav-link @if($activeMenu == 'activity') active @endif"   role="tab">Activity Analysis<div><small>(Coming Soon..)</small></div></a>
+        <a href="{{url('backoffice/activity/summary')}}" class="nav-link @if($activeMenu == 'activity') active @endif"   role="tab">Activity Analysis<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
         <a href="{{url('backoffice/dashboard/compliance')}}" class="nav-link @if($activeMenu == 'documents') active @endif"   role="tab">Document Library<div><small>(Coming Soon..)</small></div></a>
