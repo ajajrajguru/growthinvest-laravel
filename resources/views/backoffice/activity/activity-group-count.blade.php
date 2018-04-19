@@ -9,6 +9,7 @@
         @php
             $i = 0;
             $activityTypeList = activityTypeList();
+            $countData2 = [];
         @endphp
         @foreach($countData as $groupName => $count)
          
@@ -43,6 +44,7 @@
     </div>
 
     <!-- 2nd -->
+    @if(!empty($countData2))
     <div class="col-sm-6 border">
         <div class="row bg-primary text-white py-2 px-3">
             <div class="col-9">Activity Group</div>
@@ -76,4 +78,5 @@
         @endphp 
         @endforeach
     </div>
+    @endif
 </div>
