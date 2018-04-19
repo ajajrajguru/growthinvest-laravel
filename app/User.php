@@ -9,11 +9,13 @@ use App\User;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ajency\FileUpload\FileUpload;
+
     
 use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles,SoftDeletes;
+    use Notifiable, HasRoles,SoftDeletes,FileUpload;
  
 
     // protected $guard_name = 'backoffice';
@@ -134,6 +136,18 @@ class User extends Authenticatable
     {
         $userData = $this->userData()->where('data_key','financial_advisor_info')->first();
         return $userData;
+    }
+
+    public Function getProfilePicture($type){
+        $profilePic  = url('img/dummy/avatar.png');
+        $profilePicImages = $this->getImages();
+        foreach ($profilePicImages as $key => $image) { 
+            if(isset($image[$type])) 
+                $profilePic = $image[$type];
+        }
+
+
+        return $profilePic;
     }
 
     public function isCompanyWealthManager(){

@@ -9,7 +9,7 @@ use Auth;
 use File;
 use Storage;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\UploadedFile;
 //Importing laravel-permission models
 use Illuminate\Support\Facades\Hash;
 use Session;
@@ -320,7 +320,7 @@ class UserController extends Controller
         if (empty($user)) {
             abort(404);
         }
-
+        $profilePic  = $user->getProfilePicture('medium_1x1'); 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
@@ -330,6 +330,7 @@ class UserController extends Controller
         $intermidiatData            = $user->userIntermidaiteCompInfo();
         $taxstructureInfo           = $user->taxstructureInfo();
         $data['user']               = $user;
+        $data['profilePic']               = $profilePic;
         $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
         $data['taxstructureInfo']   = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
         $data['regulationTypes']    = getRegulationTypes();
@@ -750,22 +751,28 @@ class UserController extends Controller
           isset($requestData['crop_data']) ? $requestData['crop_data'] : null,
           isset($requestData['crop_file']) ? $requestData['crop_file'] : null
         );
-        
-        $destinationUrl ='';
+
+        $objectType = $requestData['object_type'];
+        $objectId = $requestData['object_id'];
+        $displaySize = $requestData['display_size'];
+         
 
         $url = $crop -> getResult(); 
 
         if($crop -> getMsg() !=null) {
-            //move from temp dir
-            // $source    = pathinfo($url);
-            // $basename  = $source['basename'];
 
-            // $currentPath = public_path() . '/uploads/tmp/' . $basename;
-            // $destinationPath = public_path() . '/uploads/img/' . $basename;
-            // $destinationUrl =url('/uploads/img/' . $basename);
- 
-            // Storage::move($currentPath, $destinationPath);
-            
+            //move from temp dir
+            $source    = pathinfo($url);
+            $basename  = $source['basename'];
+
+            $currentPath = public_path() . '/uploads/tmp/' . $basename;
+
+            // $file = File($currentPath);
+            $uploadedFile = new UploadedFile($currentPath, $basename);
+            $model = $objectType::find($objectId);
+            $id = $model->uploadImage($uploadedFile,false);
+            $model->remapImages([$id]);
+            $url  = $model->getProfilePicture($displaySize); 
 
         } 
 

@@ -19,9 +19,11 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-             uploadCropImage('profile-picture','pickfiles','upload-image','{{ url("upload-cropper-image") }}');
+            uploadCropImage('profile-picture','pickfiles','user-profile-picture','{{ url("upload-cropper-image") }}');
+            uploadCropImage('company-logo-cont','picklogo','company-logo-img','{{ url("upload-cropper-image") }}');
         });
     </script>
+
 
 @endsection
 @section('backoffice-content')
@@ -74,31 +76,29 @@
                 <div class="row">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Profile Picture</label>
-                        <div id="profile-picture">
-                            <img src="{{ url('img/dummy/avatar.png')}}" id="upload-image" alt="..." class="img-thumbnail">
-                            <br>
-                            <a id="pickfiles" href="javascript:;">[Select files]</a>
+                        <div>
+                            <img src="{{ $profilePic }}"  alt="..." class="img-thumbnail user-profile-picture">
                         </div>
                     </div>
                     <div class="col-sm-8">
                         <div class="row align-items-end">
                             <div class="col-sm-6 mb-4">
-                                <div class="word-break text-large text-dark"> @if ($user->contact_skype_id) {{ $user->contact_skype_id}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <div class="word-break text-large text-dark"> @if (isset($intermidiatData['con_skype'])) {{ $intermidiatData['con_skype'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                 <label class="font-weight-medium">Skype ID</label>
                             </div>
                             <div class="col-sm-6 mb-4">
-                                <div class="word-break text-large text-dark"> @if ($user->contact_linked_in) {{ $user->contact_linked_in}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <div class="word-break text-large text-dark"> @if (isset($intermidiatData['con_link'])) {{ $intermidiatData['con_link'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                 <label class="font-weight-medium">LinkedIn</label>
                             </div>
                         </div>
 
                         <div class="row align-items-end">
                             <div class="col-sm-6 mb-4">
-                                <div class="word-break text-large text-dark"> @if ($user->contact_facebook) {{ $user->contact_facebook}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <div class="word-break text-large text-dark"> @if (isset($intermidiatData['con_fb'])) {{ $intermidiatData['con_fb']}} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                 <label class="font-weight-medium">Facebook</label>
                             </div>
                             <div class="col-sm-6 mb-4">
-                                <div class="word-break text-large text-dark"> @if ($user->contact_twitter) {{ $user->contact_twitter}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                <div class="word-break text-large text-dark"> @if (isset($intermidiatData['con_twit'])) {{ $intermidiatData['con_twit'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                 <label class="font-weight-medium">Twitter</label>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
                 @if($user->isCompanyWealthManager())
                 <div class="row align-items-end mt-4">
                     <div class="col-sm-6">
-                        <div class="word-break text-large text-dark"> @if ($user->contact_job_title) {{ $user->contact_job_title}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if (isset($intermidiatData['position'])) {{ $intermidiatData['position'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">Job Title</label>
                     </div>
                 </div>
@@ -119,18 +119,18 @@
                         <label class="font-weight-medium">Are you a UK FCA regulated individual?</label>
                     </div>
                     <div class="col-sm-6 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->contact_registration_number) {{ $user->contact_registration_number}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if (isset($intermidiatData['personal_fca'])) {{ $intermidiatData['personal_fca'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">If you are a regulated individual, please enter your registration number</label>
                     </div>
                 </div>
 
                 <div class="row align-items-end">
                     <div class="col-sm-6 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->contact_telephone) {{ $user->contact_telephone}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if(isset($intermidiatData['telephonenumber'])) {{ $intermidiatData['telephonenumber'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">Telephone - Direct Dial</label>
                     </div>
                     <div class="col-sm-6 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->contact_mobile) {{ $user->contact_mobile}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if(isset($intermidiatData['mobile'])) {{ $intermidiatData['mobile'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">Telephone - Mobile</label>
                     </div>
                 </div>
@@ -143,21 +143,21 @@
                 <div class="row mb-4">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Logo</label>
-                        <div><img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail"></div>
+                        <div><img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail company-logo-img"></div>
                     </div>
                     <div class="col-sm-8">
                         <div class="row align-items-end">
                             <div class="col-sm-6">
                                 <div class="mb-4">
-                                    <div class="word-break text-large text-dark"> @if ($user->company_linkedin) {{ $user->company_linkedin}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                    <div class="word-break text-large text-dark"> @if  (isset($intermidiatData['company_link'])) {{ $intermidiatData['company_link']}} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                     <label class="font-weight-medium">LinkedIn</label>
                                 </div>
                                 <div class="mb-4">
-                                    <div class="word-break text-large text-dark"> @if ($user->company_facebook) {{ $user->company_facebook}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                    <div class="word-break text-large text-dark"> @if (isset($intermidiatData['company_fb'])) {{ $intermidiatData['company_fb'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                     <label class="font-weight-medium">Facebook</label>
                                 </div>
                                 <div class="mb-4">
-                                    <div class="word-break text-large text-dark"> @if ($user->company_twitter) {{ $user->company_twitter}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                                    <div class="word-break text-large text-dark"> @if(isset($intermidiatData['company_twit'])) {{ $intermidiatData['company_twit'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                                     <label class="font-weight-medium">Twitter</label>
                                 </div>
                             </div>
@@ -167,18 +167,18 @@
 
                 <div class="row align-items-end">
                     <div class="col-sm-6 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->company_regulation_type) {{ $user->company_regulation_type}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if(isset($intermidiatData['regulationtype']) && isset($regulationTypes[$intermidiatData['regulationtype']])) {{ $regulationTypes[$intermidiatData['regulationtype']] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">Please select your regulation type</label>
                     </div>
                     <div class="col-sm-6 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->company_reg_ind) {{ $user->company_reg_ind}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if(isset($intermidiatData['reg_ind_cnt']) && isset($registeredIndRange[$intermidiatData['reg_ind_cnt']])) {{ $registeredIndRange[$intermidiatData['reg_ind_cnt']] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">How many Registered individuals are employed at the company ?</label>
                     </div>
                 </div>
 
                 <div class="row align-items-end">
                     <div class="col-sm-12 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->company_estimate_asset_under_mgt) {{ $user->company_estimate_asset_under_mgt}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if (isset($intermidiatData['regulated_total_bus_inv_aum'])) {{ $intermidiatData['regulated_total_bus_inv_aum'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">What are your current estimated Assets Under Management ?</label>
                     </div>
                 </div>
@@ -258,14 +258,14 @@
 
                 <div class="row align-items-end">
                     <div class="col-sm-6 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->about_platform) {{ $user->about_platform}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if (isset($intermidiatData['source']) && isset($sources[$intermidiatData['source']])) {{ $sources[$intermidiatData['source']] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">How did you hear about the Platform?</label>
                     </div>
                 </div>
 
                 <div class="row align-items-end">
                     <div class="col-sm-12 mb-4">
-                        <div class="word-break text-large text-dark"> @if ($user->additional_comments) {{ $user->additional_comments}} @else <span class="text-muted text-small">N/A</span> @endif</div>
+                        <div class="word-break text-large text-dark"> @if(isset($intermidiatData['source_cmts'])) {{ $intermidiatData['source_cmts'] }} @else <span class="text-muted text-small">N/A</span> @endif</div>
                         <label class="font-weight-medium">Additional Comments</label>
                     </div>
                 </div>
@@ -278,12 +278,12 @@
                         </div>
                         <div>
                             <div class="d-inline-block mr-3">
-                                <div class="word-break text-large text-dark">{{ ($user->connect_email) ?  'Yes' : 'No' }} </div>
+                                <div class="word-break text-large text-dark">{{ (isset($intermidiatData['contact_email']) && $intermidiatData['contact_email']=='yes')  ?  'Yes' : 'No' }} </div>
                                 <label class="font-weight-medium">Email</label>
                             </div>
                             
                             <div class="d-inline-block mr-3">
-                                <div class="word-break text-large text-dark">{{ ($user->connect_mobile) ?  'Yes' : 'No' }} </div>
+                                <div class="word-break text-large text-dark">{{ (isset($intermidiatData['contact_phone']) && $intermidiatData['contact_phone']=='yes') ?  'Yes' : 'No' }} </div>
                                 <label class="font-weight-medium">Phone</label>
                             </div>
                         </div>
@@ -293,12 +293,12 @@
                 <div class="row align-items-end">
                     <div class="col-sm-12 mb-4">
                         <div class="form-group">
-                            <div class="word-break text-large text-dark">{{ ($user->marketing_email) ?  'Yes' : 'No' }} </div>
+                            <div class="word-break text-large text-dark">{{ (isset($intermidiatData['marketingmail']) && $intermidiatData['marketingmail']=='yes') ?  'Yes' : 'No' }} </div>
                             <label class="font-weight-medium">Yes, I am happy to receive marketing emails from the platform</label>
                         </div>
 
                         <div class="form-group">
-                            <div class="word-break text-large text-dark">{{ ($user->marketing_mails_partners) ?  'Yes' : 'No' }} </div>
+                            <div class="word-break text-large text-dark">{{ (isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes')  ?  'Yes' : 'No' }} </div>
                             <label class="font-weight-medium">Yes, I am happy to receive marketing emails from the platform from selected partners of the platform</label>
                         </div>
 
@@ -333,12 +333,12 @@
                   <div class="card-header text-white bg-primary font-weight-medium">Contact Information</div>
                   <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 text-center">
+                        <div class="col-md-3 text-center" id="profile-picture">
                             <label class="d-block">Profile Picture</label>
-                            <img src="{{ url('img/dummy/avatar.png')}}" alt="..." class="img-thumbnail">
-                            @if($mode=='edit')
-                            <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
-                            @endif
+                            <img src="{{ $profilePic }}" alt="..." class="img-thumbnail user-profile-picture">
+                             
+                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>
+                             
                         </div>
                         <div class="col-md-9">
                             <div class="row">
@@ -439,12 +439,12 @@
                   <div class="card-header text-white bg-primary font-weight-medium">Company Information</div>
                   <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 text-center">
+                        <div class="col-md-3 text-center" id="company-logo-cont">
                             <label class="d-block">Logo</label>
-                            <img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail">
-                            @if($mode=='edit')
-                            <button type="button" class="btn btn-primary btn-sm mt-2"><i class="fa fa-camera"></i> Select Image</button>
-                            @endif
+                            <img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail company-logo-img">
+                             
+                            <button type="button" id="picklogo" class="btn btn-primary btn-sm mt-2 editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>
+                             
                         </div>
                         <div class="col-md-9">
                             <div class="row">
@@ -732,33 +732,16 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="crop-image-container" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog " role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Crop Image</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body m-auto d-block">
-            <form name="cropImage" id="cropImage" enctype="multipart/form-data" >
-            <div>
-                 <img src="" style="">
-                 <input type="hidden" name="aspect_ratio" value="1">
-                 <input type="hidden" name="original_image" value="">
-                 <input type="hidden" name="crop_data" value="">
- 
-            </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-            <button type="button" class="btn btn-primary crop-image">Crop</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    @php
+    $cropModalData = ['objectType'=>'App\User','objectId'=>$user->id,'aspectRatio'=>1,'heading'=>'Crop Profile Image','imageClass'=>'user-profile-picture','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_1x1'];
+    @endphp
+    {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
+
+    @php
+    $cropModalData = ['objectType'=>'','objectId'=>'','aspectRatio'=>1,'heading'=>'Crop Company Logo','imageClass'=>'company-logo-img','minContainerWidth' =>450,
+'minContainerHeight'=>200,'displaySize'=>'medium_1x1'];
+    @endphp
+    {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
 
     <style type="text/css">
         #datatable-users_filter{

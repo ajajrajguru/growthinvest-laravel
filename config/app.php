@@ -168,6 +168,7 @@ return [
          * Package Service Providers...
          */
         Ajency\Comm\CommServiceProvider::class,
+        Ajency\FileUpload\FileUploadServiceProvider::class,
 
 
         /*
@@ -228,6 +229,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'AjComm' => Ajency\Comm\CommServiceProvider::class,
+        'AjFileUpload' => Ajency\FileUpload\FileUploadServiceProvider::class,
 
     ],
 

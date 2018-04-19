@@ -1,7 +1,6 @@
 (function() {
   window.uploadCropImage = function(containerId, selectFile, imageId, uploadPath) {
     var uploader;
-    console.log(121);
     uploader = new plupload.Uploader({
       runtimes: 'html5,flash,silverlight,html4',
       browse_button: selectFile,
@@ -30,20 +29,23 @@
           false;
         },
         FileUploaded: function(up, files, xhr) {
-          var $image, aspectRatioVal, cropper, fileResponse;
+          var $image, aspectRatioVal, cropper, fileResponse, minContainerHeightVal, minContainerWidthVal;
           fileResponse = JSON.parse(xhr.response);
           console.log(fileResponse);
-          $('#crop-image-container').find('input[name="original_image"]').val(fileResponse.data.image_path);
-          aspectRatioVal = $('#crop-image-container').find('input[name="aspect_ratio"]').val();
-          $("#crop-image-container").modal('show');
-          $image = $("#crop-image-container").find('img');
+          $('#crop-' + imageId).find('input[name="original_image"]').val(fileResponse.data.image_path);
+          aspectRatioVal = $('#crop-' + imageId).find('input[name="aspect_ratio"]').val();
+          minContainerWidthVal = $("#crop-" + imageId).attr('minContainerWidth');
+          minContainerHeightVal = $("#crop-" + imageId).attr('minContainerHeight');
+          $("#crop-" + imageId).modal('show');
+          $image = $("#crop-" + imageId).find('img');
+          $image.cropper('destroy');
           $image.attr('src', fileResponse.data.image_path);
           $image.cropper({
             aspectRatio: aspectRatioVal,
-            minContainerWidth: 450,
-            minContainerHeight: 200,
+            minContainerWidth: minContainerWidthVal,
+            minContainerHeight: minContainerHeightVal,
             crop: function(event) {
-              $('#crop-image-container').find('input[name="crop_data"]').val(JSON.stringify(event.detail));
+              $("#crop-" + imageId).find('input[name="crop_data"]').val(JSON.stringify(event.detail));
             }
           });
           cropper = $image.data('cropper');
@@ -56,16 +58,21 @@
 
   $(document).ready(function() {
     return $(document).on('click', '.crop-image', function() {
+      var $form;
+      $form = $(this).closest('form');
       return $.ajax({
         type: 'post',
         url: '/crop-image',
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        data: $('form[name="cropImage"]').serialize(),
+        data: $form.serialize(),
         success: function(data) {
-          $("#crop-image-container").modal('hide');
-          return $("#upload-image").attr('src', data.image_path);
+          var imageClass;
+          imageClass = $form.find('input[name="image_class"]').val();
+          $("#crop-" + imageClass).modal('hide');
+          console.log(imageClass);
+          return $("." + imageClass).attr('src', data.image_path);
         }
       });
     });
