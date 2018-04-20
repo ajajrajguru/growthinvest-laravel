@@ -785,6 +785,13 @@ class UserController extends Controller
                 }
             }
 
+
+            //delete temp file
+            if (File::exists($currentPath))
+            {
+                File::delete($currentPath);
+            }
+
         }
 
         return response()->json([

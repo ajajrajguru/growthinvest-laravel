@@ -172,7 +172,7 @@
                                 <div class="image" id="profile-picture">
                                     <img class="mx-auto d-block img-responsive user-profile-picture" src="{{ $profilePic }}" >
                                     <div class="action-btn"> 
-                                        <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasProfilePic) d-none @endif" object-type="App\User" object-id="{{ $investor->id }}" type="profile_picture" image-class="user-profile-picture"><i class="fa fa-trash text-danger "></i></a>
+                                        <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasProfilePic) d-none @endif" object-type="App\User" object-id="{{ $investor->id }}" type="profile_picture" image-class="user-profile-picture"><i class="fa fa-trash text-danger editmode @if($mode=='view') d-none @endif"></i></a>
                                     </div>
                                 </div>
                             </div>

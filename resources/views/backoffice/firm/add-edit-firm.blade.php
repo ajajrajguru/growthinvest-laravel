@@ -355,7 +355,7 @@
                             <img src="{{ $firmLogo }}" alt="..." class="img-thumbnail firm-logo-img">
                              
                             <div class="action-btn"> 
-                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasFirmLogo) d-none @endif" object-type="App\Firm" object-id="{{ $firm->id }}" type="firm_logo" image-class="firm-logo-img"><i class="fa fa-trash text-danger "></i></a>
+                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasFirmLogo) d-none @endif" object-type="App\Firm" object-id="{{ $firm->id }}" type="firm_logo" image-class="firm-logo-img"><i class="fa fa-trash text-danger editmode @if($mode=='view') d-none @endif"></i></a>
                             </div>
                          
 
@@ -371,7 +371,7 @@
 						<img src="{{ $backgroundImage }}" alt="..." class="img-thumbnail firm-background-img">
                              
                             <div class="action-btn"> 
-                            <button type="button" id="pickbackground" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBackgroundImage) d-none @endif" object-type="App\Firm" object-id="{{ $firm->id }}" type="background_image" image-class="firm-background-img"><i class="fa fa-trash text-danger "></i></a>
+                            <button type="button" id="pickbackground" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBackgroundImage) d-none @endif" object-type="App\Firm" object-id="{{ $firm->id }}" type="background_image" image-class="firm-background-img"><i class="fa fa-trash text-danger editmode @if($mode=='view') d-none @endif"></i></a>
                             </div>
 						
 						<div class="custom-control custom-checkbox custom-control-inline">
