@@ -337,7 +337,9 @@
                             <label class="d-block">Profile Picture</label>
                             <img src="{{ $profilePic }}" alt="..." class="img-thumbnail user-profile-picture">
                              
-                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image editmode @if($mode=='view') d-none @endif" object-type="App\User" object-id="{{ $user->id }}" type="profile_picture" image-class="user-profile-picture"><i class="fa fa-trash text-danger "></i></a>
+                            <div class="action-btn"> 
+                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasProfilePic) d-none @endif" object-type="App\User" object-id="{{ $user->id }}" type="profile_picture" image-class="user-profile-picture"><i class="fa fa-trash text-danger "></i></a>
+                            </div>
                              
                         </div>
                         <div class="col-md-9">
@@ -442,9 +444,11 @@
                         <div class="col-md-3 text-center" id="company-logo-cont">
                             <label class="d-block">Logo</label>
                             <img src="{{ $companyLogo }}" alt="..." class="img-thumbnail company-logo-img">
-                             
+                            
+                            <div class="action-btn">
                             <button type="button" id="picklogo" class="btn btn-primary btn-sm mt-2 editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>
-                             
+                            <a href="javascript:void(0)" class="delete-image @if(!$hasCompanyLogo) d-none @endif" object-type="App\User" object-id="{{ $user->id }}" type="company_logo" image-class="company-logo-img"><i class="fa fa-trash text-danger "></i></a>
+                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="row">

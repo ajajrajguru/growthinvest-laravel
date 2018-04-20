@@ -320,8 +320,8 @@ class UserController extends Controller
         if (empty($user)) {
             abort(404);
         }
-        $profilePic    = $user->getProfilePicture('medium_1x1');
-        $companyLogo    = $user->getCompanyLogo('medium_1x1'); 
+        $profilePic  = $user->getProfilePicture('medium_1x1');
+        $companyLogo = $user->getCompanyLogo('medium_1x1');
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
@@ -334,8 +334,8 @@ class UserController extends Controller
         $data['user']               = $user;
         $data['profilePic']         = $profilePic['url'];
         $data['hasProfilePic']      = $profilePic['hasImage'];
-        $data['companyLogo']         = $companyLogo['url'];
-        $data['hasCompanyLogo']      = $companyLogo['hasImage'];
+        $data['companyLogo']        = $companyLogo['url'];
+        $data['hasCompanyLogo']     = $companyLogo['hasImage'];
         $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
         $data['taxstructureInfo']   = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
         $data['regulationTypes']    = getRegulationTypes();
@@ -767,32 +767,23 @@ class UserController extends Controller
         if ($crop->getMsg() != null) {
             $model = $objectType::find($objectId);
 
-            //delete old image
-            $oldImages = $model->getImages($imageType); 
-            foreach ($oldImages as $key => $oldImage) {
-                $fileId = $oldImage['id'];
-                $model->unmapImage($fileId);
-            }
-
-            //move from temp dir to s3
+             //move from temp dir to s3
             $source   = pathinfo($url);
             $basename = $source['basename'];
 
             $currentPath  = public_path() . '/uploads/tmp/' . $basename;
             $uploadedFile = new UploadedFile($currentPath, $basename);
 
-            $id = $model->uploadImage($uploadedFile,false);
-            $model->remapImages([$id],$imageType); 
-            $url = $model->getProfilePicture($displaySize);
-            $uploadImages = $model->getImages($imageType); 
-            
-            foreach ($uploadImages as $key => $image) { 
-                if(isset($image[$displaySize])) {
+            $id = $model->uploadImage($uploadedFile, $imageType, false);
+            $model->remapImages([$id], $imageType);
+ 
+            $uploadImages = $model->getImages($imageType);
+
+            foreach ($uploadImages as $key => $image) {
+                if (isset($image[$displaySize])) {
                     $url = $image[$displaySize];
                 }
             }
-
-
 
         }
 

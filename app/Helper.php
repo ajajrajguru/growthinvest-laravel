@@ -81,7 +81,7 @@ function getDefaultImages($type){
     if(in_array($type, ['profile_picture'])){
         $url = url('img/dummy/avatar.png');
     }
-    elseif(in_array($type, ['company_logo'])){
+    elseif(in_array($type, ['company_logo','firm_logo'])){
         $url = url('img/dummy/logo.png');
     }
 

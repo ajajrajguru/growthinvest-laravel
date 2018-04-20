@@ -1,10 +1,30 @@
 @extends('layouts.backoffice')
 
+@section('css')
+  @parent
+
+ 
+    <link  href="{{ asset('bower_components/cropper/dist/cropper.css') }}" rel="stylesheet">
+ 
+@endsection
+
 @section('js')
   @parent
 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
   <script src="//cdn.ckeditor.com/4.8.0/standard/ckeditor.js" onload="loadCkeditor();"></script>
+
+  <script type="text/javascript" src="{{ asset('bower_components/cropper/dist/cropper.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bower_components/plupload/js/plupload.full.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/aj-uploads.js') }}"></script>
+  
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            uploadCropImage('firm-logo-picture','pickfiles','firm-logo-img','{{ url("upload-cropper-image") }}');
+            uploadCropImage('firm-background-cont','pickbackground','firm-background-img','{{ url("upload-cropper-image") }}');
+        });
+    </script>
 
 @endsection
 
@@ -330,17 +350,29 @@
 					<div class="col-md-3">
 						<label>Logo</label>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 text-center" id="firm-logo-picture">
+                             
+                            <img src="{{ $firmLogo }}" alt="..." class="img-thumbnail firm-logo-img">
+                             
+                            <div class="action-btn"> 
+                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasFirmLogo) d-none @endif" object-type="App\Firm" object-id="{{ $firm->id }}" type="firm_logo" image-class="firm-logo-img"><i class="fa fa-trash text-danger "></i></a>
+                            </div>
+                         
+
 						<input type="hidden" name="logoid" value="{{$firm->logoid}}" />
 					</div>
 				</div>
-
+ 
 				<div class="row mb-4">
 					<div class="col-md-3">
 						<label>Background Image</label>
 					</div>
-					<div class="col-md-9">
-
+					<div class="col-md-9" id="firm-background-cont">
+						<img src="{{ $backgroundImage }}" alt="..." class="img-thumbnail firm-background-img">
+                             
+                            <div class="action-btn"> 
+                            <button type="button" id="pickbackground" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBackgroundImage) d-none @endif" object-type="App\Firm" object-id="{{ $firm->id }}" type="background_image" image-class="firm-background-img"><i class="fa fa-trash text-danger "></i></a>
+                            </div>
 						
 						<div class="custom-control custom-checkbox custom-control-inline">
 							<input class="custom-control-input editmode @if($mode=='view') d-none @endif"" type="checkbox" value="1" id="imgFrontEnd" name="frontend_display" @if($firm->frontend_display=='yes') checked @endif >
@@ -387,6 +419,16 @@
 	</div>
 
 </div>
+
+	@php
+    $cropModalData = ['objectType'=>'App\Firm','objectId'=>$firm->id,'aspectRatio'=>1,'heading'=>'Crop Firm Image','imageClass'=>'firm-logo-img','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_1x1','imageType'=>'firm_logo'];
+    @endphp
+    {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
+
+  	@php
+    $cropModalData = ['objectType'=>'App\Firm','objectId'=>$firm->id,'aspectRatio'=>'2.858/1','heading'=>'Crop Background Image','imageClass'=>'firm-background-img','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_2_58x1','imageType'=>'background_image'];
+    @endphp
+    {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
 
 <script type="text/javascript">
 

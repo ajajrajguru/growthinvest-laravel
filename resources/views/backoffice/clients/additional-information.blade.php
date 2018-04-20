@@ -1,10 +1,27 @@
 @extends('layouts.backoffice')
+@section('css')
+  @parent
 
+ 
+    <link  href="{{ asset('bower_components/cropper/dist/cropper.css') }}" rel="stylesheet">
+ 
+@endsection
 @section('js')
   @parent
 
   <script type="text/javascript" src="{{ asset('js/backoffice.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bower_components/cropper/dist/cropper.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bower_components/plupload/js/plupload.full.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/aj-uploads.js') }}"></script>
+  
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            uploadCropImage('profile-picture','pickfiles','user-profile-picture','{{ url("upload-cropper-image") }}');
+           
+        });
+    </script>
 
 @endsection
 @section('backoffice-content')
@@ -152,8 +169,11 @@
                         <div class="row mb-5 mt-5">
                             <div class="col-sm-3 text-center">
                                 <label>Profile Picture</label>
-                                <div class="image">
-                                    <img class="mx-auto d-block img-responsive" src="{{ url('img/dummy/avatar.png')}}">
+                                <div class="image" id="profile-picture">
+                                    <img class="mx-auto d-block img-responsive user-profile-picture" src="{{ $profilePic }}" >
+                                    <div class="action-btn"> 
+                                        <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasProfilePic) d-none @endif" object-type="App\User" object-id="{{ $investor->id }}" type="profile_picture" image-class="user-profile-picture"><i class="fa fa-trash text-danger "></i></a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-9">
@@ -736,7 +756,10 @@
 
 </div>
 
-
+@php
+$cropModalData = ['objectType'=>'App\User','objectId'=>$investor->id,'aspectRatio'=>1,'heading'=>'Crop Profile Image','imageClass'=>'user-profile-picture','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_1x1','imageType'=>'profile_picture'];
+@endphp
+{!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
 
     <style type="text/css">
         #datatable-investors_filter{

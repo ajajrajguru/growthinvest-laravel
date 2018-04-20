@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
-use App\ActivityGroup;
 use App\AdobeSignature;
 use App\BusinessListing;
 use App\Comment;
@@ -36,7 +34,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-       
+
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -186,7 +184,7 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
-            $investorQuery->where('user_has_certifications.last_active','1')->where('user_has_certifications.certification_default_id', $filters['client_category']);
+            $investorQuery->where('user_has_certifications.last_active', '1')->where('user_has_certifications.certification_default_id', $filters['client_category']);
 
             // $investorQuery->whereIn('users.id', function ($query) use ($filters) {
             //     $query->select('user_id')
@@ -646,7 +644,6 @@ class InvestorController extends Controller
 
         $investor->current_certification = $hasCertification->certification_default_id;
         $investor->save();
-        
 
         if (!$investor->hasRole('investor')) {
             $investor->removeRole('yet_to_be_approved_investor');
@@ -680,9 +677,8 @@ class InvestorController extends Controller
             $registeredBy = 'N/A';
         }
 
-        $certificationOf = (Auth::user()->id == $investor->id) ? 'Self' :$investor->displayName();
-        $certificationBy = (Auth::user()->id == $investor->id) ? 'Self' :Auth::user()->displayName();
-
+        $certificationOf = (Auth::user()->id == $investor->id) ? 'Self' : $investor->displayName();
+        $certificationBy = (Auth::user()->id == $investor->id) ? 'Self' : Auth::user()->displayName();
 
         $certification = $hasCertification->certification()->name;
 
@@ -968,6 +964,9 @@ class InvestorController extends Controller
         $sectors        = getSectors();
         sort($sectors);
 
+        $profilePic             = $investor->getProfilePicture('medium_1x1');
+        $data['profilePic']     = $profilePic['url'];
+        $data['hasProfilePic']  = $profilePic['hasImage'];
         $data['countyList']     = getCounty();
         $data['countryList']    = getCountry();
         $data['investor']       = $investor;
@@ -1528,28 +1527,27 @@ class InvestorController extends Controller
 
     }
 
-
     public function saveOnfidoReportStatus(Request $request)
     {
 
         $onfidoRequest = $request->all();
 
-        $investor_id            = $onfidoRequest['investor_id'];
-        $identity_report_status = $onfidoRequest['identity_report_status'];
-        $aml_report_status      = $onfidoRequest['aml_report_status'];
+        $investor_id             = $onfidoRequest['investor_id'];
+        $identity_report_status  = $onfidoRequest['identity_report_status'];
+        $aml_report_status       = $onfidoRequest['aml_report_status'];
         $watchlist_report_status = $onfidoRequest['watchlist_report_status'];
-        
-        $reports                = array();
+
+        $reports  = array();
         $investor = User::where('gi_code', $investor_id)->first();
 
-        if(empty($investor))
+        if (empty($investor)) {
             return response()->json(['success' => false]);
+        }
 
-
-        $args = array('identity_report_status'=> $identity_report_status,
-                  'aml_report_status'     => $aml_report_status,
-                  'watchlist_report_status'=> $watchlist_report_status
-                 );
+        $args = array('identity_report_status' => $identity_report_status,
+            'aml_report_status'                    => $aml_report_status,
+            'watchlist_report_status'              => $watchlist_report_status,
+        );
 
         $onfido_report_meta = $investor->userOnfidoApplicationReports();
 
@@ -1565,41 +1563,36 @@ class InvestorController extends Controller
                 $investor_onfido_applicant_id = $investor_onfido_applicant_id->data_value;
                 $report_data                  = get_onfido_reports_meta_by_applicant_id($investor_onfido_applicant_id, $args);
 
-                if(isset($report_data['check']['reports']) && empty($report_data['check']['reports'])){
+                if (isset($report_data['check']['reports']) && empty($report_data['check']['reports'])) {
 
-                    $reports = createOnfidoReportObject([],$args);
+                    $reports                         = createOnfidoReportObject([], $args);
                     $report_data['check']['reports'] = $reports;
                 }
 
-                if(isset($report_data['reports']) && empty($report_data['reports'])){
-                    $reports = createOnfidoReportObject([],$args);
+                if (isset($report_data['reports']) && empty($report_data['reports'])) {
+                    $reports                = createOnfidoReportObject([], $args);
                     $report_data['reports'] = $reports;
-                }
-                elseif(!isset($report_data['reports'])){
-                    $reports = createOnfidoReportObject([],$args);
+                } elseif (!isset($report_data['reports'])) {
+                    $reports                = createOnfidoReportObject([], $args);
                     $report_data['reports'] = $reports;
                 }
 
             } else {
 
-                
+                $reports = createOnfidoReportObject([], $args);
 
-                $reports = createOnfidoReportObject([],$args);
-
-
-                $report_data = array( 'applicant_id'    => '',
-                                      'check'           => array('id'               => '',
-                                                             'check_status'         => '',
-                                                             'check_type'           => '',
-                                                             'check_result_url'     => '',
-                                                             'check_download_url'   => '',
-                                                             'check_form_url'       => '',
-                                                             'check_paused'         => '',
-                                                             'reports'              => $reports
-                                                            ),
-                                      'reports'              => $reports
-                                     );
-
+                $report_data = array('applicant_id' => '',
+                    'check'                             => array('id' => '',
+                        'check_status'                                    => '',
+                        'check_type'                                      => '',
+                        'check_result_url'                                => '',
+                        'check_download_url'                              => '',
+                        'check_form_url'                                  => '',
+                        'check_paused'                                    => '',
+                        'reports'                                         => $reports,
+                    ),
+                    'reports'                           => $reports,
+                );
 
             }
 
@@ -1613,13 +1606,13 @@ class InvestorController extends Controller
             $report_data = (!empty($onfido_report_meta)) ? $onfido_report_meta->data_value : [];
             // dd($report_data);
 
-            $onfido_check   = $report_data['check'];
-            $onfido_reports = $onfido_check['reports'];
+            $onfido_check            = $report_data['check'];
+            $onfido_reports          = $onfido_check['reports'];
             $watchlist_report_exists = false;
 
             foreach ($onfido_reports as $key => $value) {
 
-                if($value->name=="watchlist"){
+                if ($value->name == "watchlist") {
                     $watchlist_report_exists = true;
                 }
 
@@ -1627,20 +1620,20 @@ class InvestorController extends Controller
 
             }
 
-            if($watchlist_report_exists==false){
+            if ($watchlist_report_exists == false) {
 
-                $watchlist_report_obj = new \stdClass;
-                $watchlist_report_obj->name = 'watchlist';
-                $watchlist_report_obj->variant = 'full';
-                $watchlist_report_obj->id = '';
+                $watchlist_report_obj                      = new \stdClass;
+                $watchlist_report_obj->name                = 'watchlist';
+                $watchlist_report_obj->variant             = 'full';
+                $watchlist_report_obj->id                  = '';
                 $watchlist_report_obj->status_growthinvest = $watchlist_report_status;
-                $reports[] = $watchlist_report_obj;
+                $reports[]                                 = $watchlist_report_obj;
 
             }
 
             $onfido_check['reports'] = $reports;
             $report_data['check']    = $onfido_check;
-            $report_data['reports'] = $reports;
+            $report_data['reports']  = $reports;
 
         }
 
@@ -1654,7 +1647,6 @@ class InvestorController extends Controller
 
         $onfido_report_meta->data_value = $report_data;
         $onfido_report_meta->save();
-            
 
         return response()->json(['success' => true]);
 
@@ -1667,10 +1659,9 @@ class InvestorController extends Controller
             abort(404);
         }
 
-        $investorCertification = $investor->getActiveCertification(); 
-        $onfidoReportMeta = $investor->userOnfidoApplicationReports();
-        $onfidoReport = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value:[];
-        
+        $investorCertification = $investor->getActiveCertification();
+        $onfidoReportMeta      = $investor->userOnfidoApplicationReports();
+        $onfidoReport          = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value : [];
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
@@ -1681,7 +1672,7 @@ class InvestorController extends Controller
 
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['onfidoReports']      = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])  ) ? $onfidoReport['check']['reports'] : [];
+        $data['onfidoReports']         = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])) ? $onfidoReport['check']['reports'] : [];
         $data['breadcrumbs']           = $breadcrumbs;
         $data['pageTitle']             = 'View Profile';
         $data['activeMenu']            = 'manage_clients';
@@ -1955,7 +1946,5 @@ class InvestorController extends Controller
 
         return response()->json($json_data);
     }
-
-    
 
 }

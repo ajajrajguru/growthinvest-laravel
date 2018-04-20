@@ -71,8 +71,13 @@ $(document).ready ->
         $("#crop-"+imageClass).modal('hide')
         console.log imageClass     
         $("."+imageClass).attr('src', data.image_path)
+        $("."+imageClass).closest('div').find('.delete-image').removeClass('d-none') 
 
   $(document).on 'click', '.delete-image', ->
+    if !confirm('Are you sure you want to delete this image?')
+      return
+
+    btnObj = $(this)
     objectType = $(this).attr('object-type') 
     objectId = $(this).attr('object-id')
     type = $(this).attr('type')
@@ -89,6 +94,7 @@ $(document).ready ->
          
       success: (data) ->
         $("."+imageClass).attr('src', data.image_path)
+        btnObj.addClass('d-none')
 
  
 

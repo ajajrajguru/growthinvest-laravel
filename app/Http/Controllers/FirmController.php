@@ -206,6 +206,13 @@ class FirmController extends Controller
         // print_r($invite_content->getAttribute('data_value'));
         // die();
 
+        $profilePic      = $firm->getFirmLogo('medium_1x1');
+        $backgroundImage = $firm->getBackgroundImage('medium_2_58x1');
+
+        $data['firmLogo']         = $profilePic['url'];
+        $data['hasFirmLogo']      = $profilePic['hasImage'];
+        $data['backgroundImage']    = $backgroundImage['url'];
+        $data['hasBackgroundImage'] = $backgroundImage['hasImage'];
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
         $data['network_firms']      = $network_firm->getAllParentFirms();

@@ -72,12 +72,17 @@
           imageClass = $form.find('input[name="image_class"]').val();
           $("#crop-" + imageClass).modal('hide');
           console.log(imageClass);
-          return $("." + imageClass).attr('src', data.image_path);
+          $("." + imageClass).attr('src', data.image_path);
+          return $("." + imageClass).closest('div').find('.delete-image').removeClass('d-none');
         }
       });
     });
     return $(document).on('click', '.delete-image', function() {
-      var imageClass, objectId, objectType, type;
+      var btnObj, imageClass, objectId, objectType, type;
+      if (!confirm('Are you sure you want to delete this image?')) {
+        return;
+      }
+      btnObj = $(this);
       objectType = $(this).attr('object-type');
       objectId = $(this).attr('object-id');
       type = $(this).attr('type');
@@ -94,7 +99,8 @@
           'image_type': type
         },
         success: function(data) {
-          return $("." + imageClass).attr('src', data.image_path);
+          $("." + imageClass).attr('src', data.image_path);
+          return btnObj.addClass('d-none');
         }
       });
     });

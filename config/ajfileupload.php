@@ -19,13 +19,37 @@ return [
 			'width' => 1024,
 			'height' => 1024,
 				],
+		'thumb_2_58x1' => [
+			'width' => 150,
+			'height' => 58,
+				],
+		'medium_2_58x1' => [
+			'width' => 300,
+			'height' => 116,
+				],
+		'large_2_58x1' => [
+			'width' => 1024,
+			'height' => 396,
+				],
 
 	],
 	'model' => [
 		'App\User' => [
 			'base_path' => 'user',
 			'slug_column' => 'gi_code',
-			'sizes' => ['thumb_1x1','medium_1x1','large_1x1']
+			'sizes' => 
+				[
+					'profile_picture' =>['thumb_1x1','medium_1x1','large_1x1'],
+					'company_logo' =>['thumb_1x1','medium_1x1','large_1x1'],
+				]
+		],
+		'App\Firm' => [
+			'base_path' => 'firm',
+			'slug_column' => 'gi_code',
+			'sizes' => [
+					'firm_logo' =>['thumb_1x1','medium_1x1','large_1x1'],
+					'background_image' =>['thumb_2_58x1','medium_2_58x1','large_2_58x1'],
+				]
 		],
 	],
 ];
