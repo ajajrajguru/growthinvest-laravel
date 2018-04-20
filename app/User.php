@@ -139,16 +139,36 @@ class User extends Authenticatable
     }
 
     public Function getProfilePicture($type){
-        $profilePic  = url('img/dummy/avatar.png');
-        $profilePicImages = $this->getImages();
+        $hasImage = false;
+        $profilePic  = getDefaultImages('profile_picture');
+        $profilePicImages = $this->getImages('profile_picture'); 
         foreach ($profilePicImages as $key => $image) { 
-            if(isset($image[$type])) 
+            if(isset($image[$type])) {
                 $profilePic = $image[$type];
+                $hasImage = true;
+            }
         }
 
 
-        return $profilePic;
+        return ['url'=>$profilePic,'hasImage'=>$hasImage];
     }
+
+    public Function getCompanyLogo($type){
+        $hasImage = false;
+        $companyLogo  = getDefaultImages('company_logo');
+        $companyLogos = $this->getImages('company_logo'); 
+        foreach ($companyLogos as $key => $logo) { 
+            if(isset($logo[$type])) {
+                $companyLogo = $logo[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$companyLogo,'hasImage'=>$hasImage]; 
+    }
+
+
 
     public function isCompanyWealthManager(){
         $compInfo = (!empty($this->userAdditionalInfo())) ? $this->userAdditionalInfo()->data_value : [];  

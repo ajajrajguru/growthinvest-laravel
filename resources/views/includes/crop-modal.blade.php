@@ -18,6 +18,8 @@
              <input type="hidden" name="image_class" value="{{ $imageClass }}">
              <input type="hidden" name="object_type" value="{{ $objectType }}">
              <input type="hidden" name="object_id" value="{{ $objectId }}">
+             <input type="hidden" name="display_size" value="{{ $displaySize }}">
+             <input type="hidden" name="image_type" value="{{ $imageType }}">
 
         </div>
         

@@ -72,6 +72,24 @@ $(document).ready ->
         console.log imageClass     
         $("."+imageClass).attr('src', data.image_path)
 
+  $(document).on 'click', '.delete-image', ->
+    objectType = $(this).attr('object-type') 
+    objectId = $(this).attr('object-id')
+    type = $(this).attr('type')
+    imageClass = $(this).attr('image-class')
+    $.ajax
+      type: 'post'
+      url: '/delete-image'
+      headers:
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      data:
+        'object_type': objectType 
+        'object_id': objectId 
+        'image_type': type 
+         
+      success: (data) ->
+        $("."+imageClass).attr('src', data.image_path)
+
  
 
     

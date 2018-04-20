@@ -22,6 +22,7 @@ Route::post('investment-opportunities/filter-listings', 'BusinessListingControll
 Route::group(['middleware' => ['auth']], function () {
     Route::post('upload-cropper-image', 'UserController@uploadTempImage');
     Route::post('crop-image', 'UserController@uploadCroppedImage');
+    Route::post('delete-image', 'UserController@deleteImage');
 });
 
 

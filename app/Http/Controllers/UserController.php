@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Cropper;
 use App\User;
 use App\UserData;
-use App\Cropper;
 use Auth;
 use File;
-use Storage;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 //Importing laravel-permission models
 use Illuminate\Support\Facades\Hash;
 use Session;
+use Spatie\Permission\Models\Role;
 
 //Enables us to output flash messaging
-use Spatie\Permission\Models\Role;
+use Storage;
 
 class UserController extends Controller
 {
@@ -320,7 +320,9 @@ class UserController extends Controller
         if (empty($user)) {
             abort(404);
         }
-        $profilePic  = $user->getProfilePicture('medium_1x1'); 
+        $profilePic    = $user->getProfilePicture('medium_1x1');
+        $companyLogo    = $user->getCompanyLogo('medium_1x1'); 
+
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
@@ -330,7 +332,10 @@ class UserController extends Controller
         $intermidiatData            = $user->userIntermidaiteCompInfo();
         $taxstructureInfo           = $user->taxstructureInfo();
         $data['user']               = $user;
-        $data['profilePic']               = $profilePic;
+        $data['profilePic']         = $profilePic['url'];
+        $data['hasProfilePic']      = $profilePic['hasImage'];
+        $data['companyLogo']         = $companyLogo['url'];
+        $data['hasCompanyLogo']      = $companyLogo['hasImage'];
         $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
         $data['taxstructureInfo']   = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
         $data['regulationTypes']    = getRegulationTypes();
@@ -745,41 +750,82 @@ class UserController extends Controller
         }
 
         $requestData = $request->all();
-        // dd($requestData);
+
         $crop = new Cropper(
-          isset($requestData['original_image']) ? $requestData['original_image'] : null,
-          isset($requestData['crop_data']) ? $requestData['crop_data'] : null,
-          isset($requestData['crop_file']) ? $requestData['crop_file'] : null
+            isset($requestData['original_image']) ? $requestData['original_image'] : null,
+            isset($requestData['crop_data']) ? $requestData['crop_data'] : null,
+            isset($requestData['crop_file']) ? $requestData['crop_file'] : null
         );
 
-        $objectType = $requestData['object_type'];
-        $objectId = $requestData['object_id'];
+        $objectType  = $requestData['object_type'];
+        $objectId    = $requestData['object_id'];
+        $imageType   = $requestData['image_type'];
         $displaySize = $requestData['display_size'];
-         
 
-        $url = $crop -> getResult(); 
+        $url = $crop->getResult();
 
-        if($crop -> getMsg() !=null) {
-
-            //move from temp dir
-            $source    = pathinfo($url);
-            $basename  = $source['basename'];
-
-            $currentPath = public_path() . '/uploads/tmp/' . $basename;
-
-            // $file = File($currentPath);
-            $uploadedFile = new UploadedFile($currentPath, $basename);
+        if ($crop->getMsg() != null) {
             $model = $objectType::find($objectId);
-            $id = $model->uploadImage($uploadedFile,false);
-            $model->remapImages([$id]);
-            $url  = $model->getProfilePicture($displaySize); 
 
-        } 
+            //delete old image
+            $oldImages = $model->getImages($imageType); 
+            foreach ($oldImages as $key => $oldImage) {
+                $fileId = $oldImage['id'];
+                $model->unmapImage($fileId);
+            }
+
+            //move from temp dir to s3
+            $source   = pathinfo($url);
+            $basename = $source['basename'];
+
+            $currentPath  = public_path() . '/uploads/tmp/' . $basename;
+            $uploadedFile = new UploadedFile($currentPath, $basename);
+
+            $id = $model->uploadImage($uploadedFile,false);
+            $model->remapImages([$id],$imageType); 
+            $url = $model->getProfilePicture($displaySize);
+            $uploadImages = $model->getImages($imageType); 
+            
+            foreach ($uploadImages as $key => $image) { 
+                if(isset($image[$displaySize])) {
+                    $url = $image[$displaySize];
+                }
+            }
+
+
+
+        }
 
         return response()->json([
-            'code'    => 'image_uploaded',
-            'message' => 'success',
+            'code'       => 'image_uploaded',
+            'message'    => 'success',
             'image_path' => $url,
+        ], 200);
+
+    }
+
+    public function deleteImage(Request $request)
+    {
+
+        $requestData = $request->all();
+
+        $objectType = $requestData['object_type'];
+        $objectId   = $requestData['object_id'];
+        $imageType  = $requestData['image_type'];
+
+        $model = $objectType::find($objectId);
+
+        $defaultImage     = getDefaultImages($imageType);
+        $profilePicImages = $model->getImages($imageType);
+        foreach ($profilePicImages as $key => $profilePicImage) {
+            $fileId = $profilePicImage['id'];
+            $model->unmapImage($fileId);
+        }
+
+        return response()->json([
+            'code'       => 'image_uploaded',
+            'message'    => 'success',
+            'image_path' => $defaultImage,
         ], 200);
 
     }

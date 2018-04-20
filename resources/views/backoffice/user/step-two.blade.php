@@ -143,7 +143,7 @@
                 <div class="row mb-4">
                     <div class="col-sm-4 text-center">
                         <label class="font-weight-medium">Logo</label>
-                        <div><img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail company-logo-img"></div>
+                        <div><img src="{{ $companyLogo }}" alt="..." class="img-thumbnail company-logo-img"></div>
                     </div>
                     <div class="col-sm-8">
                         <div class="row align-items-end">
@@ -298,7 +298,7 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="word-break text-large text-dark">{{ (isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes')  ?  'Yes' : 'No' }} </div>
+                            <div class="word-break text-large text-dark">{{ (isset($intermidiatData['marketingmail_partner']) && $intermidiatData['marketingmail_partner']=='yes') ?  'Yes' : 'No' }} </div>
                             <label class="font-weight-medium">Yes, I am happy to receive marketing emails from the platform from selected partners of the platform</label>
                         </div>
 
@@ -337,7 +337,7 @@
                             <label class="d-block">Profile Picture</label>
                             <img src="{{ $profilePic }}" alt="..." class="img-thumbnail user-profile-picture">
                              
-                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>
+                            <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image editmode @if($mode=='view') d-none @endif" object-type="App\User" object-id="{{ $user->id }}" type="profile_picture" image-class="user-profile-picture"><i class="fa fa-trash text-danger "></i></a>
                              
                         </div>
                         <div class="col-md-9">
@@ -441,7 +441,7 @@
                     <div class="row">
                         <div class="col-md-3 text-center" id="company-logo-cont">
                             <label class="d-block">Logo</label>
-                            <img src="{{ url('img/dummy/logo.png') }}" alt="..." class="img-thumbnail company-logo-img">
+                            <img src="{{ $companyLogo }}" alt="..." class="img-thumbnail company-logo-img">
                              
                             <button type="button" id="picklogo" class="btn btn-primary btn-sm mt-2 editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>
                              
@@ -733,13 +733,13 @@
 
     <!-- Modal -->
     @php
-    $cropModalData = ['objectType'=>'App\User','objectId'=>$user->id,'aspectRatio'=>1,'heading'=>'Crop Profile Image','imageClass'=>'user-profile-picture','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_1x1'];
+    $cropModalData = ['objectType'=>'App\User','objectId'=>$user->id,'aspectRatio'=>1,'heading'=>'Crop Profile Image','imageClass'=>'user-profile-picture','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_1x1','imageType'=>'profile_picture'];
     @endphp
     {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
 
     @php
-    $cropModalData = ['objectType'=>'','objectId'=>'','aspectRatio'=>1,'heading'=>'Crop Company Logo','imageClass'=>'company-logo-img','minContainerWidth' =>450,
-'minContainerHeight'=>200,'displaySize'=>'medium_1x1'];
+    $cropModalData = ['objectType'=>'App\User','objectId'=>$user->id,'aspectRatio'=>1,'heading'=>'Crop Company Logo','imageClass'=>'company-logo-img','minContainerWidth' =>450,
+'minContainerHeight'=>200,'displaySize'=>'medium_1x1','imageType'=>'company_logo'];
     @endphp
     {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
 

@@ -76,6 +76,18 @@ function getCounty()
     return ['Avon', 'Bedfordshire', 'Berkshire', 'Borders', 'Buckinghamshire', 'Cambridgeshire', 'Central', 'Cheshire', 'Cleveland', 'Clwyd', 'Cornwall', 'County Antrim', 'County Armagh', 'County Down', 'County Fermanagh', 'County Londonderry', 'County Tyrone', 'Cumbria', 'Derbyshire', 'Devon', 'Dorset', 'Dumfries and Galloway', 'Durham', 'Dyfed', 'East Sussex', 'Essex', 'Fife', 'Gloucestershire', 'Grampian', 'Greater Manchester', 'Gwent', 'Gwynedd County', 'Hampshire', 'Herefordshire', 'Hertfordshire', 'Highlands and Islands', 'Humberside', 'Isle of Wight', 'Kent', 'Lancashire', 'Leicestershire', 'Lincolnshire', 'London', 'Lothian', 'Merseyside', 'Mid Glamorgan', 'Norfolk', 'North Yorkshire', 'Northamptonshire', 'Northumberland', 'Nottinghamshire', 'Oxfordshire', 'Powys', 'Rutland', 'Shropshire', 'Somerset', 'South Glamorgan', 'South Yorkshire', 'Staffordshire', 'Strathclyde', 'Suffolk', 'Surrey', 'Tayside', 'Tyne and Wear', 'Warwickshire', 'West Glamorgan', 'West Midlands', 'West Sussex', 'West Yorkshire', 'Wiltshire', 'Worcestershire'];
 }
 
+function getDefaultImages($type){
+    $url = url('img/dummy/logo.png');
+    if(in_array($type, ['profile_picture'])){
+        $url = url('img/dummy/avatar.png');
+    }
+    elseif(in_array($type, ['company_logo'])){
+        $url = url('img/dummy/logo.png');
+    }
+
+    return $url;
+}
+
 function investmentOfferType()
 {
     return ["fund" => "Fund", "proposal" => "Single Company"];
@@ -1598,6 +1610,9 @@ function is_in_array($array, $key, $key_value)
     return $within_array;
 }
 
+/**
+migration
+**/
 function updateVCTData()
 {
     $vctData = \App\BusinessListingData::where('data_key', 'fundvct_details')->get();
@@ -1639,6 +1654,10 @@ function updateVCTData()
     }
 }
 
+
+/**
+migration
+**/
 function updateInvestorsCurrentCerification(){
     $users = \App\User::whereNotNull('current_certification')->get(); 
     $notUpdatedUser = [];
@@ -1653,9 +1672,6 @@ function updateInvestorsCurrentCerification(){
         }
         
     }
-
- 
-
     // $userHasCer = \App\UserHasCertification::where('active','1')->where('last_active','0')->get(); dd($userHasCer);
 
     dd($notUpdatedUser);

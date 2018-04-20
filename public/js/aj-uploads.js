@@ -57,7 +57,7 @@
   };
 
   $(document).ready(function() {
-    return $(document).on('click', '.crop-image', function() {
+    $(document).on('click', '.crop-image', function() {
       var $form;
       $form = $(this).closest('form');
       return $.ajax({
@@ -72,6 +72,28 @@
           imageClass = $form.find('input[name="image_class"]').val();
           $("#crop-" + imageClass).modal('hide');
           console.log(imageClass);
+          return $("." + imageClass).attr('src', data.image_path);
+        }
+      });
+    });
+    return $(document).on('click', '.delete-image', function() {
+      var imageClass, objectId, objectType, type;
+      objectType = $(this).attr('object-type');
+      objectId = $(this).attr('object-id');
+      type = $(this).attr('type');
+      imageClass = $(this).attr('image-class');
+      return $.ajax({
+        type: 'post',
+        url: '/delete-image',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+          'object_type': objectType,
+          'object_id': objectId,
+          'image_type': type
+        },
+        success: function(data) {
           return $("." + imageClass).attr('src', data.image_path);
         }
       });
