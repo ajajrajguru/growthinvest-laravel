@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Session;
 use Spipu\Html2Pdf\Html2Pdf;
 use View;
+use File;
 use Illuminate\Http\UploadedFile;
 //Enables us to output flash messaging
 
@@ -944,6 +945,13 @@ class InvestorController extends Controller
 
         $id = $investor->uploadFile($uploadedFile,false,$pdfName . '.pdf');
         $investor->remapFiles([$id], 'certification');
+
+        //delete temp file
+        if (File::exists($outputLink))
+        {
+            File::delete($outputLink);
+        }
+
         return $id;
  
     }
