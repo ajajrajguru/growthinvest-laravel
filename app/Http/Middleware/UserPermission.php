@@ -74,7 +74,7 @@ class UserPermission
                 'backoffice/investor/{giCode}/investment-account'             => ['add_investor'],
                 'backoffice/investor/{giCode}/save-investment-account'        => ['add_investor'],
                 'backoffice/investor/{giCode}/download-investor-nominee'      => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
-                'backoffice/investor/download-certification/{fileid}'         => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/download-certification/{gi_code}'         => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
 
                 'backoffice/entrepreneurs'                                    => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'                  => ['view_all_business_owners', 'view_firm_business_owners'],

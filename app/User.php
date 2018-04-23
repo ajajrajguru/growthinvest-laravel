@@ -168,6 +168,22 @@ class User extends Authenticatable
         return ['url'=>$companyLogo,'hasImage'=>$hasImage]; 
     }
 
+    public Function getUserFile($type){
+        $hasImage = false;
+        $files = $this->getFiles($type); 
+        $fileUrl =  '';
+        $fileid =  '';
+        foreach ($files as $key => $file) { 
+            $fileid = $file['id'];
+            $fileUrl = $file['url'];
+            $hasImage = true;
+             
+             
+        }
+
+        return ['url'=>$fileUrl,'fileid'=>$fileid,'hasImage'=>$hasImage];
+    }
+
 
 
     public function isCompanyWealthManager(){

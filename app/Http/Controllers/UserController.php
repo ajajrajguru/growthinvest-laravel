@@ -774,7 +774,7 @@ class UserController extends Controller
             $currentPath  = public_path() . '/uploads/tmp/' . $basename;
             $uploadedFile = new UploadedFile($currentPath, $basename);
 
-            $id = $model->uploadImage($uploadedFile, $imageType, false);
+            $id = $model->uploadImage($uploadedFile, $imageType);
             $model->remapImages([$id], $imageType);
  
             $uploadImages = $model->getImages($imageType);

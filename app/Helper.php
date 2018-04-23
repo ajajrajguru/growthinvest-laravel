@@ -1062,6 +1062,7 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
 {
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
+    $investor = $investorCertification->user;
 
     $today = date('Y-m-d');
 
@@ -1112,7 +1113,7 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
 
         $html .= '<i class="icon icon-ok text-success"></i> Certified on
              <span class="date-rem">' . date('d/m/Y', strtotime($certificationDate)) . '
-                <a href="' . url('backoffice/investor/download-certification/' . $fileId) . '" target="_blank">(Click to download)</a>
+                <a href="' . url('backoffice/investor/download-certification/' . $investor->gi_code) . '" target="_blank">(Click to download)</a>
             </span>&nbsp;
             <span class="text-danger">
                 and valid for: ' . $validity . '

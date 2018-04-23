@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Session;
 use Spipu\Html2Pdf\Html2Pdf;
 use View;
-
+use Illuminate\Http\UploadedFile;
 //Enables us to output flash messaging
 
 class InvestorController extends Controller
@@ -720,13 +720,31 @@ class InvestorController extends Controller
         $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'invHasCertification' => $invHasCertification];
 
         if ($fileId) {
-            $filename        = DocumentFile::find($fileId)->file_url;
-            $destination_dir = public_path() . '/userdocs/';
+            // $filename        = DocumentFile::find($fileId)->file_url;
+            // $destination_dir = public_path() . '/userdocs/';
 
-            $filePath       = $destination_dir . '/' . $filename;
-            $ext            = pathinfo($filePath, PATHINFO_EXTENSION);
-            $mimeType       = getFileMimeType($ext);
-            $file           = \File::get($filePath);
+            // $filePath       = $destination_dir . '/' . $filename;
+            // $ext            = pathinfo($filePath, PATHINFO_EXTENSION);
+            // $mimeType       = getFileMimeType($ext);
+            // $file           = \File::get($filePath);
+
+            $certification = $investor->getFiles('certification'); 
+            $filePath = '';
+            $filename = '';
+            $fileid = '';
+            foreach ($certification as $key => $file) { 
+                $fileid = $file['id'];
+                $filePath = $file['url'];
+                $filename = $file['name'];
+                $hasImage = true;
+                 
+                 
+            }
+
+            $ext = pathinfo($filePath, PATHINFO_EXTENSION);      
+            $mimeType = getFileMimeType($ext);
+            $file =  $investor->getSingleFile($fileid);
+
             $data['attach'] = [['file' => base64_encode($file), 'as' => $filename, 'mime' => $mimeType]];
         }
         sendEmail($templateForinvestor, $data);
@@ -910,39 +928,77 @@ class InvestorController extends Controller
         $pattern = '/&([#0-9A-Za-z]+);/';
         $pdfName = preg_replace($pattern, '', $pdfName);
 
-        $docmentFile                = new DocumentFile;
-        $docmentFile->name          = $pdfName . '.pdf';
-        $docmentFile->file_url      = $filename . '.pdf';
-        $docmentFile->uploaded_by   = Auth::user()->id;
-        $docmentFile->document_type = "userdocs";
-        $docmentFile->object_id     = $investor->id;
-        $docmentFile->object_type   = 'App\User';
-        $docmentFile->folder_id     = 1;
-        $docmentFile->save();
+        // $docmentFile                = new DocumentFile;
+        // $docmentFile->name          = $pdfName . '.pdf';
+        // $docmentFile->file_url      = $filename . '.pdf';
+        // $docmentFile->uploaded_by   = Auth::user()->id;
+        // $docmentFile->document_type = "userdocs";
+        // $docmentFile->object_id     = $investor->id;
+        // $docmentFile->object_type   = 'App\User';
+        // $docmentFile->folder_id     = 1;
+        // $docmentFile->save();
 
-        return $docmentFile->id;
+        // return $docmentFile->id;
 
+        $uploadedFile = new UploadedFile($outputLink, $filename . '.pdf');
+
+        $id = $investor->uploadFile($uploadedFile,false,$pdfName . '.pdf');
+        $investor->remapFiles([$id], 'certification');
+        return $id;
+ 
     }
 
-    public function downloadCertification($fileId)
+    // public function downloadCertification($fileId)
+    // {
+
+    //     $docmentFile = DocumentFile::find($fileId);
+    //     if (empty($docmentFile)) {
+    //         abort(404);
+    //     }
+
+    //     $filePath = public_path() . '/userdocs/' . $docmentFile->file_url;
+    //     $filename = $docmentFile->name;
+    //     header('Content-type: text/csv');
+    //     header('Content-Length: ' . filesize($filePath));
+    //     header('Content-Disposition: attachment; filename=' . $filename);
+    //     while (ob_get_level()) {
+    //         ob_end_clean();
+    //     }
+    //     readfile($filePath);
+
+    //     exit();
+    // }
+
+    public function downloadCertification($giCode)
     {
-        $docmentFile = DocumentFile::find($fileId);
-        if (empty($docmentFile)) {
-            abort(404);
+
+        $investor = User::where('gi_code', $giCode)->first();
+        $certification = $investor->getFiles('certification'); 
+        $filePath = '';
+        $filename = '';
+        $fileid = '';
+        foreach ($certification as $key => $file) { 
+            $fileid = $file['id'];
+            $filePath = $file['url'];
+            $filename = $file['name'];
+            $hasImage = true;
+             
+             
         }
 
-        $filePath = public_path() . '/userdocs/' . $docmentFile->file_url;
-        $filename = $docmentFile->name;
-        header('Content-type: text/csv');
-        header('Content-Length: ' . filesize($filePath));
-        header('Content-Disposition: attachment; filename=' . $filename);
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        readfile($filePath);
 
-        exit();
+        $ext = pathinfo($filePath, PATHINFO_EXTENSION);      
+        $mimeType = getFileMimeType($ext);
+        $file =  $investor->getSingleFile($fileid);
+         
+        return response($file)
+          ->header('Content-Type', $mimeType)
+          ->header('Content-Description', 'File Transfer')
+          ->header('Content-Disposition', "attachment; filename={$filename}")
+          ->header('Filename', $filename);
     }
+
+    
 
     public function additionalInformation($giCode)
     {
@@ -1397,6 +1453,12 @@ class InvestorController extends Controller
 
             $action   = 'Start Adobe Sign';
             $activity = saveActivityLog('User', Auth::user()->id, 'start_adobe_sign', $investor->id, $action, '', $investor->firm_id);
+
+            //delete temp file
+            if (File::exists($output_link))
+            {
+                File::delete($output_link);
+            }
 
         }
     }
