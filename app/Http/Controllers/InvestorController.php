@@ -1670,6 +1670,8 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
+        $profilePic             = $investor->getProfilePicture('thumb_1x1');
+        $data['profilePic']     = $profilePic['url'];
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
         $data['onfidoReports']         = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])) ? $onfidoReport['check']['reports'] : [];

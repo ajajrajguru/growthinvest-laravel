@@ -57,7 +57,7 @@
             <div class="tab-pane p-3 active" id="profile" role="tabpanel">
                 <div class="media investor-info">
                     <div class="investor-avatar align-self-center mr-3 mw-80 mh-80">
-                        <img class="rounded-circle img-fluid" src="https://dummyimage.com/80x80" alt="Generic placeholder image">
+                        <img class="rounded-circle img-fluid" src="{{ $profilePic }}" alt="Generic placeholder image">
                     </div>
                     <div class="media-body align-self-center">
                         <div class="">
