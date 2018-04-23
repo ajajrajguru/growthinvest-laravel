@@ -39,6 +39,7 @@
     @include('includes.notification')
 
 	<div class="mt-4 bg-white border border-gray p-4">
+		@include('backoffice.firm.firm-navigation')
 		<!-- <h1 class="section-title font-weight-medium text-primary mb-0">Add Firm</h1> -->
 		<div class="row">
 		    <div class="col-6">

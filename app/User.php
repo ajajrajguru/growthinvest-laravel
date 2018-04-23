@@ -241,7 +241,7 @@ class User extends Authenticatable
     }
 
 
-    public function allUsers($cond=[]){
+    public function allUsers($cond=[],$inCond=[]){
         $backOfficeRoleIds = $this->getbackOfficeAccessRoleIds();
 
         $users = User::join('model_has_roles', function ($join) {
@@ -250,7 +250,12 @@ class User extends Authenticatable
                     })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
                             ->where('roles.name','!=', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
-                    })->where($cond)->select('users.*')->orderBy('first_name','asc')->get();
+                    });
+        foreach ($inCond as $key => $values) {
+            $users = $users->whereIn($key,$values);
+        }
+        $users = $users->select('users.*')->orderBy('first_name','asc')->get(); 
+       
 
         return $users; 
       

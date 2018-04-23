@@ -33,8 +33,11 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('firms/save-firm-invite', 'FirmController@saveFirmInvite');
     Route::get('firms/{giCode}', 'FirmController@show');
     Route::get('firm/export-firm', 'FirmController@exportFirms');
+    Route::get('firm/{giCode}/users', 'FirmController@getFirmUsers');
+    Route::get('firm/{giCode}/intermediary-registration', 'UserController@addUserStepOne');
+    Route::get('firm/{giCode}/user-additional-information', 'UserController@addUserStepOne');
     Route::resource('firm', 'FirmController');
-
+ 
     //users
     Route::get('user/add/intermediary-registration', 'UserController@addUserStepOne');
     Route::get('user/{giCode}/intermediary-registration', 'UserController@userStepOneData');

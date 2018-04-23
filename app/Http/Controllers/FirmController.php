@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Firm;
 use App\FirmData;
+use App\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Session;
 
 class FirmController extends Controller
@@ -28,6 +30,8 @@ class FirmController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Firms';
         $data['activeMenu']  = 'firms';
+        
+
 
         return view('backoffice.firm.list')->with($data);
     }
@@ -221,6 +225,7 @@ class FirmController extends Controller
         $data['additional_details'] = (!empty($additional_info)) ? $additional_info->data_value : [];
         $data['invite_content']     = (!empty($invite_content)) ? $invite_content->data_value : [];
         $data['mode']               = 'view';
+        $data['firmActiveMenu']  = 'firm-details';
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
@@ -288,6 +293,37 @@ class FirmController extends Controller
         return redirect()->back()->withInput();
 
     }
+
+    public function getFirmUsers($giCode){
+        $firm   = Firm::where('gi_code', $giCode)->first();
+        $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray();
+
+        if(empty($firm)){
+            abort(404);
+        }
+        $firmIds = $childFirms;
+        $firmIds[] = $firm->id;
+        $cond = ['firm_id' => $firmIds];
+        $user = new User;
+        $users = $user->allUsers([],$cond); 
+        
+        $data['roles']       = Role::where('type', 'backoffice')->pluck('display_name');
+        $data['users']               = $users;
+        $data['firm']               = $firm;
+        $data['firmActiveMenu']  =  'firm-users';
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Firm Users'];
+
+        $data['breadcrumbs'] = $breadcrumbs;
+
+        return view('backoffice.firm.firm-users')->with($data);
+    }
+
+
 
     /**
      * Show the form for editing the specified resource.

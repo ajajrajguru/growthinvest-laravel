@@ -42,12 +42,14 @@ class UserPermission
                 'backoffice/firms/save-firm'                                  => ['add_firm', 'edit_firm', 'edit_my_firm'],
                 'backoffice/firms/save-firm-invite'                           => ['add_firm', 'edit_firm', 'edit_my_firm'],
                 'backoffice/firms/{giCode}'                                   => ['edit_firm', 'edit_my_firm'],
+                'backoffice/firm/{giCode}/users'                              => ['edit_firm', 'edit_my_firm','users'],
+                'backoffice/firm/{giCode}/intermediary-registration'          => ['edit_firm', 'edit_my_firm','add_user'],
 
                 'backoffice/manage-act-feed-group'                            => ['manage_options'],
                 'backoffice/activity-group/get-activity-type'                 => ['manage_options'],
                 'backoffice/activity-group/save-activity-type'                => ['manage_options'],
                 'backoffice/activity/summary'                                 => ['backoffice_access'],
-                'backoffice/activity/activity-summary'                                 => ['backoffice_access'],
+                'backoffice/activity/activity-summary'                        => ['backoffice_access'],
 
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],
@@ -74,7 +76,7 @@ class UserPermission
                 'backoffice/investor/{giCode}/investment-account'             => ['add_investor'],
                 'backoffice/investor/{giCode}/save-investment-account'        => ['add_investor'],
                 'backoffice/investor/{giCode}/download-investor-nominee'      => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
-                'backoffice/investor/download-certification/{gi_code}'         => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/download-certification/{gi_code}'        => ['add_investor', 'view_all_investors', 'investors', 'view_investors'],
 
                 'backoffice/entrepreneurs'                                    => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'                  => ['view_all_business_owners', 'view_firm_business_owners'],

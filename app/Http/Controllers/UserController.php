@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Cropper;
 use App\User;
 use App\UserData;
+use App\Firm;
+
 use Auth;
 use File;
 use Illuminate\Http\Request;
@@ -83,17 +85,37 @@ class UserController extends Controller
     get list of all required data to be populated in form
     send empty user object to form in create mode
     by default mode will be edit when user is created first time
+    $firmGiCode - request from firm to add user
      */
-    public function addUserStepOne()
+    public function addUserStepOne($firmGiCode='')
     {
         $user      = new User;
-        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firmCond = ($firmGiCode !='') ? ['gi_code'=>$firmGiCode] : [];
+        $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
-        $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+        if($firmGiCode==''){
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+            $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+            $data['is_firm_user'] = 'no';
+            $viewFile = 'backoffice.user.step-one';
+        }
+        else{
+            $firm   = Firm::where('gi_code', $firmGiCode)->first();
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+            $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+            $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+            $data['firm']              = $firm;
+            $data['is_firm_user'] = 'yes';
+            $data['firmActiveMenu']  =  'firm-users';
+            $viewFile = 'backoffice.firm.intermediary-registration';
+        }
+        
 
         $data['roles']              = Role::where('type', 'backoffice')->get();
         $data['countyList']         = getCounty();
@@ -105,7 +127,7 @@ class UserController extends Controller
         $data['pageTitle']          = 'Add User';
         $data['mode']               = 'edit';
 
-        return view('backoffice.user.step-one')->with($data);
+        return view($viewFile)->with($data);
     }
 
     /**
@@ -137,7 +159,8 @@ class UserController extends Controller
         $firm               = $requestData['firm'];
         $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode             = $requestData['gi_code'];
-
+        $isFirmUser             = $requestData['is_firm_user'];
+ 
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
         $sendmail = false;
@@ -268,6 +291,8 @@ class UserController extends Controller
         }
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
+
+
         return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));
 
     }

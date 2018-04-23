@@ -43,7 +43,6 @@
          @include('includes.manage-tabs')
 
         <div class="mt-4 bg-white border border-gray p-4">
-
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="section-title font-weight-medium text-primary mb-0">Firms</h1>
