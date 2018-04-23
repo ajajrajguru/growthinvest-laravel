@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('firm/export-firm', 'FirmController@exportFirms');
     Route::get('firm/{giCode}/users', 'FirmController@getFirmUsers');
     Route::get('firm/{giCode}/intermediary-registration', 'UserController@addUserStepOne');
-    Route::get('firm/{giCode}/user-additional-information', 'UserController@addUserStepOne');
+    Route::get('firm/{giCode}/export-users', 'FirmController@exportFirmUsers');
     Route::resource('firm', 'FirmController');
  
     //users

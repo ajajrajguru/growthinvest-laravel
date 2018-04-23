@@ -44,6 +44,7 @@ class UserPermission
                 'backoffice/firms/{giCode}'                                   => ['edit_firm', 'edit_my_firm'],
                 'backoffice/firm/{giCode}/users'                              => ['edit_firm', 'edit_my_firm','users'],
                 'backoffice/firm/{giCode}/intermediary-registration'          => ['edit_firm', 'edit_my_firm','add_user'],
+                'backoffice/firm/{giCode}/export-users'          => ['edit_firm', 'edit_my_firm','add_user'],
 
                 'backoffice/manage-act-feed-group'                            => ['manage_options'],
                 'backoffice/activity-group/get-activity-type'                 => ['manage_options'],

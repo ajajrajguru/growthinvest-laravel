@@ -6,8 +6,8 @@ use App\Firm;
 use App\FirmData;
 use App\User;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Session;
+use Spatie\Permission\Models\Role;
 
 class FirmController extends Controller
 {
@@ -30,8 +30,6 @@ class FirmController extends Controller
         $data['breadcrumbs'] = $breadcrumbs;
         $data['pageTitle']   = 'Firms';
         $data['activeMenu']  = 'firms';
-        
-
 
         return view('backoffice.firm.list')->with($data);
     }
@@ -213,8 +211,8 @@ class FirmController extends Controller
         $profilePic      = $firm->getFirmLogo('medium_1x1');
         $backgroundImage = $firm->getBackgroundImage('medium_2_58x1');
 
-        $data['firmLogo']         = $profilePic['url'];
-        $data['hasFirmLogo']      = $profilePic['hasImage'];
+        $data['firmLogo']           = $profilePic['url'];
+        $data['hasFirmLogo']        = $profilePic['hasImage'];
         $data['backgroundImage']    = $backgroundImage['url'];
         $data['hasBackgroundImage'] = $backgroundImage['hasImage'];
         $data['countyList']         = getCounty();
@@ -225,7 +223,7 @@ class FirmController extends Controller
         $data['additional_details'] = (!empty($additional_info)) ? $additional_info->data_value : [];
         $data['invite_content']     = (!empty($invite_content)) ? $invite_content->data_value : [];
         $data['mode']               = 'view';
-        $data['firmActiveMenu']  = 'firm-details';
+        $data['firmActiveMenu']     = 'firm-details';
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
@@ -294,23 +292,24 @@ class FirmController extends Controller
 
     }
 
-    public function getFirmUsers($giCode){
-        $firm   = Firm::where('gi_code', $giCode)->first();
+    public function getFirmUsers($giCode)
+    {
+        $firm       = Firm::where('gi_code', $giCode)->first();
         $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray();
 
-        if(empty($firm)){
+        if (empty($firm)) {
             abort(404);
         }
-        $firmIds = $childFirms;
+        $firmIds   = $childFirms;
         $firmIds[] = $firm->id;
-        $cond = ['firm_id' => $firmIds];
-        $user = new User;
-        $users = $user->allUsers([],$cond); 
-        
-        $data['roles']       = Role::where('type', 'backoffice')->pluck('display_name');
-        $data['users']               = $users;
-        $data['firm']               = $firm;
-        $data['firmActiveMenu']  =  'firm-users';
+        $cond      = ['firm_id' => $firmIds];
+        $user      = new User;
+        $users     = $user->allUsers([], $cond);
+
+        $data['roles']          = Role::where('type', 'backoffice')->pluck('display_name');
+        $data['users']          = $users;
+        $data['firm']           = $firm;
+        $data['firmActiveMenu'] = 'firm-users';
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
@@ -323,7 +322,41 @@ class FirmController extends Controller
         return view('backoffice.firm.firm-users')->with($data);
     }
 
+    public function exportFirmUsers($giCode)
+    {
+        $firm       = Firm::where('gi_code', $giCode)->first();
+        $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray();
 
+        if (empty($firm)) {
+            abort(404);
+        }
+        $firmIds   = $childFirms;
+        $firmIds[] = $firm->id;
+        $cond      = ['firm_id' => $firmIds];
+        $userObj      = new User;
+        $users   = $userObj->allUsers([], $cond);
+
+        $fileName = 'approved_intermediary';
+
+        $header = ['Platform GI Code', 'Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+
+        $userData = [];
+
+        foreach ($users as $user) {
+            $userData[] = [$user->gi_code,
+                title_case($user->first_name . ' ' . $user->last_name),
+                $user->email,
+                title_case($user->roles()->pluck('display_name')->implode(' ')),
+                (!empty($user->firm)) ? $user->firm->name : '',
+                $user->telephone_no,
+            ];
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
+
+    }
 
     /**
      * Show the form for editing the specified resource.
