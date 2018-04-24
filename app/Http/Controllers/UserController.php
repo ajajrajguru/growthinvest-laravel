@@ -159,7 +159,7 @@ class UserController extends Controller
         $firm               = $requestData['firm'];
         $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode             = $requestData['gi_code'];
-        $isFirmUser             = $requestData['is_firm_user'];
+        // $isFirmUser             = $requestData['is_firm_user'];
  
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
