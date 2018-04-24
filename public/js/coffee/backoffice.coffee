@@ -566,9 +566,72 @@ $(document).ready ->
 
 	$('.download-current-business-valuation-csv').click ->		 
 		window.open("/backoffice/current-valuations/export-current-valuations");
+
+
+	investmentClientTable = $('#datatable-investment-client').DataTable(
+	    'paging': false
+	    'processing': false
+	    'serverSide': true
+	    'bAutoWidth': false
+	    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
+	    'aaSorting': [[1,'asc']]
+	    'ajax':
+	      url: '/backoffice/financials/get-investment-client'
+	      type: 'post'
+	      dataSrc: (json) ->
+	      	console.log json
+	      	$("#total_invested").html(json.totalInvested)
+	      	$("#total_accrude").html(json.totalAccrude)
+	      	$("#total_paid").html(json.totalPaid)
+	      	$("#total_due").html(json.totalDue)
+
+	      	return json.data
+	      data: (data) ->
+
+	        filters = {}
+
+	        data.filters = filters
+	        data
+
+	      error: ->
+	        return
+
+	    'columns': [
+	      { 'data': '#' , "orderable": false}
+	      { 'data': 'invested_date' , "orderable": false}
+	      { 'data': 'investment', "orderable": false}
+	      { 'data': 'investor' , "orderable": false}
+	      { 'data': 'firm', "orderable": false }
+	      { 'data': 'invested_amount', "orderable": false }
+	      { 'data': 'accrude', "orderable": false }
+	      { 'data': 'paid', "orderable": false }
+	      { 'data': 'due', "orderable": false }
+	      { 'data': 'parent_firm', "orderable": false }
+	      { 'data': 'investment_gi_code', "orderable": false}
+	      { 'data': 'investor_gi_code', "orderable": false}
+	      { 'data': 'firm_gi_code', "orderable": false}
+	      { 'data': 'transaction_type', "orderable": false}
+	      { 'data': 'action' , "orderable": false}
+	    ]
+	    'columnDefs': [
+	      {
+	        'targets': 'col-visble'
+	        'visible': false
+	      }
+	    ]
+	    )
+
+	$('body').on 'click', '.alter-investmentclient-table', ->
+	    $('.inv-cli-cols').each ->
+	      colIndex = $(this).val()
+	      if $(this).is(':checked')
+	        investmentClientTable.column( colIndex ).visible( true );
+	      else
+	        investmentClientTable.column( colIndex ).visible( false );
+
+	    $('#columnVisibility').modal('hide')
+	    return
 				 
 	 		 
-
-
 
 

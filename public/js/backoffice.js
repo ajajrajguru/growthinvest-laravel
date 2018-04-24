@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var addrolesTable, api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
+    var addrolesTable, api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, investmentClientTable, updateSerachinput, userAdminTable, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -626,8 +626,101 @@
         }
       });
     });
-    return $('.download-current-business-valuation-csv').click(function() {
+    $('.download-current-business-valuation-csv').click(function() {
       return window.open("/backoffice/current-valuations/export-current-valuations");
+    });
+    investmentClientTable = $('#datatable-investment-client').DataTable({
+      'paging': false,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>',
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/financials/get-investment-client',
+        type: 'post',
+        dataSrc: function(json) {
+          console.log(json);
+          $("#total_invested").html(json.totalInvested);
+          $("#total_accrude").html(json.totalAccrude);
+          $("#total_paid").html(json.totalPaid);
+          $("#total_due").html(json.totalDue);
+          return json.data;
+        },
+        data: function(data) {
+          var filters;
+          filters = {};
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': '#',
+          "orderable": false
+        }, {
+          'data': 'invested_date',
+          "orderable": false
+        }, {
+          'data': 'investment',
+          "orderable": false
+        }, {
+          'data': 'investor',
+          "orderable": false
+        }, {
+          'data': 'firm',
+          "orderable": false
+        }, {
+          'data': 'invested_amount',
+          "orderable": false
+        }, {
+          'data': 'accrude',
+          "orderable": false
+        }, {
+          'data': 'paid',
+          "orderable": false
+        }, {
+          'data': 'due',
+          "orderable": false
+        }, {
+          'data': 'parent_firm',
+          "orderable": false
+        }, {
+          'data': 'investment_gi_code',
+          "orderable": false
+        }, {
+          'data': 'investor_gi_code',
+          "orderable": false
+        }, {
+          'data': 'firm_gi_code',
+          "orderable": false
+        }, {
+          'data': 'transaction_type',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ],
+      'columnDefs': [
+        {
+          'targets': 'col-visble',
+          'visible': false
+        }
+      ]
+    });
+    return $('body').on('click', '.alter-investmentclient-table', function() {
+      $('.inv-cli-cols').each(function() {
+        var colIndex;
+        colIndex = $(this).val();
+        if ($(this).is(':checked')) {
+          return investmentClientTable.column(colIndex).visible(true);
+        } else {
+          return investmentClientTable.column(colIndex).visible(false);
+        }
+      });
+      $('#columnVisibility').modal('hide');
     });
   });
 

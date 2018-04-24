@@ -353,7 +353,7 @@ class InvestorController extends Controller
 
             $data['firm']              = $firm;
             $data['is_firm_investor'] = 'yes';
-            $data['firmActiveMenu']  =  'firm-users';
+            $data['firmActiveMenu']  =  'investors';
             $viewFile = 'backoffice.firm.investor-registration';
         }
 

@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
 
     // financials
     Route::get('financials/investment-clients', 'BusinessListingController@investmentClients');
+    Route::post('financials/get-investment-client', 'BusinessListingController@getInvestmentClients');
     Route::get('financials/business-clients', 'BusinessListingController@businessClients');
 
     /*Coming soon routes on dashboard */

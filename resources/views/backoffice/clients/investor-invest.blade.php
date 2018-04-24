@@ -140,7 +140,7 @@
                                 <th>Investment Focus</th>
                                 <th>Target Raise</th>
                                 <th>Min Investment</th>
-                                <th>Aount Raised (&pound; M)</th>
+                                <th>Amount Raised (&pound; M)</th>
                                 <th>Invest</th>
                                 <th>Downloads</th>
                             </tr>
