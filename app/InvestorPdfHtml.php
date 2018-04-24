@@ -393,7 +393,7 @@ class InvestorPdfHtml
                          <tr>
                          <td style="Width: 5%; vertical-align: top;">';
 
-        if (isset($retailData['conditions']) && in_array('ri_check_1', $retailData['conditions'])) {
+        if (isset($retailData['conditions']) && in_array('ri_check_0', $retailData['conditions'])) {
             $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
             $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
@@ -408,7 +408,7 @@ class InvestorPdfHtml
                          <tr>
                          <td style="Width: 5%; vertical-align: top;">';
 
-        if (isset($retailData['conditions']) && in_array('ri_check_2', $retailData['conditions'])) {
+        if (isset($retailData['conditions']) && in_array('ri_check_1', $retailData['conditions'])) {
             $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
             $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';
@@ -424,7 +424,7 @@ class InvestorPdfHtml
                          <tr>
                          <td style="Width: 5%; vertical-align: top;">';
 
-        if (isset($retailData['conditions']) && in_array('ri_check_3', $retailData['conditions'])) {
+        if (isset($retailData['conditions']) && in_array('ri_check_2', $retailData['conditions'])) {
             $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-tick.jpg") . '"/>';
         } else {
             $html .= '<img class="bg-background" src="' . public_path("img/pdf/cert-untick.jpg") . '"/>';

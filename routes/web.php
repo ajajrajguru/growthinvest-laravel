@@ -111,6 +111,10 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('firm-invite/{giCode}/{type}', 'FirmController@getInvite');
     Route::get('dashboard/', 'UserController@showDashboard');
 
+    // financials
+    Route::get('financials/investment-clients', 'BusinessListingController@investmentClients');
+    Route::get('financials/business-clients', 'BusinessListingController@businessClients');
+
     /*Coming soon routes on dashboard */
     Route::get('dashboard', ['type' => 'home', 'uses' => 'UserController@showDashboard']);
     Route::get('dashboard/portfolio', ['type' => 'portfolio', 'uses' => 'UserController@showDashboard']);
@@ -128,6 +132,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('manage/companylist', ['type' => 'manage-companylist', 'uses' => 'UserController@showAdminManage']);
     // Route::get('manage/manage-act-feed-group', ['type' => 'manage-activityfeedgroup', 'uses' => 'UserController@showAdminManage']);
     /*End Coming soon routes on manage */
+
 
 
 

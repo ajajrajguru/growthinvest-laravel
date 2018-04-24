@@ -1080,6 +1080,12 @@ class BusinessListingController extends Controller
 
     }
 
+    public function investmentClients(){
+
+        
+
+    }
+
 /**
  * Show the form for creating a new resource.
  *
