@@ -609,7 +609,7 @@
                 @endif
             </div>
 
-            <input type="hidden" name="is_firm_user" value="{{ $is_firm_user }}">
+            
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="gi_code" value="{{ $user->gi_code }}">
         </form>
