@@ -82,6 +82,14 @@ class FirmController extends Controller
         $data['mode']           = 'edit';
         $data['invite_content'] = $invite_content;
 
+        $profilePic      = $firm->getFirmLogo('medium_1x1');
+        $backgroundImage = $firm->getBackgroundImage('medium_2_58x1');
+
+        $data['firmLogo']           = $profilePic['url'];
+        $data['hasFirmLogo']        = $profilePic['hasImage'];
+        $data['backgroundImage']    = $backgroundImage['url'];
+        $data['hasBackgroundImage'] = $backgroundImage['hasImage'];
+        
         return view('backoffice.firm.add-edit-firm')->with($data);
     }
 
