@@ -5,7 +5,7 @@ $modelName : 'App/User';
 $filters: ['id'=>1]
 $orderDataBy: ['id'=>'desc']
  **/
-function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderDataBy = [])
+function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderDataBy = [], $inCond = [])
 {
 
     $model = new $modelName;
@@ -16,9 +16,15 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
         $modelQuery = $model::where($filters);
     }
 
+    foreach ($inCond as $key => $values) {
+        $modelQuery->whereIn($key,$values);
+    }
+
     foreach ($orderDataBy as $columnName => $orderBy) {
         $modelQuery->orderBy($columnName, $orderBy);
     }
+
+    
 
     if ($length > 1) {
         $listCount = $modelQuery->get()->count();

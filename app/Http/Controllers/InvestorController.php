@@ -58,6 +58,7 @@ class InvestorController extends Controller
         $data['clientCategories']   = $clientCategories;
         $data['requestFilters']     = $requestFilters;
         $data['firms']              = $firms;
+        $data['firm_ids']              = [];
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Investors';
@@ -169,9 +170,18 @@ class InvestorController extends Controller
         })->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
 
         $investorQuery->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
+        
+
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investorQuery->where('users.firm_id', $filters['firm_name']);
         }
+
+        if (isset($filters['firm_ids']) && $filters['firm_ids'] != "") {  
+            $firmIds = explode(',', $filters['firm_ids']);
+            $investorQuery->whereIn('users.firm_id', $firmIds);
+        }
+
+        
 
         if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
             $userIds = explode(',', $filters['user_ids']);
@@ -316,18 +326,36 @@ class InvestorController extends Controller
 
     }
 
-    public function registration()
+    public function registration($firmGiCode='')
     {
 
         $investor  = new User;
-        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firmCond = ($firmGiCode !='') ? ['gi_code'=>$firmGiCode] : [];
+        $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
         $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
-        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
-        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+        if($firmGiCode==''){
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+            $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
+            $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+            $data['is_firm_investor'] = 'no';
+            $viewFile = 'backoffice.clients.registration';
+        }
+        else{
+            $firm   = Firm::where('gi_code', $firmGiCode)->first();
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+            $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+            $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+            $data['firm']              = $firm;
+            $data['is_firm_investor'] = 'yes';
+            $data['firmActiveMenu']  =  'firm-users';
+            $viewFile = 'backoffice.firm.investor-registration';
+        }
 
         $data['countyList']              = getCounty();
         $data['countryList']             = getCountry();
@@ -339,7 +367,7 @@ class InvestorController extends Controller
         $data['mode']                    = 'edit';
         $data['activeMenu']              = 'add_clients';
 
-        return view('backoffice.clients.registration')->with($data);
+        return view($viewFile)->with($data);
 
     }
 

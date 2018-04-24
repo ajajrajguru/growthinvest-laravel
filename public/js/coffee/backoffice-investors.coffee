@@ -12,6 +12,8 @@ $(document).ready ->
       data: (data) ->
 
         filters = {}
+
+        filters.firm_ids = $('input[name="firm_ids"]').val()
         filters.firm_name = $('select[name="firm_name"]').val()
         filters.investor_name = $('select[name="investor_name"]').val()
         filters.client_category = $('select[name="client_category"]').val()
@@ -48,6 +50,7 @@ $(document).ready ->
 
 
   $('.download-investor-csv').click ->
+    firm_ids = $('input[name="firm_ids"]').val()
     firm_name = $('select[name="firm_name"]').val()
     investor_name = $('select[name="investor_name"]').val()
     client_category = $('select[name="client_category"]').val()
@@ -61,7 +64,7 @@ $(document).ready ->
       if $(this).is(':checked')
         userIds += $(this).val()+','
 
-    window.open("/backoffice/investor/export-investors?firm_name="+firm_name+"&investor_name="+investor_name+"&client_category="+client_category+"&client_certification="+client_certification+"&investor_nominee="+investor_nominee+"&idverified="+idverified+"&user_ids="+userIds);
+    window.open("/backoffice/investor/export-investors?firm_ids="+firm_ids+"&firm_name="+firm_name+"&investor_name="+investor_name+"&client_category="+client_category+"&client_certification="+client_certification+"&investor_nominee="+investor_nominee+"&idverified="+idverified+"&user_ids="+userIds);
 
   $('.investorSearchinput').change ->
     urlParams = ''

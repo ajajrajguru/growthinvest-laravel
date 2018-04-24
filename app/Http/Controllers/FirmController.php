@@ -322,6 +322,54 @@ class FirmController extends Controller
         return view('backoffice.firm.firm-users')->with($data);
     }
 
+
+    public function firmInvestors(Request $request,$giCode)
+    {
+        $firm       = Firm::where('gi_code', $giCode)->first();
+        $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray(); 
+
+        if (empty($firm)) {
+            abort(404);
+        }
+        $firmIds   = $childFirms;
+        $firmIds[] = $firm->id; 
+        $inCond      = ['firm_id' => $firmIds]; 
+        $firmInCond      = ['id' => $firmIds]; 
+        $user      = new User;
+
+        $investors = $user->getInvestorUsers([],$inCond);
+
+        $requestFilters = $request->all();
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc'],$firmInCond);
+        $firms     = $firmsList['list'];
+
+        $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
+        $clientCategories     = $clientCategoriesList['list'];
+
+        $certificationTypes = certificationTypes();
+
+        
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+
+        $data['certificationTypes'] = $certificationTypes;
+        $data['clientCategories']   = $clientCategories;
+        $data['requestFilters']     = $requestFilters;
+        $data['firm']              = $firm;
+        $data['firms']              = $firms;
+        $data['firm_ids']              = $firmIds;
+        $data['investors']          = $investors;
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'Investors';
+        $data['firmActiveMenu'] = 'investors';
+
+        return view('backoffice.firm.firm-investors')->with($data);
+    }
+
     public function exportFirmUsers($giCode)
     {
         $firm       = Firm::where('gi_code', $giCode)->first();

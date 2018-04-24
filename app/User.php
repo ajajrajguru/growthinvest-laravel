@@ -323,7 +323,7 @@ class User extends Authenticatable
     }
 
 
-    public function getInvestorUsers($cond=[]){
+    public function getInvestorUsers($cond=[],$inCond=[]){
 
         $users = User::join('model_has_roles', function ($join) {
                         $join->on('users.id', '=', 'model_has_roles.model_id')
@@ -332,9 +332,14 @@ class User extends Authenticatable
                             $join->on('model_has_roles.role_id', '=', 'roles.id')
 
                                 ->whereIn('roles.name', ['investor','yet_to_be_approved_investor']);
-                        })->where($cond)->select('users.*')->get();
+                        })->where($cond);
 
-
+        foreach ($inCond as $key => $values) {
+            $users = $users->whereIn($key,$values);
+        }
+        $users = $users->select('users.*')->get(); 
+       
+       
         return $users; 
     }
 
