@@ -752,7 +752,7 @@
       window.history.pushState("", "", "?" + urlParams);
       investmentClientTable.ajax.reload();
     });
-    return $('body').on('click', '.reset-investmentclient-filters', function() {
+    $('body').on('click', '.reset-investmentclient-filters', function() {
       $('select[name="firm_name"]').val('').trigger('change');
       $('select[name="investor_name"]').val('').trigger('change');
       $('select[name="client_category"]').val('');
@@ -761,6 +761,34 @@
       $('input[name="duration_to"]').val('');
       window.history.pushState("", "", "?");
       investmentClientTable.ajax.reload();
+    });
+    return $('.download-investmentclient-report').click(function() {
+      var type, urlParams;
+      type = $(this).attr('report-type');
+      urlParams = '';
+      if ($('select[name="firm_name"]').val() !== "") {
+        urlParams += 'firm=' + $('select[name="firm_name"]').val();
+      }
+      if ($('select[name="investor_name"]').val() !== "") {
+        urlParams += '&investor=' + $('select[name="investor_name"]').val();
+      }
+      if ($('select[name="client_category"]').val() !== "") {
+        urlParams += '&client-category=' + $('select[name="client_category"]').val();
+      }
+      if ($('select[name="investment"]').val() !== "") {
+        urlParams += '&investment=' + $('select[name="investment"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if (type === 'csv') {
+        return window.open("/backoffice/financials/export-investmentclient?" + urlParams);
+      } else if (type === 'pdf') {
+        return window.open("/backoffice/financials/investmentclient-pdf?" + urlParams);
+      }
     });
   });
 

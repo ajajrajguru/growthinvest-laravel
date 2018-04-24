@@ -3740,4 +3740,126 @@ class InvestorPdfHtml
         return $html;
     }
 
+
+    public function getInvestmentClientHtml($investmentClients)
+    {
+        $html = '
+
+                                                <style>
+                     h3 {
+
+                    margin-top: 4px;
+                    font-size:18px;
+                    font-weight:600;
+                    line-height: 20px;
+                    margin-top:10px;
+
+                    }
+
+
+
+                    th{
+                        vertical-align:top;
+                        color: #000
+                    }
+                    th,td {
+                        padding : 10px 15px;
+                        font-size:12px;
+                    }
+
+                    td{
+                        color: #A2A0A0
+                    }
+
+
+
+                     </style>
+
+
+
+                     <h3>Wealth Manager Fees</h3>
+                    <table cellpadding="0" cellspacing="0"  style="width: 100%;"  >
+
+                         <tr>
+                              <td align="left" valign="bottom" style="width: 50%;"  >Date - ' . date('d/m/Y') . ' </td>
+                              <td align="right" valign="bottom" style="width: 50%;color:#A2A0A0" >&nbsp;</td>
+                         </tr>
+                         <tr height="8" style="height:4px;padding:0px;">
+                            <td colspan="2" valign="top" height="4" style="width: 100%;height:8px;padding:0px;"><hr style="border:1px solid #ccc;width: 100%;"></td>
+                         </tr>
+                    </table>';
+        $table_html = '<table  cellpadding="0" cellspacing="0" style="width:100%;" border="1" cellpadding="8px" cellspacing="0px">';
+
+        $table_html .= '<tr    class="title-bg" style=" ">
+                           
+                            <th style="width: 15%;">Invested Date</th>
+                            <th style="width: 10%;">Proposal Investor</th>
+                            <th style="width: 10%;">Firm</th>
+                            <th style="width: 10%;">Invested Amount</th>
+                            <th style="width: 10%;"> Accrued</th>
+                            <th style="width: 15%;">Paid</th>
+                            <th style="width: 15%;">Due</th>
+
+                          </tr>';
+        $bgcolor          = '#fff';
+        $activityData     = [];
+         
+        $row_cnt          = 0;
+        $userObj          = [];
+ 
+        if (!empty($investmentClients)) {
+
+            foreach ($investmentClients as $key => $investmentClient) {
+                if ($row_cnt % 2 == 0) {
+                    $bgcolor = '#fff';
+                } else {
+                    $bgcolor = '#f9fafb';
+                }
+
+                $commissions = $investmentClient->wm_commission;
+                $paid        = ($investmentClient->commission_amount) ? $investmentClient->commission_amount : 0;
+                $accrude     = ($commissions / 100) * $investmentClient->invested;
+                $due         = $accrude - $paid;
+
+               
+
+                $firms[$investmentClient->firm_id] = $investmentClient->firm_name;
+
+                if ($investmentClient->firms_parent_id && !isset($firms[$investmentClient->firms_parent_id])) {
+                    $parentFirm                                = Firm::find($investmentClient->firms_parent_id);
+                    $firms[$investmentClient->firms_parent_id] = (!empty($parentFirm)) ? $parentFirm->name : '';
+                }
+                $parentFirmName = ($investmentClient->firms_parent_id) ? $firms[$investmentClient->firms_parent_id] : '';
+
+              
+
+            $table_html .= "<tr style='background-color:$bgcolor;'>
+                            <td  style='width: 15%;' align='center' >". title_case($investmentClient->title) .'('.$investmentClient->investoremail.')' ."</td>
+                            <td style='width: 10%;'>" . title_case($investmentClient->investorname) . "</td>
+                            <td style='width: 10%;''>" . title_case($investmentClient->firm_name) . "</td>
+                            <td style='width: 10%;'>" . format_amount($investmentClient->invested, 0,true) . "</td>
+                            <td style='width: 15%;'>" . format_amount($accrude, 0,true) . "</td>
+                            <td style='width: 15%;'>" . format_amount($paid, 0,true) . "</td>
+                            <td style='width: 15%;' align='center' >" .  format_amount($due, 0,true) . "</td>";
+                $table_html .= "
+
+
+                          </tr>";
+
+                $row_cnt++;
+
+            }
+        } else {
+            $table_html .= '<tr style="background-color:' . $bgcolor . '">
+                            <td colspan="5" >No Activity Data</td>
+                      </tr>';
+        }
+
+        $table_html .= '</table>';
+
+        $html = $html . $table_html;
+
+        return $html;
+    }
+
 }

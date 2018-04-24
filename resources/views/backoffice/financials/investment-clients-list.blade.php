@@ -85,8 +85,8 @@
             <div class="d-flex justify-content-end">
                 <div class="mt-3">
                     <a href="" class="btn btn-primary" data-toggle="modal" data-target="#columnVisibility">Column Visibility</a>  
-                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary download-investor-csv" >Download CSV</a>
-                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary download-investor-csv" >Download PDF</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary download-investmentclient-report" report-type="csv">Download CSV </a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary download-investmentclient-report" report-type="pdf"> Download PDF</a>
                 </div>
             </div>
 

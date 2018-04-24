@@ -115,6 +115,10 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('financials/investment-clients', 'BusinessListingController@investmentClients');
     Route::post('financials/get-investment-client', 'BusinessListingController@getInvestmentClients');
     Route::get('financials/business-clients', 'BusinessListingController@businessClients');
+    Route::get('financials/export-investmentclient', 'BusinessListingController@exportInvestmentClients');
+    Route::get('financials/investmentclient-pdf', 'BusinessListingController@generateInvestmentClientsPdf');
+
+
 
     /*Coming soon routes on dashboard */
     Route::get('dashboard', ['type' => 'home', 'uses' => 'UserController@showDashboard']);
