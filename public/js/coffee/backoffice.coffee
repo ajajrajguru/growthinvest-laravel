@@ -589,7 +589,12 @@ $(document).ready ->
 	      data: (data) ->
 
 	        filters = {}
-
+	        filters.firm_name = $('select[name="firm_name"]').val()
+	        filters.investor_name = $('select[name="investor_name"]').val()
+	        filters.client_category = $('select[name="client_category"]').val()
+	        filters.investment = $('select[name="investment"]').val()
+	        filters.duration_from = $('input[name="duration_from"]').val()
+	        filters.duration_to = $('input[name="duration_to"]').val()
 	        data.filters = filters
 	        data
 
@@ -631,6 +636,43 @@ $(document).ready ->
 
 	    $('#columnVisibility').modal('hide')
 	    return
+
+	$('body').on 'click', '.apply-investmentclient-filters', ->
+	    urlParams = ''
+
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+	    if($('select[name="investor_name"]').val()!="")
+	      urlParams +='&investor='+$('select[name="investor_name"]').val()
+
+	    if($('select[name="client_category"]').val()!="")
+	      urlParams +='&client-category='+$('select[name="client_category"]').val()
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+	    window.history.pushState("", "", "?"+urlParams);
+	    investmentClientTable.ajax.reload()
+	    return
+
+  $('body').on 'click', '.reset-investmentclient-filters', ->
+    $('select[name="firm_name"]').val('').trigger('change')
+    $('select[name="investor_name"]').val('').trigger('change')
+    $('select[name="client_category"]').val('')
+    $('select[name="investment"]').val('')
+    $('input[name="duration_from"]').val('')
+    $('input[name="duration_to"]').val('')
+    window.history.pushState("", "", "?");
+    investmentClientTable.ajax.reload()
+    
+    return
 				 
 	 		 
 

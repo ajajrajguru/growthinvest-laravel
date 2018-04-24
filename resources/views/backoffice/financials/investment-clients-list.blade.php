@@ -19,10 +19,66 @@
             
             <div class="p-3 bg-gray">
                 <div class="row">
-                     
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                      <div class="inner-addon right-addon">
+                        <i class="fa fa-calendar"></i>
+                        <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range rounded-0" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="inner-addon right-addon">
+                        <i class="fa fa-calendar"></i>
+                        <input type="text"  placeholder="Select To Date" class="form-control datepicker date_range rounded-0" name="duration_to" value="{{ (isset($requestFilters['duration_to'])) ? $requestFilters['duration_to'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                      </div>
+                  </div>
+
+                    <div class="col-md-4 mb-3 mb-sm-0">
+                        <label for="">Firm Name</label>
+                      
+                        <select name="firm_name" class="form-control investorSearchinput select2-single"  >
+                            <option value="">All Firms</option>
+                            @foreach($firms as $firm)
+                            <option @if(isset($requestFilters['firm']) && $requestFilters['firm'] == $firm->id) selected @endif value="{{ $firm->id }}">{{ $firm->name }}</option>
+                            @endforeach
+
+                        </select>
+                        <em class="small">Select the firm whose investors you need to view</em>
+                        
+                    </div>
+                    <div class="col-md-4 mb-3 mb-sm-0">
+                        <label for="">Investor</label>
+                        <select name="investor_name" class="form-control investorSearchinput select2-single"  >
+                            <option value="">--</option>
+                            @foreach($investors as $investor)
+                            <option @if(isset($requestFilters['investor']) && $requestFilters['investor'] == $investor->id) selected @endif value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
                 </div>
                 <div class="row mt-3">
-                    
+                    <div class="col-md-4">
+                        <label for="">Investment</label>
+                        <select name="investment" class="form-control investorSearchinput"  >
+                            <option value="">All Investment</option>
+                            @foreach($investmentList as $investment)
+                            <option @if(isset($requestFilters['client-category']) && $requestFilters['client-category'] == $investment->id) selected @endif value="{{ $investment->id }}">{{ $investment->title }}</option>
+                            @endforeach
+                        </select>
+                    </div> 
+                    <div class="col-md-4">
+                        <label for="">Client Categories</label>
+                        <select name="client_category" class="form-control investorSearchinput"  >
+                            <option value="">All client categories</option>
+                            @foreach($clientCategories as $clientCategory)
+                            <option @if(isset($requestFilters['client-category']) && $requestFilters['client-category'] == $clientCategory->id) selected @endif value="{{ $clientCategory->id }}">{{ $clientCategory->name }}</option>
+                            @endforeach
+                        </select>
+                    </div> 
+                    <div class="col-md-3 align-self-end text-right">
+                      <button class="btn btn-primary mr-1 apply-investmentclient-filters">Apply</button>
+                        <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-investmentclient-filters">Reset filter</a>
+                    </div>
                 </div>
             </div>
 
