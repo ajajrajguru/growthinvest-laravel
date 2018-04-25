@@ -34,7 +34,7 @@
 
                     <div class="col-md-4 mb-3 mb-sm-0">
                         <label for="">Firm Name</label>
-                      
+                        <input type="hidden" name="firm_ids" value="{{ implode(',' ,$firm_ids) }}"> 
                         <select name="firm_name" class="form-control investorSearchinput select2-single"  >
                             <option value="">All Firms</option>
                             @foreach($firms as $firm)

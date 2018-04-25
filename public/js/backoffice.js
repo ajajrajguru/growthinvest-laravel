@@ -650,6 +650,7 @@
         data: function(data) {
           var filters;
           filters = {};
+          filters.firm_ids = $('input[name="firm_ids"]').val();
           filters.firm_name = $('select[name="firm_name"]').val();
           filters.investor_name = $('select[name="investor_name"]').val();
           filters.client_category = $('select[name="client_category"]').val();
@@ -766,6 +767,9 @@
       var type, urlParams;
       type = $(this).attr('report-type');
       urlParams = '';
+      if ($('input[name="firm_ids"]').val() !== "") {
+        urlParams += 'firm_ids=' + $('input[name="firm_ids"]').val();
+      }
       if ($('select[name="firm_name"]').val() !== "") {
         urlParams += 'firm=' + $('select[name="firm_name"]').val();
       }

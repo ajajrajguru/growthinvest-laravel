@@ -47,6 +47,7 @@ class UserPermission
                 'backoffice/firm/{giCode}/export-users'                       => ['edit_firm', 'edit_my_firm', 'add_user'],
                 'backoffice/firm/{giCode}/investors'                          => ['edit_firm', 'edit_my_firm', 'view_all_investors', 'investors'],
                 'backoffice/firm/{giCode}/investor/registration'              => ['edit_firm', 'edit_my_firm', 'add_investor'],
+                'backoffice/firm/{giCode}/investment-clients'              => ['edit_firm', 'manage_options'],
 
                 'backoffice/manage-act-feed-group'                            => ['manage_options'],
                 'backoffice/activity-group/get-activity-type'                 => ['manage_options'],

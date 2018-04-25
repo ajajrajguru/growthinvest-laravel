@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\BusinessInvestment;
 use App\BusinessListing;
 use App\Firm;
+use App\InvestorPdfHtml;
 use App\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
-use App\InvestorPdfHtml;
-use View;
 use Spipu\Html2Pdf\Html2Pdf;
+use View;
 
 class BusinessListingController extends Controller
 {
@@ -1080,15 +1080,14 @@ class BusinessListingController extends Controller
 
     }
 
-    public function investmentClients(Request $request,$firmGiCode = '')
+    public function investmentClients(Request $request)
     {
         $requestFilters = $request->all();
-        $firmCond = ($firmGiCode !='') ? ['gi_code'=>$firmGiCode] : [];
-        $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $user      = new User;
-        $investors = $user->getInvestorUsers();
+        $user                 = new User;
+        $investors            = $user->getInvestorUsers();
         $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
         $clientCategories     = $clientCategoriesList['list'];
 
@@ -1096,20 +1095,20 @@ class BusinessListingController extends Controller
             $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['funded']);
         })->where('business_listings.business_status', 'listed')->groupBy('business_listings.id')->get();
 
-
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Financials'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Investment Clients'];
-        
-        $data['requestFilters']     = $requestFilters;
-        $data['firms'] = $firms;
-        $data['investors'] = $investors;
+
+        $data['requestFilters']   = $requestFilters;
+        $data['firms']            = $firms;
+        $data['firm_ids']         = [];
+        $data['investors']        = $investors;
         $data['clientCategories'] = $clientCategories;
-        $data['investmentList'] = $investmentList;
-        $data['breadcrumbs'] = $breadcrumbs;
-        $data['pageTitle']   = 'Investment Clients';
-        $data['activeMenu']  = 'financials';
+        $data['investmentList']   = $investmentList;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Investment Clients';
+        $data['activeMenu']       = 'financials';
 
         return view('backoffice.financials.investment-clients')->with($data);
 
@@ -1127,22 +1126,22 @@ class BusinessListingController extends Controller
 
         $columnOrder = array(
 
-            '1' => 'invested_date',
-            '2' => 'investment',
-            '3' => 'investor',
-            '4' => 'firm',
-            '5' => 'invested_amount',
-            '6' => 'accrude',
-            '7' => 'paid',
-            '8' => 'due',
-            '9' => 'parent_firm',
+            '1'  => 'invested_date',
+            '2'  => 'investment',
+            '3'  => 'investor',
+            '4'  => 'firm',
+            '5'  => 'invested_amount',
+            '6'  => 'accrude',
+            '7'  => 'paid',
+            '8'  => 'due',
+            '9'  => 'parent_firm',
             '10' => 'investment_gi_code',
             '11' => 'investor_gi_code',
             '12' => 'firm_gi_code',
             '13' => 'transaction_type',
         );
 
-         if (isset($columnOrder[$orderValue['column']])) {
+        if (isset($columnOrder[$orderValue['column']])) {
             $columnName = $columnOrder[$orderValue['column']];
             $orderBy    = $orderValue['dir'];
         }
@@ -1160,9 +1159,9 @@ class BusinessListingController extends Controller
         $firms                 = [];
 
         $totalInvested = 0;
-        $totalDue = 0;
-        $totalPaid = 0;
-        $totalAccrude = 0;
+        $totalDue      = 0;
+        $totalPaid     = 0;
+        $totalAccrude  = 0;
         foreach ($investmentClients as $key => $investmentClient) {
             $commissions = $investmentClient->wm_commission;
             $paid        = ($investmentClient->commission_amount) ? $investmentClient->commission_amount : 0;
@@ -1203,19 +1202,15 @@ class BusinessListingController extends Controller
 
         }
 
-       
- 
-
-         
         $json_data = array(
             "draw"            => intval($requestData['draw']),
             "recordsTotal"    => intval($totalInvestmentClients),
             "recordsFiltered" => intval($totalInvestmentClients),
             "data"            => $investmentClientsData,
-            "totalInvested"            => format_amount($totalInvested, 0, true),
-            "totalDue"            => format_amount($totalDue, 0, true),
-            "totalPaid"            => format_amount($totalPaid, 0, true),
-            "totalAccrude"            => format_amount($totalAccrude, 0, true),
+            "totalInvested"   => format_amount($totalInvested, 0, true),
+            "totalDue"        => format_amount($totalDue, 0, true),
+            "totalPaid"       => format_amount($totalPaid, 0, true),
+            "totalAccrude"    => format_amount($totalAccrude, 0, true),
         );
 
         return response()->json($json_data);
@@ -1237,17 +1232,21 @@ class BusinessListingController extends Controller
             $join->on('users.firm_id', 'firms.id');
         })->where('business_investments.status', 'funded');
 
-
         if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != "")) {
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
-           $investmentClients ->whereDate("business_investments.created_at",">=",$fromDate);
-           $investmentClients ->whereDate("business_listings.created_at","<=",$toDate);
- 
+            $investmentClients->whereDate("business_investments.created_at", ">=", $fromDate);
+            $investmentClients->whereDate("business_listings.created_at", "<=", $toDate);
+
         }
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investmentClients->where('firms.id', $filters['firm_name']);
+        }
+
+        if (isset($filters['firm_ids']) && $filters['firm_ids'] != "") {  
+            $firmIds = explode(',', $filters['firm_ids']); 
+            $investmentClients->whereIn('firms.id', $firmIds);
         }
 
         if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
@@ -1257,15 +1256,13 @@ class BusinessListingController extends Controller
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
             $investmentClients->leftjoin('user_has_certifications', function ($join) {
                 $join->on('investor.id', 'user_has_certifications.user_id');
-            })->where('user_has_certifications.last_active', '1')->where('user_has_certifications.certification_default_id', $filters['client_category']); 
+            })->where('user_has_certifications.last_active', '1')->where('user_has_certifications.certification_default_id', $filters['client_category']);
 
         }
 
-        if (isset($filters['investment']) && $filters['investment'] != "") { 
+        if (isset($filters['investment']) && $filters['investment'] != "") {
             $investmentClients->where('business_listings.id', $filters['investment']);
         }
-
-
 
         foreach ($orderDataBy as $columnName => $orderBy) {
             $investmentClients->orderBy($columnName, $orderBy);
@@ -1286,8 +1283,9 @@ class BusinessListingController extends Controller
 
     }
 
-    public function exportInvestmentClients(Request $request){
-        $filters = $request->all();
+    public function exportInvestmentClients(Request $request)
+    {
+        $filters    = $request->all();
         $columnName = 'business_investments.created_at';
         $orderBy    = 'desc';
 
@@ -1300,12 +1298,12 @@ class BusinessListingController extends Controller
         $investmentClientsData = [];
         $firms                 = [];
 
-        $header   = ["Invested Date","Proposal,Investor","Firm Name","Invested Amount","Accrued","Paid","Due","Parent Firm","GI ID for the Investments","GI ID for the Investor","GI ID for the firm","Transaction type"];
+        $header = ["Invested Date", "Proposal,Investor", "Firm Name", "Invested Amount", "Accrued", "Paid", "Due", "Parent Firm", "GI ID for the Investments", "GI ID for the Investor", "GI ID for the firm", "Transaction type"];
 
         $totalInvested = 0;
-        $totalDue = 0;
-        $totalPaid = 0;
-        $totalAccrude = 0;
+        $totalDue      = 0;
+        $totalPaid     = 0;
+        $totalAccrude  = 0;
         foreach ($investmentClients as $key => $investmentClient) {
             $commissions = $investmentClient->wm_commission;
             $paid        = ($investmentClient->commission_amount) ? $investmentClient->commission_amount : 0;
@@ -1327,7 +1325,7 @@ class BusinessListingController extends Controller
 
             $investmentClientsData[] = [
                 date('d/m/Y', strtotime($investmentClient->investment_date)),
-                title_case($investmentClient->title) .'('.$investmentClient->investoremail.')',
+                title_case($investmentClient->title) . '(' . $investmentClient->investoremail . ')',
                 title_case($investmentClient->investorname),
                 title_case($investmentClient->firm_name),
                 format_amount($investmentClient->invested),
@@ -1339,7 +1337,6 @@ class BusinessListingController extends Controller
                 $investmentClient->investor_gi_code,
                 $investmentClient->firm_gi_code,
                 'AI-C',
-                
 
             ];
 
@@ -1352,8 +1349,8 @@ class BusinessListingController extends Controller
 
     public function generateInvestmentClientsPdf(Request $request)
     {
-        $data    = [];
-        $filters = $request->all();
+        $data       = [];
+        $filters    = $request->all();
         $columnName = 'business_investments.created_at';
         $orderBy    = 'desc';
 
@@ -1362,7 +1359,6 @@ class BusinessListingController extends Controller
         $filterInvestmentClients = $this->getFilteredInvestmentClients($filters, 0, 0, $orderDataBy);
         $investmentClients       = $filterInvestmentClients['list'];
         $totalInvestmentClients  = $filterInvestmentClients['totalInvestmentClients'];
-
 
         $args                     = array();
         $header_footer_start_html = getHeaderPageMarkup($args);
