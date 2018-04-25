@@ -49,6 +49,7 @@
                     </div> 
                    
                     <div class="col-md-3 align-self-end text-right">
+                      <input type="hidden" name="business_ids" >
                       <button class="btn btn-primary mr-1 apply-businessclient-filters">Apply</button>
                         <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-businessclient-filters">Reset filter</a>
                     </div>

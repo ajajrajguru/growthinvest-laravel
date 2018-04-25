@@ -66,6 +66,7 @@
                         </select>
                     </div> 
                     <div class="col-md-3 align-self-end text-right">
+                        <input type="hidden" name="business_ids" > 
                       <button class="btn btn-primary mr-1 apply-investmentclient-filters">Apply</button>
                         <a href="javascript:void(0)" class="btn btn-primary btn-sm reset-investmentclient-filters">Reset filter</a>
                     </div>
@@ -127,7 +128,7 @@
             <div>
                 <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input inv-cli-cols" value="0" id="ch_0" checked>
-                  <label class="custom-control-label" for="ch_0">Logo</label>
+                  <label class="custom-control-label" for="ch_0">#</label>
                 </div>
                 <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input inv-cli-cols" value="1" id="ch_1" checked>

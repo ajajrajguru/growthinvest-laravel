@@ -1183,7 +1183,7 @@ class BusinessListingController extends Controller
             $parentFirmName = ($investmentClient->firms_parent_id) ? $firms[$investmentClient->firms_parent_id] : '';
 
             $investmentClientsData[] = [
-                '#'                  => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investmentClient->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $investmentClient->id . '"><label class="custom-control-label" for="ch' . $investmentClient->id . '"></label></div> ',
+                '#'                  => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investmentClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $investmentClient->id . '"><label class="custom-control-label" for="ch' . $investmentClient->id . '"></label></div> ',
                 'invested_date'      => date('d/m/Y', strtotime($investmentClient->investment_date)),
                 'investment'         => title_case($investmentClient->title),
                 'investor'           => title_case($investmentClient->investorname),
@@ -1250,6 +1250,14 @@ class BusinessListingController extends Controller
             $investmentClients->whereIn('firms.id', $firmIds);
         }
 
+        if (isset($filters['business_ids']) && $filters['business_ids'] != "") {
+            $businessIds = explode(',', $filters['business_ids']);
+            $businessIds = array_filter($businessIds);
+            $investmentClients->whereIn('business_listings.id', $businessIds);
+        }
+
+        
+
         if (isset($filters['investor_name']) && $filters['investor_name'] != "") {
             $investmentClients->where('business_investments.investor_id', $filters['investor_name']);
         }
@@ -1286,7 +1294,7 @@ class BusinessListingController extends Controller
 
     public function exportInvestmentClients(Request $request)
     {
-        $filters    = $request->all();
+        $filters    = $request->all(); 
         $columnName = 'business_investments.created_at';
         $orderBy    = 'desc';
 
@@ -1456,7 +1464,7 @@ class BusinessListingController extends Controller
             $totalAccrude += $accrude;
 
             $businessClientsData[] = [
-                '#'               => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
+                '#'               => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
                 'investment'      => title_case($businessClient->title) . '<br>(' . $businessClient->investoremail . ')',
                 'invested_amount' => format_amount($businessClient->investment_raised, 0, true),
                 'accrude'         => format_amount($accrude, 0, true),
@@ -1512,6 +1520,12 @@ class BusinessListingController extends Controller
         if (isset($filters['firm_ids']) && $filters['firm_ids'] != "") {
             $firmIds = explode(',', $filters['firm_ids']);
             $businessClients->whereIn('firms.id', $firmIds);
+        }
+
+        if (isset($filters['business_ids']) && $filters['business_ids'] != "") {
+            $businessIds = explode(',', $filters['business_ids']);
+            $businessIds = array_filter($businessIds);
+            $businessClients->whereIn('business_listings.id', $businessIds);
         }
 
         if (isset($filters['investment']) && $filters['investment'] != "") {

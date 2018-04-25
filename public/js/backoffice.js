@@ -771,13 +771,13 @@
         urlParams += 'firm_ids=' + $('input[name="firm_ids"]').val();
       }
       if ($('select[name="firm_name"]').val() !== "") {
-        urlParams += 'firm=' + $('select[name="firm_name"]').val();
+        urlParams += '&firm=' + $('select[name="firm_name"]').val();
       }
       if ($('select[name="investor_name"]').val() !== "") {
-        urlParams += '&investor=' + $('select[name="investor_name"]').val();
+        urlParams += '&investor_name=' + $('select[name="investor_name"]').val();
       }
       if ($('select[name="client_category"]').val() !== "") {
-        urlParams += '&client-category=' + $('select[name="client_category"]').val();
+        urlParams += '&client_category=' + $('select[name="client_category"]').val();
       }
       if ($('select[name="investment"]').val() !== "") {
         urlParams += '&investment=' + $('select[name="investment"]').val();
@@ -787,6 +787,9 @@
       }
       if ($('input[name="duration_to"]').val() !== "") {
         urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('input[name="business_ids"]').val() !== "") {
+        urlParams += '&business_ids=' + $('input[name="business_ids"]').val();
       }
       if (type === 'csv') {
         return window.open("/backoffice/financials/export-investmentclient?" + urlParams);
@@ -901,8 +904,11 @@
       if ($('input[name="firm_ids"]').val() !== "") {
         urlParams += 'firm_ids=' + $('input[name="firm_ids"]').val();
       }
+      if ($('input[name="business_ids"]').val() !== "") {
+        urlParams += '&business_ids=' + $('input[name="business_ids"]').val();
+      }
       if ($('select[name="firm_name"]').val() !== "") {
-        urlParams += 'firm=' + $('select[name="firm_name"]').val();
+        urlParams += '&firm=' + $('select[name="firm_name"]').val();
       }
       if ($('select[name="investment"]').val() !== "") {
         urlParams += '&investment=' + $('select[name="investment"]').val();
@@ -918,6 +924,14 @@
       } else if (type === 'pdf') {
         return window.open("/backoffice/financials/businessclient-pdf?" + urlParams);
       }
+    });
+    $('body').on('click', 'input[name="ck_business"]', function() {
+      var textVal;
+      textVal = '';
+      $('input[name="ck_business"]:checked').each(function() {
+        return textVal += ',' + $(this).val();
+      });
+      return $('input[name="business_ids"]').val(textVal);
     });
     $('body').on('click', '.add-fees', function() {
       var businessId, investorId, type;
