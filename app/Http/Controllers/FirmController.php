@@ -462,6 +462,49 @@ class FirmController extends Controller
 
     }
 
+    public function firmBusinessClients(Request $request, $firmGiCode = '')
+    {
+        $requestFilters = $request->all();
+        $firm           = Firm::where('gi_code', $firmGiCode)->first();
+        $firmCond       = [];
+
+        if (empty($firm)) {
+            abort(404);
+        }
+
+        $firms = Firm::where('parent_id', $firm->id)->get();
+        $firms->push($firm);
+        $firmIds  = $firms->pluck('id')->toArray();
+        $firmCond = ['firm_id' => $firm->id];
+
+       
+
+        $investmentList = BusinessListing::select('business_listings.*')->join('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['funded']);
+        })->leftjoin('users', function ($join) {
+            $join->on('business_listings.owner_id', 'users.id');
+        })->whereIn('users.firm_id', $firmIds)->where('business_listings.business_status', 'listed')->groupBy('business_listings.id')->get();
+
+        $breadcrumbs   = [];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Business Clients'];
+
+        $data['requestFilters']   = $requestFilters;
+        $data['firm']            = $firm;
+        $data['firms']            = $firms;
+        $data['firm_ids']         = $firmIds;
+        $data['investmentList']   = $investmentList;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Business Clients';
+        $data['firmActiveMenu']   = 'firm-business-clients';
+
+        return view('backoffice.firm.business-clients')->with($data);
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

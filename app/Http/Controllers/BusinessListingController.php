@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\BusinessInvestment;
 use App\BusinessListing;
-use App\Commission;
 use App\Firm;
 use App\InvestorPdfHtml;
 use App\User;
@@ -1385,10 +1384,7 @@ class BusinessListingController extends Controller
         $firmsList      = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms          = $firmsList['list'];
 
-        $user                 = new User;
-        $investors            = $user->getInvestorUsers();
-        $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
-        $clientCategories     = $clientCategoriesList['list'];
+        
 
         $investmentList = BusinessListing::select('business_listings.*')->join('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['funded']);
@@ -1402,8 +1398,6 @@ class BusinessListingController extends Controller
         $data['requestFilters']   = $requestFilters;
         $data['firms']            = $firms;
         $data['firm_ids']         = [];
-        $data['investors']        = $investors;
-        $data['clientCategories'] = $clientCategories;
         $data['investmentList']   = $investmentList;
         $data['breadcrumbs']      = $breadcrumbs;
         $data['pageTitle']        = 'Business Clients';
@@ -1441,36 +1435,34 @@ class BusinessListingController extends Controller
         $totalBusinessClients  = $filterBusinessClients['totalBusinessClients'];
 
         $businessClientsData = [];
-        $firms                 = [];
+        $firms               = [];
 
         $totalInvested = 0;
         $totalDue      = 0;
         $totalPaid     = 0;
         $totalAccrude  = 0;
-         
+
         foreach ($businessClients as $key => $businessClient) {
-            $commissions = $businessClient->wm_commission;
-            $commisonPaid        = DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '".$businessClient->id."' group by `business_id`"); 
-            $paid        = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
-            $accrude     = ($commissions / 100) * $businessClient->invested;
-            $due         = $accrude - $paid;
+            $commissions  = $businessClient->wm_commission;
+            $commisonPaid = DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
+            $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
+            $accrude      = ($commissions / 100) * $businessClient->invested;
+            $due          = $accrude - $paid;
 
             $totalInvested += $businessClient->invested;
             $totalDue += $due;
             $totalPaid += $paid;
             $totalAccrude += $accrude;
 
-            
-
             $businessClientsData[] = [
-                '#'                  => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
-                'investment'         => title_case($businessClient->title) . '<br>(' . $businessClient->investoremail . ')',
-                'invested_amount'    => format_amount($businessClient->investment_raised, 0, true),
-                'accrude'            => format_amount($accrude, 0, true),
-                'paid'               => format_amount($paid, 0, true),
-                'due'                => format_amount($due, 0, true),
-               
-                'action'             => '<a href="javascript:void(0)">Expand<i class="icon-arrow-down"></i></a>',
+                '#'               => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
+                'investment'      => title_case($businessClient->title) . '<br>(' . $businessClient->investoremail . ')',
+                'invested_amount' => format_amount($businessClient->investment_raised, 0, true),
+                'accrude'         => format_amount($accrude, 0, true),
+                'paid'            => format_amount($paid, 0, true),
+                'due'             => format_amount($due, 0, true),
+
+                'action'          => '<a href="javascript:void(0)">Expand<i class="icon-arrow-down"></i></a>',
 
             ];
 
@@ -1521,9 +1513,6 @@ class BusinessListingController extends Controller
             $businessClients->whereIn('firms.id', $firmIds);
         }
 
-  
-        
-
         if (isset($filters['investment']) && $filters['investment'] != "") {
             $businessClients->where('business_listings.id', $filters['investment']);
         }
@@ -1542,7 +1531,7 @@ class BusinessListingController extends Controller
             $businessClients      = $businessClients->get();
             $totalBusinessClients = $businessClients->count();
         }
-         
+
         return ['totalBusinessClients' => $totalBusinessClients, 'list' => $businessClients];
 
     }
@@ -1555,58 +1544,35 @@ class BusinessListingController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterInvestmentClients = $this->getFilteredInvestmentClients($filters, 0, 0, $orderDataBy);
-        $investmentClients       = $filterInvestmentClients['list'];
-        $totalInvestmentClients  = $filterInvestmentClients['totalInvestmentClients'];
+        $filterBusinessClients = $this->getFilteredBusinessClients($filters, 0, 0, $orderDataBy);
+        $businessClients       = $filterBusinessClients['list'];
+        $totalBusinessClients  = $filterBusinessClients['totalBusinessClients'];
 
         $investmentClientsData = [];
         $firms                 = [];
 
-        $header = ["Invested Date", "Proposal,Investor", "Firm Name", "Invested Amount", "Accrued", "Paid", "Due", "Parent Firm", "GI ID for the Investments", "GI ID for the Investor", "GI ID for the firm", "Transaction type"];
+        $header = ['Platform GI Code', 'Business Proposal', 'Investment Raised', 'Commission accrued', 'Commission paid', 'Commission due'];
 
-        $totalInvested = 0;
-        $totalDue      = 0;
-        $totalPaid     = 0;
-        $totalAccrude  = 0;
-        foreach ($investmentClients as $key => $investmentClient) {
-            $commissions = $investmentClient->wm_commission;
-            $paid        = ($investmentClient->commission_amount) ? $investmentClient->commission_amount : 0;
-            $accrude     = ($commissions / 100) * $investmentClient->invested;
-            $due         = $accrude - $paid;
+        foreach ($businessClients as $key => $businessClient) {
+            $commissions  = $businessClient->wm_commission;
+            $commisonPaid = DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
+            $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
+            $accrude      = ($commissions / 100) * $businessClient->invested;
+            $due          = $accrude - $paid;
 
-            $totalInvested += $investmentClient->invested;
-            $totalDue += $due;
-            $totalPaid += $paid;
-            $totalAccrude += $accrude;
-
-            $firms[$investmentClient->firm_id] = $investmentClient->firm_name;
-
-            if ($investmentClient->firms_parent_id && !isset($firms[$investmentClient->firms_parent_id])) {
-                $parentFirm                                = Firm::find($investmentClient->firms_parent_id);
-                $firms[$investmentClient->firms_parent_id] = (!empty($parentFirm)) ? $parentFirm->name : '';
-            }
-            $parentFirmName = ($investmentClient->firms_parent_id) ? $firms[$investmentClient->firms_parent_id] : '';
-
-            $investmentClientsData[] = [
-                date('d/m/Y', strtotime($investmentClient->investment_date)),
-                title_case($investmentClient->title) . '(' . $investmentClient->investoremail . ')',
-                title_case($investmentClient->investorname),
-                title_case($investmentClient->firm_name),
-                format_amount($investmentClient->investment_raised),
+            $businessClientsData[] = [
+                $businessClient->gi_code,
+                title_case($businessClient->title) . '(' . $businessClient->investoremail . ')',
+                format_amount($businessClient->investment_raised, 0),
                 format_amount($accrude, 0),
                 format_amount($paid, 0),
                 format_amount($due, 0),
-                $parentFirmName,
-                $investmentClient->gi_code,
-                $investmentClient->investor_gi_code,
-                $investmentClient->firm_gi_code,
-                'AI-C',
 
             ];
 
         }
-        $fileName = 'Wealth_Manager_Fees_as_on_' . date('d-m-Y');
-        generateCSV($header, $investmentClientsData, $fileName);
+        $fileName = 'Introducer_commission_as_on_' . date('d-m-Y');
+        generateCSV($header, $businessClientsData, $fileName);
 
         return true;
     }
@@ -1620,16 +1586,16 @@ class BusinessListingController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterInvestmentClients = $this->getFilteredInvestmentClients($filters, 0, 0, $orderDataBy);
-        $investmentClients       = $filterInvestmentClients['list'];
-        $totalInvestmentClients  = $filterInvestmentClients['totalInvestmentClients'];
+        $filterBusinessClients = $this->getFilteredBusinessClients($filters, 0, 0, $orderDataBy);
+        $businessClients       = $filterBusinessClients['list'];
+        $totalBusinessClients  = $filterBusinessClients['totalBusinessClients'];
 
         $args                     = array();
         $header_footer_start_html = getHeaderPageMarkup($args);
 
         $investorPdf = new InvestorPdfHtml();
 
-        $html = $investorPdf->getInvestmentClientHtml($investmentClients);
+        $html = $investorPdf->getBusinessClientHtml($businessClients);
         // echo $html; exit;
 
         $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(5, 5, 5, 5));

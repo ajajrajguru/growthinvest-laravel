@@ -72,6 +72,18 @@
         </div>
 
         <div class="col-md-10 bg-white border border-gray border-left-0 border-right-0">
+          <div class="squareline-tabs">
+            <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                       <a class="nav-link d-none d-sm-block active "   href="{{url('backoffice/financials/investment-clients')}}">Client Investment </a>
+                   </li>
+                    <li class="nav-item">
+                       <a class="nav-link d-none d-sm-block"  href="{{url('backoffice/financials/business-clients')}}">Business Investment</a>
+                   </li>
+         
+               </ul>
+        </div>
+
              @include('backoffice.financials.business-clients-list')           
         </div>
     </div>
