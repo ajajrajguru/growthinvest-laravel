@@ -566,9 +566,149 @@ $(document).ready ->
 
 	$('.download-current-business-valuation-csv').click ->		 
 		window.open("/backoffice/current-valuations/export-current-valuations");
+
+
+	investmentClientTable = $('#datatable-investment-client').DataTable(
+	    'paging': false
+	    'processing': false
+	    'serverSide': true
+	    'bAutoWidth': false
+	    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
+	    'aaSorting': [[1,'asc']]
+	    'ajax':
+	      url: '/backoffice/financials/get-investment-client'
+	      type: 'post'
+	      dataSrc: (json) ->
+	      	console.log json
+	      	$("#total_invested").html(json.totalInvested)
+	      	$("#total_accrude").html(json.totalAccrude)
+	      	$("#total_paid").html(json.totalPaid)
+	      	$("#total_due").html(json.totalDue)
+
+	      	return json.data
+	      data: (data) ->
+
+	        filters = {}
+
+	        filters.firm_ids = $('input[name="firm_ids"]').val()
+	        filters.firm_name = $('select[name="firm_name"]').val()
+	        filters.investor_name = $('select[name="investor_name"]').val()
+	        filters.client_category = $('select[name="client_category"]').val()
+	        filters.investment = $('select[name="investment"]').val()
+	        filters.duration_from = $('input[name="duration_from"]').val()
+	        filters.duration_to = $('input[name="duration_to"]').val()
+	        data.filters = filters
+	        data
+
+	      error: ->
+	        return
+
+	    'columns': [
+	      { 'data': '#' , "orderable": false}
+	      { 'data': 'invested_date' , "orderable": false}
+	      { 'data': 'investment', "orderable": false}
+	      { 'data': 'investor' , "orderable": false}
+	      { 'data': 'firm', "orderable": false }
+	      { 'data': 'invested_amount', "orderable": false }
+	      { 'data': 'accrude', "orderable": false }
+	      { 'data': 'paid', "orderable": false }
+	      { 'data': 'due', "orderable": false }
+	      { 'data': 'parent_firm', "orderable": false }
+	      { 'data': 'investment_gi_code', "orderable": false}
+	      { 'data': 'investor_gi_code', "orderable": false}
+	      { 'data': 'firm_gi_code', "orderable": false}
+	      { 'data': 'transaction_type', "orderable": false}
+	      { 'data': 'action' , "orderable": false}
+	    ]
+	    'columnDefs': [
+	      {
+	        'targets': 'col-visble'
+	        'visible': false
+	      }
+	    ]
+	    )
+
+	$('body').on 'click', '.alter-investmentclient-table', ->
+	    $('.inv-cli-cols').each ->
+	      colIndex = $(this).val()
+	      if $(this).is(':checked')
+	        investmentClientTable.column( colIndex ).visible( true );
+	      else
+	        investmentClientTable.column( colIndex ).visible( false );
+
+	    $('#columnVisibility').modal('hide')
+	    return
+
+	$('body').on 'click', '.apply-investmentclient-filters', ->
+	    urlParams = ''
+
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+	    if($('select[name="investor_name"]').val()!="")
+	      urlParams +='&investor='+$('select[name="investor_name"]').val()
+
+	    if($('select[name="client_category"]').val()!="")
+	      urlParams +='&client-category='+$('select[name="client_category"]').val()
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+	    window.history.pushState("", "", "?"+urlParams);
+	    investmentClientTable.ajax.reload()
+	    return
+
+	$('body').on 'click', '.reset-investmentclient-filters', ->
+		$('select[name="firm_name"]').val('').trigger('change')
+		$('select[name="investor_name"]').val('').trigger('change')
+		$('select[name="client_category"]').val('')
+		$('select[name="investment"]').val('')
+		$('input[name="duration_from"]').val('')
+		$('input[name="duration_to"]').val('')
+		window.history.pushState("", "", "?");
+		investmentClientTable.ajax.reload()
+
+		return
+
+	$('.download-investmentclient-report').click ->
+	    type = $(this).attr('report-type')
+	    urlParams = ''
+
+	    if($('input[name="firm_ids"]').val()!="")
+	      urlParams +='firm_ids='+$('input[name="firm_ids"]').val() 
+	      
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+	    if($('select[name="investor_name"]').val()!="")
+	      urlParams +='&investor='+$('select[name="investor_name"]').val()
+
+	    if($('select[name="client_category"]').val()!="")
+	      urlParams +='&client-category='+$('select[name="client_category"]').val()
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+	       
+
+	    if(type == 'csv')  
+	      window.open("/backoffice/financials/export-investmentclient?"+urlParams)
+	    else if(type == 'pdf')  
+	      window.open("/backoffice/financials/investmentclient-pdf?"+urlParams)
+
+
 				 
 	 		 
-
-
 
 

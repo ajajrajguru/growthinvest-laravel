@@ -14,7 +14,7 @@
                <a class="nav-link d-none d-sm-block h-100 @if($firmActiveMenu == 'firm-investment-clients') active @endif "   href="{{url('backoffice/firm/'.$firm->gi_code.'/investment-clients')}}"><div class="">Investment Clients</div></a>
            </li>
            <li class="nav-item">
-               <a class="nav-link d-none d-sm-block h-100 @if($firmActiveMenu == 'investors') active @endif "   href="{{url('backoffice/firm/'.$firm->gi_code.'/investors')}}"><div class="">Investors </a>
+               <a class="nav-link d-none d-sm-block h-100 @if($firmActiveMenu == 'investors') active @endif "   href="{{url('backoffice/firm/'.$firm->gi_code.'/investors')}}"><div class="">Investors</div></a>
            </li>
        </ul>
 </div>

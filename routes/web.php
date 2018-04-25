@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('firm/{giCode}/export-users', 'FirmController@exportFirmUsers');
     Route::get('firm/{giCode}/investors', 'FirmController@firmInvestors');
     Route::get('firm/{giCode}/investor/registration', 'InvestorController@registration');
+    Route::get('firm/{giCode}/investment-clients', 'FirmController@firmInvestmentClients');
     Route::resource('firm', 'FirmController');
  
     //users
@@ -111,6 +112,15 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('firm-invite/{giCode}/{type}', 'FirmController@getInvite');
     Route::get('dashboard/', 'UserController@showDashboard');
 
+    // financials
+    Route::get('financials/investment-clients', 'BusinessListingController@investmentClients');
+    Route::post('financials/get-investment-client', 'BusinessListingController@getInvestmentClients');
+    Route::get('financials/business-clients', 'BusinessListingController@businessClients');
+    Route::get('financials/export-investmentclient', 'BusinessListingController@exportInvestmentClients');
+    Route::get('financials/investmentclient-pdf', 'BusinessListingController@generateInvestmentClientsPdf');
+
+
+
     /*Coming soon routes on dashboard */
     Route::get('dashboard', ['type' => 'home', 'uses' => 'UserController@showDashboard']);
     Route::get('dashboard/portfolio', ['type' => 'portfolio', 'uses' => 'UserController@showDashboard']);
@@ -128,6 +138,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('manage/companylist', ['type' => 'manage-companylist', 'uses' => 'UserController@showAdminManage']);
     // Route::get('manage/manage-act-feed-group', ['type' => 'manage-activityfeedgroup', 'uses' => 'UserController@showAdminManage']);
     /*End Coming soon routes on manage */
+
 
 
 
