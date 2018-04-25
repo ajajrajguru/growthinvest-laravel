@@ -112,6 +112,7 @@
             </div>
         </div>
 
+      @include('backoffice.financials.add-fees-model')    
  <!-- Modal -->
     <div class="modal fade" id="columnVisibility" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-sm" role="document">

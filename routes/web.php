@@ -122,7 +122,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('financials/get-business-client', 'BusinessListingController@getBusinessClients');
     Route::get('financials/export-businessclient', 'BusinessListingController@exportBusinessClients');
     Route::get('financials/businessclient-pdf', 'BusinessListingController@generateBusinessClientsPdf');
-
+    Route::post('financials/save-commission', 'BusinessListingController@saveCommission');
 
 
     /*Coming soon routes on dashboard */

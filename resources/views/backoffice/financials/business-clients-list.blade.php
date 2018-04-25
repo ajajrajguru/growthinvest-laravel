@@ -88,4 +88,4 @@
             </div>
         </div>
 
-  
+  @include('backoffice.financials.add-fees-model')    

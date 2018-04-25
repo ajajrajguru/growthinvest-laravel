@@ -91,6 +91,7 @@ class UserPermission
                 'backoffice/financials/export-businessclient'                 => ['manage_options'],
                 'backoffice/financials/businessclient-pdf'                 => ['manage_options'],
                 'backoffice/financials/get-business-client'                 => ['manage_options'],
+                'backoffice/financials/save-commission'                 => ['manage_options'],
 
                 'backoffice/entrepreneurs'                                    => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'                  => ['view_all_business_owners', 'view_firm_business_owners'],

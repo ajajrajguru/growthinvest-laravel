@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessInvestment;
+use App\Commission;
 use App\BusinessListing;
 use App\Firm;
 use App\InvestorPdfHtml;
@@ -1196,7 +1197,7 @@ class BusinessListingController extends Controller
                 'investor_gi_code'   => $investmentClient->investor_gi_code,
                 'firm_gi_code'       => $investmentClient->firm_gi_code,
                 'transaction_type'   => 'AI-C',
-                'action'             => '<a href="javascript:void(0)">Expand<i class="icon-arrow-down"></i></a>',
+                'action'             => '<a href="javascript:void(0)" class="add-fees"   business="'.$investmentClient->id.'" investor="'.$investmentClient->investorid.'" type="wm">Expand<i class="icon-arrow-down"></i></a>',
 
             ];
 
@@ -1220,7 +1221,7 @@ class BusinessListingController extends Controller
     public function getFilteredInvestmentClients($filters, $skip, $length, $orderDataBy)
     {
 
-        $investmentClients = BusinessInvestment::select(\DB::raw('business_listings.*,business_investments.created_at as investment_date,firms.name as firm_name,firms.id as firm_id,firms.gi_code as firm_gi_code,firms.wm_commission ,firms.parent_id as firms_parent_id ,commissions.amount as commission_amount, investor.gi_code as investor_gi_code, CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.email  as investoremail, SUM(business_investments.amount) as invested'))->leftjoin('business_listings', function ($join) {
+        $investmentClients = BusinessInvestment::select(\DB::raw('business_listings.*,business_investments.created_at as investment_date,business_investments.investor_id as investorid,firms.name as firm_name,firms.id as firm_id,firms.gi_code as firm_gi_code,firms.wm_commission ,firms.parent_id as firms_parent_id ,commissions.amount as commission_amount, investor.gi_code as investor_gi_code, CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.email  as investoremail, SUM(business_investments.amount) as invested'))->leftjoin('business_listings', function ($join) {
             $join->on('business_investments.business_id', 'business_listings.id')->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish');
         })->leftjoin('users as investor', function ($join) {
             $join->on('business_investments.investor_id', 'investor.id');
@@ -1462,7 +1463,7 @@ class BusinessListingController extends Controller
                 'paid'            => format_amount($paid, 0, true),
                 'due'             => format_amount($due, 0, true),
 
-                'action'          => '<a href="javascript:void(0)">Expand<i class="icon-arrow-down"></i></a>',
+                'action'          => '<a href="javascript:void(0)" class="add-fees" business="'.$businessClient->id.'" investor="0" type="introducer">Expand<i class="icon-arrow-down"></i></a>',
 
             ];
 
@@ -1605,6 +1606,24 @@ class BusinessListingController extends Controller
         $html2pdf->output();
 
         return true;
+
+    }
+
+    public function saveCommission(Request $request){
+        $requestData    = $request->all();
+
+        $commission = new Commission;
+        $commission->commission_type = $requestData['type'];
+
+
+
+        $commission->investor_id = $requestData['investor_id'];
+        $commission->business_id = $requestData['business_id'];
+        $commission->comment = $requestData['comment'];
+        $commission->amount  = $requestData['amount'];
+        $commission->save();
+
+        return $commission->id;
 
     }
 

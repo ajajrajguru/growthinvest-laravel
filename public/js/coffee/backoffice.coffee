@@ -826,6 +826,41 @@ $(document).ready ->
 	    else if(type == 'pdf')  
 	      window.open("/backoffice/financials/businessclient-pdf?"+urlParams)
 
+	$('body').on 'click', '.add-fees', ->
+		investorId = $(this).attr('investor')
+		businessId = $(this).attr('business')
+		type = $(this).attr('type')
+		$("#addFeesModel").find('input[name="investor_id"]').val(investorId)
+		$("#addFeesModel").find('input[name="type"]').val(type)
+		$("#addFeesModel").find('input[name="business_id"]').val(businessId)
+		$("#addFeesModel").modal('show')
+
+	$('body').on 'click', '.save-investment-fees', ->
+		investorId = $('input[name="investor_id"]').val()
+		businessId = $('input[name="business_id"]').val()
+		type = $('input[name="type"]').val()
+		amount = $('input[name="amount"]').val()
+		comment = $('textarea[name="comments"]').val()
+
+		$.ajax
+			type: 'post'
+			url: '/backoffice/financials/save-commission'
+			data:
+				'investor_id': investorId
+				'business_id': businessId
+				'type': type
+				'comment': comment
+				'amount': amount
+			success: (data) ->
+				 
+				if type == 'wm'
+					investmentClientTable.ajax.reload()
+				else
+					businessClientTable.ajax.reload()
+
+				$("#addFeesModel").modal('hide')
+
+
 
 				 
 	 		 

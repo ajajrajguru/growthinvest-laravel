@@ -894,7 +894,7 @@
       window.history.pushState("", "", "?");
       businessClientTable.ajax.reload();
     });
-    return $('.download-businessclient-report').click(function() {
+    $('.download-businessclient-report').click(function() {
       var type, urlParams;
       type = $(this).attr('report-type');
       urlParams = '';
@@ -918,6 +918,43 @@
       } else if (type === 'pdf') {
         return window.open("/backoffice/financials/businessclient-pdf?" + urlParams);
       }
+    });
+    $('body').on('click', '.add-fees', function() {
+      var businessId, investorId, type;
+      investorId = $(this).attr('investor');
+      businessId = $(this).attr('business');
+      type = $(this).attr('type');
+      $("#addFeesModel").find('input[name="investor_id"]').val(investorId);
+      $("#addFeesModel").find('input[name="type"]').val(type);
+      $("#addFeesModel").find('input[name="business_id"]').val(businessId);
+      return $("#addFeesModel").modal('show');
+    });
+    return $('body').on('click', '.save-investment-fees', function() {
+      var amount, businessId, comment, investorId, type;
+      investorId = $('input[name="investor_id"]').val();
+      businessId = $('input[name="business_id"]').val();
+      type = $('input[name="type"]').val();
+      amount = $('input[name="amount"]').val();
+      comment = $('textarea[name="comments"]').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/financials/save-commission',
+        data: {
+          'investor_id': investorId,
+          'business_id': businessId,
+          'type': type,
+          'comment': comment,
+          'amount': amount
+        },
+        success: function(data) {
+          if (type === 'wm') {
+            investmentClientTable.ajax.reload();
+          } else {
+            businessClientTable.ajax.reload();
+          }
+          return $("#addFeesModel").modal('hide');
+        }
+      });
     });
   });
 
