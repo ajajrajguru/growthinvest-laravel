@@ -48,6 +48,7 @@ class UserPermission
                 'backoffice/firm/{giCode}/investors'                          => ['edit_firm', 'edit_my_firm', 'view_all_investors', 'investors'],
                 'backoffice/firm/{giCode}/investor/registration'              => ['edit_firm', 'edit_my_firm', 'add_investor'],
                 'backoffice/firm/{giCode}/investment-clients'              => ['edit_firm', 'manage_options'],
+                'backoffice/firm/{giCode}/business-clients'              => ['edit_firm', 'manage_options'],
 
                 'backoffice/manage-act-feed-group'                            => ['manage_options'],
                 'backoffice/activity-group/get-activity-type'                 => ['manage_options'],
@@ -87,6 +88,9 @@ class UserPermission
                 'backoffice/financials/investmentclient-pdf'                 => ['manage_options'],
                 'backoffice/financials/get-investment-client'                 => ['manage_options'],
                 'backoffice/financials/business-clients'                      => ['manage_options'],
+                'backoffice/financials/export-businessclient'                 => ['manage_options'],
+                'backoffice/financials/businessclient-pdf'                 => ['manage_options'],
+                'backoffice/financials/get-business-client'                 => ['manage_options'],
 
                 'backoffice/entrepreneurs'                                    => ['view_all_business_owners', 'view_firm_business_owners'],
                 'backoffice/entrepreneurs/get-entrepreneurs'                  => ['view_all_business_owners', 'view_firm_business_owners'],

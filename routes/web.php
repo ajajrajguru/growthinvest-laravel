@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('firm/{giCode}/investors', 'FirmController@firmInvestors');
     Route::get('firm/{giCode}/investor/registration', 'InvestorController@registration');
     Route::get('firm/{giCode}/investment-clients', 'FirmController@firmInvestmentClients');
+    Route::get('firm/{giCode}/business-clients', 'FirmController@firmBusinessClients');
     Route::resource('firm', 'FirmController');
  
     //users
@@ -115,9 +116,12 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     // financials
     Route::get('financials/investment-clients', 'BusinessListingController@investmentClients');
     Route::post('financials/get-investment-client', 'BusinessListingController@getInvestmentClients');
-    Route::get('financials/business-clients', 'BusinessListingController@businessClients');
     Route::get('financials/export-investmentclient', 'BusinessListingController@exportInvestmentClients');
     Route::get('financials/investmentclient-pdf', 'BusinessListingController@generateInvestmentClientsPdf');
+    Route::get('financials/business-clients', 'BusinessListingController@businessClients');
+    Route::post('financials/get-business-client', 'BusinessListingController@getBusinessClients');
+    Route::get('financials/export-businessclient', 'BusinessListingController@exportBusinessClients');
+    Route::get('financials/businessclient-pdf', 'BusinessListingController@generateBusinessClientsPdf');
 
 
 

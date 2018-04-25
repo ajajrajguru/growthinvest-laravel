@@ -708,6 +708,125 @@ $(document).ready ->
 	      window.open("/backoffice/financials/investmentclient-pdf?"+urlParams)
 
 
+
+	businessClientTable = $('#datatable-business-client').DataTable(
+	    'paging': false
+	    'processing': false
+	    'serverSide': true
+	    'bAutoWidth': false
+	    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
+	    'aaSorting': [[1,'asc']]
+	    'ajax':
+	      url: '/backoffice/financials/get-business-client'
+	      type: 'post'
+	      dataSrc: (json) ->
+	      	console.log json
+	      	$("#total_invested").html(json.totalInvested)
+	      	$("#total_accrude").html(json.totalAccrude)
+	      	$("#total_paid").html(json.totalPaid)
+	      	$("#total_due").html(json.totalDue)
+
+	      	return json.data
+	      data: (data) ->
+
+	        filters = {}
+
+	        filters.firm_ids = $('input[name="firm_ids"]').val()
+	        filters.firm_name = $('select[name="firm_name"]').val()
+	        filters.investment = $('select[name="investment"]').val()
+	        filters.duration_from = $('input[name="duration_from"]').val()
+	        filters.duration_to = $('input[name="duration_to"]').val()
+	        data.filters = filters
+	        data
+
+	      error: ->
+	        return
+
+	    'columns': [
+	      { 'data': '#' , "orderable": false}
+	      { 'data': 'investment', "orderable": false}
+	      { 'data': 'invested_amount', "orderable": false }
+	      { 'data': 'accrude', "orderable": false }
+	      { 'data': 'paid', "orderable": false }
+	      { 'data': 'due', "orderable": false }
+	      { 'data': 'action' , "orderable": false}
+	    ]
+	    'columnDefs': [
+	      {
+	        'targets': 'col-visble'
+	        'visible': false
+	      }
+	    ]
+	    )
+
+	$('body').on 'click', '.alter-businessclient-table', ->
+	    $('.inv-cli-cols').each ->
+	      colIndex = $(this).val()
+	      if $(this).is(':checked')
+	        businessClientTable.column( colIndex ).visible( true );
+	      else
+	        businessClientTable.column( colIndex ).visible( false );
+
+	    $('#columnVisibility').modal('hide')
+	    return
+
+	$('body').on 'click', '.apply-businessclient-filters', ->
+	    urlParams = ''
+
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+ 
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+	    window.history.pushState("", "", "?"+urlParams);
+	    businessClientTable.ajax.reload()
+	    return
+
+	$('body').on 'click', '.reset-businessclient-filters', ->
+		$('select[name="firm_name"]').val('').trigger('change')
+		$('select[name="investment"]').val('')
+		$('input[name="duration_from"]').val('')
+		$('input[name="duration_to"]').val('')
+		window.history.pushState("", "", "?");
+		businessClientTable.ajax.reload()
+
+		return
+
+	$('.download-businessclient-report').click ->
+	    type = $(this).attr('report-type')
+	    urlParams = ''
+
+	    if($('input[name="firm_ids"]').val()!="")
+	      urlParams +='firm_ids='+$('input[name="firm_ids"]').val() 
+	      
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+	       
+
+	    if(type == 'csv')  
+	      window.open("/backoffice/financials/export-businessclient?"+urlParams)
+	    else if(type == 'pdf')  
+	      window.open("/backoffice/financials/businessclient-pdf?"+urlParams)
+
+
 				 
 	 		 
 
