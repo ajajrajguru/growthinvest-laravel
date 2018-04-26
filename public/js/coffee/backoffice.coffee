@@ -569,7 +569,7 @@ $(document).ready ->
 
 
 	investmentClientTable = $('#datatable-investment-client').DataTable(
-	    'paging': false
+	    'pageLength': 50
 	    'processing': false
 	    'serverSide': true
 	    'bAutoWidth': false
@@ -712,7 +712,7 @@ $(document).ready ->
 
 
 	businessClientTable = $('#datatable-business-client').DataTable(
-	    'paging': false
+	    'pageLength': 50
 	    'processing': false
 	    'serverSide': true
 	    'bAutoWidth': false

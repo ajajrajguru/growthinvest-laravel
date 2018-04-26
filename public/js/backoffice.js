@@ -630,7 +630,7 @@
       return window.open("/backoffice/current-valuations/export-current-valuations");
     });
     investmentClientTable = $('#datatable-investment-client').DataTable({
-      'paging': false,
+      'pageLength': 50,
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
@@ -798,7 +798,7 @@
       }
     });
     businessClientTable = $('#datatable-business-client').DataTable({
-      'paging': false,
+      'pageLength': 50,
       'processing': false,
       'serverSide': true,
       'bAutoWidth': false,
