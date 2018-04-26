@@ -605,15 +605,15 @@ $(document).ready ->
 
 	    'columns': [
 	      { 'data': '#' , "orderable": false}
-	      { 'data': 'invested_date' , "orderable": false}
-	      { 'data': 'investment', "orderable": false}
-	      { 'data': 'investor' , "orderable": false}
-	      { 'data': 'firm', "orderable": false }
-	      { 'data': 'invested_amount', "orderable": false }
-	      { 'data': 'accrude', "orderable": false }
-	      { 'data': 'paid', "orderable": false }
-	      { 'data': 'due', "orderable": false }
-	      { 'data': 'parent_firm', "orderable": false }
+	      { 'data': 'invested_date' }
+	      { 'data': 'investment'}
+	      { 'data': 'investor' }
+	      { 'data': 'firm' }
+	      { 'data': 'invested_amount' }
+	      { 'data': 'accrude'}
+	      { 'data': 'paid'}
+	      { 'data': 'due'}
+	      { 'data': 'parent_firm'}
 	      { 'data': 'investment_gi_code', "orderable": false}
 	      { 'data': 'investor_gi_code', "orderable": false}
 	      { 'data': 'firm_gi_code', "orderable": false}
@@ -746,11 +746,11 @@ $(document).ready ->
 
 	    'columns': [
 	      { 'data': '#' , "orderable": false}
-	      { 'data': 'investment', "orderable": false}
-	      { 'data': 'invested_amount', "orderable": false }
-	      { 'data': 'accrude', "orderable": false }
-	      { 'data': 'paid', "orderable": false }
-	      { 'data': 'due', "orderable": false }
+	      { 'data': 'investment'}
+	      { 'data': 'invested_amount'}
+	      { 'data': 'accrude'}
+	      { 'data': 'paid'}
+	      { 'data': 'due' }
 	      { 'data': 'action' , "orderable": false}
 	    ]
 	    'columnDefs': [

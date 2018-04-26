@@ -667,32 +667,23 @@
           'data': '#',
           "orderable": false
         }, {
-          'data': 'invested_date',
-          "orderable": false
+          'data': 'invested_date'
         }, {
-          'data': 'investment',
-          "orderable": false
+          'data': 'investment'
         }, {
-          'data': 'investor',
-          "orderable": false
+          'data': 'investor'
         }, {
-          'data': 'firm',
-          "orderable": false
+          'data': 'firm'
         }, {
-          'data': 'invested_amount',
-          "orderable": false
+          'data': 'invested_amount'
         }, {
-          'data': 'accrude',
-          "orderable": false
+          'data': 'accrude'
         }, {
-          'data': 'paid',
-          "orderable": false
+          'data': 'paid'
         }, {
-          'data': 'due',
-          "orderable": false
+          'data': 'due'
         }, {
-          'data': 'parent_firm',
-          "orderable": false
+          'data': 'parent_firm'
         }, {
           'data': 'investment_gi_code',
           "orderable": false
@@ -833,20 +824,15 @@
           'data': '#',
           "orderable": false
         }, {
-          'data': 'investment',
-          "orderable": false
+          'data': 'investment'
         }, {
-          'data': 'invested_amount',
-          "orderable": false
+          'data': 'invested_amount'
         }, {
-          'data': 'accrude',
-          "orderable": false
+          'data': 'accrude'
         }, {
-          'data': 'paid',
-          "orderable": false
+          'data': 'paid'
         }, {
-          'data': 'due',
-          "orderable": false
+          'data': 'due'
         }, {
           'data': 'action',
           "orderable": false

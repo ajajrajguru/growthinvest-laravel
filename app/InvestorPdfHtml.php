@@ -3930,12 +3930,12 @@ class InvestorPdfHtml
                     $bgcolor = '#f9fafb';
                 }
 
-                
-                $commissions  = $businessClient->wm_commission;
-                $commisonPaid = \DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
-                $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
-                $accrude      = ($commissions / 100) * $businessClient->invested;
-                $due          = $accrude - $paid;
+                $commissions = $businessClient->wm_commission;
+                // $commisonPaid = \DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
+                // $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
+                $paid    = $businessClient->paid_amount;
+                $accrude = ($commissions / 100) * $businessClient->investment_raised;
+                $due     = $accrude - $paid;
 
                 $table_html .= "<tr style='background-color:$bgcolor;'>
                             <td  style='width: 40%;' align='center' >" . title_case($businessClient->title) . '<br>(' . $businessClient->investoremail . ')' . "</td>
