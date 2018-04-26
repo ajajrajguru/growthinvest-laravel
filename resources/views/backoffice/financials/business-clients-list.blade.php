@@ -2,7 +2,7 @@
 
 <div class="">
             <h1 class="section-title font-weight-medium text-primary mb-0">Business Investment</h1>
-            <p class="text-muted">View the profile and the portfolio of the investors registered with us.</p>
+            <p class="text-muted">This area will show any introduced businesses, funds or investments.</p>
 
             <h5 class="mt-2 mb-0">Selection Filters</h5>
             
@@ -43,7 +43,7 @@
                         <select name="investment" class="form-control investorSearchinput"  >
                             <option value="">All Investment</option>
                             @foreach($investmentList as $investment)
-                            <option @if(isset($requestFilters['client-category']) && $requestFilters['client-category'] == $investment->id) selected @endif value="{{ $investment->id }}">{{ $investment->title }}</option>
+                            <option @if(isset($requestFilters['investment']) && $requestFilters['investment'] == $investment->id) selected @endif value="{{ $investment->id }}">{{ $investment->title }}</option>
                             @endforeach
                         </select>
                     </div> 

@@ -1230,7 +1230,7 @@ class BusinessListingController extends Controller
         })->leftjoin('commissions', function ($join) {
             $join->on('business_listings.id', 'commissions.business_id')->where('commissions.commission_type', 'wm');
         })->leftjoin('firms', function ($join) {
-            $join->on('users.firm_id', 'firms.id');
+            $join->on('investor.firm_id', 'firms.id');
         })->where('business_investments.status', 'funded');
 
         if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != "")) {
@@ -1512,7 +1512,7 @@ class BusinessListingController extends Controller
         })->leftjoin('users', function ($join) {
             $join->on('business_listings.owner_id', 'users.id');
         })->leftjoin('firms', function ($join) {
-            $join->on('users.firm_id', 'firms.id');
+            $join->on('investor.firm_id', 'firms.id');
         })->where('business_investments.status', 'funded');
 
         if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != "")) {

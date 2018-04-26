@@ -90,6 +90,9 @@ function getDefaultImages($type){
     elseif(in_array($type, ['company_logo','firm_logo'])){
         $url = url('img/dummy/logo.png');
     }
+    elseif(in_array($type, ['business_logo'])){
+        $url = url('img/dummy/seedavtar.jpg');
+    }
 
     return $url;
 }

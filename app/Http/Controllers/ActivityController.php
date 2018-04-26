@@ -121,6 +121,7 @@ class ActivityController extends Controller
         $activityListingData = [];
         $activityTypeList    = activityTypeList();
         $userObj             = [];
+        $imageUrls             = [];
 
         foreach ($activityListings as $key => $activityListing) {
             if (isset($userObj[$activityListing->user_id])) {
@@ -155,17 +156,50 @@ class ActivityController extends Controller
             else
                 $userLink = ''; 
 
+            $telephoneNo = (!empty($user)) ? title_case($user->telephone_no) : '';
 
+            if($activityListing->itemid !=''){
+                if(!isset($imageUrls['business'][$activityListing->itemid])){
+                    $businessListingObj = BusinessListing::find($activityListing->itemid);
+                    if(empty($businessListingObj))
+                        $businessListingObj = new BusinessListing;
+                     
+                    $logo = $businessListingObj->getBusinessLogo('thumb_1x1');    
+                    $logoUrl = $logo['url'];
+                    $imageUrls['business'][$activityListing->itemid] = $logoUrl;
+                }
+                else
+                    $logoUrl = $imageUrls['business'][$activityListing->itemid];
+                
+               
+            }
+            else{
+
+                if(!isset($imageUrls['user'][$activityListing->user_id])){
+                    if(empty($user)){
+                        $user = new User;
+                    }
+
+                    $logo = $user->getProfilePicture('thumb_1x1');
+                    $logoUrl = $logo['url'];
+                    $imageUrls['user'][$activityListing->user_id] = $logoUrl;
+                }
+                else
+                    $logoUrl = $imageUrls['user'][$activityListing->user_id];
+ 
+                
+            }
+             $logoHtml = '<img src="'.$logoUrl.'" height="50">';
 
             $activityListingData[] = [
-                'logo'           => '',
+                'logo'           => $logoHtml,
                 'proposal_funds' => title_case($activityListing->itemname),
                 'user'           => $userLink,
                 'user_type'      => $userType,
                 'firm'           => $firmLink,
                 'gi_code'        => (!empty($activityListing->gi_platform_code)) ? strtoupper($activityListing->gi_platform_code) : '',
                 'email'          => (!empty($activityListing->email)) ? $activityListing->email : '',
-                'telephone'      => (!empty($user)) ? title_case($user->telephone_no) : '',
+                'telephone'      => $telephoneNo,
                 'description'    => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
                 'date'           => (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
                 'activity'       => $activity,

@@ -83,23 +83,26 @@
                     </thead>
                     <tbody>
                         @foreach($firms as $firm)
-                                <tr >
-                                    <td></td>
-                                    <td><a class="font-weight-medium" href="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">{{ title_case($firm->name) }} </a></td>
-                                    <td>{{ title_case($firm->firmType()->name) }} </td>
-                                    <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
-                                    <td>{{ $firm->gi_code }}</td>
-                                    <td>
-                                        <select class="form-control firm_actions" data-id="78523"   gi_code="{{ $firm->gi_code }}">
-                                        <option>--select--</option>
-                                        <option value="edit" edit-url="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">View Firm Details</option>
-                                        <option value="view_wm_commissions">View Investment Clients</option>
-                                        <option value="view_introducer_commissions">View Business Clients</option>
-                                        </select>
-                                    </td>
- 
-                                </tr>
-                            @endforeach
+                            @php
+                            $logo = $firm->getFirmLogo('thumb_1x1');
+                            @endphp
+                            <tr >
+                                <td><img src="{{ $logo['url'] }}" height="50"></td>
+                                <td><a class="font-weight-medium" href="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">{{ title_case($firm->name) }} </a></td>
+                                <td>{{ title_case($firm->firmType()->name) }} </td>
+                                <td>{{ (!empty($firm->getParentFirm())) ? title_case($firm->getParentFirm()->name) :'' }}</td>
+                                <td>{{ $firm->gi_code }}</td>
+                                <td>
+                                    <select class="form-control firm_actions" data-id="78523"   gi_code="{{ $firm->gi_code }}">
+                                    <option>--select--</option>
+                                    <option value="edit" edit-url="{{ url('backoffice/firms/'.$firm->gi_code.'/')}}">View Firm Details</option>
+                                    <option value="view_wm_commissions">View Investment Clients</option>
+                                    <option value="view_introducer_commissions">View Business Clients</option>
+                                    </select>
+                                </td>
+
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
