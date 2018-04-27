@@ -1237,7 +1237,7 @@ class BusinessListingController extends Controller
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
             $investmentClients->whereDate("business_investments.created_at", ">=", $fromDate);
-            $investmentClients->whereDate("business_listings.created_at", "<=", $toDate);
+            $investmentClients->whereDate("business_investments.created_at", "<=", $toDate);
 
         }
 
@@ -1329,10 +1329,11 @@ class BusinessListingController extends Controller
                 $firms[$investmentClient->firms_parent_id] = (!empty($parentFirm)) ? $parentFirm->name : '';
             }
             $parentFirmName = ($investmentClient->firms_parent_id) ? $firms[$investmentClient->firms_parent_id] : '';
-
+            $investorEmail = (!empty($investmentClient->investoremail)) ? '(' . $investmentClient->investoremail . ')' : '';
+            
             $investmentClientsData[] = [
                 date('d/m/Y', strtotime($investmentClient->investment_date)),
-                title_case($investmentClient->title) . '(' . $investmentClient->investoremail . ')',
+                title_case($investmentClient->title) . $investorEmail,
                 title_case($investmentClient->investorname),
                 title_case($investmentClient->firm_name),
                 format_amount($investmentClient->invested),
@@ -1456,25 +1457,23 @@ class BusinessListingController extends Controller
         $totalAccrude  = 0;
 
         foreach ($businessClients as $key => $businessClient) {
-            $commissions = $businessClient->wm_commission;
+            $commissions = $businessClient->introducer_commission;
             // $commisonPaid = DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
             // $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
             $paid    = $businessClient->paid_amount;
             $accrude = ($commissions / 100) * $businessClient->investment_raised;
             $due     = $accrude - $paid;
 
-
-
-            $totalInvested += $businessClient->invested;
+            $totalInvested += $businessClient->investment_raised;
             $totalDue += $due;
             $totalPaid += $paid;
             $totalAccrude += $accrude;
-
+            $owenerEmail = (!empty($businessClient->owneremail)) ? '<br>(' . $businessClient->owneremail . ')' : '';
             
 
             $businessClientsData[] = [
                 '#'               => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
-                'investment'      => title_case($businessClient->title) . '<br>(' . $businessClient->investoremail . ')',
+                'investment'      => title_case($businessClient->title) . $owenerEmail,
                 'invested_amount' => format_amount($businessClient->investment_raised, 0, true),
                 'accrude'         => format_amount($accrude, 0, true),
                 'paid'            => format_amount($paid, 0, true),
@@ -1505,21 +1504,19 @@ class BusinessListingController extends Controller
     {
         
 
-        $businessClients = BusinessInvestment::select(\DB::raw('business_listings.*,business_investments.created_at as investment_date,firms.name as firm_name,firms.id as firm_id,firms.gi_code as firm_gi_code,firms.wm_commission ,firms.parent_id as firms_parent_id ,investor.gi_code as investor_gi_code, CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.email  as investoremail, SUM(business_investments.amount) as investment_raised, IFNULL((select SUM(amount) as `paid` from `commissions` where commission_type="introducer" and `business_id`=business_listings.id ),0) as paid_amount,((firms.wm_commission / 100)*  SUM(business_investments.amount)) as accrude_amount, (((firms.wm_commission / 100)*  SUM(business_investments.amount)) - IFNULL((select SUM(amount) as `paid` from `commissions` where commission_type="introducer" and `business_id`=business_listings.id ),0)) as due_amount'))->leftjoin('business_listings', function ($join) {
+        $businessClients = BusinessInvestment::select(\DB::raw('business_listings.*,business_investments.created_at as investment_date,firms.name as firm_name,firms.id as firm_id,firms.gi_code as firm_gi_code,firms.introducer_commission ,firms.parent_id as firms_parent_id , CONCAT(owner.first_name," ",owner.last_name) as ownername,owner.email  as owneremail, SUM(business_investments.amount) as investment_raised, IFNULL((select SUM(amount) as `paid` from `commissions` where commission_type="introducer" and `business_id`=business_listings.id ),0) as paid_amount,((firms.wm_commission / 100)*  SUM(business_investments.amount)) as accrude_amount, (((firms.wm_commission / 100)*  SUM(business_investments.amount)) - IFNULL((select SUM(amount) as `paid` from `commissions` where commission_type="introducer" and `business_id`=business_listings.id ),0)) as due_amount'))->leftjoin('business_listings', function ($join) {
             $join->on('business_investments.business_id', 'business_listings.id')->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish');
-        })->leftjoin('users as investor', function ($join) {
-            $join->on('business_investments.investor_id', 'investor.id');
-        })->leftjoin('users', function ($join) {
-            $join->on('business_listings.owner_id', 'users.id');
+        })->leftjoin('users as owner', function ($join) {
+            $join->on('business_listings.owner_id', 'owner.id');
         })->leftjoin('firms', function ($join) {
-            $join->on('investor.firm_id', 'firms.id');
+            $join->on('owner.firm_id', 'firms.id');
         })->where('business_investments.status', 'funded');
 
         if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != "")) {
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
             $businessClients->whereDate("business_investments.created_at", ">=", $fromDate);
-            $businessClients->whereDate("business_listings.created_at", "<=", $toDate);
+            $businessClients->whereDate("business_investments.created_at", "<=", $toDate);
 
         }
 
@@ -1579,16 +1576,17 @@ class BusinessListingController extends Controller
         $header = ['Platform GI Code', 'Business Proposal', 'Investment Raised', 'Commission accrued', 'Commission paid', 'Commission due'];
 
         foreach ($businessClients as $key => $businessClient) {
-            $commissions  = $businessClient->wm_commission;
+            $commissions  = $businessClient->introducer_commission;
             // $commisonPaid = DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
             // $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
             $paid    = $businessClient->paid_amount;
             $accrude      = ($commissions / 100) * $businessClient->investment_raised;
             $due          = $accrude - $paid;
+            $owenerEmail = (!empty($businessClient->owneremail)) ? '<br>(' . $businessClient->owneremail . ')' : '';
 
             $businessClientsData[] = [
                 $businessClient->gi_code,
-                title_case($businessClient->title) . '(' . $businessClient->investoremail . ')',
+                title_case($businessClient->title) .$owenerEmail,
                 format_amount($businessClient->investment_raised, 0),
                 format_amount($accrude, 0),
                 format_amount($paid, 0),
