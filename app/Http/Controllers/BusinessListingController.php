@@ -707,14 +707,16 @@ class BusinessListingController extends Controller
             $businessListingQuery->where('business_listings.title', 'like', '%' . $searchTitle . '%');
         }
 
+        $filterDefaultIds = [];
         if (isset($filters['sectors']) && $filters['sectors'] != "") {
             $sectors = $filters['sectors'];
             $sectors = explode(',', $sectors);
             $sectors = array_filter($sectors);
+            $filterDefaultIds = array_merge($sectors,$filterDefaultIds);
 
-            $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
-                $join->on('business_listings.id', 'business_has_defaults.business_id');
-            })->whereIn('business_has_defaults.default_id', $sectors);
+            $businessListingQuery->leftjoin('business_has_defaults as bds', function ($join) {
+                $join->on('business_listings.id', 'bds.business_id');
+            })->whereIn('bds.default_id', $sectors);
             $joinedBusinessDefaults = true;
         }
 
@@ -722,43 +724,36 @@ class BusinessListingController extends Controller
             $dueDeligence = $filters['due_deligence'];
             $dueDeligence = explode(',', $dueDeligence);
             $dueDeligence = array_filter($dueDeligence);
+            $filterDefaultIds = array_merge($dueDeligence,$filterDefaultIds);
 
-            if (!$joinedBusinessDefaults) {
-                $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
-                    $join->on('business_listings.id', 'business_has_defaults.business_id');
-                });
-            }
-            $joinedBusinessDefaults = true;
-            $businessListingQuery->whereIn('business_has_defaults.default_id', $dueDeligence);
+            $businessListingQuery->leftjoin('business_has_defaults  as bddd', function ($join) {
+                $join->on('business_listings.id', 'bddd.business_id');
+            })->whereIn('bddd.default_id', $dueDeligence);
+             
         }
 
         if (isset($filters['business_stage']) && $filters['business_stage'] != "") {
             $businessStage = $filters['business_stage'];
             $businessStage = explode(',', $businessStage);
             $businessStage = array_filter($businessStage);
+            $filterDefaultIds = array_merge($businessStage,$filterDefaultIds);
 
-            if (!$joinedBusinessDefaults) {
-                $businessListingQuery->leftjoin('business_has_defaults', function ($join) {
-                    $join->on('business_listings.id', 'business_has_defaults.business_id');
-                });
-            }
-            $joinedBusinessDefaults = true;
-            $businessListingQuery->whereIn('business_has_defaults.default_id', $businessStage);
+             
+            $businessListingQuery->leftjoin('business_has_defaults  as bdbs', function ($join) {
+                $join->on('business_listings.id', 'bdbs.business_id');
+            })->whereIn('bdbs.default_id', $businessStage);
         }
 
+ 
         if (isset($filters['fund_type']) && $filters['fund_type'] != "") {
             $fundTypes = $filters['fund_type'];
             $fundTypes = explode(',', $fundTypes);
             $fundTypes = array_filter($fundTypes);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $fundTypes)->where('business_listing_datas.data_key', 'fund_typeoffund');
+ 
+            $businessListingQuery->leftjoin('business_listing_datas as bldft', function ($join) {
+                $join->on('business_listings.id', 'bldft.business_id');
+            })->whereIn('bldft.data_value', $fundTypes)->where('bldft.data_key', 'fund_typeoffund');
         }
 
         if (isset($filters['fund_status']) && $filters['fund_status'] != "") {
@@ -766,14 +761,10 @@ class BusinessListingController extends Controller
             $fundStatus = explode(',', $fundStatus);
             $fundStatus = array_filter($fundStatus);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $fundStatus)->where('business_listing_datas.data_key', 'fund_openclosed');
+            
+            $businessListingQuery->leftjoin('business_listing_datas as bldfs', function ($join) {
+                $join->on('business_listings.id', 'bldfs.business_id');
+            })->whereIn('bldfs.data_value', $fundStatus)->where('bldfs.data_key', 'fund_openclosed');
         }
 
         if (isset($filters['fund_investmentobjective']) && $filters['fund_investmentobjective'] != "") {
@@ -781,14 +772,10 @@ class BusinessListingController extends Controller
             $fundInvestmentObjective = explode(',', $fundInvestmentObjective);
             $fundInvestmentObjective = array_filter($fundInvestmentObjective);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $fundInvestmentObjective)->where('business_listing_datas.data_key', 'fund_investmentobjective');
+        
+            $businessListingQuery->leftjoin('business_listing_datas as bldfio', function ($join) {
+                $join->on('business_listings.id', 'bldfio.business_id');
+            })->whereIn('bldfio.data_value', $fundInvestmentObjective)->where('bldfio.data_key', 'fund_investmentobjective');
         }
 
         if (isset($filters['vct_type']) && $filters['vct_type'] != "") {
@@ -796,14 +783,9 @@ class BusinessListingController extends Controller
             $vctType = explode(',', $vctType);
             $vctType = array_filter($vctType);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $vctType)->where('business_listing_datas.data_key', 'vcttype');
+            $businessListingQuery->leftjoin('business_listing_datas as bldfvt', function ($join) {
+                $join->on('business_listings.id', 'bldfvt.business_id');
+            })->whereIn('bldfvt.data_value', $vctType)->where('bldfvt.data_key', 'vcttype');
         }
 
         if (isset($filters['vct_investmentstrategy']) && $filters['vct_investmentstrategy'] != "") {
@@ -811,14 +793,10 @@ class BusinessListingController extends Controller
             $vctInvestmentstrategy = explode(',', $vctInvestmentstrategy);
             $vctInvestmentstrategy = array_filter($vctInvestmentstrategy);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $vctInvestmentstrategy)->where('business_listing_datas.data_key', 'investmentstrategy');
+        
+            $businessListingQuery->leftjoin('business_listing_datas as bldfvis', function ($join) {
+                $join->on('business_listings.id', 'bldfvis.business_id');
+            })->whereIn('bldfvis.data_value', $vctInvestmentstrategy)->where('bldfvis.data_key', 'investmentstrategy');
         }
 
         if (isset($filters['vct_offeringtype']) && $filters['vct_offeringtype'] != "") {
@@ -826,14 +804,10 @@ class BusinessListingController extends Controller
             $vctOfferingtype = explode(',', $vctOfferingtype);
             $vctOfferingtype = array_filter($vctOfferingtype);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $vctOfferingtype)->where('business_listing_datas.data_key', 'offeringtype');
+          
+            $businessListingQuery->leftjoin('business_listing_datas as bldfvot', function ($join) {
+                $join->on('business_listings.id', 'bldfvot.business_id');
+            })->whereIn('bldfvot.data_value', $vctOfferingtype)->where('bldfvot.data_key', 'offeringtype');
         }
 
         if (isset($filters['aic_sector']) && $filters['aic_sector'] != "") {
@@ -841,14 +815,10 @@ class BusinessListingController extends Controller
             $aicsector = explode(',', $aicsector);
             $aicsector = array_filter($aicsector);
 
-            if (!$joinedBusinessData) {
-                $businessListingQuery->leftjoin('business_listing_datas', function ($join) {
-                    $join->on('business_listings.id', 'business_listing_datas.business_id');
-                });
-            }
-            $joinedBusinessData = true;
-
-            $businessListingQuery->whereIn('business_listing_datas.data_value', $aicsector)->where('business_listing_datas.data_key', 'aicsector');
+          
+            $businessListingQuery->leftjoin('business_listing_datas as bldfas', function ($join) {
+                $join->on('business_listings.id', 'bldfas.business_id');
+            })->whereIn('bldfas.data_value', $aicsector)->where('bldfas.data_key', 'aicsector');
         }
 
         if ($businessListingType == 'vct') {
