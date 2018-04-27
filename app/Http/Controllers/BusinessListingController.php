@@ -1237,7 +1237,7 @@ class BusinessListingController extends Controller
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
             $investmentClients->whereDate("business_investments.created_at", ">=", $fromDate);
-            $investmentClients->whereDate("business_listings.created_at", "<=", $toDate);
+            $investmentClients->whereDate("business_investments.created_at", "<=", $toDate);
 
         }
 
@@ -1516,7 +1516,7 @@ class BusinessListingController extends Controller
             $fromDate = date('Y-m-d', strtotime($filters['duration_from']));
             $toDate   = date('Y-m-d', strtotime($filters['duration_to']));
             $businessClients->whereDate("business_investments.created_at", ">=", $fromDate);
-            $businessClients->whereDate("business_listings.created_at", "<=", $toDate);
+            $businessClients->whereDate("business_investments.created_at", "<=", $toDate);
 
         }
 
