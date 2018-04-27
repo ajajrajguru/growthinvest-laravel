@@ -33,7 +33,7 @@ $(document).ready ->
       { 'data': 'certification_date'}
       { 'data': 'client_categorisation' }
       { 'data': 'parent_firm', "orderable": false }
-      { 'data': 'registered_date', "orderable": false}
+      { 'data': 'registered_date'}
       { 'data': 'action' , "orderable": false}
     ])
 

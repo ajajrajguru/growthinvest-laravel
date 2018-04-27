@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\AdobeSignature;
+use App\BusinessInvestment;
 use App\BusinessListing;
 use App\Comment;
 use App\Defaults;
-use App\DocumentFile;
 use App\Firm;
 use App\InvestorPdfHtml;
 use App\NomineeApplication;
@@ -15,15 +15,16 @@ use App\UserData;
 use App\UserHasCertification;
 use Auth;
 use DB;
+use File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 //Importing laravel-permission models
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Session;
 use Spipu\Html2Pdf\Html2Pdf;
 use View;
-use File;
-use Illuminate\Http\UploadedFile;
+
 //Enables us to output flash messaging
 
 class InvestorController extends Controller
@@ -58,7 +59,7 @@ class InvestorController extends Controller
         $data['clientCategories']   = $clientCategories;
         $data['requestFilters']     = $requestFilters;
         $data['firms']              = $firms;
-        $data['firm_ids']              = [];
+        $data['firm_ids']           = [];
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Investors';
@@ -81,6 +82,7 @@ class InvestorController extends Controller
             '1' => 'users.first_name',
             '2' => 'user_has_certifications.created_at',
             '3' => 'user_has_certifications.active',
+            '5' => 'users.created_at',
         );
 
         $columnName = 'users.first_name';
@@ -132,7 +134,7 @@ class InvestorController extends Controller
 
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
 
-            $firmLink = (!empty($investor->firm)) ? '<a href="'.url('backoffice/firms/'.$investor->firm->gi_code).'" target="_blank">'.title_case($investor->firm->name).'</a>' : '';
+            $firmLink = (!empty($investor->firm)) ? '<a href="' . url('backoffice/firms/' . $investor->firm->gi_code) . '" target="_blank">' . title_case($investor->firm->name) . '</a>' : '';
 
             $investorsData[] = [
                 '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investor->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $investor->id . '"><label class="custom-control-label" for="ch' . $investor->id . '"></label></div> ',
@@ -172,18 +174,15 @@ class InvestorController extends Controller
         })->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
 
         $investorQuery->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
-        
 
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investorQuery->where('users.firm_id', $filters['firm_name']);
         }
 
-        if (isset($filters['firm_ids']) && $filters['firm_ids'] != "") {  
+        if (isset($filters['firm_ids']) && $filters['firm_ids'] != "") {
             $firmIds = explode(',', $filters['firm_ids']);
             $investorQuery->whereIn('users.firm_id', $firmIds);
         }
-
-        
 
         if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
             $userIds = explode(',', $filters['user_ids']);
@@ -328,35 +327,34 @@ class InvestorController extends Controller
 
     }
 
-    public function registration($firmGiCode='')
+    public function registration($firmGiCode = '')
     {
 
         $investor  = new User;
-        $firmCond = ($firmGiCode !='') ? ['gi_code'=>$firmGiCode] : [];
+        $firmCond  = ($firmGiCode != '') ? ['gi_code' => $firmGiCode] : [];
         $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $breadcrumbs   = [];
-        if($firmGiCode==''){
+        $breadcrumbs = [];
+        if ($firmGiCode == '') {
             $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
             $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
             $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
             $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
 
             $data['is_firm_investor'] = 'no';
-            $viewFile = 'backoffice.clients.registration';
-        }
-        else{
-            $firm   = Firm::where('gi_code', $firmGiCode)->first();
+            $viewFile                 = 'backoffice.clients.registration';
+        } else {
+            $firm          = Firm::where('gi_code', $firmGiCode)->first();
             $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
             $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
             $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
             $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
 
-            $data['firm']              = $firm;
+            $data['firm']             = $firm;
             $data['is_firm_investor'] = 'yes';
-            $data['firmActiveMenu']  =  'investors';
-            $viewFile = 'backoffice.firm.investor-registration';
+            $data['firmActiveMenu']   = 'investors';
+            $viewFile                 = 'backoffice.firm.investor-registration';
         }
 
         $data['countyList']              = getCounty();
@@ -759,22 +757,21 @@ class InvestorController extends Controller
             // $mimeType       = getFileMimeType($ext);
             // $file           = \File::get($filePath);
 
-            $certification = $investor->getFiles('certification'); 
-            $filePath = '';
-            $filename = '';
-            $fileid = '';
-            foreach ($certification as $key => $file) { 
-                $fileid = $file['id'];
+            $certification = $investor->getFiles('certification');
+            $filePath      = '';
+            $filename      = '';
+            $fileid        = '';
+            foreach ($certification as $key => $file) {
+                $fileid   = $file['id'];
                 $filePath = $file['url'];
                 $filename = $file['name'];
                 $hasImage = true;
-                 
-                 
+
             }
 
-            $ext = pathinfo($filePath, PATHINFO_EXTENSION);      
+            $ext      = pathinfo($filePath, PATHINFO_EXTENSION);
             $mimeType = getFileMimeType($ext);
-            $file =  $investor->getSingleFile($fileid);
+            $file     = $investor->getSingleFile($fileid);
 
             $data['attach'] = [['file' => base64_encode($file), 'as' => $filename, 'mime' => $mimeType]];
         }
@@ -973,17 +970,16 @@ class InvestorController extends Controller
 
         $uploadedFile = new UploadedFile($outputLink, $filename . '.pdf');
 
-        $id = $investor->uploadFile($uploadedFile,false,$pdfName . '.pdf');
+        $id = $investor->uploadFile($uploadedFile, false, $pdfName . '.pdf');
         $investor->remapFiles([$id], 'certification');
 
         //delete temp file
-        if (File::exists($outputLink))
-        {
+        if (File::exists($outputLink)) {
             File::delete($outputLink);
         }
 
         return $id;
- 
+
     }
 
     // public function downloadCertification($fileId)
@@ -1010,33 +1006,29 @@ class InvestorController extends Controller
     public function downloadCertification($giCode)
     {
 
-        $investor = User::where('gi_code', $giCode)->first();
-        $certification = $investor->getFiles('certification'); 
-        $filePath = '';
-        $filename = '';
-        $fileid = '';
-        foreach ($certification as $key => $file) { 
-            $fileid = $file['id'];
+        $investor      = User::where('gi_code', $giCode)->first();
+        $certification = $investor->getFiles('certification');
+        $filePath      = '';
+        $filename      = '';
+        $fileid        = '';
+        foreach ($certification as $key => $file) {
+            $fileid   = $file['id'];
             $filePath = $file['url'];
             $filename = $file['name'];
             $hasImage = true;
-             
-             
+
         }
 
-
-        $ext = pathinfo($filePath, PATHINFO_EXTENSION);      
+        $ext      = pathinfo($filePath, PATHINFO_EXTENSION);
         $mimeType = getFileMimeType($ext);
-        $file =  $investor->getSingleFile($fileid);
-         
-        return response($file)
-          ->header('Content-Type', $mimeType)
-          ->header('Content-Description', 'File Transfer')
-          ->header('Content-Disposition', "attachment; filename={$filename}")
-          ->header('Filename', $filename);
-    }
+        $file     = $investor->getSingleFile($fileid);
 
-    
+        return response($file)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Disposition', "attachment; filename={$filename}")
+            ->header('Filename', $filename);
+    }
 
     public function additionalInformation($giCode)
     {
@@ -1493,8 +1485,7 @@ class InvestorController extends Controller
             $activity = saveActivityLog('User', Auth::user()->id, 'start_adobe_sign', $investor->id, $action, '', $investor->firm_id);
 
             //delete temp file
-            if (File::exists($output_link))
-            {
+            if (File::exists($output_link)) {
                 File::delete($output_link);
             }
 
@@ -1770,8 +1761,8 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
-        $profilePic             = $investor->getProfilePicture('thumb_1x1');
-        $data['profilePic']     = $profilePic['url'];
+        $profilePic                    = $investor->getProfilePicture('thumb_1x1');
+        $data['profilePic']            = $profilePic['url'];
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
         $data['onfidoReports']         = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])) ? $onfidoReport['check']['reports'] : [];
@@ -1867,17 +1858,20 @@ class InvestorController extends Controller
 
         foreach ($businessListings as $key => $businessListing) {
 
+            $plegedAmount          = BusinessInvestment::select(\DB::raw('SUM(amount) as total_pledged_amount'))->where('status', 'pledged')->where('business_id', $businessListing->id)->groupBy('business_id')->first();
+            $totalPledgedAmount    = (!empty($plegedAmount)) ? $plegedAmount->total_pledged_amount : 0;
             $businessListingData[] = [
-                'offer'       => '<a href="">' . ucfirst($businessListing->title) . '</a>',
-                'manager'     => ucfirst($businessListing->manager),
-                'tax_status'  => $businessListing->tax_status,
-                'type'        => (isset($investmentOfferType[$businessListing->type])) ? ucfirst($investmentOfferType[$businessListing->type]) : '',
-                'focus'       => $businessListing->investment_objective,
-                'taget_raise' => format_amount($businessListing->target_amount, 0, true),
-                'min_inv'     => format_amount($businessListing->minimum_investment, 0, true),
-                'amt_raised'  => format_amount($businessListing->amount_raised, 0, true),
-                'invest'      => '<a href="#" class="btn btn-primary">Invest</a>',
-                'download'    => '<a href="#" class="btn btn-link">Download</a>',
+                'offer'                => '<a href="">' . ucfirst($businessListing->title) . '</a>',
+                'manager'              => ucfirst($businessListing->manager),
+                'tax_status'           => $businessListing->tax_status,
+                'type'                 => (isset($investmentOfferType[$businessListing->type])) ? ucfirst($investmentOfferType[$businessListing->type]) : '',
+                'focus'                => $businessListing->investment_objective,
+                'taget_raise'          => format_amount($businessListing->target_amount, 0, true),
+                'min_inv'              => format_amount($businessListing->minimum_investment, 0, true),
+                'amt_raised'           => format_amount($businessListing->amount_raised, 0, true),
+                'total_pledged_amount' => format_amount($totalPledgedAmount, 0),
+                'invest'               => '<a href="#" class="btn btn-primary">Invest</a>',
+                'download'             => '<a href="#" class="btn btn-link">Download</a>',
 
             ];
 
@@ -1897,9 +1891,9 @@ class InvestorController extends Controller
     public function getFilteredBusinessListing($filters, $skip, $length, $orderDataBy)
     {
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->where('business_listings.invest_listing', 'yes')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
-            $join->on('business_listings.id', 'business_investments.business_id');
-        })->whereIn('business_investments.status', ['pledged', 'funded']);
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['pledged', 'funded']);
+        })->where('business_listings.invest_listing', 'yes')->where('business_listings.status', 'publish');
 
         if (isset($filters['company']) && $filters['company'] != "") {
             $businessListingQuery->where('business_listings.id', $filters['company']);
