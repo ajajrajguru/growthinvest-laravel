@@ -19,11 +19,11 @@
 	      <div class="card-body ">
 	        <div class="filter-options">
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_type[]" id="ch_limited_life" value="limited_life" >
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_type[]" id="ch_limited_life" value="limited_life" slug-val="limited-life" @if(isset($requestFilters['vct-type']) && in_array('limited-life',$requestFilters['vct-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_limited_life">Limited Life</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_type[]" id="ch_evergreen" value="evergreen">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_type[]" id="ch_evergreen" value="evergreen"  slug-val="evergreen" @if(isset($requestFilters['vct-type']) && in_array('evergreen',$requestFilters['vct-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_evergreen">Evergreen</label>
 				</div>
 	 
@@ -45,17 +45,17 @@
 	        <div class="filter-options">
 				 
 	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_investmentstrategy[]" id="ch_generalist" value="generalist">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_investmentstrategy[]" id="ch_generalist" value="generalist" slug-val="generalist" @if(isset($requestFilters['vct-investment-strategy']) && in_array('generalist',$requestFilters['vct-investment-strategy'])) checked @endif>
 					  <label class="custom-control-label" for="ch_generalist">Generalist</label>
 					</div>
 
 					<div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_investmentstrategy[]" id="ch_aim" value="aim">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_investmentstrategy[]" id="ch_aim" value="aim" slug-val="aim" @if(isset($requestFilters['vct-investment-strategy']) && in_array('aim',$requestFilters['vct-investment-strategy'])) checked @endif>
 					  <label class="custom-control-label" for="ch_aim">AIM</label>
 					</div>
 
 					<div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_investmentstrategy[]" id="ch_specialist" value="specialist">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_investmentstrategy[]" id="ch_specialist" value="specialist" slug-val="specialist" @if(isset($requestFilters['vct-investment-strategy']) && in_array('specialist',$requestFilters['vct-investment-strategy'])) checked @endif>
 					  <label class="custom-control-label" for="ch_specialist">Specialist</label>
 					</div>
 	              
@@ -76,17 +76,17 @@
 	        <div class="filter-options">
 				 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_offeringtype[]" id="ch_Approved_Fund" value="new offer">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_offeringtype[]" id="ch_Approved_Fund" value="new offer" slug-val="new-offer" @if(isset($requestFilters['vct-offering-type']) && in_array('new-offer',$requestFilters['vct-offering-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Approved_Fund">New Offer</label>
 				</div>
 
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_offeringtype[]" id="ch_Unapproved_Fund" value="topup">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_offeringtype[]" id="ch_Unapproved_Fund" value="topup" slug-val="topup" @if(isset($requestFilters['vct-offering-type']) && in_array('topup',$requestFilters['vct-offering-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Unapproved_Fund">Top-Up</label>
 				</div>
 
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_offeringtype[]" id="ch_Managed_portfolio" value="multiple">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="vct_offeringtype[]" id="ch_Managed_portfolio" value="multiple" slug-val="multiple" @if(isset($requestFilters['vct-offering-type']) && in_array('multiple',$requestFilters['vct-offering-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Managed_portfolio">Multiple</label>
 				</div>
 	              
@@ -108,7 +108,7 @@
 	        	 
                	@foreach($aicsector as $sectorId => $sector)
 	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_aic_{{ $sectorId }}" value="{{ $sectorId }}">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="aic_sector[]" id="ch_aic_{{ $sectorId }}" value="{{ $sectorId }}" slug-val="{{ str_slug($sector) }}" @if(isset($requestFilters['aic-sector']) && in_array(str_slug($sector),$requestFilters['aic-sector'])) checked @endif>
 					  <label class="custom-control-label" for="ch_aic_{{ $sectorId }}">{{ ucfirst($sector) }}</label>
  
 					</div>
