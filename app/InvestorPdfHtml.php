@@ -3791,13 +3791,13 @@ class InvestorPdfHtml
 
         $table_html .= '<tr    class="title-bg" style=" ">
 
-                            <th style="width: 15%;">Invested Date</th>
-                            <th style="width: 10%;">Proposal Investor</th>
-                            <th style="width: 10%;">Firm</th>
+                            <th style="width: 30%;">Invested Date</th>
+                            <th style="width: 15%;">Proposal Investor</th>
+                            <th style="width: 15%;">Firm</th>
                             <th style="width: 10%;">Invested Amount</th>
                             <th style="width: 10%;"> Accrued</th>
-                            <th style="width: 15%;">Paid</th>
-                            <th style="width: 15%;">Due</th>
+                            <th style="width: 10%;">Paid</th>
+                            <th style="width: 10%;">Due</th>
 
                           </tr>';
         $bgcolor      = '#fff';
@@ -3805,6 +3805,11 @@ class InvestorPdfHtml
 
         $row_cnt = 0;
         $userObj = [];
+
+        $totalInvested = 0;
+        $totalDue      = 0;
+        $totalPaid     = 0;
+        $totalAccrude  = 0;
 
         if (!empty($investmentClients)) {
 
@@ -3820,6 +3825,12 @@ class InvestorPdfHtml
                 $accrude     = ($commissions / 100) * $investmentClient->invested;
                 $due         = $accrude - $paid;
 
+                $totalInvested += $investmentClient->invested;
+                $totalDue += $due;
+                $totalPaid += $paid;
+                $totalAccrude += $accrude;
+
+
                 $firms[$investmentClient->firm_id] = $investmentClient->firm_name;
 
                 if ($investmentClient->firms_parent_id && !isset($firms[$investmentClient->firms_parent_id])) {
@@ -3827,15 +3838,16 @@ class InvestorPdfHtml
                     $firms[$investmentClient->firms_parent_id] = (!empty($parentFirm)) ? $parentFirm->name : '';
                 }
                 $parentFirmName = ($investmentClient->firms_parent_id) ? $firms[$investmentClient->firms_parent_id] : '';
+                $investorEmail = (!empty($investmentClient->investoremail)) ? '(' . $investmentClient->investoremail . ')' : '';
 
                 $table_html .= "<tr style='background-color:$bgcolor;'>
-                            <td  style='width: 15%;' align='center' >" . title_case($investmentClient->title) . '(' . $investmentClient->investoremail . ')' . "</td>
-                            <td style='width: 10%;'>" . title_case($investmentClient->investorname) . "</td>
-                            <td style='width: 10%;''>" . title_case($investmentClient->firm_name) . "</td>
+                            <td  style='width: 30%;' align='center' >" . title_case($investmentClient->title) . $investorEmail . "</td>
+                            <td style='width: 15%;'>" . title_case($investmentClient->investorname) . "</td>
+                            <td style='width: 15%;''>" . title_case($investmentClient->firm_name) . "</td>
                             <td style='width: 10%; align='center''>" . format_amount($investmentClient->invested, 0, true) . "</td>
-                            <td style='width: 15%;' align='center'>" . format_amount($accrude, 0, true) . "</td>
-                            <td style='width: 15%;' align='center'>" . format_amount($paid, 0, true) . "</td>
-                            <td style='width: 15%;' align='center' >" . format_amount($due, 0, true) . "</td>";
+                            <td style='width: 10%;' align='center'>" . format_amount($accrude, 0, true) . "</td>
+                            <td style='width: 10%;' align='center'>" . format_amount($paid, 0, true) . "</td>
+                            <td style='width: 10%;' align='center' >" . format_amount($due, 0, true) . "</td>";
                 $table_html .= "
 
 
@@ -3851,6 +3863,15 @@ class InvestorPdfHtml
         }
 
         $table_html .= '</table>';
+
+        $table_html .= '<br><table  cellpadding="0" cellspacing="0" style="width:100%;" border="1" cellpadding="8px" cellspacing="0px">
+                        <tr>
+                        <td style="width: 25%;" align="center" >Total Invested Amount :' . format_amount($totalInvested, 0, true) . ' </td>
+                        <td style="width: 25%;" align="center">Total Accrued Amount :' . format_amount($totalAccrude, 0, true) . '</td>
+                        <td style="width: 25%;" align="center">Total Paid Amount :' . format_amount($totalPaid, 0, true) . '</td>
+                        <td style="width: 25%;" align="center">Total Due Amount :' . format_amount($totalDue, 0, true) . '</td>
+                        </tr>
+                        </table>';
 
         $html = $html . $table_html;
 
@@ -3921,6 +3942,12 @@ class InvestorPdfHtml
         $row_cnt = 0;
         $userObj = [];
 
+        $totalInvested = 0;
+        $totalDue      = 0;
+        $totalPaid     = 0;
+        $totalAccrude  = 0;
+
+
         if (!empty($businessClients)) {
 
             foreach ($businessClients as $key => $businessClient) {
@@ -3930,15 +3957,24 @@ class InvestorPdfHtml
                     $bgcolor = '#f9fafb';
                 }
 
-                $commissions = $businessClient->wm_commission;
+                $commissions = $businessClient->introducer_commission;
                 // $commisonPaid = \DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
                 // $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
                 $paid    = $businessClient->paid_amount;
                 $accrude = ($commissions / 100) * $businessClient->investment_raised;
                 $due     = $accrude - $paid;
 
+                $totalInvested += $businessClient->investment_raised;
+                $totalDue += $due;
+                $totalPaid += $paid;
+                $totalAccrude += $accrude;
+
+
+
+                $owenerEmail = (!empty($businessClient->owneremail)) ? '<br>(' . $businessClient->owneremail . ')' : '';
+
                 $table_html .= "<tr style='background-color:$bgcolor;'>
-                            <td  style='width: 40%;' align='center' >" . title_case($businessClient->title) . '<br>(' . $businessClient->investoremail . ')' . "</td>
+                            <td  style='width: 40%;' align='center' >" . title_case($businessClient->title) . $owenerEmail . "</td>
                             <td style='width: 15%;' align='center'>" . format_amount($businessClient->investment_raised, 0, true) . "</td>
                             <td style='width: 15%;' align='center'>" . format_amount($accrude, 0, true) . "</td>
                             <td style='width: 15%;' align='center'>" . format_amount($paid, 0, true) . "</td>
@@ -3958,6 +3994,15 @@ class InvestorPdfHtml
         }
 
         $table_html .= '</table>';
+  
+        $table_html .= '<br><table  cellpadding="0" cellspacing="0" style="width:100%;" border="1" cellpadding="8px" cellspacing="0px">
+                        <tr>
+                        <td style="width: 25%;" align="center" >Total Invested Amount :' . format_amount($totalInvested, 0, true) . ' </td>
+                        <td style="width: 25%;" align="center">Total Accrued Amount :' . format_amount($totalAccrude, 0, true) . '</td>
+                        <td style="width: 25%;" align="center">Total Paid Amount :' . format_amount($totalPaid, 0, true) . '</td>
+                        <td style="width: 25%;" align="center">Total Due Amount :' . format_amount($totalDue, 0, true) . '</td>
+                        </tr>
+                        </table>';
 
         $html = $html . $table_html;
 
