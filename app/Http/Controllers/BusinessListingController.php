@@ -1576,7 +1576,7 @@ class BusinessListingController extends Controller
         $header = ['Platform GI Code', 'Business Proposal', 'Investment Raised', 'Commission accrued', 'Commission paid', 'Commission due'];
 
         foreach ($businessClients as $key => $businessClient) {
-            $commissions  = $businessClient->introducer_commission;
+            $commissions = $businessClient->introducer_commission;
             // $commisonPaid = DB::select(" select SUM(amount) as `paid` from `commissions` where commission_type='introducer' and `business_id` = '" . $businessClient->id . "' group by `business_id`");
             // $paid         = (!empty($commisonPaid) && isset($commisonPaid[0])) ? $commisonPaid[0]->paid : 0;
             $paid    = $businessClient->paid_amount;
