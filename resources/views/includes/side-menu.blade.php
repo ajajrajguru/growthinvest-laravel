@@ -13,7 +13,7 @@
         <a href="{{url('backoffice/investor/registration')}}" class="nav-link @if($activeMenu == 'add_clients') active @endif"   role="tab">Add Clients<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
-        <a href="{{url('backoffice/dashboard/investment_offers')}}" class="nav-link @if($activeMenu == 'investment_offers') active @endif"   role="tab">Investment Offers<div><small>(Coming Soon..)</small></div></a>
+        <a href="{{url('backoffice/investment-offers')}}" class="nav-link @if($activeMenu == 'investment_offers') active @endif"   role="tab">Investment Offers<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
         <a href="{{url('backoffice/dashboard/transferasset')}}" class="nav-link @if($activeMenu == 'transferassets') active @endif"   role="tab">Transfer Assets<div><small>(Coming Soon..)</small></div></a>

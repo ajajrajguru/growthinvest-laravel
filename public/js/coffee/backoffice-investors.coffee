@@ -691,6 +691,8 @@ $(document).ready ->
         filters.sector = $('select[name="sector"]').val()
         filters.type = $('select[name="type"]').val()
         filters.manager = $('select[name="manager"]').val()
+        filters.investor = $('select[name="investor"]').val()
+        filters.firm = $('select[name="firm"]').val()
 
         status = ''
         $('input[name="tax_status[]"]').each ->
@@ -756,7 +758,14 @@ $(document).ready ->
 
     if($('select[name="manager"]').val()!="")
       urlParams +='&manager='+$('select[name="manager"]').val()
- 
+
+    if($('select[name="investor"]').val()!="")
+      urlParams +='&investor='+$('select[name="investor"]').val()
+
+    if($('select[name="firm"]').val()!="")
+      urlParams +='&firm='+$('select[name="firm"]').val()
+
+
     status = ''
     $('input[name="tax_status[]"]').each ->
       if $(this).is(':checked')
@@ -773,6 +782,8 @@ $(document).ready ->
     $('select[name="sector"]').val('')
     $('select[name="type"]').val('')
     $('select[name="manager"]').val('')
+    $('select[name="investor"]').val('')
+    $('select[name="firm"]').val('')
     $('input[name="tax_status[]"]').prop('checked',false)
     window.history.pushState("", "", "?");
     investorInvestTable.ajax.reload()

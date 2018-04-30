@@ -66,6 +66,8 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('activity/summary', 'ActivityController@activitySummary');
     Route::post('activity/activity-summary', 'ActivityController@getActivitySummary');
 
+    Route::get('investment-offers', 'InvestorController@investmentOffers');
+
 
     //investors
     Route::get('investor/export-investors', 'InvestorController@exportInvestors');

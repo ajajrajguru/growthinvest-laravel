@@ -1913,6 +1913,16 @@ class InvestorController extends Controller
             $businessListingQuery->where('business_listings.manager', $filters['manager']);
         }
 
+        if (isset($filters['investor']) && $filters['investor'] != "") {
+            $businessListingQuery->where('business_investments.investor_id', $filters['investor']);
+        }
+
+        if (isset($filters['firm']) && $filters['firm'] != "") {
+            $businessListingQuery->leftjoin('users', function ($join) {
+                $join->on('business_listings.owner_id', 'users.id');
+            })->where('users.firm_id', $filters['firm']);
+        }
+
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
             $taxStatus = $filters['tax_status'];
             $taxStatus = explode(',', $taxStatus);
@@ -2041,6 +2051,47 @@ class InvestorController extends Controller
         );
 
         return response()->json($json_data);
+    }
+
+    public function investmentOffers(Request $request){
+        $requestFilters = $request->all();
+        if (isset($requestFilters['status'])) {
+            $status                   = explode(',', $requestFilters['status']);
+            $requestFilters['status'] = array_filter($status);
+
+        }
+        $user      = new User;
+        $investors = $user->getInvestorUsers();
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+ 
+        $businessListings = new BusinessListing;
+        $companyNames     = $businessListings->getCompanyNames();
+        $sectors          = getBusinessSectors();
+        $managers         = [];
+        if (!empty($companyNames)) {
+            $compManagers = collect($companyNames->toArray());
+            $managers     = $compManagers->pluck('manager')->unique();
+            $managers     = array_filter($managers->toArray());
+        }
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Investment Offers'];
+
+        $data['companyNames']        = (!empty($companyNames)) ? $companyNames : [];
+        $data['investmentOfferType'] = investmentOfferType();
+        $data['sectors']             = $sectors;
+        $data['managers']            = $managers;
+        $data['requestFilters']      = $requestFilters;
+        $data['firms']              = $firms;
+        $data['investors']          = $investors;
+        $data['breadcrumbs']         = $breadcrumbs;
+        $data['pageTitle']           = 'Investment Offers';
+        $data['activeMenu']          = 'investment_offers';
+
+        return view('backoffice.investments.investments')->with($data);
+
     }
 
 }
