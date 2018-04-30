@@ -4,6 +4,7 @@
   
   <div class="gray-section border bg-gray p-3">
       <div class="row mb-3">
+          @if(!$investor->id)
           <div class="col-md-3 mb-3 mb-sm-0">
               <label for="">Firm Name</label>
              
@@ -25,6 +26,7 @@
                   @endforeach
               </select>
           </div>
+          @endif
           <div class="col-md-3">
               <div>
                   <label for="">Company</label>

@@ -2060,8 +2060,8 @@ class InvestorController extends Controller
             $requestFilters['status'] = array_filter($status);
 
         }
-        $user      = new User;
-        $investors = $user->getInvestorUsers();
+        $investor      = new User;
+        $investors = $investor->getInvestorUsers();
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
  
@@ -2079,6 +2079,7 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Investment Offers'];
 
+        $data['investor']            = $investor;
         $data['companyNames']        = (!empty($companyNames)) ? $companyNames : [];
         $data['investmentOfferType'] = investmentOfferType();
         $data['sectors']             = $sectors;
