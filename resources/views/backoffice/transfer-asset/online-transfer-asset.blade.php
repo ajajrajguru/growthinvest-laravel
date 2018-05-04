@@ -240,7 +240,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Providers</label>
-                           <select name="providers" class="form-control"  >
+                           <select name="providers" class="form-control select2-single"  >
                               <option value="">-select-</option>
                               @foreach($other_companies as $key=>$other_company)
                               <option name="{{ $other_company->name }}" product="{{ $other_company->product }}" email="{{ $other_company->email }}" phone="{{ $other_company->phone }}" value="{{ $other_company->id }}" class="" type="{{ $other_company->type }}">{{ $other_company->name }}</option>

@@ -30,6 +30,24 @@ class TransferAssetController extends Controller
         return view('backoffice.transfer-asset.transfer-asset')->with($data);
     }
 
+    public function offlineTransferAsset()
+    {
+
+        $investor     = new User;
+         
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Transfer Asset'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Offline Transfer Asset'];
+        
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Offline Transfer Asset';
+        $data['activeMenu']       = 'transferassets';
+
+        return view('backoffice.transfer-asset.offline-transfer-asset')->with($data);
+    }
+
     public function onlineTransferAsset()
     {
 

@@ -186,16 +186,16 @@ class TransferAssetPdfHtml
               </tr>
               </table>';
 
-        // $table_html.='<table cellpadding="0" cellspacing="10" border="1"  width="100%" >
-        //               <tr>
-        //                <th width="100%">The GrowthInvest nominee and custody service enables you to make investments directly through the platform and monitor all of your tax efficient investments in one place. In providing this service we have partnered with <b>Platform One Limited</b>, an FCA regulated custodian and nominee service. Please complete the Asset Transfer form as accurately as possible and post the signed version to: GrowthInvest, Candlewick House, 120 Cannon Street, London, EC4N 6AS.</th>
-        //               </tr>
-        //               </table>';
+ 
         $table_html .= '<br>';
         $label = 'APPLICANT DETAILS';
         $table_html .= $this->transfer_assets_subheaders($label);
 
         // test starts
+        $assets_noofshares = (isset($transferassetDetails['assets_noofshares'])) ? $transferassetDetails['assets_noofshares'] :'';
+         $assets_typeofshare = (isset($transferassetDetails['assets_typeofshare'])) ?$transferassetDetails['assets_typeofshare']:'';
+         $assets_nameonsharecertificate = (isset($transferassetDetails['assets_nameonsharecertificate'])) ?$transferassetDetails['assets_nameonsharecertificate']:'';
+         $assets_transferamount = (isset($transferassetDetails['assets_transferamount'])) ?$transferassetDetails['assets_transferamount']:'';
 
         if ($transferasset->typeofasset != 'single_company') {
 
@@ -494,7 +494,7 @@ class TransferAssetPdfHtml
 
             <tr style="margin-bottom: 0; padding-bottom: 0;">
                 <td style="width: 50%;">
-                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" > $transferassetDetails
+                     <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" > 
                      <tr>
                      <td style="Width: 30%;">Company Name :</td>
                      <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $companyDetails->name . '</div></td>
@@ -534,21 +534,21 @@ class TransferAssetPdfHtml
                      <table style="width: 100%; margin-bottom:0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">No. Shares to be:</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $transferassetDetails['assets_noofshares'] . '</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $assets_noofshares . '</div></td>
                      </tr>
                      </table><br>
 
                      <table style="width: 100%; margin-bottom:0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">Type of Share :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $transferassetDetails['assets_typeofshare'] . '</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $assets_typeofshare . '</div></td>
                      </tr>
                      </table><br>
 
                      <table style="width: 100%; margin-bottom:0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">Name of Certificate :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $transferassetDetails['assets_nameonsharecertificate'] . '</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $assets_nameonsharecertificate . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -709,7 +709,7 @@ class TransferAssetPdfHtml
                      <table style="width: 100%; margin-bottom:0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">Amount to  Transfer :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;&pound;&nbsp;' . (isset($transferassetDetails['assets_transferamount'])) ? $transferassetDetails['assets_transferamount'] : '' . '</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;&pound;&nbsp;' . $assets_transferamount . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -955,7 +955,7 @@ class TransferAssetPdfHtml
 
                 </style>';
 
-        $words = NumbersToWords::convert($transferassetDetails['assets_noofshares']);
+        
         // echo "<pre>";
         // print_r($usermeta);
         $address               = isset($investor->address_1) ? ", " . $investor->address_1 : "";
@@ -963,6 +963,12 @@ class TransferAssetPdfHtml
         $city                  = isset($investor->city) ? ", " . $investor->city : "";
         $postcode              = isset($investor->postcode) ? ", " . $investor->postcode : "";
         $assets_transferamount = (isset($transferassetDetails['assets_transferamount']) && $transferassetDetails['assets_transferamount'] != "") ? $transferassetDetails['assets_transferamount'] : "Nil";
+
+        $assets_typeofshare = (isset($transferassetDetails['assets_typeofshare'])) ? $transferassetDetails['assets_typeofshare'] :'';
+        $assets_noofshares = (isset($transferassetDetails['assets_noofshares'])) ? $transferassetDetails['assets_noofshares'] :'';
+         
+        $words = NumbersToWords::convert($assets_noofshares);
+        
         $signimage_url         = public_path("img/pdf/sign-here.png");
         $table_html            = '
          <table style="width: 100%; background: #fff; margin-bottom: 0;" cellpadding="8" cellspacing="0">
@@ -1002,7 +1008,7 @@ class TransferAssetPdfHtml
                   Full Description of Security
                   </td>
                   <td style="width: 60%; border: 1px dotted #000; padding: 6px;">
-                    ' . $transferassetDetails['assets_typeofshare'] . '
+                    ' . $assets_typeofshare . '
                   </td>
                 </tr>
               </table>
@@ -1015,7 +1021,7 @@ class TransferAssetPdfHtml
                       ' . $words . '
                     </td>
                     <td style="width: 20%; border: 1px dotted #000; padding: 6px;">
-                      ' . $transferassetDetails['assets_noofshares'] . '
+                      ' . $assets_noofshares . '
                     </td>
                   </tr>
               </table>
@@ -1507,9 +1513,11 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
         $city     = isset($investor->city) ? ", " . $investor->city : "";
         $postcode = isset($investor->postcode) ? ", " . $investor->postcode : "";
 
+        $assets_noofshares = isset($transferassetDetails['assets_noofshares']) ? $transferassetDetails['assets_noofshares'] : "";
         if ($transferasset->typeofasset == 'iht_service') {
             $company_name      = $companyDetails->name;
-            $assets_noofshares = ' / ' . $transferassetDetails['assets_noofshares'];
+
+            $assets_noofshares = ' / ' . $assets_noofshares;
 
         } else {
             $company_name      = $companyDetails->name;

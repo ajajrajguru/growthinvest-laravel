@@ -130,6 +130,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
 
     // transfer-asset 
     Route::get('transfer-asset', 'TransferAssetController@transferAsset');
+    Route::get('transfer-asset/offline', 'TransferAssetController@offlineTransferAsset');
     Route::get('transfer-asset/online', 'TransferAssetController@onlineTransferAsset');
     Route::get('transfer-asset/online/{id}', 'TransferAssetController@onlineTransferAssetSummary');
     Route::post('transfer-asset/save-online-asset', 'TransferAssetController@saveOnlineTransferAsset');

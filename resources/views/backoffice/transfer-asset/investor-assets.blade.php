@@ -65,7 +65,7 @@ Stock Transfer Form - Please fill out and send to us as we required for our own 
 <button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="stock_transfer_form">Send for E-SIGN </button><br><br>
 
 Asset Transfer Form - Always save a copy for your own record and send for electronic signature<br>
-<a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/transfer_asset_pdf')}}"    class="btn btn-primary mt-3 ">Download </a>
+<a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/transfer_asset_pdf')}}"    class="btn btn-primary mt-3 " target="_blank">Download </a>
 
 <button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="transfer_asset_pdf">Send for E-SIGN </button>
     </td>
