@@ -1,5 +1,6 @@
 <?php
 namespace App;
+
 use App\NumbersToWords;
 
 class TransferAssetPdfHtml
@@ -19,8 +20,21 @@ class TransferAssetPdfHtml
         $default_logo_url     = public_path("img/pdf/pdfheader - nomination-firstpg.jpg");
 
         $nomineeApplication = $investor->investorNomineeApplication();
-        $nominee_details    = (!empty($nominee_details)) ? $nomineeApplication->details:[];
+        if (!empty($nominee_details)) {
+            $nominee_details = $nomineeApplication->details
+        } else {
 
+            $nominee_details['title']               = '';
+            $nominee_details['surname']             = '';
+            $nominee_details['forename']            = '';
+            $nominee_details['dateofbirth']         = '';
+            $nominee_details['nationalinsuranceno'] = '';
+            $nominee_details['address']             = '';
+            $nominee_details['postcode']            = '';
+            $nominee_details['email']               = '';
+            $nominee_details['telephone']           = '';
+
+        }
         $checkbox_nonationalinsuranceno[] = array('label_first' => false, 'label' => 'If your client does not have a National Insurance number, please tick here', 'checked' => false);
         if (isset($nominee_details['nonationalinsuranceno'])) {
             if ($nominee_details['nonationalinsuranceno'] == 1) {
@@ -695,7 +709,7 @@ class TransferAssetPdfHtml
                      <table style="width: 100%; margin-bottom:0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">Amount to  Transfer :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;&pound;&nbsp;' . (isset($transferassetDetails['assets_transferamount'])) ? $transferassetDetails['assets_transferamount'] :'' . '</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;&pound;&nbsp;' . (isset($transferassetDetails['assets_transferamount'])) ? $transferassetDetails['assets_transferamount'] : '' . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -831,10 +845,7 @@ class TransferAssetPdfHtml
         $investor             = $transferasset->investor;
         $companyDetails       = $transferasset->company;
         $transferassetDetails = $transferasset->details;
-   
- 
 
-        
         $style_html = '<style type="text/css">
               .bordertable {border:1px solid #000;}
                 th {border:none;
@@ -944,17 +955,16 @@ class TransferAssetPdfHtml
 
                 </style>';
 
- 
-        $words        = NumbersToWords::convert($transferassetDetails['assets_noofshares']);
+        $words = NumbersToWords::convert($transferassetDetails['assets_noofshares']);
         // echo "<pre>";
         // print_r($usermeta);
         $address               = isset($investor->address_1) ? ", " . $investor->address_1 : "";
         $address2              = isset($investor->address_2) ? ", " . $investor->address_2 : "";
         $city                  = isset($investor->city) ? ", " . $investor->city : "";
         $postcode              = isset($investor->postcode) ? ", " . $investor->postcode : "";
-        $assets_transferamount = (isset($transferassetDetails['assets_transferamount']) && $transferassetDetails['assets_transferamount'] != "")? $transferassetDetails['assets_transferamount'] : "Nil";
-        $signimage_url         = public_path("img/pdf/sign-here.png");  
-        $table_html = '
+        $assets_transferamount = (isset($transferassetDetails['assets_transferamount']) && $transferassetDetails['assets_transferamount'] != "") ? $transferassetDetails['assets_transferamount'] : "Nil";
+        $signimage_url         = public_path("img/pdf/sign-here.png");
+        $table_html            = '
          <table style="width: 100%; background: #fff; margin-bottom: 0;" cellpadding="8" cellspacing="0">
           <tr>
             <td style="width: 20%;  vertical-align: top;">
@@ -1094,7 +1104,7 @@ class TransferAssetPdfHtml
                 <table style="width: 100%; background: #fff;" cellpadding="8" cellspacing="0">
                   <tr>
                       <td style="width: 50%; border: 1px dotted #000; padding: 6px; ">
-                      Please provide the information requested below in case we need to contact you.<br><br>Day time telephone number :- <u>' . $investor->telephone_no . '</u><br><br>Email :- <u>' .$investor->email . '</u>……………………………………………(9)
+                      Please provide the information requested below in case we need to contact you.<br><br>Day time telephone number :- <u>' . $investor->telephone_no . '</u><br><br>Email :- <u>' . $investor->email . '</u>……………………………………………(9)
                       </td>
                       <td style="width: 50%; border: 1px dotted #000; ; padding: 6px; vertical-align: top; background-color: #ccc;">
 
@@ -1122,7 +1132,7 @@ class TransferAssetPdfHtml
         $label = 'COMPLETING THE FORM';
         $table_html .= $this->transfer_assets_subheaders($label);
 
-        $processimage_url = public_path("img/pdf/stock-transfer-exp2.png");  
+        $processimage_url = public_path("img/pdf/stock-transfer-exp2.png");
         $table_html .= '
 
 
@@ -1324,7 +1334,6 @@ class TransferAssetPdfHtml
                   </td>
                 </tr>
                 </table><br>';
- 
 
         $table_html .= '<table style="width: 100%; background: #fff;" cellpadding="8" cellspacing="0">
               <tr>
@@ -1387,8 +1396,8 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
         $default_logo_url     = public_path("img/pdf/pdfheader - nomination-firstpg.jpg");
 
         $nomineeApplication = $investor->userAdditionalInfo();
-  
-            $style_html ='<style type="text/css">
+
+        $style_html = '<style type="text/css">
               .bordertable {border:1px solid #000;}
                 th {border:none;
                   font-size:12px;
@@ -1396,8 +1405,8 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                 }
                 td {
                   font-size:12px;
-                  font-weight:normal;   
-                  border:none;           
+                  font-weight:normal;
+                  border:none;
                 }
                table {
                  background-color:#E0E0E0;
@@ -1408,7 +1417,7 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                   border:1px solid #A9A9A9;
                   background-color:#FFF;
                   line-height: 15px;
-                  
+
                 }
                 div.sectionhead{
                   background-color:#0066ff;
@@ -1421,20 +1430,20 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                 }
                 .blue_heading_div{
                       color:#fff;
-                      background-color:#0A3250;                                   
+                      background-color:#0A3250;
                       font-size:10px;
                       display:block;
-                     
-                       
+
+
                       text-align: left;
                       /* border-left:1px solid #000;
                       border-top:1px solid #000;
                       border-right:1px solid #000;
                       border-bottom:1px solid #000; */
-                      border-radius: 1mm; 
+                      border-radius: 1mm;
                       padding-top:3px;
                       padding-bottom:6px;
-                       
+
                     }
                     .w100per{
                       width:100%;
@@ -1448,7 +1457,7 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                     .w50per{
                       width:50%;
                     }
-                    
+
                     .w30per{
                       width:30%;
                     }
@@ -1459,78 +1468,73 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                       width:20%;
                     }
                     .round_radius{
-                      border-radius: 1mm; 
+                      border-radius: 1mm;
                     }
-                    .inputcss{                                                   
+                    .inputcss{
                       /* border: solid 1px #ccc;
                       border-radius: 50%;
                       display:block;
                       padding: 50px;
                       width:100px;
                       inline-height:200px; */
-                     border-radius: 1mm; 
+                     border-radius: 1mm;
                       /* padding-top:2px;
                       padding-bottom:4px;
-                      border: none;                       
-                      text-align: center; 
+                      border: none;
+                      text-align: center;
                       border:1px solid #D9DBDD; */
                       padding-left:5px;
                     }
                     table.no-spacing {
-                      border-spacing:0; 
-                      border-collapse: collapse;  
+                      border-spacing:0;
+                      border-collapse: collapse;
                     }
 
                     .signature_style{
                       display:block;
                       width:300px;
-                      font-size:22px; 
-                      padding-top:5px; 
+                      font-size:22px;
+                      padding-top:5px;
                     }
 
 
-                     
-
-                </style>' ;
- 
-
-                $address               = isset($investor->address_1) ? ", " . $investor->address_1 : "";
-                $address2              = isset($investor->address_2) ? ", " . $investor->address_2 : "";
-                $city                  = isset($investor->city) ? ", " . $investor->city : "";
-                $postcode              = isset($investor->postcode) ? ", " . $investor->postcode : "";
 
 
-            if($transferasset->typeofasset=='iht_service') 
-            {
-              $company_name= $companyDetails->name;
-              $assets_noofshares=' / '.$transferassetDetails['assets_noofshares'];            
+                </style>';
 
-            }
-            else{
-              $company_name= $companyDetails->name;
-              $assets_noofshares='';
-            }
+        $address  = isset($investor->address_1) ? ", " . $investor->address_1 : "";
+        $address2 = isset($investor->address_2) ? ", " . $investor->address_2 : "";
+        $city     = isset($investor->city) ? ", " . $investor->city : "";
+        $postcode = isset($investor->postcode) ? ", " . $investor->postcode : "";
 
+        if ($transferasset->typeofasset == 'iht_service') {
+            $company_name      = $companyDetails->name;
+            $assets_noofshares = ' / ' . $transferassetDetails['assets_noofshares'];
 
-            //Page 1 Start
-            $table_html ='
-            
+        } else {
+            $company_name      = $companyDetails->name;
+            $assets_noofshares = '';
+        }
+
+        //Page 1 Start
+        $table_html = '
+
             <table cellpadding="0" cellspacing="0" border="0"  style="width:92%; background:#FFF;" >
-                
+
                 <tr>
                 <td style="width:100%">
                 <h3 style="font-weight: 500; color: grey;">Letter of Authority</h3>
                 Dear Client,<br>This letter is addressed to the undertaking company for the requested asset transfer to your Platform One Limited nominee account. In order for us to complete the transfer we require your permission to access your information and order the transfer from the company/fund where you hold stock.
                 </td>
                 </tr>
-               
+
             </table><br>';
-            
-            $label='AUTHORITY LETTER FOR ASSET TRANSFER';
-            $table_html.=$this->transfer_assets_subheaders($label);
-             
-            // test starts
-            $table_html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
+
+        $label = 'AUTHORITY LETTER FOR ASSET TRANSFER';
+        $table_html .= $this->transfer_assets_subheaders($label);
+
+        // test starts
+        $table_html .= '<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
               <tr>
               <td class="w50per"><b>Registered Holder’s Name</b></td>
               <td class="w50per" ><b>Undertaking Manager/Company</b></td>
@@ -1540,7 +1544,7 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                      <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">Name of Account Holder :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;'.$investor->displayName().'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $investor->displayName() . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -1548,7 +1552,7 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                      <table style="width: 100%; margin-bottom:0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%;">Name of the Undertaking :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;'.$companyDetails->name.'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $companyDetails->name . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -1564,7 +1568,7 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                      <table style="width: 100%;" class="no-spacing">
                      <tr>
                      <td style="Width: 30%;">Address :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px; height: 50px;">&nbsp;'.$address.' '.$address2.'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px; height: 50px;">&nbsp;' . $address . ' ' . $address2 . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -1572,24 +1576,24 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                      <table style="width: 100%;" class="no-spacing" >
                      <tr>
                      <td style="Width: 30%; vertical-align: top;">Address :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px; height: 50px;">&nbsp;'.$companyDetails->address.'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px; height: 50px;">&nbsp;' . $companyDetails->address . '</div></td>
                      </tr>
                      </table>
                      <table style="width: 100%;" class="no-spacing">
                      <tr>
                      <td style="Width: 30%; vertical-align: middle;">Postcode :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;'.$companyDetails->postcode.'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $companyDetails->postcode . '</div></td>
                      </tr>
                      </table>
                  </td>
               </tr>
               <tr style="vertical-align: top;">
-                
+
                  <td style="width: 50%;">
                      <table style="width: 100%;" >
                      <tr>
                      <td style="Width: 30%; vertical-align: middle;">Postcode :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;'.$postcode.'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $postcode . '</div></td>
                      </tr>
                      </table>
                  </td>
@@ -1603,16 +1607,16 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                      <table style="width: 100%;" >
                      <tr>
                      <td style="Width: 30%; vertical-align: middle;">Type of Asset :</td>
-                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;'.$typeOfAssets[$transferasset->typeofasset].'</div></td>
+                     <td style="Width: 70%;"><div class="inputcss" style="padding: 6px;">&nbsp;' . $typeOfAssets[$transferasset->typeofasset] . '</div></td>
                      </tr>
                      </table>
                  </td>
               </tr>
-             
-              
+
+
              </table>';
-  
-                $table_html.='<table cellpadding="0" cellspacing="10" border="1"  class="w100per round_radius" >
+
+        $table_html .= '<table cellpadding="0" cellspacing="10" border="1"  class="w100per round_radius" >
                 <tr>
                 <th class="w100per"> I/We the undersigned, hereby authorise my/our agent; GrowthInvest (Trading name for EIS Platforms Ltd. located at: Candlewick House, 120 Cannon Street, EC4N 6AS, London) to access and complete the asset re-registration.<br><br>
                 Any and all acts carried out by GrowthInvest on my/our behalf as regards the asset transfer, shall have the same effect as my/our own. I/We confirm that by virtue of paragraph 6 of schedule 19 of the Finance Act 1999 this transaction is exempt from Stamp Duty Reserve Tax.<br><br>
@@ -1621,23 +1625,23 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                 This authorisation is valid until further written notice.</th>
                           </tr>
                           </table>';
-           $table_html.='<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius">
-          
-            
-            
+        $table_html .= '<table cellpadding="0" cellspacing="10" border="1"   class="w100per round_radius">
+
+
+
               <tr>
                 <td style="width: 50%; vertical-align: top;">
                     <table style="width: 100%; margin-bottom: 0;" >
                          <tr>
-                         
+
                          <td style="Width: 100%;"><div class="inputcss" style="padding: 6px; background: #ccc;"><b>REGISTERED HOLDER’S NAME</b></div></td>
                          </tr>
                      </table>
 
                      <table style="width: 100%; margin-top: 0;" >
                      <tr>
-                     
-                     <td style="Width: 100%;"><div class="inputcss" style="padding: 6px; height:15px;">'.$investor->displayName().'</div></td>
+
+                     <td style="Width: 100%;"><div class="inputcss" style="padding: 6px; height:15px;">' . $investor->displayName() . '</div></td>
                      </tr>
                      </table>
                      <table style="width: 100%;" >
@@ -1645,49 +1649,47 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                      <td style="Width: 20%; vertical-align: middle;"><b>Date:</b> </td>
                      <td style="Width: 80%;"><div class="inputcss" style="padding: 6px;">';
 
-                      if($additional_args['pdfaction']=="esign"){
-                        $table_html.='<input type="text" style=" background:#FFF;  font-size:12px;   border: dashed 1mm white;    "name="Dte_es_:signer1:date:format(date,\'dd/mm/yyyy\')" /> ';
-                      }
-                      else{
-                          $table_html.=' &nbsp;';
-                      }
+        if ($additional_args['pdfaction'] == "esign") {
+            $table_html .= '<input type="text" style=" background:#FFF;  font-size:12px;   border: dashed 1mm white;    "name="Dte_es_:signer1:date:format(date,\'dd/mm/yyyy\')" /> ';
+        } else {
+            $table_html .= ' &nbsp;';
+        }
 
-                    $table_html.='</div></td>';
-               //      <td style="Width: 80%;"><div class="inputcss" style="padding: 6px;">'.$firm_stats['created_date'].'</div></td>
+        $table_html .= '</div></td>';
+        //      <td style="Width: 80%;"><div class="inputcss" style="padding: 6px;">'.$firm_stats['created_date'].'</div></td>
 
-                    $table_html.='
+        $table_html .= '
                      </tr>
                      </table>
                  </td>
                  <td style="width: 50%; vertical-align: top;" >
                  <table style="width: 100%;" >
                          <tr>
-                         
+
                          <td style="Width: 100%;"><div class="inputcss" style="padding: 6px; background: #ccc;"><b>REGISTERED HOLDER’S SIGNATURE</b></div></td>
                          </tr>
                      </table>
                      <table style="width: 100%;" >
                      <tr style="vertical-align: top;">
-                     
+
                      <td style="Width: 100%; vertical-align: top;">';
-                     if($additional_args['pdfaction']=="esign"){
-                        //$table_html.='{{Sig_es_:signer1:signature}}';
-                        $table_html.='<div class="inputcss" style="margin-left:5px;padding:14px 8px;margin-top:5px;"><input type="text" class="signature_style" name="Sig_es_:signer1:signature" /></div> ';
-                      }
-                      else{
-                        $table_html.='<div class="inputcss" style="height: 60px;"></div>';
-                      }
-                      $table_html.='</td>
+        if ($additional_args['pdfaction'] == "esign") {
+            //$table_html.='{{Sig_es_:signer1:signature}}';
+            $table_html .= '<div class="inputcss" style="margin-left:5px;padding:14px 8px;margin-top:5px;"><input type="text" class="signature_style" name="Sig_es_:signer1:signature" /></div> ';
+        } else {
+            $table_html .= '<div class="inputcss" style="height: 60px;"></div>';
+        }
+        $table_html .= '</td>
                      </tr>
                      </table>
                  </td>
               </tr>
-            
-            
+
+
             </table><br pagebreak="true"/>';
-            $label='ASSETS TO BE TRANSFERRED/RE-REGISTERED';
-            $table_html.=$this->transfer_assets_subheaders($label);
-             $table_html.='
+        $label = 'ASSETS TO BE TRANSFERRED/RE-REGISTERED';
+        $table_html .= $this->transfer_assets_subheaders($label);
+        $table_html .= '
              <table style="border: solid 1px #000; border-collapse: collapse; width:100%;" align="center">
                <tr style="background:#ccc; color:#000;">
                   <td class="w50per" style="padding:8px;border: solid 1px #CCC;">Full name of assets to be transferred or re-registered:</td>
@@ -1695,45 +1697,44 @@ If any of the above applies, you should complete <b>Certificate 2</b> on the sec
                 </tr>
              </table>
              <table style=" border-collapse: collapse; width:100%;" align="center">
-             
+
              <tr style="margin-bottom: 0; padding: 0; ">
                 <td style="width: 50%; border: solid 1px #0A3250; padding:8px; background:#FFF;">
-                                    '.$company_name.$assets_noofshares.'
+                                    ' . $company_name . $assets_noofshares . '
 
                  </td>
                  <td style="width: 50%; border: solid 1px #0A3250; padding:8px;background:#FFF;">
-                                  
+
                  </td>
               </tr>
               <tr style="margin-bottom: 0;">
                 <td style="width: 50%; border: solid 1px #0A3250; padding:8px;background:#FFF;">
-                    &nbsp;  
+                    &nbsp;
                  </td>
                  <td style="width: 50%; border: solid 1px #0A3250; padding:8px;background:#FFF;">
-                     &nbsp; 
+                     &nbsp;
                  </td>
               </tr>
               <tr style="margin-bottom: 0;">
                 <td style="width: 50%; border: solid 1px #0A3250; padding:8px;background:#FFF;">
-                    &nbsp;  
+                    &nbsp;
                  </td>
                  <td style="width: 50%; border: solid 1px #0A3250; padding:8px;background:#FFF;">
-                     &nbsp; 
+                     &nbsp;
                  </td>
-              </tr> 
-            
-            
-            
+              </tr>
+
+
+
             </table>
             ';
-  
-          $head_foot_args['headertxt']  = "14mm";
-          $header_footer_start_html     = get_header_page_markup($head_foot_args);
- 
-          
-          $html =$style_html.$header_footer_start_html.$table_html.$header_footer_end_html;
 
-          return $html;
+        $head_foot_args['headertxt'] = "14mm";
+        $header_footer_start_html    = get_header_page_markup($head_foot_args);
+
+        $html = $style_html . $header_footer_start_html . $table_html . $header_footer_end_html;
+
+        return $html;
 
     }
 

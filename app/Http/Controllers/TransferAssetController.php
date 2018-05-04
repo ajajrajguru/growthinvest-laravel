@@ -244,6 +244,12 @@ class TransferAssetController extends Controller
             $foldername = uniqid("ab1234cde_folder1_a932_");
             $destination_dir = public_path() . '/userdocs/' . $tmp_foldername . '/' . $foldername;
 
+            if (!file_exists(public_path() . '/userdocs/' . $tmp_foldername)) {
+
+                mkdir(public_path() . '/userdocs/' . $tmp_foldername);
+
+            }
+            
             if ($type == 'transfer_asset_pdf') {
                 $html      = $transferAssetPdf->getHtmlForTransferAssetPdf($transferasset, $additionalArgs);
                 
