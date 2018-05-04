@@ -21,7 +21,7 @@ class TransferAssetPdfHtml
 
         $nomineeApplication = $investor->investorNomineeApplication();
         if (!empty($nominee_details)) {
-            $nominee_details = $nomineeApplication->details
+            $nominee_details = $nomineeApplication->details;
         } else {
 
             $nominee_details['title']               = '';
