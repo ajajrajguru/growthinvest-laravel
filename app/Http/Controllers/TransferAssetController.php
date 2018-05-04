@@ -200,9 +200,11 @@ class TransferAssetController extends Controller
             $html     = $transferAssetPdf->getHtmlForTransferAssetPdf($transferasset, $additionalArgs);
             $pdfTitle = 'Transfer Assets Form ';
         } elseif ($type == 'stock_transfer_form') {
-            $html = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset);
+            $html = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset,$additionalArgs);
+            $pdfTitle = 'Stock Transfer Form';
         } elseif ($type == 'letter_of_authority_pdf') {
-            $html = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset);
+            $html = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset,$additionalArgs);
+            $pdfTitle = 'Letter Of Authority';
         }
 
         $now_date = date('d-m-Y', time());
@@ -238,43 +240,41 @@ class TransferAssetController extends Controller
             $pdfTitle                    = '';
             $now_date                    = date('d-m-Y', time());
 
+            $tmp_foldername = "tmp_transferassets";
+            $foldername = uniqid("ab1234cde_folder1_a932_");
+            $destination_dir = public_path() . '/userdocs/' . $tmp_foldername . '/' . $foldername;
+
             if ($type == 'transfer_asset_pdf') {
                 $html      = $transferAssetPdf->getHtmlForTransferAssetPdf($transferasset, $additionalArgs);
-                $pdfTitle  = 'Transfer Assets Form ';
-                $file_name = 'Transfer_Asset_pdf_' . $now_date . '.pdf';
-            } elseif ($type == 'stock_transfer_form') {
-                $html = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset);
-            } elseif ($type == 'letter_of_authority_pdf') {
-                $html = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset);
-            }
+                
+                $output_link       = $destination_dir . '/Transfer_Asset_pdf_' . $now_date . '.pdf';
+                $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=transferasset';
+                $adobesign_message = "Please sign the Transfer Asset document";
+                $adobesign_name    = "Transfer Asset Form";
 
-            $now_date = date('d-m-Y', time());
+            } elseif ($type == 'stock_transfer_form') {
+                $html = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset, $additionalArgs);
+                $output_link       = $destination_dir . '/stock_transfer_pdf_' . $now_date . '.pdf';
+                $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=stock_transfer_form';
+                $adobesign_message ="Please sign Stock Transfer document";
+                $adobesign_name ="Stock Transfer Form";
+
+            } elseif ($type == 'letter_of_authority_pdf') {
+                $html = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset, $additionalArgs);
+                $output_link       = $destination_dir . '/letter_of_authority_pdf_' . $now_date . '.pdf';
+                $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=letter_of_authority';
+                $adobesign_message ="Please sign Letter Of Authority document";
+                $adobesign_name ="Letter Of Authority";
+            }
 
             $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
             $html2pdf->pdf->SetDisplayMode('fullpage');
             $html2pdf->writeHTML($html, isset($_GET['vuehtml']));
 
-            $tmp_foldername = "tmp_transferassets";
-
-            $foldername = uniqid("ab1234cde_folder1_a932_");
-
-            if (!file_exists(public_path() . '/userdocs/' . $tmp_foldername)) {
-
-                mkdir(public_path() . '/userdocs/' . $tmp_foldername);
-
-            }
-
-            $destination_dir = public_path() . '/userdocs/' . $tmp_foldername . '/' . $foldername;
-
             if (!file_exists($destination_dir)) {
 
                 mkdir($destination_dir);
             }
-
-            $output_link       = $destination_dir . '/Transfer_Asset_pdf_' . $now_date . '.pdf';
-            $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=transferasset';
-            $adobesign_message = "Please sign the Transfer Asset document";
-            $adobesign_name    = "Transfer Asset Form";
 
             $html2pdf->Output($output_link, 'F');
 

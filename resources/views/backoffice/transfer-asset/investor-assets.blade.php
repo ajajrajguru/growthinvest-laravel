@@ -57,16 +57,17 @@ $files = $transferasset->getFiles('transferasset');
   <tr class="download-doc-{{ $transferasset->id }} d-none" >
     <td colspan="13">
       Letter of Authority - Enables us to complete the transfer on your/your client’s behalf<br>
-      <button type="submit" class="btn btn-primary mt-3 ">Download </button>
-      <button type="submit" class="btn btn-primary mt-3 ">Send for E-SIGN </button><br><br>
+<a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/letter_of_authority_pdf')}}"  class="btn btn-primary mt-2 " target="_blank">Download </a>
+<button  class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="letter_of_authority_pdf">Send for E-SIGN </button><br><br>
 
-      Stock Transfer Form - Please fill out and send to us as we required for our own records regardless of Stamp Duty status<br>
-      <button type="submit" class="btn btn-primary mt-3 ">Download </button>
-      <button type="submit" class="btn btn-primary mt-3 ">Send for E-SIGN </button><br><br>
+Stock Transfer Form - Please fill out and send to us as we required for our own records regardless of Stamp Duty status<br>
+<a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/stock_transfer_form')}}"  class="btn btn-primary mt-2" target="_blank">Download </a>
+<button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="stock_transfer_form">Send for E-SIGN </button><br><br>
 
-      Asset Transfer Form - Always save a copy for your own record and send for electronic signature<br>
-      <button type="submit" class="btn btn-primary mt-3 ">Download </button>
-      <button type="submit" class="btn btn-primary mt-3 ">Send for E-SIGN </button>
+Asset Transfer Form - Always save a copy for your own record and send for electronic signature<br>
+<a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/transfer_asset_pdf')}}"    class="btn btn-primary mt-3 ">Download </a>
+
+<button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="transfer_asset_pdf">Send for E-SIGN </button>
     </td>
   </tr>
   <tr class="download-uploaded-doc-{{ $transferasset->id }} d-none">

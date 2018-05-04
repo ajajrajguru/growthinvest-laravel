@@ -222,7 +222,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Custody / Non-Custody</label>
-                           <select name="company['assets_aicustody']" class="form-control update-summary">
+                           <select name="company[assets_aicustody]" class="form-control update-summary">
                               <option value="">--select--</option>
                               <option value="aic">Custody</option>
                               <option value="ainc">Non-Custody</option>
