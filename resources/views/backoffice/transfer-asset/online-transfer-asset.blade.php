@@ -74,7 +74,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                <div class="col-md-3 text-center" >
                   <div class="form-group">
                      <label>Select Client <span class="text-danger">*</span></label>
-                     <select name="investor" class="form-control" required >
+                     <select name="investor" class="form-control select2-single" required >
                         <option value="">-select-</option>
                         @foreach($investors as $investor)
                         <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
@@ -143,7 +143,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                <div class="col-md-3 text-center" >
                   <div class="form-group">
                      <label>Type of Asset <span class="text-danger">*</span></label>
-                     <select name="type_of_asset" class="form-control" required="" >
+                     <select name="type_of_asset" class="form-control select2-single" required="" >
                         <option value="">-select-</option>
                         @foreach($typeOfAssets as $key=>$typeOfAsset)
                         <option value="{{ $key }}">{{ $typeOfAsset }}</option>
@@ -159,10 +159,10 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-3">
                         <div class="form-group">
                            <label>Company<span class="text-danger">*</span></label>
-                           <select name="companies" class="form-control" required=""  >
+                           <select name="companies" class="form-control select2-single" required=""  >
                               <option value="">-select-</option>
                               @foreach($single_companies as $key=>$company)
-                              <option value="{{ $company->id }}" class="" type="{{ $company->type }}">{{ $company->name }}</option>
+                              <option name="{{ $company->name }}" company_no="{{ $company->company_no }}" email="{{ $company->email }}" phone="{{ $company->phone }}" value="{{ $company->id }}" class="" type="{{ $company->type }}">{{ $company->name }}</option>
                               @endforeach
                            </select>
                         </div>
@@ -174,13 +174,13 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Company Name (as registered at companies house)</label>
-                           <input type="text"  name="company[assets_cmpname]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_cmpname]" input_name="assets_cmpname" class="form-control update-summary company_name"  >
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Company Number</label>
-                           <input type="text"  name="company[assets_cmpno]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_cmpno]" input_name="assets_cmpno" class="form-control update-summary company_no"  >
                         </div>
                      </div>
                   </div>
@@ -188,13 +188,13 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Email</label>
-                           <input type="text"  name="company[assets_cmpemail]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_cmpemail]" input_name="assets_cmpemail" class="form-control update-summary company_email"  >
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Company Telephone</label>
-                           <input type="text"  name="company[assets_cmpphone]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_cmpphone]" input_name="assets_cmpphone" class="form-control update-summary company_tel"  >
                         </div>
                      </div>
                   </div>
@@ -202,13 +202,13 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Type of share (e.g. "Ordinary")</label>
-                           <input type="text"  name="company[assets_typeofshare]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_typeofshare]" input_name="assets_typeofshare" class="form-control update-summary"  >
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Number of shares to be transferred</label>
-                           <input type="text"  name="company[assets_noofshares]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_noofshares]" input_name="assets_noofshares" class="form-control update-summary"  >
                         </div>
                      </div>
                   </div>
@@ -216,13 +216,13 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Current name on share certificate</label>
-                           <input type="text"  name="company[assets_nameonsharecertificate]" class="form-control update-summary"  >
+                           <input type="text"  name="company[assets_nameonsharecertificate]" input_name="assets_nameonsharecertificate" class="form-control update-summary"  >
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Custody / Non-Custody</label>
-                           <select name="company[assets_aicustody]" class="form-control update-summary">
+                           <select name="company[assets_aicustody]" input_name="assets_aicustody" class="form-control update-summary">
                               <option value="">--select--</option>
                               <option value="aic">Custody</option>
                               <option value="ainc">Non-Custody</option>
@@ -243,7 +243,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                            <select name="providers" class="form-control"  >
                               <option value="">-select-</option>
                               @foreach($other_companies as $key=>$other_company)
-                              <option value="{{ $other_company->id }}" class="" type="{{ $other_company->type }}">{{ $other_company->name }}</option>
+                              <option name="{{ $other_company->name }}" product="{{ $other_company->product }}" email="{{ $other_company->email }}" phone="{{ $other_company->phone }}" value="{{ $other_company->id }}" class="" type="{{ $other_company->type }}">{{ $other_company->name }}</option>
                               @endforeach
                            </select>
                         </div>
@@ -255,19 +255,19 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-4">
                         <div class="form-group">
                            <label>Name of Provider</label>
-                           <input type="text"  name="provider[assets_providername]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_providername]" input_name="assets_providername" class="form-control update-summary provider_name"  >
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group">
                            <label>Name of Product</label>
-                           <input type="text"  name="provider[assets_productname]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_productname]" input_name="assets_productname" class="form-control update-summary provider_product"  >
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group">
                            <label>Client Account Number</label>
-                           <input type="text"  name="provider[assets_clientaccno]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_clientaccno]" input_name="assets_clientaccno" class="form-control update-summary "  >
                         </div>
                      </div>
                   </div>
@@ -275,19 +275,19 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-4">
                         <div class="form-group">
                            <label>Email</label>
-                           <input type="text"  name="provider[assets_provider_email]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_provider_email]" input_name="assets_provider_email" class="form-control update-summary provider_email"  >
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group">
                            <label>Company Telephone</label>
-                           <input type="text"  name="provider[assets_provider_phone]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_provider_phone]" input_name="assets_provider_phone" class="form-control update-summary provider_tel"  >
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group">
                            <label>Custody / Non-Custody</label>
-                           <select   name="provider[assets_provider_aicustody]" class="form-control update-summary">
+                           <select   name="provider[assets_provider_aicustody]" input_name="assets_provider_aicustody" class="form-control update-summary">
                               <option value="">--select--</option>
                               <option value="aic">Custody</option>
                               <option value="ainc">Non-Custody</option>
@@ -299,7 +299,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-12">
                         <div class="form-group">
                            <label>Address of Provider</label>
-                           <textarea name="provider[assets_provideraddress]" class="form-control update-summary"  ></textarea>
+                           <textarea name="provider[assets_provideraddress]" input_name="assets_provideraddress" class="form-control update-summary"  ></textarea>
                         </div>
                      </div>
                   </div>
@@ -307,13 +307,13 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>ISIN No</label>
-                           <input type="text"  name="provider[isinno]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[isinno]" input_name="isinno" class="form-control update-summary"  >
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>SEDOL Code</label>
-                           <input type="text"  name="provider[sedol]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[sedol]" input_name="sedol" class="form-control update-summary"  >
                         </div>
                      </div>
                   </div>
@@ -321,13 +321,13 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>County</label>
-                           <input type="text"  name="provider[assets_county]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_county]" input_name="assets_county" class="form-control update-summary"  >
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Postcode</label>
-                           <input type="text"  name="provider[assets_pincode]" class="form-control update-summary"  >
+                           <input type="text"  name="provider[assets_pincode]" input_name="assets_pincode" class="form-control update-summary"  >
                         </div>
                      </div>
                   </div>
@@ -337,11 +337,11 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                            <label>Please Transfer</label>
                            <div class=" ">
                               <div class="custom-control custom-radio">
-                                 <input type="radio" id="yesrodio1" name="provider[typeoftransfer]" value="full" class="custom-control-input update-summary"  >
+                                 <input type="radio" id="yesrodio1" input_name="typeoftransfer" name="provider[typeoftransfer]" value="full" class="custom-control-input update-summary"  >
                                  <label class="custom-control-label normal" for="yesrodio1" >In Full  </label>
                               </div>
                               <div class="custom-control custom-radio">
-                                 <input type="radio" id="norodio1" name="provider[typeoftransfer]" value="part" class="custom-control-input update-summary" >
+                                 <input type="radio" id="norodio1" input_name="typeoftransfer" name="provider[typeoftransfer]" value="part" class="custom-control-input update-summary" >
                                  <label class="custom-control-label normal" for="norodio1" > In Part</label>
                               </div>
                            </div>

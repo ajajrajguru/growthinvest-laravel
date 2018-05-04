@@ -941,7 +941,7 @@ $(document).ready ->
 		$('.progress-indicator').find('li[part="'+part+'"]').addClass('active')
 
 	$('.transfer-asset').on 'change', 'select[name="type_of_asset"]', ->
-		 
+		assetType  = $(this).val()
 		if($(this).val()!='')
 			if($(this).val()=='single_company')
 				$('.company-section').removeClass('d-none')
@@ -949,6 +949,11 @@ $(document).ready ->
 			else
 				$('.company-section').addClass('d-none')
 				$('.provider-section').removeClass('d-none')
+
+				$('select[name="providers"]> option').each (id,value) ->
+					$(this).removeClass('d-none')
+					if($(this).attr('type')!=assetType)
+						$(this).addClass('d-none')
 
 				if($(this).val()=='vct')
 					$('.vct-section').removeClass('d-none')
@@ -964,16 +969,55 @@ $(document).ready ->
 			$('.company-section').addClass('d-none')
 
 
-	$('.transfer-asset').on 'change', '.update-summary', ->
-
-		eleClass = $(this).attr('name')+'_summary'
-		eleValue = $(this).val()
+	updateTransferAssetSummaryValues = (inpObj) ->
+		eleClass = inpObj.attr('input_name')+'_summary'
+		eleValue = inpObj.val()
+		console.log eleClass
+		console.log eleValue
 		if($(this).is('select'))
 			eleValue =$(this).find("option:selected").text();
 
 		$('.'+eleClass).html eleValue
 
+	$('.transfer-asset').on 'change', 'select[name="companies"]', ->
+		name = $(this).find("option:selected").attr('name');
+		company_no = $(this).find("option:selected").attr('company_no');
+		email = $(this).find("option:selected").attr('email');
+		phone = $(this).find("option:selected").attr('phone');
 
+		$('.company_name').val(name).attr('readonly',true)
+		$('.company_no').val(company_no).attr('readonly',true)
+		$('.company_email').val(email).attr('readonly',true)
+		$('.company_tel').val(phone).attr('readonly',true)
+
+		$('.update-summary').each (id,value) ->
+			updateTransferAssetSummaryValues($(this))
+
+		return
+
+
+	$('.transfer-asset').on 'change', 'select[name="providers"]', ->
+		name = $(this).find("option:selected").attr('name');
+		product = $(this).find("option:selected").attr('product');
+		email = $(this).find("option:selected").attr('email');
+		phone = $(this).find("option:selected").attr('phone');
+
+		
+		$('.provider_name').val(name).attr('readonly',true)
+		$('.provider_product').val(product).attr('readonly',true)
+		$('.provider_email').val(email).attr('readonly',true)
+		$('.provider_tel').val(phone).attr('readonly',true)
+
+		$('.update-summary').each (id,value) ->
+			updateTransferAssetSummaryValues($(this))
+
+		return
+		
+
+	$('.transfer-asset').on 'change', '.update-summary', ->
+		updateTransferAssetSummaryValues($(this))
+
+	
 	$('.transfer-asset').on 'click', '.esign_doc', ->
 		rowObj = $(this)
 		assetid = $(this).attr('assetid')
