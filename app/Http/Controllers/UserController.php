@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Cropper;
+use App\Firm;
 use App\User;
 use App\UserData;
-use App\Firm;
-
 use Auth;
 use File;
 use Illuminate\Http\Request;
@@ -15,6 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Session;
 use Spatie\Permission\Models\Role;
+use Ajency\FileUpload\models\FileUpload_Files;
 
 //Enables us to output flash messaging
 use Storage;
@@ -87,35 +87,33 @@ class UserController extends Controller
     by default mode will be edit when user is created first time
     $firmGiCode - request from firm to add user
      */
-    public function addUserStepOne($firmGiCode='')
+    public function addUserStepOne($firmGiCode = '')
     {
         $user      = new User;
-        $firmCond = ($firmGiCode !='') ? ['gi_code'=>$firmGiCode] : [];
+        $firmCond  = ($firmGiCode != '') ? ['gi_code' => $firmGiCode] : [];
         $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $breadcrumbs   = [];
-        if($firmGiCode==''){
+        $breadcrumbs = [];
+        if ($firmGiCode == '') {
             $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
             $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
             $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
 
             $data['is_firm_user'] = 'no';
-            $viewFile = 'backoffice.user.step-one';
-        }
-        else{
-            $firm   = Firm::where('gi_code', $firmGiCode)->first();
+            $viewFile             = 'backoffice.user.step-one';
+        } else {
+            $firm          = Firm::where('gi_code', $firmGiCode)->first();
             $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
             $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
             $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
             $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
 
-            $data['firm']              = $firm;
-            $data['is_firm_user'] = 'yes';
-            $data['firmActiveMenu']  =  'firm-users';
-            $viewFile = 'backoffice.firm.intermediary-registration';
+            $data['firm']           = $firm;
+            $data['is_firm_user']   = 'yes';
+            $data['firmActiveMenu'] = 'firm-users';
+            $viewFile               = 'backoffice.firm.intermediary-registration';
         }
-        
 
         $data['roles']              = Role::where('type', 'backoffice')->get();
         $data['countyList']         = getCounty();
@@ -160,7 +158,7 @@ class UserController extends Controller
         $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode             = $requestData['gi_code'];
         // $isFirmUser             = $requestData['is_firm_user'];
- 
+
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
         $sendmail = false;
@@ -291,7 +289,6 @@ class UserController extends Controller
         }
 
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
-
 
         return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));
 
@@ -792,7 +789,7 @@ class UserController extends Controller
         if ($crop->getMsg() != null) {
             $model = $objectType::find($objectId);
 
-             //move from temp dir to s3
+            //move from temp dir to s3
             $source   = pathinfo($url);
             $basename = $source['basename'];
 
@@ -801,7 +798,7 @@ class UserController extends Controller
 
             $id = $model->uploadImage($uploadedFile, $imageType);
             $model->remapImages([$id], $imageType);
- 
+
             $uploadImages = $model->getImages($imageType);
 
             foreach ($uploadImages as $key => $image) {
@@ -810,10 +807,8 @@ class UserController extends Controller
                 }
             }
 
-
             //delete temp file
-            if (File::exists($currentPath))
-            {
+            if (File::exists($currentPath)) {
                 File::delete($currentPath);
             }
 
@@ -851,6 +846,52 @@ class UserController extends Controller
             'image_path' => $defaultImage,
         ], 200);
 
+    }
+
+    public function uploadTempFiles(Request $request)
+    {
+        if (!File::exists(public_path() . '/uploads/tmp')) {
+            File::makeDirectory(public_path() . '/uploads/tmp', 0777);
+        }
+
+        $file     = $request->file('file');
+        $fileName     = $request->input('name');
+         
+        $destinationPath = public_path() . '/uploads/tmp/';
+        $url             = url('/uploads/tmp/'); //dd($url);
+        $fileUrl         = url('/uploads/tmp/' . $fileName); //dd($url);
+        $request->file('file')->move($destinationPath, $fileName);
+
+        return response()->json([
+            'code'    => 'image_uploaded',
+            'message' => 'success',
+            'data'    => [
+                'image_path' => $fileUrl,
+            ],
+        ], 200);
+
+    }
+
+    public function downloadS3File($id)
+    {
+
+        
+        $file      = FileUpload_Files::find($id); 
+      
+        $filePath = $file->url;
+        $filename = $file->name;
+
+        $user = User::first();
+        
+        $ext      = pathinfo($filePath, PATHINFO_EXTENSION);
+        $mimeType = getFileMimeType($ext);
+        $file     = $user->getSingleFile($id);
+        
+        return response($file)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Disposition', "attachment; filename={$filename}")
+            ->header('Filename', $filename);
     }
 
 }

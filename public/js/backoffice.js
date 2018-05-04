@@ -929,7 +929,7 @@
       $("#addFeesModel").find('input[name="business_id"]').val(businessId);
       return $("#addFeesModel").modal('show');
     });
-    return $('body').on('click', '.save-investment-fees', function() {
+    $('body').on('click', '.save-investment-fees', function() {
       var amount, businessId, comment, investorId, type;
       investorId = $('input[name="investor_id"]').val();
       businessId = $('input[name="business_id"]').val();
@@ -953,6 +953,127 @@
             businessClientTable.ajax.reload();
           }
           return $("#addFeesModel").modal('hide');
+        }
+      });
+    });
+    $('.transfer-asset').on('change', 'select[name="investor"]', function() {
+      var investorId;
+      investorId = $(this).val();
+      $('.name_of_client_summary').html($(this).find("option:selected").text());
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/investor-assets',
+        data: {
+          'investor_id': investorId
+        },
+        success: function(data) {
+          return $('.data_container').html(data.businesslisting_html);
+        }
+      });
+    });
+    $('.transfer-asset').on('click', '.savetransferasset_asset', function() {
+      var assetid, status;
+      assetid = $(this).attr('assetid');
+      status = $(this).closest('td').find('.transferasset_status').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/save-status',
+        data: {
+          'assetid': assetid,
+          'status': status
+        },
+        success: function(data) {
+          return console.log(data.status);
+        }
+      });
+    });
+    $('.transfer-asset').on('click', '.toggle-download-doc', function() {
+      var assetId;
+      assetId = $(this).attr('assetid');
+      if ($('.download-doc-' + assetId).hasClass('d-none')) {
+        return $('.download-doc-' + assetId).removeClass('d-none');
+      } else {
+        return $('.download-doc-' + assetId).addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('click', '.toggle-download-uploaded-doc', function() {
+      var assetId;
+      assetId = $(this).attr('assetid');
+      if ($('.download-uploaded-doc-' + assetId).hasClass('d-none')) {
+        return $('.download-uploaded-doc-' + assetId).removeClass('d-none');
+      } else {
+        return $('.download-uploaded-doc-' + assetId).addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('click', '.delete_tranferasset', function() {
+      var assetid, rowObj;
+      rowObj = $(this);
+      assetid = $(this).attr('assetid');
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/delete-asset',
+        data: {
+          'assetid': assetid,
+          'status': status
+        },
+        success: function(data) {
+          return rowObj.closest('tr').remove();
+        }
+      });
+    });
+    $('.transfer-asset').on('click', '.display-section', function() {
+      var part;
+      part = $(this).attr('part');
+      $(this).closest('.part-container').addClass('d-none');
+      $('.' + part).removeClass('d-none');
+      $('.progress-indicator').find('li').removeClass('active');
+      return $('.progress-indicator').find('li[part="' + part + '"]').addClass('active');
+    });
+    $('.transfer-asset').on('change', 'select[name="type_of_asset"]', function() {
+      if ($(this).val() !== '') {
+        if ($(this).val() === 'single_company') {
+          $('.company-section').removeClass('d-none');
+          $('.provider-section').addClass('d-none');
+        } else {
+          $('.company-section').addClass('d-none');
+          $('.provider-section').removeClass('d-none');
+          if ($(this).val() === 'vct') {
+            $('.vct-section').removeClass('d-none');
+          } else {
+            $('.vct-section').addClass('d-none');
+          }
+        }
+        $('.upload-files-section').removeClass('d-none');
+        return $('.type_of_asset_summary').html($(this).find("option:selected").text());
+      } else {
+        $('.upload-files-section').addClass('d-none');
+        $('.provider-section').addClass('d-none');
+        return $('.company-section').addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('change', '.update-summary', function() {
+      var eleClass, eleValue;
+      eleClass = $(this).attr('name') + '_summary';
+      eleValue = $(this).val();
+      if ($(this).is('select')) {
+        eleValue = $(this).find("option:selected").text();
+      }
+      return $('.' + eleClass).html(eleValue);
+    });
+    return $('.transfer-asset').on('click', '.esign_doc', function() {
+      var assetid, assettype, rowObj;
+      rowObj = $(this);
+      assetid = $(this).attr('assetid');
+      assettype = $(this).attr('assettype');
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/esign-doc',
+        data: {
+          'assetid': assetid,
+          'assettype': assettype
+        },
+        success: function(data) {
+          return rowObj.closest('tr').remove();
         }
       });
     });

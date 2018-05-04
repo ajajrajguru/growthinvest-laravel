@@ -17,14 +17,12 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
     }
 
     foreach ($inCond as $key => $values) {
-        $modelQuery->whereIn($key,$values);
+        $modelQuery->whereIn($key, $values);
     }
 
     foreach ($orderDataBy as $columnName => $orderBy) {
         $modelQuery->orderBy($columnName, $orderBy);
     }
-
-    
 
     if ($length > 1) {
         $listCount = $modelQuery->get()->count();
@@ -82,15 +80,14 @@ function getCounty()
     return ['Avon', 'Bedfordshire', 'Berkshire', 'Borders', 'Buckinghamshire', 'Cambridgeshire', 'Central', 'Cheshire', 'Cleveland', 'Clwyd', 'Cornwall', 'County Antrim', 'County Armagh', 'County Down', 'County Fermanagh', 'County Londonderry', 'County Tyrone', 'Cumbria', 'Derbyshire', 'Devon', 'Dorset', 'Dumfries and Galloway', 'Durham', 'Dyfed', 'East Sussex', 'Essex', 'Fife', 'Gloucestershire', 'Grampian', 'Greater Manchester', 'Gwent', 'Gwynedd County', 'Hampshire', 'Herefordshire', 'Hertfordshire', 'Highlands and Islands', 'Humberside', 'Isle of Wight', 'Kent', 'Lancashire', 'Leicestershire', 'Lincolnshire', 'London', 'Lothian', 'Merseyside', 'Mid Glamorgan', 'Norfolk', 'North Yorkshire', 'Northamptonshire', 'Northumberland', 'Nottinghamshire', 'Oxfordshire', 'Powys', 'Rutland', 'Shropshire', 'Somerset', 'South Glamorgan', 'South Yorkshire', 'Staffordshire', 'Strathclyde', 'Suffolk', 'Surrey', 'Tayside', 'Tyne and Wear', 'Warwickshire', 'West Glamorgan', 'West Midlands', 'West Sussex', 'West Yorkshire', 'Wiltshire', 'Worcestershire'];
 }
 
-function getDefaultImages($type){
+function getDefaultImages($type)
+{
     $url = url('img/dummy/logo.png');
-    if(in_array($type, ['profile_picture'])){
+    if (in_array($type, ['profile_picture'])) {
         $url = url('img/dummy/avatar.png');
-    }
-    elseif(in_array($type, ['company_logo','firm_logo'])){
+    } elseif (in_array($type, ['company_logo', 'firm_logo'])) {
         $url = url('img/dummy/logo.png');
-    }
-    elseif(in_array($type, ['business_logo'])){
+    } elseif (in_array($type, ['business_logo'])) {
         $url = url('img/dummy/seedavtar.jpg');
     }
 
@@ -105,6 +102,16 @@ function investmentOfferType()
 function investmentTaxStatus()
 {
     return ["eis" => "EIS", "seis" => "SEIS", "vct" => "VCT", "iht" => "BR", "sitr" => "SITR"];
+}
+
+function typeOfAssets()
+{
+    $staticarr = ['single_company' => 'Single Company',
+        'seis_eis_portfolio'           => 'SEIS/EIS Portfolio',
+        'iht_service'                  => 'IHT Service',
+        'vct'                          => 'VCT'];
+
+    return $staticarr;
 }
 
 function getCountry()
@@ -711,7 +718,7 @@ function getUploadFileUrl($id)
 function getFileMimeType($ext)
 {
 
-    $mimeTypes = ['pdf' => 'application/pdf', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'doc' => 'application/msword'];
+    $mimeTypes = ['gif' => 'image/gif', 'jpeg' => 'image/jpeg', 'jpg' => 'image/jpeg', 'png' => 'image/png', 'svg' => 'image/svg+xml', 'pdf' => 'application/pdf', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'doc' => 'application/msword'];
 
     $mimeType = $mimeTypes[$ext];
     return $mimeType;
@@ -1071,7 +1078,7 @@ function genActiveCertificationValidityHtml($investorCertification, $fileId)
 {
     $certificationDate = $investorCertification->created_at;
     $certificationName = $investorCertification->certification()->name;
-    $investor = $investorCertification->user;
+    $investor          = $investorCertification->user;
 
     $today = date('Y-m-d');
 
@@ -1146,29 +1153,30 @@ function getBusinessSectors()
     return \App\Defaults::where('type', 'business-sector')->where('status', '1')->get();
 }
 
-function aicSectors(){
-    return ['generalist'=>'Generalist',
-    'generalist_pre_qualifying'=>'Generalist Pre-Qualifying',
-    'aim_quoted'=>'AIM Quoted',
-    'specialist_environmental'=>'Specialist: Environmental',
-    'specialist_technology'=>'Specialist: Technology',
-    'specialist_infrastructure'=>'Specialist: Infrastructure'];
+function aicSectors()
+{
+    return ['generalist'        => 'Generalist',
+        'generalist_pre_qualifying' => 'Generalist Pre-Qualifying',
+        'aim_quoted'                => 'AIM Quoted',
+        'specialist_environmental'  => 'Specialist: Environmental',
+        'specialist_technology'     => 'Specialist: Technology',
+        'specialist_infrastructure' => 'Specialist: Infrastructure'];
 }
 
 function getDueDeligence()
 {
     // return \App\Defaults::where('type', 'approver')->where('status', '1')->get();
     return \App\Defaults::join('business_has_defaults', function ($join) {
-            $join->on('defaults.id', '=', 'business_has_defaults.default_id');
-            })->where('defaults.type', 'approver')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
+        $join->on('defaults.id', '=', 'business_has_defaults.default_id');
+    })->where('defaults.type', 'approver')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
 
 }
 
 function getStageOfBusiness()
 {
     return \App\Defaults::join('business_has_defaults', function ($join) {
-            $join->on('defaults.id', '=', 'business_has_defaults.default_id');
-            })->where('defaults.type', 'stage_of_business')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
+        $join->on('defaults.id', '=', 'business_has_defaults.default_id');
+    })->where('defaults.type', 'stage_of_business')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
 
     // return \App\Defaults::where('type', 'stage_of_business')->where('status', '1')->get();
 }
@@ -1387,10 +1395,10 @@ function getRecipientsByCapability($recipients, $capabilities, $firmId = 0)
 function saveActivityLog($component, $userId, $type, $itemId, $action, $content = '', $secItemId = 0, $primaryLink = "")
 {
     $giArgs = array('prefix' => "GIAC", 'min' => 90000001, 'max' => 100000000);
-    
-    $activity                    = new \App\Activity;
-    $giCode = generateGICode($activity, 'gi_platform_code', $giArgs);
-    
+
+    $activity = new \App\Activity;
+    $giCode   = generateGICode($activity, 'gi_platform_code', $giArgs);
+
     $activity->user_id           = $userId;
     $activity->component         = $component;
     $activity->type              = $type;
@@ -1601,6 +1609,58 @@ function activityQueryBuilder()
     }
 }
 
+function get_header_page_markup($args){
+
+     
+    $backtop = isset($args['backtop'])?$args['backtop']:"25mm";    
+    $backbottom = isset($args['backbottom'])?$args['backbottom']:"14mm";
+    $backleft = isset($args['backleft'])?$args['backleft']:"14mm";
+    $backright = isset($args['backright'])?$args['backright']:"14mm";
+    $headerimg = isset($args['headerimg'])?$args['headerimg']:public_path("img/pdf/header-edge-main.png");
+    $footerimg = isset($args['footerimg'])?$args['footerimg']:public_path("img/pdf/footer_ta_pdf-min.png");
+    $header_txt = isset($args['headertxt'])?$args['headertxt']:"Transfer Asset PDF";
+
+
+    $header_footer_start_html ='<page  ';
+    if(isset($args['hideheader'])){
+        $header_footer_start_html.='  hideheader="'.$args['hideheader'].'" ';
+    }
+
+
+    if(isset($args['hidefooter'])){
+        $header_footer_start_html.='  hidefooter="'.$args['hidefooter'].'" ';
+    }
+
+    $header_footer_start_html.='backimgx="0px" backimgy="0px" backimgw="100%" backimg="'.$headerimg.'" backtop="'.$backtop.'" backbottom="'.$backbottom.'" backleft="'.$backleft.'"  backright="'.$backleft.'" style="font-size: 12pt">
+    <page_header > ';
+
+    if($header_txt!=""){
+        $header_footer_start_html.='<table style="border: none; background-color:#FFF; margin-top:100px; margin-left:'.$backleft.'"  class="w50per"  >
+            <tr>
+                <td style="text-align: left;"  class="w100per">
+                   <h3 style="font-weight:500; color: grey;">'.$header_txt.'</h3> 
+                </td>                 
+            </tr>
+        </table>';  
+      }
+    $header_footer_start_html.=' </page_header>
+    <page_footer>
+        <table style="border: none; background-color:#FFF; width: 100%;  "  >
+            <tr>
+                <td style="text-align:center;"  class="w100per" >
+                  <img src="'.$footerimg.'" class="w90per"  />
+                </td>                
+            </tr>
+            <tr>
+                <td style="text-align: center;    width: 100%">page [[page_cu]]/[[page_nb]]</td> 
+            </tr>
+        </table>
+    </page_footer>';
+
+    return $header_footer_start_html;
+
+}
+
 function is_in_array($array, $key, $key_value)
 {
     $within_array = 'no';
@@ -1622,7 +1682,7 @@ function is_in_array($array, $key, $key_value)
 
 /**
 migration
-**/
+ **/
 function updateVCTData()
 {
     $vctData = \App\BusinessListingData::where('data_key', 'fundvct_details')->get();
@@ -1631,7 +1691,7 @@ function updateVCTData()
 
         $dataValue = unserialize($dataValue);
         if (!empty($dataValue) && !is_array($dataValue)) {
-            $dataValue = unserialize($dataValue); 
+            $dataValue = unserialize($dataValue);
 
             $vctType              = new \App\BusinessListingData;
             $vctType->business_id = $vct->business_id;
@@ -1664,23 +1724,22 @@ function updateVCTData()
     }
 }
 
-
 /**
 migration
-**/
-function updateInvestorsCurrentCerification(){
-    $users = \App\User::whereNotNull('current_certification')->get(); 
+ **/
+function updateInvestorsCurrentCerification()
+{
+    $users          = \App\User::whereNotNull('current_certification')->get();
     $notUpdatedUser = [];
-    foreach ($users as $key => $user) { 
-        $userCertification = $user->userCertification()->where('certification_default_id',$user->current_certification)->first();
-        if(!empty($userCertification)){
+    foreach ($users as $key => $user) {
+        $userCertification = $user->userCertification()->where('certification_default_id', $user->current_certification)->first();
+        if (!empty($userCertification)) {
             $userCertification->last_active = 1;
             $userCertification->save();
-        }
-        else{
+        } else {
             $notUpdatedUser[] = $user->email;
         }
-        
+
     }
     // $userHasCer = \App\UserHasCertification::where('active','1')->where('last_active','0')->get(); dd($userHasCer);
 

@@ -20,6 +20,8 @@ Route::post('investment-opportunities/filter-listings', 'BusinessListingControll
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('download-file/{id}', 'UserController@downloadS3File');
+    Route::post('upload-files', 'UserController@uploadTempFiles');
     Route::post('upload-cropper-image', 'UserController@uploadTempImage');
     Route::post('crop-image', 'UserController@uploadCroppedImage');
     Route::post('delete-image', 'UserController@deleteImage');
@@ -126,6 +128,18 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('financials/businessclient-pdf', 'BusinessListingController@generateBusinessClientsPdf');
     Route::post('financials/save-commission', 'BusinessListingController@saveCommission');
 
+    // transfer-asset 
+    Route::get('transfer-asset', 'TransferAssetController@transferAsset');
+    Route::get('transfer-asset/online', 'TransferAssetController@onlineTransferAsset');
+    Route::get('transfer-asset/online/{id}', 'TransferAssetController@onlineTransferAssetSummary');
+    Route::post('transfer-asset/save-online-asset', 'TransferAssetController@saveOnlineTransferAsset');
+    Route::post('transfer-asset/investor-assets', 'TransferAssetController@getInvestorAssets');
+    Route::post('transfer-asset/save-status', 'TransferAssetController@saveAssetStatus');
+    Route::post('transfer-asset/delete-asset', 'TransferAssetController@deleteAsset');
+    Route::get('transfer-asset/{id}/download/{type}', 'TransferAssetController@downloadTransferAsset');
+    Route::post('transfer-asset/esign-doc', 'TransferAssetController@adobeSignataureTransferAsset');
+
+
 
     /*Coming soon routes on dashboard */
     Route::get('dashboard', ['type' => 'home', 'uses' => 'UserController@showDashboard']);
@@ -159,6 +173,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 });
 
 Route::post('investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf');
+Route::post('transfer-asset/adobe/signed-doc-callback', 'TransferAssetController@updateTransferAssetDockey');
 Route::post('onfido-webhook', 'InvestorController@onfidoWebhook');
 
 Route::resource('users', 'UserController');

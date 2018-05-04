@@ -16,7 +16,7 @@
         <a href="{{url('backoffice/investment-offers')}}" class="nav-link @if($activeMenu == 'investment_offers') active @endif"   role="tab">Investment Offers<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
-        <a href="{{url('backoffice/dashboard/transferasset')}}" class="nav-link @if($activeMenu == 'transferassets') active @endif"   role="tab">Transfer Assets<div><small>(Coming Soon..)</small></div></a>
+        <a href="{{url('backoffice/transfer-asset')}}" class="nav-link @if($activeMenu == 'transferassets') active @endif"   role="tab">Transfer Assets<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
         <a href="{{url('backoffice/activity/summary')}}" class="nav-link @if($activeMenu == 'activity') active @endif"   role="tab">Activity Analysis<div><small>(Coming Soon..)</small></div></a>

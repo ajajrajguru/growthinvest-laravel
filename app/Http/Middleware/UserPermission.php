@@ -58,6 +58,18 @@ class UserPermission
 
                 'backoffice/investment-offers'                                => ['backoffice_access'],
 
+                'backoffice/transfer-asset'                                   => ['transfer_assets'],
+                'backoffice/transfer-asset/online'                            => ['transfer_assets', 'transfer_assets_online_group'],
+                'backoffice/transfer-asset/online/{id}'                            => ['transfer_assets', 'transfer_assets_online_group'],
+                'backoffice/transfer-asset/save-online-asset'                 => ['transfer_assets', 'transfer_assets_online_group'],
+                'backoffice/transfer-asset/save-status'                       => ['transfer_assets', 'transfer_assets_online_group'],
+                'backoffice/transfer-asset/delete-asset'                      => ['transfer_assets', 'transfer_assets_online_group'],
+                'backoffice/transfer-asset/investor-assets'                   => ['transfer_assets', 'transfer_assets_online_group'],
+                'backoffice/transfer-asset/offonline'                         => ['transfer_assets', 'transfer_asset_docs_offline_group'],
+                'backoffice/transfer-asset/{id}/download/{type}'                         => ['transfer_assets', 'transfer_asset_docs_offline_group'],
+                'backoffice/transfer-asset/esign-doc'                         => ['transfer_assets', 'transfer_asset_docs_offline_group'],
+                
+
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-invest'                => ['view_all_investors', 'investors', 'view_investors'],

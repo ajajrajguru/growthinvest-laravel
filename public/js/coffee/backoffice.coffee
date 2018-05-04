@@ -875,6 +875,123 @@ $(document).ready ->
 				$("#addFeesModel").modal('hide')
 
 
+	$('.transfer-asset').on 'change', 'select[name="investor"]', ->
+		investorId = $(this).val()
+		$('.name_of_client_summary').html $(this).find("option:selected").text()
+		
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/investor-assets'
+			data:
+				'investor_id': investorId
+			success: (data) ->
+				$('.data_container').html(data.businesslisting_html)
+
+	$('.transfer-asset').on 'click', '.savetransferasset_asset', ->
+		assetid = $(this).attr('assetid')
+		status = $(this).closest('td').find('.transferasset_status').val()
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/save-status'
+			data:
+				'assetid': assetid
+				'status': status
+
+			success: (data) ->
+				console.log data.status
+
+
+	$('.transfer-asset').on 'click', '.toggle-download-doc', ->
+		assetId= $(this).attr('assetid')
+		if($('.download-doc-'+assetId).hasClass('d-none'))
+			$('.download-doc-'+assetId).removeClass('d-none')
+		else
+			$('.download-doc-'+assetId).addClass('d-none')
+
+
+	$('.transfer-asset').on 'click', '.toggle-download-uploaded-doc', ->
+		assetId= $(this).attr('assetid')
+		if($('.download-uploaded-doc-'+assetId).hasClass('d-none'))
+			$('.download-uploaded-doc-'+assetId).removeClass('d-none')
+		else
+			$('.download-uploaded-doc-'+assetId).addClass('d-none')
+
+
+
+	$('.transfer-asset').on 'click', '.delete_tranferasset', ->
+		rowObj = $(this)
+		assetid = $(this).attr('assetid')
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/delete-asset'
+			data:
+				'assetid': assetid
+				'status': status
+
+			success: (data) ->
+				rowObj.closest('tr').remove();
+
+
+ 
+	$('.transfer-asset').on 'click', '.display-section', ->
+		part = $(this).attr('part')
+		$(this).closest('.part-container').addClass('d-none')
+		$('.'+part).removeClass('d-none')
+		$('.progress-indicator').find('li').removeClass('active')
+		$('.progress-indicator').find('li[part="'+part+'"]').addClass('active')
+
+	$('.transfer-asset').on 'change', 'select[name="type_of_asset"]', ->
+		 
+		if($(this).val()!='')
+			if($(this).val()=='single_company')
+				$('.company-section').removeClass('d-none')
+				$('.provider-section').addClass('d-none')
+			else
+				$('.company-section').addClass('d-none')
+				$('.provider-section').removeClass('d-none')
+
+				if($(this).val()=='vct')
+					$('.vct-section').removeClass('d-none')
+				else
+					$('.vct-section').addClass('d-none')
+
+			$('.upload-files-section').removeClass('d-none')
+			$('.type_of_asset_summary').html $(this).find("option:selected").text()
+			
+		else
+			$('.upload-files-section').addClass('d-none')
+			$('.provider-section').addClass('d-none')
+			$('.company-section').addClass('d-none')
+
+
+	$('.transfer-asset').on 'change', '.update-summary', ->
+
+		eleClass = $(this).attr('name')+'_summary'
+		eleValue = $(this).val()
+		if($(this).is('select'))
+			eleValue =$(this).find("option:selected").text();
+
+		$('.'+eleClass).html eleValue
+
+
+	$('.transfer-asset').on 'click', '.esign_doc', ->
+		rowObj = $(this)
+		assetid = $(this).attr('assetid')
+		assettype = $(this).attr('assettype')
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/esign-doc'
+			data:
+				'assetid': assetid
+				'assettype': assettype
+
+			success: (data) ->
+				rowObj.closest('tr').remove();
+
+				
+		
+
+
 
 				 
 	 		 

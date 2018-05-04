@@ -1,3 +1,35 @@
+window.uploadFiles = (containerId,uploadPath) -> 
+  $('#'+containerId).pluploadQueue
+    runtimes: 'html5,flash,silverlight,html4'
+    url: uploadPath
+    chunk_size: '2mb'
+    headers: 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    rename: true
+    dragdrop: true
+    filters:
+      max_file_size: '10mb'
+      mime_types: [
+        {
+          title: 'Image files'
+          extensions: 'jpg,gif,png'
+        }
+        {
+          title: 'Zip files'
+          extensions: 'zip'
+        }
+      ]
+    resize:
+      width: 200
+      height: 200
+      quality: 90
+      crop: true
+    flash_swf_url: '/plupload/js/Moxie.swf'
+    silverlight_xap_url: '/plupload/js/Moxie.xap'
+    init:
+      FileUploaded: (up, files, xhr) ->
+        fileResponse = JSON.parse(xhr.response)
+        $('.upload-files-section').append('<input type="hidden" name="file_apth[]" value="'+fileResponse.data.image_path+'">')
+
 
 window.uploadCropImage = (containerId,selectFile,imageId,uploadPath) -> 
   uploader = new (plupload.Uploader)(
