@@ -19,7 +19,7 @@ class TransferAssetPdfHtml
         $default_logo_url     = public_path("img/pdf/pdfheader - nomination-firstpg.jpg");
 
         $nomineeApplication = $investor->investorNomineeApplication();
-        $nominee_details    = $nomineeApplication->details;
+        $nominee_details    = (!empty($nominee_details)) ? $nomineeApplication->details:[];
 
         $checkbox_nonationalinsuranceno[] = array('label_first' => false, 'label' => 'If your client does not have a National Insurance number, please tick here', 'checked' => false);
         if (isset($nominee_details['nonationalinsuranceno'])) {
