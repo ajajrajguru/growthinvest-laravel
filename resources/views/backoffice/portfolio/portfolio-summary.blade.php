@@ -8,7 +8,7 @@
 <style>
 .chartDiv {
   width   : 100%;
-  height    : 500px;
+  height    : 350px;
   font-size : 11px;
 }
 
@@ -42,6 +42,9 @@
 <script type="text/javascript" src="{{ asset('/bower_components/amcharts3/amcharts/amcharts.js') }}" ></script>
 <script type="text/javascript" src="{{ asset('/bower_components/amcharts3/amcharts/pie.js') }}" ></script>
 <script type="text/javascript" src="{{ asset('/bower_components/amcharts3/amcharts/serial.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('/bower_components/amcharts3/amcharts/plugins/export/export.js') }}" ></script>
+
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.js"></script>
 <script type="text/javascript" src="{{ asset('/bower_components/amcharts3/amcharts/themes/light.js') }}"></script>
 
 <script type="text/javascript" src="{{ asset('js/aj-charts.js') }}"></script>
@@ -79,8 +82,6 @@
        
     });
 
-
- 
 </script>
 
 @endsection
@@ -126,7 +127,7 @@
                                     if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey){
                                         $selected = "selected";
                                     }
-                                    elseif(!isset($requestFilters['duration_from']) && !isset($requestFilters['duration']) && 'lasttwomonth' == $durationKey){
+                                    elseif(!isset($requestFilters['duration_from']) && !isset($requestFilters['tax_year']) && !isset($requestFilters['duration']) && 'lasttwomonth' == $durationKey){
                                         $selected = "selected";
                                     }
                                     else{
@@ -146,7 +147,7 @@
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <div class="inner-addon right-addon">
                                   <i class="fa fa-calendar"></i>
-                                  <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range rounded-0" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif>
+                                  <input type="text"  placeholder="Select From Date" class="form-control datepicker date_range rounded-0" name="duration_from" value="{{ (isset($requestFilters['duration_from'])) ? $requestFilters['duration_from'] : '' }}" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif @if(isset($requestFilters['tax_year']) && $requestFilters['tax_year'] != '') disabled @endif >
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -161,11 +162,18 @@
                           <div class="row">
                             <div class="col-sm-12 mb-3 mb-sm-0">
                                 <div class="form-group">
-                                    <select name="tax_year" class="form-control">
+                                    <select name="tax_year" class="form-control" @if(isset($requestFilters['duration']) && $requestFilters['duration'] != '') disabled @endif @if(isset($requestFilters['duration_from']) && $requestFilters['duration_from'] != '') disabled @endif>
                                       <option value="">Select Tax Year</option>
-                                      @foreach($durationType as $durationKey=>$duration)
-                                         
-                                        <option value="{{ $durationKey }}" {{ $selected }} >{{ $duration }}</option>
+                                      @foreach($financialYears as $year)
+                                         @php
+                                          if(isset($requestFilters['tax_year']) && $requestFilters['tax_year'] == $year){
+                                              $selected = "selected";
+                                          }
+                                          else{
+                                              $selected = "";
+                                          }
+                                      @endphp
+                                        <option value="{{ $year }}" {{ $selected }} >{{ $year }}</option>
                                       @endforeach
 
                                     </select>
@@ -175,7 +183,45 @@
                         </div>
                       </div><!-- /bg-lightgray -->
 
-                      <div class="row mt-3">
+                    
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="">Firms</label>
+                          <select name="firm" id="firm" class="form-control select2-single">
+                            <option value="">View All Firms</option>
+                            @foreach($firms as $firm)
+                              <option value="{{ $firm->id }}" @if(isset($requestFilters['firm']) && $requestFilters['firm'] == $firm->id) selected @endif>{{ $firm->name }}</option>
+                            @endforeach
+                          </select>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                              <label for="">Business Proposals/Funds</label>
+                              <select name="companies" id="" class="form-control select2-single">
+                                <option value="">View All Companies</option>
+                                @foreach($businessListings as $businessListing)
+                                  <option value="{{ $businessListing->id }}" @if(isset($requestFilters['companies']) && $requestFilters['companies'] == $businessListing->id) selected @endif>{{ $businessListing->title }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                              <label for="">Users</label>
+                              <select name="user" id="user" class="form-control select2-single" is-visible="true">
+                                <option value="">View All Investors</option>
+                                @foreach($investors as $investor)
+                                  <option value="{{ $investor->id }}" @if(isset($requestFilters['user']) && $requestFilters['user'] == $investor->id) selected @endif>{{ $investor->displayName() }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
                         <div class="col-sm-6 mb-3 mb-sm-0">
                           <div class="">
                               <label for="">Asset Status</label>
@@ -201,42 +247,6 @@
                         </div>
                       </div>
 
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                          <label for="">Firms</label>
-                          <select name="firm" id="firm" class="form-control">
-                            <option value="">View All Firms</option>
-                            @foreach($firms as $firm)
-                              <option value="{{ $firm->id }}" @if(isset($requestFilters['firm']) && $requestFilters['firm'] == $firm->id) selected @endif>{{ $firm->name }}</option>
-                            @endforeach
-                          </select>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                              <label for="">Business Proposals/Funds</label>
-                              <select name="companies" id="" class="form-control">
-                                <option value="">View All Companies</option>
-                                @foreach($businessListings as $businessListing)
-                                  <option value="{{ $businessListing->id }}" @if(isset($requestFilters['companies']) && $requestFilters['companies'] == $businessListing->id) selected @endif>{{ $businessListing->title }}</option>
-                                @endforeach
-                              </select>
-                          </div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                              <label for="">Users</label>
-                              <select name="user" id="user" class="form-control" is-visible="true">
-                                <option value="">View All Users</option>
-                                @foreach($backofficeUsers as $backofficeUser)
-                                  <option value="{{ $backofficeUser->id }}" @if(isset($requestFilters['user']) && $requestFilters['user'] == $backofficeUser->id) selected @endif>{{ $backofficeUser->displayName() }}</option>
-                                @endforeach
-                              </select>
-                          </div>
-                        </div>
-                      </div>
 
                       <div class="row mt-sm-4 mt-0 d-sm-flex align-items-sm-center">
  
@@ -253,7 +263,12 @@
 
 
                 </div>
-
+                <div class="text-right mt-3 mb-2">
+                    <div class="">
+                        <a href="javascript:void(0)" class="btn btn-outline-primary download-portfolio-report-xlsx" report-type="csv">Download XLSX </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-primary download-portfolio-report-pdf" report-type="pdf"> Download PDF</a>
+                    </div>
+                </div>
 
 
 

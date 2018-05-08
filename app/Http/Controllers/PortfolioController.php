@@ -6,7 +6,10 @@ use App\BusinessHasDefault;
 use App\BusinessInvestment;
 use App\BusinessListing;
 use App\User;
+use DB;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class PortfolioController extends Controller
 {
@@ -21,15 +24,16 @@ class PortfolioController extends Controller
         $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $user           = new User;
-        $backofficeUser = $user->backofficeUsers();
+        $user      = new User;
+        $investors = $user->getInvestorUsers();
 
         $businessListing          = BusinessListing::where('status', 'publish')->where('business_status', 'listed')->get();
         $data['businessListings'] = $businessListing;
         $data['durationType']     = durationType();
+        $data['financialYears']   = getFinancialYears();
         $data['breadcrumbs']      = $breadcrumbs;
         $data['requestFilters']   = $requestFilters;
-        $data['backofficeUsers']  = $backofficeUser;
+        $data['investors']        = $investors;
         $data['firms']            = $firms;
         $data['breadcrumbs']      = $breadcrumbs;
         $data['pageTitle']        = 'Portfolio';
@@ -71,11 +75,56 @@ class PortfolioController extends Controller
 
     }
 
+    public function applyFilters($queryObj,$filters){
+
+        if (isset($filters['duration']) && $filters['duration'] != "") {
+            $durationDates = getDateByPeriod($filters['duration']);
+            $queryObj->where(DB::raw('DATE_FORMAT(business_investments.created_at, "%Y-%m-%d")'),'>=', $durationDates['fromDate']);
+            $queryObj->where(DB::raw('DATE_FORMAT(business_investments.created_at, "%Y-%m-%d")'),'<=', $durationDates['toDate']);
+        }
+
+        if ((isset($filters['duration_from']) && $filters['duration_from'] != "") && (isset($filters['duration_to']) && $filters['duration_to'] != ""))  {
+            $fromDate = date('Y-m-d',strtotime($filters['duration_from']));
+            $toDate = date('Y-m-d',strtotime($filters['duration_to']));
+            $queryObj->where(DB::raw('DATE_FORMAT(business_investments.created_at, "%Y-%m-%d")'),'>=', $fromDate);
+            $queryObj->where(DB::raw('DATE_FORMAT(business_investments.created_at, "%Y-%m-%d")'),'<=', $toDate);
+        }
+
+        if (isset($filters['tax_year']) && $filters['tax_year'] != "") {
+            $arg['year'] = $filters['tax_year'];
+            $durationDates = getDateByPeriod('financialyr',$arg);
+            $queryObj->where(DB::raw('DATE_FORMAT(business_investments.created_at, "%Y-%m-%d")'),'>=', $durationDates['fromDate']);
+            $queryObj->where(DB::raw('DATE_FORMAT(business_investments.created_at, "%Y-%m-%d")'),'<=', $durationDates['toDate']);
+        }
+
+        if (isset($filters['firmid']) && $filters['firmid'] != "") {
+            $queryObj->leftjoin('users', function ($join) {
+                $join->on('business_listings.owner_id', 'users.id');
+            })->where('users.firm_id', $filters['firmid']);
+        }
+
+        if (isset($filters['investor']) && $filters['investor'] != "") {
+            $queryObj->where('business_investments.investor_id', $filters['investor']);
+        }
+
+        if (isset($filters['company']) && $filters['company'] != "") {
+            $queryObj->where('business_listings.id', $filters['company']);
+        }
+
+        if (isset($filters['asset_status']) && $filters['asset_status'] != "") {
+            $queryObj->where('business_investments.aic_gi', $filters['asset_status']);
+        }
+
+        return $queryObj;
+    }
+
     public function getInvestmentType($filters)
     {
-        $businessListings = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->groupBy('business_listings.id')->get();
+        });
+
+        $businessListings = $this->applyFilters($businessListingQry,$filters)->groupBy('business_listings.id')->get();
 
         $totalSeis       = 0;
         $totalEis        = 0;
@@ -134,11 +183,13 @@ class PortfolioController extends Controller
         }
 
         $sectorIds        = array_keys($sectorNames);
-        $businessListings = BusinessHasDefault::select(\DB::raw('business_has_defaults.default_id as defaultid, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_listings', function ($join) {
+        $businessListingQry = BusinessHasDefault::select(\DB::raw('business_has_defaults.default_id as defaultid, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_listings', function ($join) {
             $join->on('business_has_defaults.business_id', 'business_listings.id')->where('business_listings.status', 'publish');
         })->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->whereIn('business_has_defaults.default_id', $sectorIds)->groupBy('business_has_defaults.default_id')->orderBy('amount_raised', 'desc')->get();
+        })->whereIn('business_has_defaults.default_id', $sectorIds);
+
+        $businessListings = $this->applyFilters($businessListingQry,$filters)->groupBy('business_has_defaults.default_id')->orderBy('amount_raised', 'desc')->get();
 
         $data      = [];
         $sectorAmt = [];
@@ -173,11 +224,13 @@ class PortfolioController extends Controller
         }
 
         $stageIds         = array_keys($stageNames);
-        $businessListings = BusinessHasDefault::select(\DB::raw('business_has_defaults.default_id as defaultid, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_listings', function ($join) {
+        $businessListingQry = BusinessHasDefault::select(\DB::raw('business_has_defaults.default_id as defaultid, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_listings', function ($join) {
             $join->on('business_has_defaults.business_id', 'business_listings.id')->where('business_listings.status', 'publish');
         })->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->whereIn('business_has_defaults.default_id', $stageIds)->groupBy('business_has_defaults.default_id')->orderBy('amount_raised', 'desc')->get();
+        })->whereIn('business_has_defaults.default_id', $stageIds);
+
+        $businessListings = $this->applyFilters($businessListingQry,$filters)->groupBy('business_has_defaults.default_id')->orderBy('amount_raised', 'desc')->get();
 
         $data      = [];
         $sectorAmt = [];
@@ -198,9 +251,13 @@ class PortfolioController extends Controller
 
     public function getInvestmentRoute($filters)
     {
-        $businessListings = BusinessListing::select(\DB::raw('business_listings.type, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.type, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->groupBy('business_listings.type')->get();
+        });
+
+        $businessListings = $this->applyFilters($businessListingQry,$filters)->groupBy('business_listings.type')->get();
+
+        $data      = [];
 
         foreach ($businessListings as $key => $businessListing) {
             $investmenttype = title_case($businessListing->type);
@@ -216,10 +273,13 @@ class PortfolioController extends Controller
 
     public function getInvestmentTaxByYear($filters)
     {
-        $businessListings = BusinessListing::select(\DB::raw('business_listings.*, business_investments.created_at as invested_date, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.*, business_investments.created_at as invested_date, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->groupBy('business_listings.id')->orderBy('business_investments.created_at', 'desc')->get();
+        });
 
+        $businessListings = $this->applyFilters($businessListingQry,$filters)->groupBy('business_listings.id')->orderBy('business_investments.created_at', 'desc')->get();
+
+        $data      = [];
         $investmentByYear     = [];
         $investmentTypeByYear = [];
         foreach ($businessListings as $key => $businessListing) {
@@ -317,13 +377,15 @@ class PortfolioController extends Controller
     public function portfolioSummary($filters)
     {
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*,
-    		SUM(CASE business_investments.status WHEN "funded" THEN 1 ELSE 0 END) as invested_count,
-    		SUM(CASE business_investments.status WHEN "watch_list" THEN 1 ELSE 0 END) as watchlist_count,
-    		SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,
-    		SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->leftjoin('business_investments', function ($join) {
+        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.*,
+            SUM(CASE business_investments.status WHEN "funded" THEN 1 ELSE 0 END) as invested_count,
+            SUM(CASE business_investments.status WHEN "watch_list" THEN 1 ELSE 0 END) as watchlist_count,
+            SUM(CASE business_investments.status WHEN "funded" THEN business_investments.amount ELSE 0 END) as invested,
+            SUM(CASE  WHEN business_investments.status="pledged" and business_investments.details like "%ready-to-invest%" THEN business_investments.amount ELSE 0 END) as pledged '))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['pledged', 'funded', 'watchlist_count']);
-        })->first();
+        });
+
+        $businessListingQuery = $this->applyFilters($businessListingQry,$filters)->first();
 
         if (!empty($businessListingQuery)) {
             return ['cash_amount' => 0, 'invested_count' => $businessListingQuery->invested_count, 'watchlist_count' => $businessListingQuery->invested_count, 'invested' => format_amount($businessListingQuery->invested, 0, true), 'pledged' => format_amount($businessListingQuery->pledged, 0, true)];
@@ -335,13 +397,17 @@ class PortfolioController extends Controller
 
     public function getTopInvestments($filters)
     {
-        $businessListings = BusinessListing::select(\DB::raw('business_listings.id,business_listings.gi_code,business_listings.title, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.id,business_listings.gi_code,business_listings.title, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->groupBy('business_listings.id')->orderBy('amount_raised', 'desc')->take('5')->get();
+        });
 
-        $totalInvestment = BusinessListing::select(\DB::raw('SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+        $businessListings = $this->applyFilters($businessListingQry,$filters)->groupBy('business_listings.id')->orderBy('amount_raised', 'desc')->take('5')->get();
+
+        $totalInvestmentQry = BusinessListing::select(\DB::raw('SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
             $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
-        })->first();
+        });
+
+        $totalInvestment = $this->applyFilters($totalInvestmentQry,$filters)->first();
 
         $topInvestments = [];
         foreach ($businessListings as $key => $businessListing) {
@@ -357,55 +423,105 @@ class PortfolioController extends Controller
 
     public function getInvestmentDetails($filters)
     {
-        $businessInvestments = BusinessInvestment::select(\DB::raw('business_listings.title as investmentname,business_listings.gi_code as investmentgicode,business_investments.amount as investmentamount, business_investments.amount,business_investments.additional_details as investment_additional_details,CONCAT(investor.first_name," ",investor.last_name) as investorname'))->leftjoin('business_listings', function ($join) {
+        $businessInvestmentQry = BusinessInvestment::select(\DB::raw('business_listings.title as investmentname,business_listings.gi_code as investmentgicode,business_investments.amount as investmentamount, business_investments.amount,business_investments.additional_details as investment_additional_details,CONCAT(investor.first_name," ",investor.last_name) as investorname'))->leftjoin('business_listings', function ($join) {
             $join->on('business_investments.business_id', 'business_listings.id');
         })->leftjoin('users as investor', function ($join) {
             $join->on('business_investments.investor_id', 'investor.id');
-        })->orderBy('business_investments.created_at', 'desc')->get();
+        });
 
-        $tdHtml = '';
-        $grandTotal  = 0;
+        $businessInvestments = $this->applyFilters($businessInvestmentQry,$filters)->orderBy('business_investments.created_at', 'desc')->get();
+
+        $tdHtml     = '';
+        $grandTotal = 0;
 
         foreach ($businessInvestments as $key => $businessInvestment) {
-        	$additionalDetails =  $businessInvestment->investment_additional_details;
-        	$noofShares = '-';
-        	$shareIssuePrice = '-';
-        	$shareIssueDate = '-';
-        	$revaluationDate = '-';
-        	$currSharePrice = 0;
-        	$totalCompanyValue = 0;
-        	$subTotal = 0;
-        	 
-        	if(!empty($additionalDetails)){
-        		$additionalDetails = unserialize($additionalDetails);
-        		$noofShares = (isset($additionalDetails['shares']) && $additionalDetails['shares']!='') ? $additionalDetails['shares']:'-';
-        		
-        		$shareIssuePrice = (isset($additionalDetails['share_issue_price'])) ? $additionalDetails['share_issue_price']:'-';
-        		$shareIssueDate = (isset($additionalDetails['share_issue_date']) && !empty($additionalDetails['share_issue_date'])) ? date('d/m/Y',strtotime($additionalDetails['share_issue_date'])):'-';
-        		$revaluationDate = (isset($additionalDetails['revaluation_date']) && !empty($additionalDetails['revaluation_date'])) ? date('d/m/Y',strtotime($additionalDetails['revaluation_date'])):'-';
-        	}
+            $additionalDetails = $businessInvestment->investment_additional_details;
+            $noofShares        = '-';
+            $shareIssuePrice   = '-';
+            $shareIssueDate    = '-';
+            $revaluationDate   = '-';
+            $currSharePrice    = 0;
+            $totalCompanyValue = 0;
+            $subTotal          = 0;
 
-        	$noofSharesVal = ($noofShares!='') ? intval($noofShares):0;
-        	$subTotal = $noofSharesVal * $currSharePrice;
+            if (!empty($additionalDetails)) {
+                $additionalDetails = unserialize($additionalDetails);
+                $noofShares        = (isset($additionalDetails['shares']) && $additionalDetails['shares'] != '') ? $additionalDetails['shares'] : '-';
 
-        	$grandTotal  = $grandTotal + $subTotal;
+                $shareIssuePrice = (isset($additionalDetails['share_issue_price'])) ? $additionalDetails['share_issue_price'] : '-';
+                $shareIssueDate  = (isset($additionalDetails['share_issue_date']) && !empty($additionalDetails['share_issue_date'])) ? date('d/m/Y', strtotime($additionalDetails['share_issue_date'])) : '-';
+                $revaluationDate = (isset($additionalDetails['revaluation_date']) && !empty($additionalDetails['revaluation_date'])) ? date('d/m/Y', strtotime($additionalDetails['revaluation_date'])) : '-';
+            }
+
+            $noofSharesVal = ($noofShares != '') ? intval($noofShares) : 0;
+            $subTotal      = $noofSharesVal * $currSharePrice;
+
+            $grandTotal = $grandTotal + $subTotal;
 
             $tdHtml .= '<tr><td>' . $businessInvestment->investmentgicode . '</td>
-        	 				<td>' . $businessInvestment->investorname . '</td>
-        	 				<td>' . $businessInvestment->investmentname . '</td>
-        	 				<td>' . format_amount($businessInvestment->investmentamount, 0, true) . '</td>
-        	 				<td>' . $noofShares . '</td>
-        	 				<td>' . $shareIssuePrice . '</td>
-        	 				<td>' . $shareIssueDate . '</td>
-        	 				<td>' . $revaluationDate . '</td>
-        	 				<td>' . $currSharePrice . '</td>
-        	 				<td>' . $totalCompanyValue . '</td>
-        	 				<td>' . $subTotal . '</td>
-        	 			</tr>';
+                            <td>' . $businessInvestment->investorname . '</td>
+                            <td>' . $businessInvestment->investmentname . '</td>
+                            <td>' . format_amount($businessInvestment->investmentamount, 0, true) . '</td>
+                            <td>' . $noofShares . '</td>
+                            <td>' . $shareIssuePrice . '</td>
+                            <td>' . $shareIssueDate . '</td>
+                            <td>' . $revaluationDate . '</td>
+                            <td>' . $currSharePrice . '</td>
+                            <td>' . $totalCompanyValue . '</td>
+                            <td>' . $subTotal . '</td>
+                        </tr>';
         }
 
         $tdHtml .= '<tr><td  colspan="10"></td><td>' . $grandTotal . '</td></tr>';
 
         return $tdHtml;
+    }
+
+    public function exportPortfolioReportXlsx(){
+        $spreadsheet = new Spreadsheet();
+
+        // Set document properties
+        $spreadsheet->getProperties()->setCreator('Maarten Balliauw')
+            ->setLastModifiedBy('Maarten Balliauw')
+            ->setTitle('Office 2007 XLSX Test Document')
+            ->setSubject('Office 2007 XLSX Test Document')
+            ->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.')
+            ->setKeywords('office 2007 openxml php')
+            ->setCategory('Test result file');
+
+        // Add some data
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Hello')
+            ->setCellValue('B2', 'world!')
+            ->setCellValue('C1', 'Hello')
+            ->setCellValue('D2', 'world!');
+
+        // Miscellaneous glyphs, UTF-8
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A4', 'Miscellaneous glyphs')
+            ->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
+
+        // Rename worksheet
+        $spreadsheet->getActiveSheet()->setTitle('Simple');
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $spreadsheet->setActiveSheetIndex(0);
+
+        // Redirect output to a client’s web browser (Xlsx)
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="01simple.xlsx"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        exit;
     }
 }

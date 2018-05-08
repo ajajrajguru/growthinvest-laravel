@@ -131,6 +131,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     // portfolio
     Route::get('portfolio', 'PortfolioController@index');
     Route::post('portfolio/get-portfolio-data', 'PortfolioController@getPortfolioData');
+    Route::get('portfolio/export-report', 'PortfolioController@exportPortfolioReportXlsx');
 
 
 

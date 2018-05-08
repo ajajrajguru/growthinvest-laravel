@@ -385,7 +385,7 @@ function durationType()
 
 }
 
-function getDateByPeriod($period)
+function getDateByPeriod($period,$arg=[])
 {
     $fromDate = '';
     $toDate   = '';
@@ -456,6 +456,14 @@ function getDateByPeriod($period)
     } elseif ($period == 'last12month') {
         $fromDate = date('Y-m-d', strtotime('- 12 months'));
         $toDate   = date('Y-m-d');
+    }
+    elseif ($period == 'financialyr') {
+        $year = $arg['year'];
+        $splitDate=explode('-', $year);
+        $startDate = strtotime('6-April-'.$splitDate[0]);  // timestamp or 1-Januray 12:00:00 AM
+        $endDate = strtotime('5-April-'.$splitDate[1]);
+        $fromDate=date("Y-m-d", $startDate);
+        $toDate=date("Y-m-d",  $endDate);
     }
 
     return ['fromDate' => $fromDate, 'toDate' => $toDate];
@@ -1274,6 +1282,18 @@ function getObjectComments($objectType, $objectId, $parent)
 
     return $comments;
 
+}
+
+function getFinancialYears($endYear=2011){
+    $currYear = date('Y');
+    $years = [];
+    for ($i=$endYear; $i <= $currYear ; $i++) { 
+        $j = $i-1;
+        
+        $years[] = $j.'-'.substr($i, -2);
+    }
+    krsort($years);
+    return $years;
 }
 
 /**

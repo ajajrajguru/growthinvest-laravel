@@ -41,6 +41,7 @@ window.ajPieChartWithLegend = (containerId,dataProvider,valueField,titleField,pe
 	    'labelText': '[[title]]'
 	    'valueText': legendValueText
 	    'marginRight': 100
+	    'maxColumns': 1
 	    'autoMargins': false
 	  'innerRadius': '30%'
 	  'defs': 'filter': [ {
@@ -65,21 +66,10 @@ window.ajPieChartWithLegend = (containerId,dataProvider,valueField,titleField,pe
 	  'valueField': valueField
 	  'titleField': titleField
 	  'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>'
-	  'export': 'enabled': true)
+	  'export': 
+	  	'enabled': true
+	  	'menu': [])
 
-	handleInit = ->
-	  chart.legend.addListener 'rollOverItem', handleRollOver
-	  return
-
-	handleRollOver = (e) ->
-	  wedge = e.dataItem.wedge.node
-	  wedge.parentNode.appendChild wedge
-	  return
-
-	chart.addListener 'init', handleInit
-	chart.addListener 'rollOverSlice', (e) ->
-	  handleRollOver e
-	  return
 
 
 window.ajLayeredColumnBar = (containerId,dataProvider,unitType,unitTitle,graphs) ->  
@@ -122,7 +112,9 @@ window.ajClusteredBar = (containerId,dataProvider,categoryField,unitTitle,graphs
 	  'balloon': {}
 	  'titles': []
 	  'dataProvider': dataProvider
-	  'export': 'enabled': true)
+	  'export': 
+	  	'enabled': true
+	  	'menu': [])
 
  
 

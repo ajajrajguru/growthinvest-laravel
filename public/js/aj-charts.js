@@ -34,7 +34,7 @@
   };
 
   window.ajPieChartWithLegend = function(containerId, dataProvider, valueField, titleField, percent) {
-    var chart, handleInit, handleRollOver, legendValueText;
+    var chart, legendValueText;
     if (percent == null) {
       percent = true;
     }
@@ -43,7 +43,7 @@
     } else {
       legendValueText = ': [[percents]]%';
     }
-    chart = AmCharts.makeChart(containerId, {
+    return chart = AmCharts.makeChart(containerId, {
       'type': 'pie',
       'startDuration': 0,
       'theme': 'none',
@@ -54,6 +54,7 @@
         'labelText': '[[title]]',
         'valueText': legendValueText,
         'marginRight': 100,
+        'maxColumns': 1,
         'autoMargins': false
       },
       'innerRadius': '30%',
@@ -87,20 +88,9 @@
       'titleField': titleField,
       'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
       'export': {
-        'enabled': true
+        'enabled': true,
+        'menu': []
       }
-    });
-    handleInit = function() {
-      chart.legend.addListener('rollOverItem', handleRollOver);
-    };
-    handleRollOver = function(e) {
-      var wedge;
-      wedge = e.dataItem.wedge.node;
-      wedge.parentNode.appendChild(wedge);
-    };
-    chart.addListener('init', handleInit);
-    return chart.addListener('rollOverSlice', function(e) {
-      handleRollOver(e);
     });
   };
 
@@ -158,7 +148,8 @@
       'titles': [],
       'dataProvider': dataProvider,
       'export': {
-        'enabled': true
+        'enabled': true,
+        'menu': []
       }
     });
   };
