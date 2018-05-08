@@ -384,8 +384,8 @@ class ActivityController extends Controller
 
         $json_data = array(
             "activityCountSummaryView" => $activityCountSummaryView,
-            "dataProvider"             => json_encode($dataProvider, true),
-            "graphs"                   => json_encode($graphs),
+            "dataProvider"             => $dataProvider,
+            "graphs"                   => $graphs,
             "fromDate"                 => $fromDate,
             "toDate"                   => $toDate,
         );

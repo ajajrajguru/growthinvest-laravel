@@ -3,7 +3,7 @@
         <a href="{{url('backoffice/dashboard')}}" class="nav-link @if($activeMenu == 'home') active @endif"   role="tab">Home<div><small>(Coming Soon..)</small></div></a>
     </li>
     <li class="nav-item">
-        <a href="{{url('backoffice/dashboard/portfolio')}}" class="nav-link @if($activeMenu == 'portfolio') active @endif"   role="tab">Portfolio Summary<div><small>(Coming Soon..)</small></div></a>
+        <a href="{{url('backoffice/portfolio')}}" class="nav-link @if($activeMenu == 'portfolio') active @endif"   role="tab">Portfolio Summary<div><small>(Coming Soon..)</small></div></a>
     </li>
 
     <li class="nav-item">

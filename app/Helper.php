@@ -1206,6 +1206,27 @@ function get_ordinal_number($number)
 
 }
 
+function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd){
+    $date = strtotime($inputDate);
+    $inputyear = strftime('%Y',$date);
+
+    $fystartdate = strtotime($fyStart.'/'.$inputyear);
+    $fyenddate = strtotime($fyEnd.'/'.$inputyear);
+
+    if($date < $fyenddate){
+       $fy = intval($inputyear);
+       $prevyr = intval(intval($inputyear) - 1);
+       $fyear=$prevyr.'-'.substr($fy, 2,4);
+    }else{
+       $fy = intval(intval($inputyear) + 1);
+       $fyear=$inputyear.'-'.substr($fy, 2,4);
+    }
+
+    return $fyear;
+
+}
+
+
 function check_null($num)
 {
 

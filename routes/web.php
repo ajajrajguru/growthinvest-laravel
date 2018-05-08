@@ -128,6 +128,12 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('financials/businessclient-pdf', 'BusinessListingController@generateBusinessClientsPdf');
     Route::post('financials/save-commission', 'BusinessListingController@saveCommission');
 
+    // portfolio
+    Route::get('portfolio', 'PortfolioController@index');
+    Route::post('portfolio/get-portfolio-data', 'PortfolioController@getPortfolioData');
+
+
+
     // transfer-asset 
     Route::get('transfer-asset', 'TransferAssetController@transferAsset');
     Route::get('transfer-asset/offline', 'TransferAssetController@offlineTransferAsset');
