@@ -48,6 +48,7 @@
       'startDuration': 0,
       'theme': 'none',
       'autoMargins': false,
+      'labelsEnabled': false,
       'legend': {
         'position': 'right',
         'labelText': '[[title]]',

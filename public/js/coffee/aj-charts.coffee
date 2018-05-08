@@ -35,6 +35,7 @@ window.ajPieChartWithLegend = (containerId,dataProvider,valueField,titleField,pe
 	  'startDuration': 0
 	  'theme': 'none'
 	  'autoMargins' : false
+	  'labelsEnabled' : false
 	  'legend':
 	    'position': 'right'
 	    'labelText': '[[title]]'
