@@ -13,8 +13,8 @@
       filters.duration = $('select[name="duration"]').val();
       filters.duration_from = $('input[name="duration_from"]').val();
       filters.duration_to = $('input[name="duration_to"]').val();
+      filters.tax_year = $('select[name="tax_year"]').val();
       filters.user_id = $('select[name="user"]').val();
-      filters.type = $('select[name="type"]').val();
       filters.asset_status = $('select[name="asset_status"]').val();
       filters.investment_origin = $('select[name="investment_origin"]').val();
       filters.companies = $('select[name="companies"]').val();
@@ -67,7 +67,76 @@
         }
       });
     };
-    return getFilteredPortfoilio();
+    getFilteredPortfoilio();
+    $('body').on('click', '.apply-portfolio-filters	', function() {
+      var urlParams;
+      urlParams = '';
+      if ($('select[name="duration"]').val() !== "") {
+        urlParams += 'duration=' + $('select[name="duration"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('select[name="tax_year"]').val() !== "") {
+        urlParams += '&tax_year=' + $('input[name="tax_year"]').val();
+      }
+      if ($('select[name="asset_status"]').val() !== "") {
+        urlParams += '&asset_status=' + $('select[name="asset_status"]').val();
+      }
+      if ($('select[name="companies"]').val() !== "") {
+        urlParams += '&companies=' + $('select[name="companies"]').val();
+      }
+      if ($('select[name="firm"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm"]').val();
+      }
+      getFilteredPortfoilio();
+      return window.history.pushState("", "", "?" + urlParams);
+    });
+    $('body').on('click', '.reset-portfolio-filters', function() {
+      $('select[name="duration"]').val('lasttwomonth').attr('disabled', false);
+      $('input[name="duration_from"]').val('').attr('disabled', false);
+      $('input[name="duration_to"]').val('').attr('disabled', false);
+      $('select[name="tax_year"]').val('');
+      $('select[name="asset_status"]').val('');
+      $('select[name="companies"]').val('');
+      $('select[name="firm"]').val('');
+      window.history.pushState("", "", "?");
+      getFilteredPortfoilio();
+    });
+    $('body').on('change', 'select[name="duration"]', function() {
+      if ($(this).val()) {
+        $('input[name="duration_from"]').val('').attr('disabled', true);
+        $('input[name="duration_to"]').val('').attr('disabled', true);
+        return $('select[name="tax_year"]').val('').attr('disabled', true);
+      } else {
+        $('input[name="duration_from"]').val('').attr('disabled', false);
+        $('input[name="duration_to"]').val('').attr('disabled', false);
+        return $('select[name="tax_year"]').val('').attr('disabled', true);
+      }
+    });
+    $('body').on('change', 'select[name="tax_year"]', function() {
+      if ($(this).val()) {
+        $('input[name="duration_from"]').val('').attr('disabled', true);
+        $('input[name="duration_to"]').val('').attr('disabled', true);
+        return $('select[name="duration"]').val('').attr('disabled', true);
+      } else {
+        $('input[name="duration_from"]').val('').attr('disabled', false);
+        $('input[name="duration_to"]').val('').attr('disabled', false);
+        return $('select[name="duration"]').val('').attr('disabled', true);
+      }
+    });
+    return $('body').on('change', '.date_range', function() {
+      if ($(this).val()) {
+        $('select[name="duration"]').val('').attr('disabled', true);
+        return $('select[name="tax_year"]').val('').attr('disabled', true);
+      } else {
+        $('select[name="duration"]').val('').attr('disabled', false);
+        return $('select[name="tax_year"]').val('').attr('disabled', true);
+      }
+    });
   });
 
 }).call(this);

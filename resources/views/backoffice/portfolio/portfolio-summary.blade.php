@@ -156,6 +156,23 @@
                                 </div>
                             </div>
                         </div>
+                          <p class="text-center mb-2 font-weight-bold">OR</p>
+
+                          <div class="row">
+                            <div class="col-sm-12 mb-3 mb-sm-0">
+                                <div class="form-group">
+                                    <select name="tax_year" class="form-control">
+                                      <option value="">Select Tax Year</option>
+                                      @foreach($durationType as $durationKey=>$duration)
+                                         
+                                        <option value="{{ $durationKey }}" {{ $selected }} >{{ $duration }}</option>
+                                      @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                          
+                        </div>
                       </div><!-- /bg-lightgray -->
 
                       <div class="row mt-3">
