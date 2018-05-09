@@ -396,7 +396,7 @@ class PortfolioController extends Controller
             $watchlistCount = (!empty($businessListingQuery->watchlist_count)) ? $businessListingQuery->watchlist_count :0;
             $pledgedAmt =  (!empty($businessListingQuery->pledged)) ? $businessListingQuery->pledged :0;
             $invested =  (!empty($businessListingQuery->invested)) ? $businessListingQuery->invested :0;
-            return ['cash_amount' => 0, 'invested_count' => $investedCount, 'watchlist_count' => $watchlistCount, 'invested' => format_amount($invested, 0, true), 'pledged' => $pledgedAmt];
+            return ['cash_amount' => 0, 'invested_count' => $investedCount, 'watchlist_count' => $watchlistCount, 'invested' => format_amount($invested, 0, true), 'pledged' => format_amount($pledgedAmt, 0, true)];
         } else {
             return false;
         }
