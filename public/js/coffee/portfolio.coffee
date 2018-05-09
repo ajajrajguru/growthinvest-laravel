@@ -54,15 +54,18 @@ $(document).ready ->
 				topHoldingHtml = ''
 				topInvestments = data.topInvestmentData.topInvestments
 				totalInvestment = data.topInvestmentData.totalInvestment
-				$.each topInvestments, (index, value) ->
-					invAmt= parseInt(value.amount)
-					totalInvestment= parseInt(totalInvestment)
-					percentage = (invAmt/totalInvestment)*100
-					topHoldingHtml += '<div class="row">
-					<div class="col-sm-3"><label>'+value.title+'</label> </div>
-					<div class="col-sm-3">'+percentage.toFixed(2)+'%</div>
-					<div class="col-sm-3">'+value.formated_amount+'</div>
-					</div>'
+				if topInvestments.length
+					$.each topInvestments, (index, value) ->
+						invAmt= parseInt(value.amount)
+						totalInvestment= parseInt(totalInvestment)
+						percentage = (invAmt/totalInvestment)*100
+						topHoldingHtml += '<div class="row">
+						<div class="col-sm-3"><label>'+value.title+'</label> </div>
+						<div class="col-sm-3">'+percentage.toFixed(2)+'%</div>
+						<div class="col-sm-3">'+value.formated_amount+'</div>
+						</div>'
+				else
+					topHoldingHtml = 'The Table Contains No Data'
 
 				$("#top_holdings").html topHoldingHtml
 				$("#investment_details_list").html data.investmentHtml

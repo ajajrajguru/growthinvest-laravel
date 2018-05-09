@@ -1,10 +1,50 @@
 (function() {
+  AmCharts.checkEmptyData = function(chart) {
+    var dataPoint;
+    if (0 === chart.dataProvider.length) {
+      chart.valueAxes[0].minimum = 0;
+      chart.valueAxes[0].maximum = 100;
+      dataPoint = {
+        dummyValue: 0
+      };
+      dataPoint[chart.categoryField] = '';
+      chart.dataProvider = [dataPoint];
+      chart.addLabel(0, '50%', 'The chart contains no data', 'center');
+      chart.chartDiv.style.opacity = 0.5;
+      chart.validateNow();
+    }
+  };
+
+  AmCharts.addInitHandler((function(chart) {
+    var dp;
+    var dp;
+    var dp;
+    if (chart.dataProvider === void 0 || chart.dataProvider.length === 0) {
+      dp = {};
+      dp[chart.titleField] = '';
+      dp[chart.valueField] = 1;
+      chart.dataProvider.push(dp);
+      dp = {};
+      dp[chart.titleField] = '';
+      dp[chart.valueField] = 1;
+      chart.dataProvider.push(dp);
+      dp = {};
+      dp[chart.titleField] = '';
+      dp[chart.valueField] = 1;
+      chart.dataProvider.push(dp);
+      chart.labelsEnabled = false;
+      chart.addLabel('50%', '50%', 'The chart contains no data', 'middle', 15);
+      chart.alpha = 0.3;
+    }
+  }), ['pie']);
+
   window.ajLineChart = function(containerId, dataProvider, graphs, categoryField) {
     var chart;
     graphs = $.parseJSON(graphs);
-    return chart = AmCharts.makeChart(containerId, {
+    chart = AmCharts.makeChart(containerId, {
       'type': 'serial',
       'theme': 'light',
+      'hideCredits': true,
       'legend': {
         'useGraphSettings': true,
         'markerSize': 12,
@@ -31,6 +71,7 @@
         'enabled': true
       }
     });
+    return AmCharts.checkEmptyData(chart);
   };
 
   window.ajPieChartWithLegend = function(containerId, dataProvider, valueField, titleField, percent) {
@@ -45,6 +86,7 @@
     }
     return chart = AmCharts.makeChart(containerId, {
       'type': 'pie',
+      'hideCredits': true,
       'startDuration': 0,
       'theme': 'none',
       'autoMargins': false,
@@ -96,8 +138,9 @@
 
   window.ajLayeredColumnBar = function(containerId, dataProvider, unitType, unitTitle, graphs) {
     var chart;
-    return chart = AmCharts.makeChart(containerId, {
+    chart = AmCharts.makeChart(containerId, {
       'theme': 'light',
+      'hideCredits': true,
       'type': 'serial',
       'dataProvider': dataProvider,
       'valueAxes': [
@@ -118,11 +161,13 @@
         'enabled': true
       }
     });
+    return AmCharts.checkEmptyData(chart);
   };
 
   window.ajClusteredBar = function(containerId, dataProvider, categoryField, unitTitle, graphs) {
     var chart;
-    return chart = AmCharts.makeChart(containerId, {
+    chart = AmCharts.makeChart(containerId, {
+      'hideCredits': true,
       'type': 'serial',
       'theme': 'light',
       'categoryField': categoryField,
@@ -152,6 +197,7 @@
         'menu': []
       }
     });
+    return AmCharts.checkEmptyData(chart);
   };
 
 }).call(this);

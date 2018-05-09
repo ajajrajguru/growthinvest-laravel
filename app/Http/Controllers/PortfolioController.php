@@ -135,36 +135,40 @@ class PortfolioController extends Controller
         $totalEisAmount  = 0;
         $totalVctAmount  = 0;
         $totalIhtAmount  = 0;
+        $investmentTypeAmount = [];
+        if($businessListings->count()){
 
-        foreach ($businessListings as $key => $businessListing) {
 
-            if (!empty($businessListing->tax_status) && in_array('SEIS', $businessListing->tax_status)) {
-                $totalSeisAmount += $businessListing->amount_raised;
-                $totalSeis += 1;
+            foreach ($businessListings as $key => $businessListing) {
+
+                if (!empty($businessListing->tax_status) && in_array('SEIS', $businessListing->tax_status)) {
+                    $totalSeisAmount += $businessListing->amount_raised;
+                    $totalSeis += 1;
+                }
+
+                if (!empty($businessListing->tax_status) && in_array('EIS', $businessListing->tax_status)) {
+                    $totalEis += 1;
+                    $totalEisAmount += $businessListing->amount_raised;
+                }
+
+                if (!empty($businessListing->tax_status) && in_array('VCT', $businessListing->tax_status)) {
+                    $totalVct += 1;
+                    $totalVctAmount += $businessListing->amount_raised;
+                }
+
+                if (!empty($businessListing->tax_status) && in_array('IHT', $businessListing->tax_status)) {
+                    $totalIht += 1;
+                    $totalIhtAmount += $businessListing->amount_raised;
+                }
             }
 
-            if (!empty($businessListing->tax_status) && in_array('EIS', $businessListing->tax_status)) {
-                $totalEis += 1;
-                $totalEisAmount += $businessListing->amount_raised;
-            }
-
-            if (!empty($businessListing->tax_status) && in_array('VCT', $businessListing->tax_status)) {
-                $totalVct += 1;
-                $totalVctAmount += $businessListing->amount_raised;
-            }
-
-            if (!empty($businessListing->tax_status) && in_array('IHT', $businessListing->tax_status)) {
-                $totalIht += 1;
-                $totalIhtAmount += $businessListing->amount_raised;
-            }
+            $investmentTypeAmount = [
+                ['Investmenttype' => 'seis', 'amount' => $totalSeisAmount],
+                ['Investmenttype' => 'eis', 'amount' => $totalEisAmount],
+                ['Investmenttype' => 'vct', 'amount' => $totalVctAmount],
+                ['Investmenttype' => 'iht', 'amount' => $totalIhtAmount],
+            ];
         }
-
-        $investmentTypeAmount = [
-            ['Investmenttype' => 'seis', 'amount' => $totalSeisAmount],
-            ['Investmenttype' => 'eis', 'amount' => $totalEisAmount],
-            ['Investmenttype' => 'vct', 'amount' => $totalVctAmount],
-            ['Investmenttype' => 'iht', 'amount' => $totalIhtAmount],
-        ];
 
         $investmentTypeData = ['seis_count' => $totalSeis, 'seis_amount' => format_amount($totalSeisAmount, 0, true), 'eis_count' => $totalEis, 'eis_amount' => format_amount($totalEisAmount, 0, true), 'vct_count' => $totalVct, 'vct_amount' => format_amount($totalVctAmount, 0, true), 'iht_count' => $totalIhtAmount, 'iht_amount' => format_amount($totalIhtAmount, 0, true)];
 
@@ -388,7 +392,11 @@ class PortfolioController extends Controller
         $businessListingQuery = $this->applyFilters($businessListingQry, $filters)->first();
 
         if (!empty($businessListingQuery)) {
-            return ['cash_amount' => 0, 'invested_count' => $businessListingQuery->invested_count, 'watchlist_count' => $businessListingQuery->invested_count, 'invested' => format_amount($businessListingQuery->invested, 0, true), 'pledged' => format_amount($businessListingQuery->pledged, 0, true)];
+            $investedCount = (!empty($businessListingQuery->invested_count)) ? $businessListingQuery->invested_count :0;
+            $watchlistCount = (!empty($businessListingQuery->watchlist_count)) ? $businessListingQuery->watchlist_count :0;
+            $pledgedAmt =  (!empty($businessListingQuery->pledged)) ? $businessListingQuery->pledged :0;
+            $invested =  (!empty($businessListingQuery->invested)) ? $businessListingQuery->invested :0;
+            return ['cash_amount' => 0, 'invested_count' => $investedCount, 'watchlist_count' => $watchlistCount, 'invested' => format_amount($invested, 0, true), 'pledged' => $pledgedAmt];
         } else {
             return false;
         }
@@ -487,7 +495,7 @@ class PortfolioController extends Controller
                         </tr>';
         }
 
-        $tdHtml .= '<tr><td  colspan="10"></td><td>' . $grandTotal . '</td></tr>';
+        $tdHtml .= '<tr><td  colspan="10">Total:</td><td>' . format_amount($grandTotal, 0, true) . '</td></tr>';
 
         return ['investmentHtml' => $tdHtml, 'investmentList' => $investmentList, 'grandTotal' => $grandTotal];
     }

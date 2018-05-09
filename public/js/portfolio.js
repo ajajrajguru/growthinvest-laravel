@@ -53,13 +53,17 @@
           topHoldingHtml = '';
           topInvestments = data.topInvestmentData.topInvestments;
           totalInvestment = data.topInvestmentData.totalInvestment;
-          $.each(topInvestments, function(index, value) {
-            var invAmt, percentage;
-            invAmt = parseInt(value.amount);
-            totalInvestment = parseInt(totalInvestment);
-            percentage = (invAmt / totalInvestment) * 100;
-            return topHoldingHtml += '<div class="row"> <div class="col-sm-3"><label>' + value.title + '</label> </div> <div class="col-sm-3">' + percentage.toFixed(2) + '%</div> <div class="col-sm-3">' + value.formated_amount + '</div> </div>';
-          });
+          if (topInvestments.length) {
+            $.each(topInvestments, function(index, value) {
+              var invAmt, percentage;
+              invAmt = parseInt(value.amount);
+              totalInvestment = parseInt(totalInvestment);
+              percentage = (invAmt / totalInvestment) * 100;
+              return topHoldingHtml += '<div class="row"> <div class="col-sm-3"><label>' + value.title + '</label> </div> <div class="col-sm-3">' + percentage.toFixed(2) + '%</div> <div class="col-sm-3">' + value.formated_amount + '</div> </div>';
+            });
+          } else {
+            topHoldingHtml = 'The Table Contains No Data';
+          }
           $("#top_holdings").html(topHoldingHtml);
           return $("#investment_details_list").html(data.investmentHtml);
         }

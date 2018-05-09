@@ -1,3 +1,47 @@
+AmCharts.checkEmptyData = (chart) ->
+  if 0 == chart.dataProvider.length
+    # set min/max on the value axis
+    chart.valueAxes[0].minimum = 0
+    chart.valueAxes[0].maximum = 100
+    # add dummy data point
+    dataPoint = dummyValue: 0
+    dataPoint[chart.categoryField] = ''
+    chart.dataProvider = [ dataPoint ]
+    # add label
+    chart.addLabel 0, '50%', 'The chart contains no data', 'center'
+    # set opacity of the chart div
+    chart.chartDiv.style.opacity = 0.5
+    # redraw it
+    chart.validateNow()
+  return
+
+AmCharts.addInitHandler ((chart) ->
+  `var dp`
+  `var dp`
+  # check if data is mepty
+  if chart.dataProvider == undefined or chart.dataProvider.length == 0
+    # add some bogus data
+    dp = {}
+    dp[chart.titleField] = ''
+    dp[chart.valueField] = 1
+    chart.dataProvider.push dp
+    dp = {}
+    dp[chart.titleField] = ''
+    dp[chart.valueField] = 1
+    chart.dataProvider.push dp
+    dp = {}
+    dp[chart.titleField] = ''
+    dp[chart.valueField] = 1
+    chart.dataProvider.push dp
+    # disable slice labels
+    chart.labelsEnabled = false
+    # add label to let users know the chart is empty
+    chart.addLabel '50%', '50%', 'The chart contains no data', 'middle', 15
+    # dim the whole chart
+    chart.alpha = 0.3
+  return
+), [ 'pie' ]
+
 
 window.ajLineChart = (containerId,dataProvider,graphs,categoryField) ->  
 	graphs = $.parseJSON(graphs)
@@ -5,6 +49,7 @@ window.ajLineChart = (containerId,dataProvider,graphs,categoryField) ->
 	chart = AmCharts.makeChart(containerId,
 	  'type': 'serial'
 	  'theme': 'light'
+	  'hideCredits':true
 	  'legend':
 	    'useGraphSettings': true
 	    'markerSize': 12
@@ -24,6 +69,8 @@ window.ajLineChart = (containerId,dataProvider,graphs,categoryField) ->
 	  'categoryAxis': 'gridPosition': 'start'
 	  'export': 'enabled': true)
 
+	AmCharts.checkEmptyData(chart)
+
 window.ajPieChartWithLegend = (containerId,dataProvider,valueField,titleField,percent=true) ->  
 	if(!percent)
 		legendValueText = ': [[value]]'
@@ -32,6 +79,7 @@ window.ajPieChartWithLegend = (containerId,dataProvider,valueField,titleField,pe
 
 	chart = AmCharts.makeChart(containerId,
 	  'type': 'pie'
+	  'hideCredits':true
 	  'startDuration': 0
 	  'theme': 'none'
 	  'autoMargins' : false
@@ -75,6 +123,7 @@ window.ajPieChartWithLegend = (containerId,dataProvider,valueField,titleField,pe
 window.ajLayeredColumnBar = (containerId,dataProvider,unitType,unitTitle,graphs) ->  
 	chart = AmCharts.makeChart(containerId,
 	  'theme': 'light'
+	  'hideCredits':true
 	  'type': 'serial'
 	  'dataProvider': dataProvider
 	  'valueAxes': [ {
@@ -89,8 +138,11 @@ window.ajLayeredColumnBar = (containerId,dataProvider,unitType,unitTitle,graphs)
 	  'categoryAxis': 'gridPosition': 'start'
 	  'export': 'enabled': true)
 
+	AmCharts.checkEmptyData(chart)
+
 window.ajClusteredBar = (containerId,dataProvider,categoryField,unitTitle,graphs) ->  
 	chart = AmCharts.makeChart(containerId,
+	  'hideCredits':true
 	  'type': 'serial'
 	  'theme': 'light'
 	  'categoryField': categoryField
@@ -115,6 +167,8 @@ window.ajClusteredBar = (containerId,dataProvider,categoryField,unitTitle,graphs
 	  'export': 
 	  	'enabled': true
 	  	'menu': [])
+
+	AmCharts.checkEmptyData(chart)
 
  
 
