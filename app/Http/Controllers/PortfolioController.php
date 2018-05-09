@@ -136,7 +136,6 @@ class PortfolioController extends Controller
         $totalVctAmount  = 0;
         $totalIhtAmount  = 0;
 
-
         foreach ($businessListings as $key => $businessListing) {
 
             if (!empty($businessListing->tax_status) && in_array('SEIS', $businessListing->tax_status)) {
@@ -161,14 +160,10 @@ class PortfolioController extends Controller
         }
 
         $investmentTypeAmount = [
-            ['Investmenttype' => 'seis',
-                'amount'          => $totalSeisAmount],
-            ['Investmenttype' => 'eis',
-                'amount'          => $totalEisAmount],
-            ['Investmenttype' => 'vct',
-                'amount'          => $totalVctAmount],
-            ['Investmenttype' => 'iht',
-                'amount'          => $totalIhtAmount],
+            ['Investmenttype' => 'seis', 'amount' => $totalSeisAmount],
+            ['Investmenttype' => 'eis', 'amount' => $totalEisAmount],
+            ['Investmenttype' => 'vct', 'amount' => $totalVctAmount],
+            ['Investmenttype' => 'iht', 'amount' => $totalIhtAmount],
         ];
 
         $investmentTypeData = ['seis_count' => $totalSeis, 'seis_amount' => format_amount($totalSeisAmount, 0, true), 'eis_count' => $totalEis, 'eis_amount' => format_amount($totalEisAmount, 0, true), 'vct_count' => $totalVct, 'vct_amount' => format_amount($totalVctAmount, 0, true), 'iht_count' => $totalIhtAmount, 'iht_amount' => format_amount($totalIhtAmount, 0, true)];
@@ -250,7 +245,7 @@ class PortfolioController extends Controller
 
         }
 
-        return ['stageData'=>$data , 'total_amount'=>$totalAmount];
+        return ['stageData' => $data, 'total_amount' => $totalAmount];
 
     }
 
@@ -517,7 +512,6 @@ class PortfolioController extends Controller
             ->setSubject('Portfolio')
             ->setDescription('Portfolio Report');
 
-  
         $spreadsheet->setActiveSheetIndex(0);
         $spreadsheet->getActiveSheet()->setTitle('list_of_invested_proposals');
         // header
@@ -529,9 +523,9 @@ class PortfolioController extends Controller
             $col++;
         }
 
-        $investmentList = $investmentData['investmentList'];
-        $grandTotal = $investmentData['grandTotal'];
-        $investmentList[] = ['','','','','','','','','','','Grand Total',$grandTotal];
+        $investmentList   = $investmentData['investmentList'];
+        $grandTotal       = $investmentData['grandTotal'];
+        $investmentList[] = ['', '', '', '', '', '', '', '', '', '', 'Grand Total', $grandTotal];
 
         $i = 2;
         foreach ($investmentList as $key => $investment) {
@@ -544,45 +538,44 @@ class PortfolioController extends Controller
             $i++;
         }
 
-
         // business_stage_summ
- 
+
         // Create a new worksheet, after the default sheet
         $spreadsheet->createSheet();
         $spreadsheet->setActiveSheetIndex(1);
 
         $spreadsheet->getActiveSheet()->setTitle('business_stage_summ');
-        $header2 = array('Business Sector Name','Percentage');
+        $header2 = array('Business Sector Name', 'Percentage');
 
         $col = 'A';
         foreach ($header2 as $header) {
             $spreadsheet->getActiveSheet()->setCellValue($col . '1', $header);
             $col++;
         }
-        $stageData = $businessStageAnalysis['stageData'];
+        $stageData   = $businessStageAnalysis['stageData'];
         $totalAmount = $businessStageAnalysis['total_amount'];
 
         $i = 2;
         foreach ($stageData as $key => $stage) {
-            $perc = round($stage['amount']/ $totalAmount*100); 
+            $perc = round($stage['amount'] / $totalAmount * 100);
 
             $spreadsheet->getActiveSheet()->setCellValue('A' . $i, $stage['stage']);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $i, $perc);
             $i++;
         }
-         
+
         // portfolio_tax_allocation
         $spreadsheet->createSheet();
         $spreadsheet->setActiveSheetIndex(2);
         $spreadsheet->getActiveSheet()->setTitle('portfolio_tax_allocation');
-        $header3 = array('Name','Value');
-        $col = 'A';
+        $header3 = array('Name', 'Value');
+        $col     = 'A';
         foreach ($header3 as $header) {
             $spreadsheet->getActiveSheet()->setCellValue($col . '1', $header);
             $col++;
         }
 
-        $investmentTypeAmount = $investmentTypeData['investmentTypeAmount'];
+        $investmentTypeAmount      = $investmentTypeData['investmentTypeAmount'];
         $investmentTypeAmountTotal = 0;
         foreach ($investmentTypeAmount as $key => $investmentTypeAmountVal) {
             $investmentTypeAmountTotal += $investmentTypeAmountVal['amount'];
@@ -590,20 +583,18 @@ class PortfolioController extends Controller
 
         $i = 2;
         foreach ($investmentTypeAmount as $key => $investmentType) {
-            $perc = $investmentType['amount']/ $investmentTypeAmountTotal*100; 
+            $perc = $investmentType['amount'] / $investmentTypeAmountTotal * 100;
 
             $spreadsheet->getActiveSheet()->setCellValue('A' . $i, $investmentType['Investmenttype']);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $i, $perc);
             $i++;
         }
 
-
-
         $spreadsheet->createSheet();
         $spreadsheet->setActiveSheetIndex(3);
         $spreadsheet->getActiveSheet()->setTitle('busines_sector_summ');
-        $header4 = array('Type of Sector','Percentage');
-        $col = 'A';
+        $header4 = array('Type of Sector', 'Percentage');
+        $col     = 'A';
         foreach ($header4 as $header) {
             $spreadsheet->getActiveSheet()->setCellValue($col . '1', $header);
             $col++;
@@ -614,32 +605,31 @@ class PortfolioController extends Controller
             $sectorAnalysisTotal += $sector['amount'];
         }
 
-         $i = 2;
+        $i = 2;
         foreach ($sectorAnalysis as $key => $sector) {
-            $perc = $sector['amount']/ $sectorAnalysisTotal*100; 
+            $perc = $sector['amount'] / $sectorAnalysisTotal * 100;
 
             $spreadsheet->getActiveSheet()->setCellValue('A' . $i, $sector['sectortype']);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $i, $perc);
             $i++;
         }
-        
 
         $spreadsheet->createSheet();
         $spreadsheet->setActiveSheetIndex(4);
         $spreadsheet->getActiveSheet()->setTitle('top_funding_summary');
-        $header5 = array('Platform GI Code','Proposal Name','Percentage','Amount Invested');
-        $col = 'A';
+        $header5 = array('Platform GI Code', 'Proposal Name', 'Percentage', 'Amount Invested');
+        $col     = 'A';
         foreach ($header5 as $header) {
             $spreadsheet->getActiveSheet()->setCellValue($col . '1', $header);
             $col++;
         }
 
         $topInvestmentList = $topInvestments['topInvestments'];
-        $totalInvestments = $topInvestments['totalInvestment'];
+        $totalInvestments  = $topInvestments['totalInvestment'];
 
         $i = 2;
         foreach ($topInvestmentList as $key => $topInvestment) {
-            $perc = $topInvestment['amount']/ $totalInvestments*100; 
+            $perc = $topInvestment['amount'] / $totalInvestments * 100;
 
             $spreadsheet->getActiveSheet()->setCellValue('A' . $i, $topInvestment['gi_code']);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $i, $topInvestment['title']);
@@ -651,25 +641,25 @@ class PortfolioController extends Controller
         $spreadsheet->createSheet();
         $spreadsheet->setActiveSheetIndex(5);
         $spreadsheet->getActiveSheet()->setTitle('tax_year_breakdown');
-        $header6 = array('Financial Year','Amount');
-        $col = 'A';
+        $header6 = array('Financial Year', 'Amount');
+        $col     = 'A';
 
         foreach ($header6 as $header) {
             $spreadsheet->getActiveSheet()->setCellValue($col . '1', $header);
             $col++;
         }
         $investmentByYear = $investmentTaxByYear['investmentByYear'];
-        
+
         $i = 2;
         foreach ($investmentByYear as $key => $investment) {
-            
+
             $spreadsheet->getActiveSheet()->setCellValue('A' . $i, $investment['year']);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $i, $investment['amount']);
             $i++;
         }
 
         $spreadsheet->setActiveSheetIndex(0);
- 
+
         // Redirect output to a client’s web browser (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="portfolio-dashboard-data.xlsx"');
