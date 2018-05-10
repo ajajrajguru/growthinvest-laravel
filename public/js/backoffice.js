@@ -969,7 +969,8 @@
           },
           success: function(data) {
             $('.data_container').html(data.businesslisting_html);
-            return $('a[part="part-2"]').removeClass('d-none');
+            $('a[part="part-2"]').removeClass('d-none');
+            return $('[data-toggle="tooltip"]').tooltip();
           }
         });
       } else {
@@ -1158,10 +1159,11 @@
       return updateTransferAssetSummaryValues($(this));
     });
     return $('.transfer-asset').on('click', '.esign_doc', function() {
-      var assetid, assettype, rowObj;
+      var assetid, assettype, rowObj, typeTxt;
       rowObj = $(this);
       assetid = $(this).attr('assetid');
       assettype = $(this).attr('assettype');
+      typeTxt = $(this).attr('asset-type-text');
       rowObj.find('.btn-spinner').removeClass('d-none');
       return $.ajax({
         type: 'post',
@@ -1172,7 +1174,9 @@
         },
         success: function(data) {
           rowObj.closest('tr').remove();
-          return rowObj.find('.btn-spinner').addClass('d-none');
+          rowObj.find('.btn-spinner').addClass('d-none');
+          $('.' + assettype + '_msg').html(typeTxt + ' is sent for e-signature on registered email id of the investor').delay(5000).fadeOut();
+          return rowObj.prop('disabled', true).attr('data-toggle', 'tooltip').attr('title', typeTxt + ' already sent for signature').attr('data-original-title', typeTxt + ' already sent for signature').tooltip();
         }
       });
     });

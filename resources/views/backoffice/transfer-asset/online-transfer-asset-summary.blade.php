@@ -79,16 +79,16 @@ Follow the mailing instructions on each separate form and always remember to mak
 <b>There are 3 documents needed for your asset transfer :</b><br><br>
 Letter of Authority - Enables us to complete the transfer on your/your client’s behalf<br>
 <a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/letter_of_authority_pdf')}}"  class="btn btn-primary mt-2 ld-ext-right" target="_blank">Download </a>
-<button  class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="letter_of_authority_pdf" >Send for E-SIGN  <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><br><br>
+<button  class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="letter_of_authority_pdf"  asset-type-text="Letter of Authority" >Send for E-SIGN  <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><span id="letter_of_authority_pdf_msg"></span><br><br>
 
 Stock Transfer Form - Please fill out and send to us as we required for our own records regardless of Stamp Duty status<br>
 <a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/stock_transfer_form')}}"  class="btn btn-primary mt-2" target="_blank">Download </a>
-<button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="stock_transfer_form">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><br><br>
+<button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="stock_transfer_form"  asset-type-text="Stock Transfer Form">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><span id="stock_transfer_form_msg"></span><br><br>
 
 Asset Transfer Form - Always save a copy for your own record and send for electronic signature<br>
 <a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/transfer_asset_pdf')}}"    class="btn btn-primary mt-3 " target="_blank">Download </a>
 
-<button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="transfer_asset_pdf">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button>
+<button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="transfer_asset_pdf" asset-type-text="Asset Transfer Form">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><span id="transfer_asset_pdf_msg"></span>
 
 <br>
 <br>

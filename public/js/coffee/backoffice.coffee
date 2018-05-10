@@ -888,6 +888,7 @@ $(document).ready ->
 				success: (data) ->
 					$('.data_container').html(data.businesslisting_html)
 					$('a[part="part-2"]').removeClass('d-none')
+					$('[data-toggle="tooltip"]').tooltip()
 		else
 			$('a[part="part-2"]').addClass('d-none')
 			$('.data_container').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>')
@@ -1075,6 +1076,8 @@ $(document).ready ->
 		rowObj = $(this)
 		assetid = $(this).attr('assetid')
 		assettype = $(this).attr('assettype')
+		typeTxt = $(this).attr('asset-type-text')
+		
 		rowObj.find('.btn-spinner').removeClass('d-none')
 		$.ajax
 			type: 'post'
@@ -1086,6 +1089,11 @@ $(document).ready ->
 			success: (data) ->
 				rowObj.closest('tr').remove();
 				rowObj.find('.btn-spinner').addClass('d-none')
+				$('.'+assettype+'_msg').html(typeTxt+' is sent for e-signature on registered email id of the investor').delay(5000).fadeOut()
+				rowObj.prop('disabled',true).attr('data-toggle','tooltip').attr('title', typeTxt+' already sent for signature').attr('data-original-title', typeTxt+' already sent for signature').tooltip()
+				 
+ 
+				
 
 				
 		

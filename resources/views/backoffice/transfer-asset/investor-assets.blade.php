@@ -9,11 +9,13 @@
   
     $details = $transferasset->details;
     $files = $transferasset->getFiles('transferasset');
-
+    $transferassetDocs = $transferasset->transferAssetMeta()->whereIn('meta_key',['transferasset_dockey','stocktransfer_dockey','authletter_dockey'])->pluck('meta_key')->toArray();
+    
   @endphp
     <tr class="">
         <td width="10%">
           {{ (isset($typeOfAssets[$transferasset->typeofasset]))? $typeOfAssets[$transferasset->typeofasset] :'' }}
+          
         </td>
         <td  width="10%">
             {{ (!empty($transferasset->company))? title_case($transferasset->company->name) :'' }}
@@ -66,16 +68,17 @@
       <td colspan="13">
         Letter of Authority - Enables us to complete the transfer on your/your client’s behalf<br>
   <a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/letter_of_authority_pdf')}}"  class="btn btn-primary mt-2 " target="_blank">Download </a>
-  <button  class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="letter_of_authority_pdf">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><br><br>
+ 
+  <button  class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="letter_of_authority_pdf" asset-type-text="Letter of Authority" @if(in_array('authletter_dockey',$transferassetDocs)) disabled data-toggle="tooltip"  title="Letter of Authority already sent for signature" data-original-title="Letter of Authority already sent for signature"  @endif>Send for E-SIGN<div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><span id="letter_of_authority_pdf_msg"></span><br><br>
 
   Stock Transfer Form - Please fill out and send to us as we required for our own records regardless of Stamp Duty status<br>
   <a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/stock_transfer_form')}}"  class="btn btn-primary mt-2" target="_blank">Download </a>
-  <button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="stock_transfer_form">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><br><br>
+  <button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="stock_transfer_form" asset-type-text="Stock Transfer Form" @if(in_array('stocktransfer_dockey',$transferassetDocs)) disabled data-toggle="tooltip"  title="Stock Transfer Form already sent for signature" data-original-title="Stock Transfer Form already sent for signature" @endif>Send for E-SIGN<div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><span id="stock_transfer_form_msg"></span><br><br>
 
   Asset Transfer Form - Always save a copy for your own record and send for electronic signature<br>
   <a href="{{ url('backoffice/transfer-asset/'.$transferasset->id.'/download/transfer_asset_pdf')}}"    class="btn btn-primary mt-3 " target="_blank">Download </a>
 
-  <button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="transfer_asset_pdf">Send for E-SIGN <div class="ld ld-ring ld-spin d-none btn-spinner"></div></button>
+  <button class="btn btn-primary mt-3 esign_doc" assetid="{{ $transferasset->id }}" assettype ="transfer_asset_pdf" asset-type-text="Asset Transfer Form" @if(in_array('transferasset_dockey',$transferassetDocs)) disabled data-toggle="tooltip"  title="Asset Transfer Form already sent for signature" data-original-title="Asset Transfer Form already sent for signature" @endif>Send for E-SIGN<div class="ld ld-ring ld-spin d-none btn-spinner"></div></button><span id="transfer_asset_pdf_msg"></span>
       </td>
     </tr>
     <tr class="download-uploaded-doc-{{ $transferasset->id }} d-none">
