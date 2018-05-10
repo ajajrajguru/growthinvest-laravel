@@ -11,7 +11,7 @@ window.uploadFiles = (containerId,uploadPath) ->
       mime_types: [
         {
           title: 'Image files'
-          extensions: 'jpg,gif,png'
+          extensions: 'jpg,gif,png,csv,doc,docx,xlsx,txt,zip,pdf'
         }
         {
           title: 'Zip files'
@@ -28,7 +28,7 @@ window.uploadFiles = (containerId,uploadPath) ->
     init:
       FileUploaded: (up, files, xhr) ->
         fileResponse = JSON.parse(xhr.response)
-        $('.uploaded-file-path').append('<input type="hidden" name="file_path[]" value="'+fileResponse.data.image_path+'">')
+        $('#'+containerId).closest('.upload-files-section').find('.uploaded-file-path').append('<input type="text" name="file_path[]" value="'+fileResponse.data.image_path+'">')
 
 
 window.uploadCropImage = (containerId,selectFile,imageId,uploadPath) -> 

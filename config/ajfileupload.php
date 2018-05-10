@@ -56,5 +56,10 @@ return [
 			'slug_column' => 'id',
 			
 		],
+		'App\BusinessListing' => [
+			'base_path' => 'business',
+			'slug_column' => 'gi_code',
+			
+		],
 	],
 ];
