@@ -316,6 +316,7 @@ class TransferAssetController extends Controller
             $dockeyvalue     = $adobe_echo_sign->sendPdfForSignature($adobe_sign_args);
 
             $transferassetData             = new TransferAssetMeta;
+            $transferassetData->transfer_id   = $transferasset->id;
             $transferassetData->meta_key   = $docKey;
             $transferassetData->meta_value = $dockeyvalue;
             $transferassetData->save();
@@ -349,13 +350,14 @@ class TransferAssetController extends Controller
             $response_data   = '';
             $returnd_doc_key = '';
 
-            $type          = 'nominee';
+            
             $adobeechosign = new AdobeSignature();
 
             $transferassetData = TransferAssetMeta::where('meta_value', $dockey)->first();
 
             if (!empty($transferassetData)) {
                 $metaKeys  = ['transferasset_dockey' => 'stocktransfer_signedurl', 'stocktransfer_dockey' => 'transferasset_signedurl', 'authletter_dockey' => 'authletter_signedurl'];
+                $type = $transferassetData->meta_key;
                 $metaKey   = $metaKeys[$type];
                 $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey);
 
