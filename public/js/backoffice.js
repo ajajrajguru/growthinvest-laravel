@@ -1173,9 +1173,8 @@
           'assettype': assettype
         },
         success: function(data) {
-          rowObj.closest('tr').remove();
           rowObj.find('.btn-spinner').addClass('d-none');
-          $('.' + assettype + '_msg').html(typeTxt + ' is sent for e-signature on registered email id of the investor').delay(5000).fadeOut();
+          $('#' + assettype + '_msg').html(typeTxt + ' is sent for e-signature on registered email id of the investor').addClass('text-success').delay(5000).fadeOut();
           return rowObj.prop('disabled', true).attr('data-toggle', 'tooltip').attr('title', typeTxt + ' already sent for signature').attr('data-original-title', typeTxt + ' already sent for signature').tooltip();
         }
       });

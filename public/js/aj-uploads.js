@@ -33,7 +33,7 @@
         FileUploaded: function(up, files, xhr) {
           var fileResponse;
           fileResponse = JSON.parse(xhr.response);
-          return $('#' + containerId).closest('.upload-files-section').find('.uploaded-file-path').append('<input type="text" name="file_path[]" value="' + fileResponse.data.image_path + '">');
+          return $('#' + containerId).closest('.upload-files-section').find('.uploaded-file-path').append('<input type="hidden" name="file_path[]" value="' + fileResponse.data.image_path + '">');
         }
       }
     });
