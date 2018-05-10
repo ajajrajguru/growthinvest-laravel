@@ -65,6 +65,7 @@ class TransferAssetController extends Controller
         $data['other_companies']  = $companies->where("type", '!=', "single_company");
         $data['investors']        = $investors;
         $data['typeOfAssets']     = $typeOfAssets;
+        $data['transferType']      = ['full'=>'In Full','part'=>'In Part'];
         $data['breadcrumbs']      = $breadcrumbs;
         $data['pageTitle']        = 'Online Transfer Asset';
         $data['activeMenu']       = 'transferassets';

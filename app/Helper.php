@@ -1156,6 +1156,11 @@ function getSectors()
     return ['Transport', 'Technology ( Social )', 'Technology ( Platform )', 'Technology ( App )', 'Bloodstock', 'Research', 'Publishing', 'Music', 'Film', 'Exports', 'Nutrition', 'Estate Agency', 'Marketing', 'Financial', 'Home Improvement', 'Dentistry', 'Advertising', 'Security', 'Environmental', 'Fashion'];
 }
 
+function custodyType()
+{
+    return ['aic'=>'Custody', 'ainc'=>'Non-Custody'];
+}
+
 function getBusinessSectors()
 {
     return \App\Defaults::where('type', 'business-sector')->where('status', '1')->get();

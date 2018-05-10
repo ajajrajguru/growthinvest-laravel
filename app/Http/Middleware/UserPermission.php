@@ -59,8 +59,8 @@ class UserPermission
                 'backoffice/investment-offers'                                => ['backoffice_access'],
 
                 'backoffice/portfolio'                                        => ['backoffice_access'],
-                'backoffice/portfolio/get-portfolio-data'                                        => ['backoffice_access'],
-                'backoffice/portfolio/export-report'                                        => ['backoffice_access'],
+                'backoffice/portfolio/get-portfolio-data'                     => ['backoffice_access'],
+                'backoffice/portfolio/export-report'                          => ['backoffice_access'],
 
                 'backoffice/transfer-asset'                                   => ['transfer_assets'],
                 'backoffice/transfer-asset/online'                            => ['transfer_assets', 'transfer_assets_online_group'],

@@ -877,17 +877,23 @@ $(document).ready ->
 
 	$('.transfer-asset').on 'change', 'select[name="investor"]', ->
 		investorId = $(this).val()
-		$('.name_of_client_summary').html $(this).find("option:selected").text()
-		
-		$.ajax
-			type: 'post'
-			url: '/backoffice/transfer-asset/investor-assets'
-			data:
-				'investor_id': investorId
-			success: (data) ->
-				$('.data_container').html(data.businesslisting_html)
+		if(investorId!='')
+			$('.name_of_client_summary').html $(this).find("option:selected").text()
+			
+			$.ajax
+				type: 'post'
+				url: '/backoffice/transfer-asset/investor-assets'
+				data:
+					'investor_id': investorId
+				success: (data) ->
+					$('.data_container').html(data.businesslisting_html)
+					$('a[part="part-2"]').removeClass('d-none')
+		else
+			$('a[part="part-2"]').addClass('d-none')
+			$('.data_container').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>')
 
 	$('.transfer-asset').on 'click', '.savetransferasset_asset', ->
+		$obj = $(this)
 		assetid = $(this).attr('assetid')
 		status = $(this).closest('td').find('.transferasset_status').val()
 		$.ajax
@@ -898,6 +904,9 @@ $(document).ready ->
 				'status': status
 
 			success: (data) ->
+				if data.status == true
+					$obj.closest('td').find('.transferasset-msg').removeClass('d-none').addClass('text-success').html('<br>Transfer asset status updated Successfully.').delay(5000).fadeOut()
+				
 				console.log data.status
 
 
@@ -935,20 +944,51 @@ $(document).ready ->
  
 	$('.transfer-asset').on 'click', '.display-section', ->
 		part = $(this).attr('part')
-		$(this).closest('.part-container').addClass('d-none')
-		$('.'+part).removeClass('d-none')
-		$('.progress-indicator').find('li').removeClass('active')
-		$('.progress-indicator').find('li[part="'+part+'"]').addClass('active')
+		takeNext = false
+		if(part == 'part-1')
+			takeNext = true
+			$('.progress-indicator').find('li[part="part-2"]').removeClass('active')
+		if(part == 'part-2')
+			$('.progress-indicator').find('li[part="part-1"]').addClass('active')
+			$('.progress-indicator').find('li[part="part-3"]').removeClass('active')
+			$('select[name="investor"]').parsley().validate()
+			takeNext = $('select[name="investor"]').parsley().isValid()
+		if(part == 'part-3')
+			$('.progress-indicator').find('li[part="part-1"]').addClass('active')
+			$('.progress-indicator').find('li[part="part-2"]').addClass('active')
+			$('select[name="type_of_asset"]').parsley().validate()
+			takeNext = $('select[name="type_of_asset"]').parsley().isValid()
+			if($('select[name="type_of_asset"]').val()=='single_company')
+				$('select[name="companies"]').parsley().validate()
+				takeNext = $('select[name="companies"]').parsley().isValid()
+			else
+				$('select[name="providers"]').parsley().validate()
+				takeNext = $('select[name="providers"]').parsley().isValid()
+
+
+		if(takeNext)
+			$(this).closest('.part-container').addClass('d-none')
+			$('.'+part).removeClass('d-none')
+			# $('.progress-indicator').find('li').removeClass('active')
+			$('.progress-indicator').find('li[part="'+part+'"]').addClass('active')
 
 	$('.transfer-asset').on 'change', 'select[name="type_of_asset"]', ->
 		assetType  = $(this).val()
 		if($(this).val()!='')
 			if($(this).val()=='single_company')
 				$('.company-section').removeClass('d-none')
+				$('select[name="companies"]').attr('data-parsley-required','true')
+				$('select[name="company[assets_cmpname]"]').attr('data-parsley-required','true')
+				$('select[name="providers"]').attr('data-parsley-required','false')
+				$('input[name="provider[assets_providername]"]').attr('data-parsley-required','false')
 				$('.provider-section').addClass('d-none')
 			else
 				$('.company-section').addClass('d-none')
 				$('.provider-section').removeClass('d-none')
+				$('select[name="companies"]').attr('data-parsley-required','false')
+				$('select[name="company[assets_cmpname]"]').attr('data-parsley-required','false')
+				$('select[name="providers"]').attr('data-parsley-required','true')
+				$('input[name="provider[assets_providername]"]').attr('data-parsley-required','true')
 
 				$('select[name="providers"]> option').each (id,value) ->
 					$(this).removeClass('d-none')
@@ -972,18 +1012,19 @@ $(document).ready ->
 	updateTransferAssetSummaryValues = (inpObj) ->
 		eleClass = inpObj.attr('input_name')+'_summary'
 		eleValue = inpObj.val()
+		
+		if(inpObj.is('select'))
+			eleValue =inpObj.find("option:selected").text();
+
 		console.log eleClass
 		console.log eleValue
-		if($(this).is('select'))
-			eleValue =$(this).find("option:selected").text();
-
 		$('.'+eleClass).html eleValue
 
 	$('.transfer-asset').on 'change', 'select[name="companies"]', ->
-		name = $(this).find("option:selected").attr('name');
-		company_no = $(this).find("option:selected").attr('company_no');
-		email = $(this).find("option:selected").attr('email');
-		phone = $(this).find("option:selected").attr('phone');
+		name = $(this).find("option:selected").attr('name')
+		company_no = $(this).find("option:selected").attr('company_no')
+		email = $(this).find("option:selected").attr('email')
+		phone = $(this).find("option:selected").attr('phone')
 
 		$('.company_name').val(name).attr('readonly',true)
 		$('.company_no').val(company_no).attr('readonly',true)
@@ -993,15 +1034,19 @@ $(document).ready ->
 		$('.update-summary').each (id,value) ->
 			updateTransferAssetSummaryValues($(this))
 
+		if $(this).val()!=''
+			$('a[part="part-3"]').removeClass('d-none')
+		else
+			$('a[part="part-3"]').addClass('d-none')
+
 		return
 
 
-	$('.transfer-asset').on 'change', 'select[name="providers"]', ->
-		name = $(this).find("option:selected").attr('name');
-		product = $(this).find("option:selected").attr('product');
-		email = $(this).find("option:selected").attr('email');
-		phone = $(this).find("option:selected").attr('phone');
-
+	$('.transfer-asset').on 'change', 'select[name="providers"]', ->		
+		name = $(this).find("option:selected").attr('name')
+		product = $(this).find("option:selected").attr('product')
+		email = $(this).find("option:selected").attr('email')
+		phone = $(this).find("option:selected").attr('phone')
 		
 		$('.provider_name').val(name).attr('readonly',true)
 		$('.provider_product').val(product).attr('readonly',true)
@@ -1010,6 +1055,11 @@ $(document).ready ->
 
 		$('.update-summary').each (id,value) ->
 			updateTransferAssetSummaryValues($(this))
+
+		if $(this).val()!=''
+			$('a[part="part-3"]').removeClass('d-none')
+		else
+			$('a[part="part-3"]').addClass('d-none')
 
 		return
 		
@@ -1022,6 +1072,7 @@ $(document).ready ->
 		rowObj = $(this)
 		assetid = $(this).attr('assetid')
 		assettype = $(this).attr('assettype')
+		rowObj.find('.btn-spinner').removeClass('d-none')
 		$.ajax
 			type: 'post'
 			url: '/backoffice/transfer-asset/esign-doc'
@@ -1031,6 +1082,7 @@ $(document).ready ->
 
 			success: (data) ->
 				rowObj.closest('tr').remove();
+				rowObj.find('.btn-spinner').addClass('d-none')
 
 				
 		

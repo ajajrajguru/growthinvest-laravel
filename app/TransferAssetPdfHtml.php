@@ -19,20 +19,24 @@ class TransferAssetPdfHtml
         $typeOfAssets         = typeOfAssets();
         $default_logo_url     = public_path("img/pdf/pdfheader - nomination-firstpg.jpg");
 
-        $nomineeApplication = $investor->investorNomineeApplication();
-        if (!empty($nominee_details)) {
+        $nomineeApplication = $investor->investorNomineeApplication(); 
+        if (!empty($nomineeApplication)) {
             $nominee_details = $nomineeApplication->details;
         } else {
+            $address = $investor->address_1;
+            $address .= ($investor->address_2!='')? '<br>'.$investor->address_2 :'';
+            $address .= ($investor->city!='')? '<br>'.$investor->city :'';
+            $address .= ($investor->county!='')? '<br>'.$investor->county :'';
 
-            $nominee_details['title']               = '';
-            $nominee_details['surname']             = '';
-            $nominee_details['forename']            = '';
+            $nominee_details['title']               = $investor->title;
+            $nominee_details['surname']             = $investor->last_name;
+            $nominee_details['forename']            = $investor->first_name;
             $nominee_details['dateofbirth']         = '';
             $nominee_details['nationalinsuranceno'] = '';
-            $nominee_details['address']             = '';
-            $nominee_details['postcode']            = '';
-            $nominee_details['email']               = '';
-            $nominee_details['telephone']           = '';
+            $nominee_details['address']             =  $address;
+            $nominee_details['postcode']            = $investor->postcode;
+            $nominee_details['email']               = $investor->email;
+            $nominee_details['telephone']           = $investor->telephone_no;
 
         }
         $checkbox_nonationalinsuranceno[] = array('label_first' => false, 'label' => 'If your client does not have a National Insurance number, please tick here', 'checked' => false);
@@ -738,7 +742,7 @@ class TransferAssetPdfHtml
                      <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
                      <tr>
                      <td style="Width: 100%;">
-                      Please transfer my holding once instructions have been received from Platform One to do so. After transfer, all dividends and tax credits due should be made payable to P1 growthinvest. Payments should be sent with client name as a reference.<br><br><b>Electronic Payments should be sent to: </b><br><br><b>Sort Code: 40 -13 - 07</b><br><br><b>Account Number: 9367 1402</b><br><br><b>Account Name: P1 growthinvest</b><br><br>
+                      Please transfer my holding once instructions have been received from Platform One to do so. After transfer, all dividends and tax credits due should be made payable to P1 growthinvest. Payments should be sent with client name as a reference.<br><br><b>Electronic Payments should be sent to: </b><br><br><b>Sort Code: 40 -05 - 30</b><br><br><b>Account Number: 0369 2051</b><br><br><b>Account Name: P1 growthinvest</b><br><br>
                      </td>
                      </tr>
                      </table>

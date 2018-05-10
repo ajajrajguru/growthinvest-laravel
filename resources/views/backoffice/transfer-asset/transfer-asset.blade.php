@@ -31,7 +31,7 @@
             In order to transfer assets, you will need to complete a full account application and set up a nominee account form for each investor. Once fully registered, a short individual transfer form for each investment is required.
             <br><br>
 
-            We are very happy to help with any multi-investor or multi-investment transfers. Please contact us via support@growthinvest.com, or 020 7071 3945
+            We are very happy to help with any multi-investor or multi-investment transfers. Please contact us via <a href="mailto:support@growthinvest.com">support@growthinvest.com</a>, or <a href="tel:02070713945">020 7071 3945</a>
                 
             
             <div class="row mb-4">
@@ -48,7 +48,8 @@
                             <div class="col-md-8">
                                 <h5 class="font-weight-normal text-dark">Download our Transfer Assets Guide</h5>
                                 <p class="mb-1">Our online transfer service allows you to transfer SEIS, EIS, VCT and other tax efficient investments.</p>
-                                <button class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Download</button>
+                                 
+                                <a  href="{{ url('uploads/offline-pdf/GrowthInvest Adviser Guides Asset Transfer 2016.pdf')}}" target="_blank" class="btn btn-primary btn-sm" ><i class="fa fa-download"></i> Download</a> 
                             </div>
 
 
@@ -156,8 +157,8 @@
 
              <b>If you cannot see your client in the drop down there are 2 options:</b><br>
 
-            If you would like to register a brand new client and transfer assets - please go to Add Clients Dashboard
-            If you would like to complete the account setup for a registered client, please go to Manage Client Dashboard
+            If you would like to register a brand new client and transfer assets - please go to <a href="{{url('backoffice/investor/registration')}}"  target="_blank">Add Clients Dashboard</a>
+            If you would like to complete the account setup for a registered client, please go to <a href="{{url('backoffice/investor')}}" target="_blank">Manage Client Dashboard</a>
             To complete offline asset tranfer please click "Offline Asset Transfer" below and if you wish to proceed through online method, please click "Online Asset Transfer"
             <br><br>
 

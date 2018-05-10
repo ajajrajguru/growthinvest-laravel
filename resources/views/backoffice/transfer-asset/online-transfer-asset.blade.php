@@ -54,6 +54,8 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
          Please follow the instructions below for the online completion of asset transfers. If you require assistance or have any questions please do not hesitate to contact our help team on 020 7071 3945
          <br>
          <br>
+         <h3 class="section-title font-weight-medium text-primary mb-0">Transfer Asset</h3><br>
+         Please select your client from the dropdown list below to view existing asset transfers or start a new one. Please note that only fully registered clients with nominee accounts will appear in the dropdown list.
          <ul class="progress-indicator my-5">
             <li class="active" part="part-1">
                <a href="javascript:void(0)">Part 1</a>
@@ -74,7 +76,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                <div class="col-md-3 text-center" >
                   <div class="form-group">
                      <label>Select Client <span class="text-danger">*</span></label>
-                     <select name="investor" class="form-control select2-single" required >
+                     <select name="investor" class="form-control select2-single" data-parsley-required >
                         <option value="">-select-</option>
                         @foreach($investors as $investor)
                         <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
@@ -131,10 +133,11 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      </tr>
                   </thead>
                   <tbody class="data_container">
+                      <tr><td  colspan="13" class="text-center"> No Data Found</td></tr>
                   </tbody>
                </table>
-               <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section" part="part-2"><i class="fa fa-angle-double-right"></i> Next</a>
-            </div>
+               <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-2"><i class="fa fa-angle-double-right"></i> Next</a>
+            </div> 
          </div>
          <!--  -->
          <!-- part 2 -->
@@ -143,7 +146,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                <div class="col-md-3 text-center" >
                   <div class="form-group">
                      <label>Type of Asset <span class="text-danger">*</span></label>
-                     <select name="type_of_asset" class="form-control select2-single" required="" >
+                     <select name="type_of_asset" class="form-control select2-single" data-parsley-required  >
                         <option value="">-select-</option>
                         @foreach($typeOfAssets as $key=>$typeOfAsset)
                         <option value="{{ $key }}">{{ $typeOfAsset }}</option>
@@ -159,7 +162,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-3">
                         <div class="form-group">
                            <label>Company<span class="text-danger">*</span></label>
-                           <select name="companies" class="form-control select2-single" required=""  >
+                           <select name="companies" class="form-control select2-single" data-parsley-required   >
                               <option value="">-select-</option>
                               @foreach($single_companies as $key=>$company)
                               <option name="{{ $company->name }}" company_no="{{ $company->company_no }}" email="{{ $company->email }}" phone="{{ $company->phone }}" value="{{ $company->id }}" class="" type="{{ $company->type }}">{{ $company->name }}</option>
@@ -173,8 +176,8 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="row">
                      <div class="col-md-6">
                         <div class="form-group">
-                           <label>Company Name (as registered at companies house)</label>
-                           <input type="text"  name="company[assets_cmpname]" input_name="assets_cmpname" class="form-control update-summary company_name"  >
+                           <label>Company Name (as registered at companies house)<span class="text-danger">*</span></label>
+                           <input type="text"  name="company[assets_cmpname]" data-parsley-required  input_name="assets_cmpname" class="form-control update-summary company_name"  >
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -222,7 +225,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      <div class="col-md-6">
                         <div class="form-group">
                            <label>Custody / Non-Custody</label>
-                           <select name="company[assets_aicustody]" input_name="assets_aicustody" class="form-control update-summary">
+                           <select name="company[assets_aicustody]" input_name="assets_aicustody" is_select="true" class="form-control update-summary">
                               <option value="">--select--</option>
                               <option value="aic">Custody</option>
                               <option value="ainc">Non-Custody</option>
@@ -239,8 +242,8 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="row">
                      <div class="col-md-6">
                         <div class="form-group">
-                           <label>Providers</label>
-                           <select name="providers" class="form-control select2-single"  >
+                           <label>Providers<span class="text-danger">*</span></label>
+                           <select name="providers" class="form-control select2-single" data-parsley-required  >
                               <option value="">-select-</option>
                               @foreach($other_companies as $key=>$other_company)
                               <option name="{{ $other_company->name }}" product="{{ $other_company->product }}" email="{{ $other_company->email }}" phone="{{ $other_company->phone }}" value="{{ $other_company->id }}" class="" type="{{ $other_company->type }}">{{ $other_company->name }}</option>
@@ -254,8 +257,8 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="row">
                      <div class="col-md-4">
                         <div class="form-group">
-                           <label>Name of Provider</label>
-                           <input type="text"  name="provider[assets_providername]" input_name="assets_providername" class="form-control update-summary provider_name"  >
+                           <label>Name of Provider<span class="text-danger">*</span></label>
+                           <input type="text"  name="provider[assets_providername]" data-parsley-required  input_name="assets_providername" class="form-control update-summary provider_name"  >
                         </div>
                      </div>
                      <div class="col-md-4">
@@ -356,7 +359,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                </div>
             </div>
             <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section" part="part-1"><i class="fa fa-angle-double-left"></i> Prev</a>
-            <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section" part="part-3"><i class="fa fa-angle-double-right"></i> Next</a>
+            <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-3"><i class="fa fa-angle-double-right"></i> Next</a>
          </div>
          <!--  -->
          <div class="part-container part-3 d-none">
@@ -428,7 +431,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      </div>
                   </div>
                </div>
-               <button type="submit" name="btn_save">Save</button>
+               <button type="submit" name="btn_save" class="btn btn-primary mt-2 ld-ext-right">Save</button>
             </div>
             <div class="row border py-3 bg-light align-items-md-center mx-0 d-none provider-section">
                <h3>Details of Provider :</h3>
@@ -531,7 +534,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      </div>
                   </div>
                </div>
-               <button type="submit" name="btn_save">Save</button>
+               <button type="submit" name="btn_save" class="btn btn-primary mt-2 ld-ext-right">Save</button>
             </div>
             <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section" part="part-2"><i class="fa fa-angle-double-left"></i> Prev</a>
          </div>

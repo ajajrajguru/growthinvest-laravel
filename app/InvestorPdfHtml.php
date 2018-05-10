@@ -3413,14 +3413,14 @@ class InvestorPdfHtml
                                    <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
                                  <tr>
                                  <td style="Width: 30%;">Sort Code :</td>
-                                 <td style="Width: 70%;"><div class="inputcss" style="padding: 5px;"> 401307 </div></td>
+                                 <td style="Width: 70%;"><div class="inputcss" style="padding: 5px;"> 400530 </div></td>
                                  </tr>
                                  </table><br>
 
                                  <table style="width: 100%; margin-bottom: 0; padding-bottom: 0;" class="no-spacing" >
                                  <tr>
                                  <td style="Width: 30%;">Account Number :</td>
-                                 <td style="Width: 70%;"><div class="inputcss" style="padding: 5px;"> 93671402 </div></td>
+                                 <td style="Width: 70%;"><div class="inputcss" style="padding: 5px;"> 03692051 </div></td>
                                  </tr>
                                  </table>
 

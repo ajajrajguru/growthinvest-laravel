@@ -1122,8 +1122,8 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Sort Code</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionsortcode" id="" placeholder="" value="401307">
-                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">401307</div>
+                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionsortcode" id="" placeholder="" value="400530">
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif">400530</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1143,8 +1143,8 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword" class="col-sm-4 col-form-label">Account No.</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionaccountno" id="" placeholder="" value="93671402">
-                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> 93671402</div>
+                                                    <input type="text" readonly class="form-control editmode @if($mode=='view') d-none @endif" name="subscriptionaccountno" id="" placeholder="" value="03692051">
+                                                    <div class="viewmode text-large text-primary @if($mode=='edit') d-none @endif"> 03692051</div>
                                                 </div>
                                             </div>
                                         </div>
