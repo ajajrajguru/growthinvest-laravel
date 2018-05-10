@@ -1109,6 +1109,9 @@
       if (inpObj.is('select')) {
         eleValue = inpObj.find("option:selected").text();
       }
+      if (eleClass === 'typeoftransfer_summary') {
+        eleValue = inpObj.attr('display-text');
+      }
       console.log(eleClass);
       console.log(eleValue);
       return $('.' + eleClass).html(eleValue);

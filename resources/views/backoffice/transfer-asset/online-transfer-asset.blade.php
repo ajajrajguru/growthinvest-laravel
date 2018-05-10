@@ -54,7 +54,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
          Please follow the instructions below for the online completion of asset transfers. If you require assistance or have any questions please do not hesitate to contact our help team on 020 7071 3945
          <br>
          <br>
-         <h3 class="section-title font-weight-medium text-primary mb-0">Transfer Asset</h3><br>
+         <div class="card-header">Transfer Asset</div>
          Please select your client from the dropdown list below to view existing asset transfers or start a new one. Please note that only fully registered clients with nominee accounts will appear in the dropdown list.
          <ul class="progress-indicator my-5">
             <li class="active" part="part-1">
@@ -340,11 +340,11 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                            <label>Please Transfer</label>
                            <div class=" ">
                               <div class="custom-control custom-radio">
-                                 <input type="radio" id="yesrodio1" input_name="typeoftransfer" name="provider[typeoftransfer]" value="full" class="custom-control-input update-summary"  checked >
+                                 <input type="radio" id="yesrodio1" input_name="typeoftransfer" name="provider[typeoftransfer]" value="full" class="custom-control-input update-summary"  checked display-text="In Full">
                                  <label class="custom-control-label normal" for="yesrodio1" >In Full  </label>
                               </div>
                               <div class="custom-control custom-radio">
-                                 <input type="radio" id="norodio1" input_name="typeoftransfer" name="provider[typeoftransfer]" value="part" class="custom-control-input update-summary" >
+                                 <input type="radio" id="norodio1" input_name="typeoftransfer" name="provider[typeoftransfer]" value="part" class="custom-control-input update-summary" display-text="In Part">
                                  <label class="custom-control-label normal" for="norodio1" > In Part</label>
                               </div>
                            </div>
@@ -370,7 +370,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Company Name (as registered at companies house) :</label>
-                        <span class="assets_cmpname_summary"></span>          
+                        <span class="assets_cmpname_summary text-capitalize"></span>          
                      </div>
                   </div>
                </div>
@@ -419,7 +419,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        Current name on share certificate  :</label><span class="assets_nameonsharecertificate_summary"></span>
+                        Current name on share certificate  :</label><span class="assets_nameonsharecertificate_summary text-capitalize"></span>
                      </div>
                   </div>
                </div>
@@ -427,7 +427,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        Custody / Non-Custody  :</label><span class="assets_aicustody_summary"></span>
+                        Custody / Non-Custody  :</label><span class="assets_aicustody_summary text-capitalize"></span>
                      </div>
                   </div>
                </div>
@@ -440,7 +440,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        Name of Provider :</label><span class="assets_providername_summary"></span>
+                        Name of Provider :</label><span class="assets_providername_summary text-capitalize"></span>
                      </div>
                   </div>
                </div>
@@ -448,7 +448,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        Name of Product :</label><span class="assets_productname_summary"></span>
+                        Name of Product :</label><span class="assets_productname_summary text-capitalize"></span>
                      </div>
                   </div>
                </div>
@@ -456,7 +456,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        Client Account Number :</label><span class="assets_clientaccno_summary"></span>
+                        Client Account Number :</label><span class="assets_clientaccno_summary "></span>
                      </div>
                   </div>
                </div>
@@ -496,7 +496,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        Custody / Non-Custody :</label><span class="assets_provider_aicustody_summary"></span>
+                        Custody / Non-Custody :</label><span class="assets_provider_aicustody_summary text-capitalize"></span>
                      </div>
                   </div>
                </div>
@@ -522,7 +522,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>
-                        County :</label><span class="assets_county_summary"></span> 
+                        County :</label><span class="assets_county_summary text-capitalize"></span> 
                      </div>
                   </div>
                </div>
