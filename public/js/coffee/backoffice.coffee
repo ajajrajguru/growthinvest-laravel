@@ -978,7 +978,7 @@ $(document).ready ->
 			if($(this).val()=='single_company')
 				$('.company-section').removeClass('d-none')
 				$('select[name="companies"]').attr('data-parsley-required','true')
-				$('select[name="company[assets_cmpname]"]').attr('data-parsley-required','true')
+				$('input[name="company[assets_cmpname]"]').attr('data-parsley-required','true')
 				$('select[name="providers"]').attr('data-parsley-required','false')
 				$('input[name="provider[assets_providername]"]').attr('data-parsley-required','false')
 				$('.provider-section').addClass('d-none')
@@ -986,7 +986,7 @@ $(document).ready ->
 				$('.company-section').addClass('d-none')
 				$('.provider-section').removeClass('d-none')
 				$('select[name="companies"]').attr('data-parsley-required','false')
-				$('select[name="company[assets_cmpname]"]').attr('data-parsley-required','false')
+				$('input[name="company[assets_cmpname]"]').attr('data-parsley-required','false')
 				$('select[name="providers"]').attr('data-parsley-required','true')
 				$('input[name="provider[assets_providername]"]').attr('data-parsley-required','true')
 

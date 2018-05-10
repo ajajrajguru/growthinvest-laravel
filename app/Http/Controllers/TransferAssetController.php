@@ -159,9 +159,9 @@ class TransferAssetController extends Controller
         $transferAsset->status      = '';
         $transferAsset->save();
 
-        if (isset($requestData['file_apth']) && !empty($requestData['file_apth'])) {
+        if (isset($requestData['file_path']) && !empty($requestData['file_path'])) {
 
-            $files = $requestData['file_apth'];
+            $files = $requestData['file_path'];
             foreach ($files as $key => $file) {
 
                 $source   = pathinfo($file);
@@ -179,7 +179,7 @@ class TransferAssetController extends Controller
                 }
             }
         }
-
+        
         return redirect(url('backoffice/transfer-asset/online/' . $transferAsset->id));
 
     }

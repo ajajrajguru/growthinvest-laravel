@@ -51,5 +51,10 @@ return [
 					'background_image' =>['thumb_2_58x1','medium_2_58x1','large_2_58x1'],
 				]
 		],
+		'App\TransferAsset' => [
+			'base_path' => 'transferasset',
+			'slug_column' => 'id',
+			
+		],
 	],
 ];

@@ -32,7 +32,7 @@
 	</div>
 	<div class="col-sm-8 d-sm-flex flex-sm-wrap">
 		<div class="w-100">
-			<h5 class="mt-3"><a href="{{ url('investment-opportunities/single-company/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
+			<h5 class="mt-3"><a href="{{ url('investment-opportunities/funds/'.$businessListing->slug) }}" class="text-primary card-link">{{ $businessListing->title }}</a></h5>
 			<p class="mb-2"><strong>Investment Strategy:</strong> {{ $businessListing->businessInvestmentStrategy() }}</p>
 			<p>{{ $businessListing->short_content }}</p>
 			<hr class="mt-2 mb-2">

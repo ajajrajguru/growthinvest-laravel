@@ -28,7 +28,7 @@ window.uploadFiles = (containerId,uploadPath) ->
     init:
       FileUploaded: (up, files, xhr) ->
         fileResponse = JSON.parse(xhr.response)
-        $('.upload-files-section').append('<input type="hidden" name="file_apth[]" value="'+fileResponse.data.image_path+'">')
+        $('.uploaded-file-path').append('<input type="hidden" name="file_path[]" value="'+fileResponse.data.image_path+'">')
 
 
 window.uploadCropImage = (containerId,selectFile,imageId,uploadPath) -> 

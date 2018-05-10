@@ -1160,10 +1160,16 @@ class BusinessListingController extends Controller
             }
             $parentFirmName = ($investmentClient->firms_parent_id) ? $firms[$investmentClient->firms_parent_id] : '';
 
+            $businessLink = url("/investment-opportunities/fund/" . $investmentClient->slug);
+            if ($investmentClient->type == "proposal") {
+                $businessLink = url("investment-opportunities/single-company/" . $investmentClient->slug);
+            }
+
+ 
             $investmentClientsData[] = [
-                '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investmentClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $investmentClient->id . '"><label class="custom-control-label" for="ch' . $investmentClient->id . '"></label></div> ',
+                '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investmentClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $investmentClient->investment_id . '"><label class="custom-control-label" for="ch' . $investmentClient->investment_id . '"></label></div> ',
                 'invested_date'         => date('d/m/Y', strtotime($investmentClient->investment_date)),
-                'investment'            => '<a href="#" target="_blank">' .title_case($investmentClient->title). '</a>',
+                'investment'            => '<a href="'.$businessLink.'" target="_blank">' .title_case($investmentClient->title). '</a>',
                 'investor'              => '<a href="' . url('backoffice/investor/' . $investmentClient->investorgicode . '/investor-profile') . '" target="_blank">' . title_case($investmentClient->investorname) . '</a>',
                 'firm'                  => '<a href="' . url('backoffice/firms/' . $investmentClient->firm_gi_code . '/') . '" target="_blank">' . title_case($investmentClient->firm_name) . '</a>',
                 'invested_amount'       => format_amount($investmentClient->invested, 0, true),
@@ -1203,7 +1209,7 @@ class BusinessListingController extends Controller
     public function getFilteredInvestmentClients($filters, $skip, $length, $orderDataBy)
     {
 
-        $investmentClients = BusinessInvestment::select(\DB::raw('business_listings.*,business_investments.created_at as investment_date,business_investments.investor_id as investorid,firms.name as firm_name,firms.id as firm_id,firms.gi_code as firm_gi_code,firms.wm_commission ,firms.parent_id as firms_parent_id ,IFNULL(commissions.amount, 0) as commission_amount, investor.gi_code as investor_gi_code, CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.email  as investoremail,investor.gi_code  as investorgicode, SUM(business_investments.amount) as invested,
+        $investmentClients = BusinessInvestment::select(\DB::raw('business_listings.*,business_investments.id as investment_id,business_investments.created_at as investment_date,business_investments.investor_id as investorid,firms.name as firm_name,firms.id as firm_id,firms.gi_code as firm_gi_code,firms.wm_commission ,firms.parent_id as firms_parent_id ,IFNULL(commissions.amount, 0) as commission_amount, investor.gi_code as investor_gi_code, CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.email  as investoremail,investor.gi_code  as investorgicode, SUM(business_investments.amount) as invested,
             ((firms.wm_commission / 100)*  SUM(business_investments.amount)) as accrude_amount,
             (((firms.wm_commission / 100)*  SUM(business_investments.amount)) - IFNULL(commissions.amount, 0)) as due_amount'))->leftjoin('business_listings', function ($join) {
             $join->on('business_investments.business_id', 'business_listings.id')->where('business_listings.business_status', 'listed')->where('business_listings.status', 'publish');
@@ -1451,9 +1457,14 @@ class BusinessListingController extends Controller
             $totalAccrude += $accrude;
             $owenerEmail = (!empty($businessClient->owneremail)) ? '<br>(' . $businessClient->owneremail . ')' : '';
 
+            $businessLink = url("/investment-opportunities/fund/" . $businessClient->slug);
+            if ($businessClient->type == "proposal") {
+                $businessLink = url("investment-opportunities/single-company/" . $businessClient->slug);
+            }
+
             $businessClientsData[] = [
                 '#'               => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
-                'investment'      => title_case($businessClient->title) . $owenerEmail,
+                'investment'      => '<a href="'.$businessLink.'" target="_blank">' .title_case($businessClient->title) . $owenerEmail.'</a>',
                 'invested_amount' => format_amount($businessClient->investment_raised, 0, true),
                 'accrude'         => format_amount($accrude, 0, true),
                 'paid'            => format_amount($paid, 0, true),

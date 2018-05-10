@@ -357,6 +357,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                <div id="uploader">
                   <p></p>
                </div>
+               <div class="uploaded-file-path"></div>
             </div>
             <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section" part="part-1"><i class="fa fa-angle-double-left"></i> Prev</a>
             <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-3"><i class="fa fa-angle-double-right"></i> Next</a>
