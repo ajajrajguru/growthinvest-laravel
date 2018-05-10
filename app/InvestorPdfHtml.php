@@ -3791,8 +3791,9 @@ class InvestorPdfHtml
 
         $table_html .= '<tr    class="title-bg" style=" ">
 
-                            <th style="width: 30%;">Invested Date</th>
-                            <th style="width: 15%;">Proposal Investor</th>
+                            <th style="width: 10%;">Invested Date</th>
+                            <th style="width: 25%;">Proposal </th>
+                            <th style="width: 10%;">Investor</th>
                             <th style="width: 15%;">Firm</th>
                             <th style="width: 10%;">Invested Amount</th>
                             <th style="width: 10%;"> Accrued</th>
@@ -3841,8 +3842,10 @@ class InvestorPdfHtml
                 $investorEmail = (!empty($investmentClient->investoremail)) ? '(' . $investmentClient->investoremail . ')' : '';
 
                 $table_html .= "<tr style='background-color:$bgcolor;'>
-                            <td  style='width: 30%;' align='center' >" . title_case($investmentClient->title) . $investorEmail . "</td>
-                            <td style='width: 15%;'>" . title_case($investmentClient->investorname) . "</td>
+                
+                            <td  style='width: 10%;' align='center' >" . date('d/m/Y', strtotime($investmentClient->investment_date)) . "</td>
+                            <td  style='width: 25%;' align='center' >" . title_case($investmentClient->title) .'<br>'. $investorEmail . "</td>
+                            <td style='width: 10%;'>" . title_case($investmentClient->investorname) . "</td>
                             <td style='width: 15%;''>" . title_case($investmentClient->firm_name) . "</td>
                             <td style='width: 10%; align='center''>" . format_amount($investmentClient->invested, 0, true) . "</td>
                             <td style='width: 10%;' align='center'>" . format_amount($accrude, 0, true) . "</td>

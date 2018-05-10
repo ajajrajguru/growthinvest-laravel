@@ -1163,7 +1163,7 @@ class BusinessListingController extends Controller
             $investmentClientsData[] = [
                 '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investmentClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $investmentClient->id . '"><label class="custom-control-label" for="ch' . $investmentClient->id . '"></label></div> ',
                 'invested_date'         => date('d/m/Y', strtotime($investmentClient->investment_date)),
-                'investment'            => title_case($investmentClient->title),
+                'investment'            => '<a href="#" target="_blank">' .title_case($investmentClient->title). '</a>',
                 'investor'              => '<a href="' . url('backoffice/investor/' . $investmentClient->investorgicode . '/investor-profile') . '" target="_blank">' . title_case($investmentClient->investorname) . '</a>',
                 'firm'                  => '<a href="' . url('backoffice/firms/' . $investmentClient->firm_gi_code . '/') . '" target="_blank">' . title_case($investmentClient->firm_name) . '</a>',
                 'invested_amount'       => format_amount($investmentClient->invested, 0, true),
