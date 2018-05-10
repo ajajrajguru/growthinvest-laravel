@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AdobeSignature;
 use App\Company;
 use App\TransferAsset;
 use App\TransferAssetMeta;
@@ -11,7 +12,6 @@ use File;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Spipu\Html2Pdf\Html2Pdf;
-use App\AdobeSignature;
 use View;
 
 class TransferAssetController extends Controller
@@ -33,17 +33,16 @@ class TransferAssetController extends Controller
     public function offlineTransferAsset()
     {
 
-        $investor     = new User;
-         
+        $investor = new User;
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
         $breadcrumbs[] = ['url' => '', 'name' => 'Transfer Asset'];
         $breadcrumbs[] = ['url' => '', 'name' => 'Offline Transfer Asset'];
-        
-        $data['breadcrumbs']      = $breadcrumbs;
-        $data['pageTitle']        = 'Offline Transfer Asset';
-        $data['activeMenu']       = 'transferassets';
+
+        $data['breadcrumbs'] = $breadcrumbs;
+        $data['pageTitle']   = 'Offline Transfer Asset';
+        $data['activeMenu']  = 'transferassets';
 
         return view('backoffice.transfer-asset.offline-transfer-asset')->with($data);
     }
@@ -65,7 +64,7 @@ class TransferAssetController extends Controller
         $data['other_companies']  = $companies->where("type", '!=', "single_company");
         $data['investors']        = $investors;
         $data['typeOfAssets']     = $typeOfAssets;
-        $data['transferType']      = ['full'=>'In Full','part'=>'In Part'];
+        $data['transferType']     = ['full' => 'In Full', 'part' => 'In Part'];
         $data['breadcrumbs']      = $breadcrumbs;
         $data['pageTitle']        = 'Online Transfer Asset';
         $data['activeMenu']       = 'transferassets';
@@ -179,7 +178,7 @@ class TransferAssetController extends Controller
                 }
             }
         }
-        
+
         return redirect(url('backoffice/transfer-asset/online/' . $transferAsset->id));
 
     }
@@ -219,10 +218,10 @@ class TransferAssetController extends Controller
             $html     = $transferAssetPdf->getHtmlForTransferAssetPdf($transferasset, $additionalArgs);
             $pdfTitle = 'Transfer Assets Form ';
         } elseif ($type == 'stock_transfer_form') {
-            $html = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset,$additionalArgs);
+            $html     = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset, $additionalArgs);
             $pdfTitle = 'Stock Transfer Form';
         } elseif ($type == 'letter_of_authority_pdf') {
-            $html = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset,$additionalArgs);
+            $html     = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset, $additionalArgs);
             $pdfTitle = 'Letter Of Authority';
         }
 
@@ -238,11 +237,12 @@ class TransferAssetController extends Controller
 
     }
 
-    public function adobeSignataureTransferAsset(Request $request) {
-        $id = $request->input('assetid');
-        $type = $request->input('assettype');
-        $transferasset = TransferAsset::find($id);
-        $investor             = $transferasset->investor;
+    public function adobeSignataureTransferAsset(Request $request)
+    {
+        $id             = $request->input('assetid');
+        $type           = $request->input('assettype');
+        $transferasset  = TransferAsset::find($id);
+        $investor       = $transferasset->investor;
         $responseStatus = false;
         if (empty($transferasset)) {
             abort(404);
@@ -259,8 +259,8 @@ class TransferAssetController extends Controller
             $pdfTitle                    = '';
             $now_date                    = date('d-m-Y', time());
 
-            $tmp_foldername = "tmp_transferassets";
-            $foldername = uniqid("ab1234cde_folder1_a932_");
+            $tmp_foldername  = "tmp_transferassets";
+            $foldername      = uniqid("ab1234cde_folder1_a932_");
             $destination_dir = public_path() . '/userdocs/' . $tmp_foldername . '/' . $foldername;
 
             if (!file_exists(public_path() . '/userdocs/' . $tmp_foldername)) {
@@ -268,28 +268,28 @@ class TransferAssetController extends Controller
                 mkdir(public_path() . '/userdocs/' . $tmp_foldername);
 
             }
-            
+
             if ($type == 'transfer_asset_pdf') {
-                $html      = $transferAssetPdf->getHtmlForTransferAssetPdf($transferasset, $additionalArgs);
-                
+                $html = $transferAssetPdf->getHtmlForTransferAssetPdf($transferasset, $additionalArgs);
+
                 $output_link       = $destination_dir . '/Transfer_Asset_pdf_' . $now_date . '.pdf';
                 $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=transferasset';
                 $adobesign_message = "Please sign the Transfer Asset document";
                 $adobesign_name    = "Transfer Asset Form";
 
             } elseif ($type == 'stock_transfer_form') {
-                $html = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset, $additionalArgs);
+                $html              = $transferAssetPdf->getHtmlForStockTransferPdf($transferasset, $additionalArgs);
                 $output_link       = $destination_dir . '/stock_transfer_pdf_' . $now_date . '.pdf';
                 $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=stock_transfer_form';
-                $adobesign_message ="Please sign Stock Transfer document";
-                $adobesign_name ="Stock Transfer Form";
+                $adobesign_message = "Please sign Stock Transfer document";
+                $adobesign_name    = "Stock Transfer Form";
 
             } elseif ($type == 'letter_of_authority_pdf') {
-                $html = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset, $additionalArgs);
+                $html              = $transferAssetPdf->getHtmlForLetterOfAuthorityPdf($transferasset, $additionalArgs);
                 $output_link       = $destination_dir . '/letter_of_authority_pdf_' . $now_date . '.pdf';
                 $callbackurl       = url('transferasset/adobe/signed-doc-callback') . '?type=transferasset&cat=letter_of_authority';
-                $adobesign_message ="Please sign Letter Of Authority document";
-                $adobesign_name ="Letter Of Authority";
+                $adobesign_message = "Please sign Letter Of Authority document";
+                $adobesign_name    = "Letter Of Authority";
             }
 
             $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
@@ -340,26 +340,31 @@ class TransferAssetController extends Controller
 
     public function updateTransferAssetDockey(Request $request)
     {
+        $eventType = $request->input("eventType");
 
-        $dockey = $request->input("documentKey");
+        if ($eventType == "ESIGNED") {
 
-        $response_data   = '';
-        $returnd_doc_key = '';
+            $dockey = $request->input("documentKey");
 
-        $type          = 'nominee';
-        $adobeechosign = new AdobeSignature();
+            $response_data   = '';
+            $returnd_doc_key = '';
 
-        $transferassetData = TransferAssetMeta::where('meta_value', $dockey)->first();
+            $type          = 'nominee';
+            $adobeechosign = new AdobeSignature();
 
-        if (!empty($transferassetData)) {
-            $metaKeys = ['transferasset_dockey'=>'stocktransfer_signedurl', 'stocktransfer_dockey'=>'transferasset_signedurl', 'authletter_dockey'=>'authletter_signedurl'];
-            $metaKey  = $metaKeys[$type];
-            $dockeyUrl                    = $adobeechosign->getAdobeDocUrlByDocKey($dockey);
+            $transferassetData = TransferAssetMeta::where('meta_value', $dockey)->first();
 
-            $transferassetData             = new TransferAssetMeta;
-            $transferassetData->meta_key   = $metaKey;
-            $transferassetData->meta_value = $dockeyUrl;
-            $transferassetData->save();
+            if (!empty($transferassetData)) {
+                $metaKeys  = ['transferasset_dockey' => 'stocktransfer_signedurl', 'stocktransfer_dockey' => 'transferasset_signedurl', 'authletter_dockey' => 'authletter_signedurl'];
+                $metaKey   = $metaKeys[$type];
+                $dockeyUrl = $adobeechosign->getAdobeDocUrlByDocKey($dockey);
+
+                $transferassetData              = new TransferAssetMeta;
+                $transferassetData->transfer_id = $transferassetData->transfer_id;
+                $transferassetData->meta_key    = $metaKey;
+                $transferassetData->meta_value  = $dockeyUrl;
+                $transferassetData->save();
+            }
         }
 
     }
