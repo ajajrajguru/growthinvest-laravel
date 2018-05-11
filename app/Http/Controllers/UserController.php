@@ -597,6 +597,26 @@ class UserController extends Controller
         return response()->json(['status' => true]);
     }
 
+    // frontofficebashboard
+
+    public function userDashboard(){
+        $user = Auth::user();
+        if(empty($user))
+            abort(403);
+
+        $profilePic           = $user->getProfilePicture('thumb_1x1');
+        $data['profilePic']   = $profilePic['url'];
+        $data['user'] = $user;
+
+        if(isUser($user,['business_owner'])){
+            $data['active_menu'] = 'dashboard';
+
+            $template = 'frontend.entrepreneur.dashboard';
+        }
+ 
+        return view($template)->with($data);
+    }
+
     /* Coming soon Dashboard Pages */
     public function showDashboard(\Illuminate\Http\Request $request)
     {

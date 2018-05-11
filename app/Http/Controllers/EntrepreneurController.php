@@ -84,7 +84,7 @@ class EntrepreneurController extends Controller
             if ($entrepreneur->registered_by !== $entrepreneur->id && $entrepreneur->registered_by != 0) {
                 $source = "Intermediary";
             }
-            
+
             if (!is_null($entrepreneur->invite_key) && $entrepreneur->invite_key != "") {
                 $source = "Invited";
             }
@@ -332,12 +332,12 @@ class EntrepreneurController extends Controller
         }
 
         Session::flash('success_message', 'Entrepreneur registered successfully');
-        return redirect(url('backoffice/entrepreneur/' . $giCode."/registration"));
+        return redirect(url('backoffice/entrepreneur/' . $giCode . "/registration"));
     }
 
     public function editRegistration($giCode)
     {
-        $user = Auth::user();
+        $user         = Auth::user();
         $entrepreneur = User::where('gi_code', $giCode)->first();
 
         if (empty($entrepreneur)) {
@@ -374,6 +374,17 @@ class EntrepreneurController extends Controller
 
         return view('backoffice.clients.registration-entrepreneur')->with($data);
 
+    }
+
+    public function dashboard()
+    {
+        $entrepreneur = Auth::user();
+
+        $profilePic           = $entrepreneur->getProfilePicture('thumb_1x1');
+        $data['profilePic']   = $profilePic['url'];
+        $data['entrepreneur'] = $entrepreneur;
+
+        return view('frontend.entrepreneur.dashboard')->with($data);
     }
 
     /**

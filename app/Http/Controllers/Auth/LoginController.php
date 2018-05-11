@@ -48,7 +48,7 @@ class LoginController extends Controller
     protected function redirectTo()
     {
 
-        $user = Auth::user();
+        $user = Auth::user(); 
         $action = 'Successful Login';
         $activity = saveActivityLog('User',$user->id,'successful_logins',$user->id,$action,'',$user->firm_id);
 
@@ -56,9 +56,9 @@ class LoginController extends Controller
 
             return url('/backoffice/dashboard');
 
-        } else if ($user->can('frontoffice_access')) {
+        } else if ($user->hasAnyPermission(['participate_in_business','create_business_proposal','create_fund'])) {
 
-            return url("/user-dashboard/");
+            return url("/user-dashboard/");   
         } else {
 
             return url("");

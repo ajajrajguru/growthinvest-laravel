@@ -36,6 +36,13 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
 
 }
 
+function isUser($object,$hasRolePermission){
+    if($object->hasAnyRole($hasRolePermission))
+        return true;
+    else
+        return false;
+}
+
 /**
 check if provided permission has access to th user
  */

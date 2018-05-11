@@ -19,6 +19,7 @@ Route::get('investment-opportunities/{type}', 'BusinessListingController@investm
 Route::post('investment-opportunities/filter-listings', 'BusinessListingController@getFilteredInvestmentOpportunity');
 
 
+// upload
 Route::group(['middleware' => ['auth']], function () {
     Route::get('download-file/{id}', 'UserController@downloadS3File');
     Route::post('upload-files', 'UserController@uploadTempFiles');
@@ -181,10 +182,20 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 
 });
 
+// frontoffice entrepreneurs
+Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function () {
+    Route::get('/', 'UserController@userDashboard');
+    
+
+});
+
+
+// webhooks
 Route::post('investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf');
 Route::post('transfer-asset/adobe/signed-doc-callback', 'TransferAssetController@updateTransferAssetDockey');
 Route::post('onfido-webhook', 'InvestorController@onfidoWebhook');
 
+// 
 Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController');
 Route::resource('permissions', 'PermissionController');
