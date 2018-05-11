@@ -366,20 +366,31 @@ function getCountrycodeAlpha2ToAlpha3()
 
 };
 
-function durationType()
+function durationType($type='all')
 {
-    $duration = [
-        "today"        => "Today",
-        "last7d"       => "Last 7 Days",
-        "lastfd"       => 'Last 15 Days',
-        "thismonth"    => 'This Month',
-        "lastmonth"    => 'Last Month',
-        "lasttwomonth" => 'Last Two Month',
-        "thisquater"   => 'This Quarter',
-        "lastquater"   => 'Last Quarter',
-        "yeartodate"   => 'Year to Date',
-        "last12month"  => 'Last 12 Months',
-    ];
+    if($type=='all'){
+        $duration = [
+            "today"        => "Today",
+            "last7d"       => "Last 7 Days",
+            "lastfd"       => 'Last 15 Days',
+            "thismonth"    => 'This Month',
+            "lastmonth"    => 'Last Month',
+            "lasttwomonth" => 'Last Two Month',
+            "thisquater"   => 'This Quarter',
+            "lastquater"   => 'Last Quarter',
+            "yeartodate"   => 'Year to Date',
+            "last12month"  => 'Last 12 Months',
+        ];
+    }
+    else{
+        $duration = [
+            "thisquater"   => 'This Quarter',
+            "lastquater"   => 'Last Quarter',
+            "yeartodate"   => 'Year to Date',
+            "last12month"  => 'Last 12 Months',
+        ];
+    }
+    
 
     return $duration;
 

@@ -29,7 +29,7 @@ class PortfolioController extends Controller
 
         $businessListing          = BusinessListing::where('status', 'publish')->where('business_status', 'listed')->get();
         $data['businessListings'] = $businessListing;
-        $data['durationType']     = durationType();
+        $data['durationType']     = durationType(1);
         $data['financialYears']   = getFinancialYears();
         $data['breadcrumbs']      = $breadcrumbs;
         $data['requestFilters']   = $requestFilters;

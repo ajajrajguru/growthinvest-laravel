@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-image', 'UserController@deleteImage');
 });
 
+// backoffice
 
 Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffice'], function () {
     //firms

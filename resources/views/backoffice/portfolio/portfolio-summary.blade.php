@@ -127,7 +127,7 @@
                                     if(isset($requestFilters['duration']) && $requestFilters['duration'] == $durationKey){
                                         $selected = "selected";
                                     }
-                                    elseif(!isset($requestFilters['duration_from']) && !isset($requestFilters['tax_year']) && !isset($requestFilters['duration']) && 'lasttwomonth' == $durationKey){
+                                    elseif(!isset($requestFilters['duration_from']) && !isset($requestFilters['tax_year']) && !isset($requestFilters['duration']) && 'thisquater' == $durationKey){
                                         $selected = "selected";
                                     }
                                     else{
