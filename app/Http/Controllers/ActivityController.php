@@ -121,6 +121,7 @@ class ActivityController extends Controller
         $activityListingData = [];
         $activityTypeList    = activityTypeList();
         $userObj             = [];
+        $imageUrls             = [];
 
         foreach ($activityListings as $key => $activityListing) {
             if (isset($userObj[$activityListing->user_id])) {
@@ -144,15 +145,61 @@ class ActivityController extends Controller
             } else {
                 $activity = '';
             }
+
+             if(!empty($activityListing->firmname))
+                $firmLink = '<a href="'.url('backoffice/firms/'.$activityListing->firmgicode.'/').'" target="_blank">'.title_case($activityListing->firmname).'</a>';
+            else
+                $firmLink = '';
+
+            if(!empty($activityListing->username))
+                $userLink = '<a href="'.url('backoffice/user/'.$activityListing->usergicode.'/intermediary-registration').'" target="_blank">'.title_case($activityListing->username).'</a>';
+            else
+                $userLink = ''; 
+
+            $telephoneNo = (!empty($user)) ? title_case($user->telephone_no) : '';
+
+            if($activityListing->itemid !=''){
+                if(!isset($imageUrls['business'][$activityListing->itemid])){
+                    $businessListingObj = BusinessListing::find($activityListing->itemid);
+                    if(empty($businessListingObj))
+                        $businessListingObj = new BusinessListing;
+                     
+                    $logo = $businessListingObj->getBusinessLogo('thumb_1x1');    
+                    $logoUrl = $logo['url'];
+                    $imageUrls['business'][$activityListing->itemid] = $logoUrl;
+                }
+                else
+                    $logoUrl = $imageUrls['business'][$activityListing->itemid];
+                
+               
+            }
+            else{
+
+                if(!isset($imageUrls['user'][$activityListing->user_id])){
+                    if(empty($user)){
+                        $user = new User;
+                    }
+
+                    $logo = $user->getProfilePicture('thumb_1x1');
+                    $logoUrl = $logo['url'];
+                    $imageUrls['user'][$activityListing->user_id] = $logoUrl;
+                }
+                else
+                    $logoUrl = $imageUrls['user'][$activityListing->user_id];
+ 
+                
+            }
+             $logoHtml = '<img src="'.$logoUrl.'" height="50">';
+
             $activityListingData[] = [
-                'logo'           => '',
+                'logo'           => $logoHtml,
                 'proposal_funds' => title_case($activityListing->itemname),
-                'user'           => (!empty($activityListing->username)) ? title_case($activityListing->username) : '',
+                'user'           => $userLink,
                 'user_type'      => $userType,
-                'firm'           => (!empty($activityListing->firmname)) ? title_case($activityListing->firmname) : '',
+                'firm'           => $firmLink,
                 'gi_code'        => (!empty($activityListing->gi_platform_code)) ? strtoupper($activityListing->gi_platform_code) : '',
                 'email'          => (!empty($activityListing->email)) ? $activityListing->email : '',
-                'telephone'      => (!empty($user)) ? title_case($user->telephone_no) : '',
+                'telephone'      => $telephoneNo,
                 'description'    => (isset($activityMeta['amount invested'])) ? $activityMeta['amount invested'] : '',
                 'date'           => (!empty($activityListing->date_recorded)) ? date('d/m/Y H:i:s', strtotime($activityListing->date_recorded)) : '',
                 'activity'       => $activity,
@@ -337,8 +384,8 @@ class ActivityController extends Controller
 
         $json_data = array(
             "activityCountSummaryView" => $activityCountSummaryView,
-            "dataProvider"             => json_encode($dataProvider, true),
-            "graphs"                   => json_encode($graphs),
+            "dataProvider"             => $dataProvider,
+            "graphs"                   => $graphs,
             "fromDate"                 => $fromDate,
             "toDate"                   => $toDate,
         );
@@ -473,7 +520,7 @@ class ActivityController extends Controller
                 }
 
                 if ($type == 'list') {
-                    $mainselect = "select a1.gi_platform_code,a1.id,a1.component,a1.type,a1.type as activitytype,a1.action,a1.content,a1.primary_link,f1.name as firmname,a1.secondary_item_id";
+                    $mainselect = "select a1.gi_platform_code,a1.id,a1.component,a1.type,a1.type as activitytype,a1.action,a1.content,a1.primary_link,f1.name as firmname,f1.gi_code as firmgicode,a1.secondary_item_id";
                 } else {
                     $mainselect = "select count(*) as count,a1.type as type ";
                 }
@@ -483,7 +530,7 @@ class ActivityController extends Controller
 
                 if (in_array($activityType, ['nominee_application', 'onfido_requested', 'onfido_confirmed', 'certification', 'registration', 'stage1_investor_registration', 'entrepreneur_account_registration', 'fundmanager_account_registration', 'successful_logins', 'download_client_registration_guide', 'download_investor_csv', 'download_transfer_asset_guide', 'download_vct_asset_transfer_form', 'download_single_company_asset_transfer_form', 'download_iht_product_asset_transfer_form', 'download_portfolio_asset_transfer_form', 'download_stock_transfer_form', 'submitted_transfers', 'status_changes_for_asset_transfers', 'transfers_deleted', 'start_adobe_sign', 'completed_adobe_sign', 'external_downloads', 'stage_3_profile_details', 'auth_fail', 'cash_withdrawl', 'cash_deposits'])) {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
+                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,u1.gi_code as usergicode ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " LEFT OUTER JOIN users u1 on u1.ID=a1.item_id ";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
@@ -501,7 +548,7 @@ class ActivityController extends Controller
 
                 } elseif (in_array($activityType, ['new_provider_added'])) {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
+                    $customfieldselect = ($type == 'list') ? " ,a1.item_id as user_id,'' as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email ,u1.gi_code as usergicode ,'' as itemid,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
                     //overide the condition
@@ -517,7 +564,7 @@ class ActivityController extends Controller
 
                 } elseif (in_array($activityType, ['investor_message', 'entrepreneur_message'])) {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug" : '';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,CONCAT(u1.first_name,' ',u1.last_name) as itemname,CONCAT(u2.first_name,' ',u2.last_name) as username ,u2.email as email,u1.gi_code as usergicode ,a1.item_id as itemid ,a1.date_recorded as date_recorded,'' as item_slug" : '';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.item_id INNER JOIN users u2 on u2.id=a1.user_id";
                     $customwhere       = $parentChildFirms;
 
@@ -534,7 +581,7 @@ class ActivityController extends Controller
 
                 } elseif (in_array($activityType, ['proposal_details_update', 'fund_details_update'])) {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug" : '';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,u1.gi_code as usergicode ,a1.item_id as itemid,max(a1.date_recorded) as date_recorded,p1.slug as item_slug" : '';
                     $customjoin        = " INNER JOIN  users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere       = $parentChildFirms;
 
@@ -554,7 +601,7 @@ class ActivityController extends Controller
                     $groupby   = ($type == 'list') ? " group by a1.component,a1.type,date(a1.date_recorded),a1.secondary_item_id,a1.user_id,a1.item_id" : " group by a1.type";
                 } elseif (in_array($activityType, ['invested'])) {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,u1.gi_code as usergicode ,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
                     $customjoin        = " LEFT JOIN users u1 on u1.id=a1.user_id
                              LEFT JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere = $parentChildFirms;
@@ -576,7 +623,7 @@ class ActivityController extends Controller
                     $groupby   = ($type == 'list') ? " " : " group by a1.type";
                 } else {
 
-                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
+                    $customfieldselect = ($type == 'list') ? " ,a1.user_id as user_id,p1.title as itemname,CONCAT(u1.first_name,' ',u1.last_name) as username ,u1.email as email,u1.gi_code as usergicode ,a1.item_id as itemid,a1.date_recorded as date_recorded,p1.slug as item_slug" : '';
                     $customjoin        = " INNER JOIN users u1 on u1.id=a1.user_id INNER JOIN business_listings p1 on p1.id=a1.item_id";
                     $customwhere       = $parentChildFirms;
 
@@ -662,6 +709,8 @@ class ActivityController extends Controller
             } else {
                 $activity = '';
             }
+
+            
             $activityListingData[] = [
                 'logo'           => '',
                 'proposal_funds' => title_case($activityListing->itemname),

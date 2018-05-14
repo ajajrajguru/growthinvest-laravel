@@ -4,9 +4,12 @@ namespace App;
 
 use App\Defaults;
 use Illuminate\Database\Eloquent\Model;
+use Ajency\FileUpload\FileUpload;
 
 class Firm extends Model
 {
+    use FileUpload;
+
     protected $table       = 'firms';
     protected $child_firms = [];
 
@@ -91,6 +94,36 @@ class Firm extends Model
     public function tree()
     {
         return static::with(implode('.', array_fill(0, 10, 'children')))->where('parent_id', '=', '0')->get();
+    }
+
+    public Function getFirmLogo($type){
+        $hasImage = false;
+        $profilePic  = getDefaultImages('firm_logo');
+        $profilePicImages = $this->getImages('firm_logo'); 
+        foreach ($profilePicImages as $key => $image) { 
+            if(isset($image[$type])) {
+                $profilePic = $image[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$profilePic,'hasImage'=>$hasImage];
+    }
+
+    public Function getBackgroundImage($type){
+        $hasImage = false;
+        $backgroundImage  = getDefaultImages('background_image');
+        $backgroundImages = $this->getImages('background_image'); 
+        foreach ($backgroundImages as $key => $image) { 
+            if(isset($image[$type])) {
+                $backgroundImage = $image[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$backgroundImage,'hasImage'=>$hasImage]; 
     }
 
     public function getAllChildFirmsByFirmID($firm_id)

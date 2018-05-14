@@ -6,7 +6,7 @@
   });
 
   $(document).ready(function() {
-    var addrolesTable, api, availablePermissionstable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, updateSerachinput, userAdminTable, usersTable;
+    var addrolesTable, api, availablePermissionstable, businessClientTable, businesslistingsTable, clearInput, column, entrepreneurTable, firmsTable, fundmanagerTable, getUrlVars, initSerachForTable, intermediaryTable, investmentClientTable, updateSerachinput, updateTransferAssetSummaryValues, userAdminTable, usersTable;
     getUrlVars = function() {
       var hash, hashes, i, vars;
       vars = [];
@@ -626,8 +626,558 @@
         }
       });
     });
-    return $('.download-current-business-valuation-csv').click(function() {
+    $('.download-current-business-valuation-csv').click(function() {
       return window.open("/backoffice/current-valuations/export-current-valuations");
+    });
+    investmentClientTable = $('#datatable-investment-client').DataTable({
+      'paging': false,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>',
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/financials/get-investment-client',
+        type: 'post',
+        dataSrc: function(json) {
+          console.log(json);
+          $("#total_invested").html(json.totalInvested);
+          $("#total_accrude").html(json.totalAccrude);
+          $("#total_paid").html(json.totalPaid);
+          $("#total_due").html(json.totalDue);
+          return json.data;
+        },
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_ids = $('input[name="firm_ids"]').val();
+          filters.firm_name = $('select[name="firm_name"]').val();
+          filters.investor_name = $('select[name="investor_name"]').val();
+          filters.client_category = $('select[name="client_category"]').val();
+          filters.investment = $('select[name="investment"]').val();
+          filters.duration_from = $('input[name="duration_from"]').val();
+          filters.duration_to = $('input[name="duration_to"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': '#',
+          "orderable": false
+        }, {
+          'data': 'invested_date'
+        }, {
+          'data': 'investment'
+        }, {
+          'data': 'investor'
+        }, {
+          'data': 'firm'
+        }, {
+          'data': 'invested_amount'
+        }, {
+          'data': 'accrude'
+        }, {
+          'data': 'paid'
+        }, {
+          'data': 'due'
+        }, {
+          'data': 'parent_firm'
+        }, {
+          'data': 'investment_gi_code',
+          "orderable": false
+        }, {
+          'data': 'investor_gi_code',
+          "orderable": false
+        }, {
+          'data': 'firm_gi_code',
+          "orderable": false
+        }, {
+          'data': 'transaction_type',
+          "orderable": false
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ],
+      'columnDefs': [
+        {
+          'targets': 'col-visble',
+          'visible': false
+        }
+      ]
+    });
+    $('body').on('click', '.alter-investmentclient-table', function() {
+      $('.inv-cli-cols').each(function() {
+        var colIndex;
+        colIndex = $(this).val();
+        if ($(this).is(':checked')) {
+          return investmentClientTable.column(colIndex).visible(true);
+        } else {
+          return investmentClientTable.column(colIndex).visible(false);
+        }
+      });
+      $('#columnVisibility').modal('hide');
+    });
+    $('body').on('click', '.apply-investmentclient-filters', function() {
+      var urlParams;
+      urlParams = '';
+      if ($('select[name="firm_name"]').val() !== "") {
+        urlParams += 'firm=' + $('select[name="firm_name"]').val();
+      }
+      if ($('select[name="investor_name"]').val() !== "") {
+        urlParams += '&investor=' + $('select[name="investor_name"]').val();
+      }
+      if ($('select[name="client_category"]').val() !== "") {
+        urlParams += '&client-category=' + $('select[name="client_category"]').val();
+      }
+      if ($('select[name="investment"]').val() !== "") {
+        urlParams += '&investment=' + $('select[name="investment"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      window.history.pushState("", "", "?" + urlParams);
+      investmentClientTable.ajax.reload();
+    });
+    $('body').on('click', '.reset-investmentclient-filters', function() {
+      $('select[name="firm_name"]').val('').trigger('change');
+      $('select[name="investor_name"]').val('').trigger('change');
+      $('select[name="client_category"]').val('');
+      $('select[name="investment"]').val('');
+      $('input[name="duration_from"]').val('');
+      $('input[name="duration_to"]').val('');
+      window.history.pushState("", "", "?");
+      investmentClientTable.ajax.reload();
+    });
+    $('.download-investmentclient-report').click(function() {
+      var type, urlParams;
+      type = $(this).attr('report-type');
+      urlParams = '';
+      if ($('input[name="firm_ids"]').val() !== "") {
+        urlParams += 'firm_ids=' + $('input[name="firm_ids"]').val();
+      }
+      if ($('select[name="firm_name"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm_name"]').val();
+      }
+      if ($('select[name="investor_name"]').val() !== "") {
+        urlParams += '&investor_name=' + $('select[name="investor_name"]').val();
+      }
+      if ($('select[name="client_category"]').val() !== "") {
+        urlParams += '&client_category=' + $('select[name="client_category"]').val();
+      }
+      if ($('select[name="investment"]').val() !== "") {
+        urlParams += '&investment=' + $('select[name="investment"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if ($('input[name="business_ids"]').val() !== "") {
+        urlParams += '&business_ids=' + $('input[name="business_ids"]').val();
+      }
+      if (type === 'csv') {
+        return window.open("/backoffice/financials/export-investmentclient?" + urlParams);
+      } else if (type === 'pdf') {
+        return window.open("/backoffice/financials/investmentclient-pdf?" + urlParams);
+      }
+    });
+    businessClientTable = $('#datatable-business-client').DataTable({
+      'paging': false,
+      'processing': false,
+      'serverSide': true,
+      'bAutoWidth': false,
+      "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>',
+      'aaSorting': [[1, 'asc']],
+      'ajax': {
+        url: '/backoffice/financials/get-business-client',
+        type: 'post',
+        dataSrc: function(json) {
+          console.log(json);
+          $("#total_invested").html(json.totalInvested);
+          $("#total_accrude").html(json.totalAccrude);
+          $("#total_paid").html(json.totalPaid);
+          $("#total_due").html(json.totalDue);
+          return json.data;
+        },
+        data: function(data) {
+          var filters;
+          filters = {};
+          filters.firm_ids = $('input[name="firm_ids"]').val();
+          filters.firm_name = $('select[name="firm_name"]').val();
+          filters.investment = $('select[name="investment"]').val();
+          filters.duration_from = $('input[name="duration_from"]').val();
+          filters.duration_to = $('input[name="duration_to"]').val();
+          data.filters = filters;
+          return data;
+        },
+        error: function() {}
+      },
+      'columns': [
+        {
+          'data': '#',
+          "orderable": false
+        }, {
+          'data': 'investment'
+        }, {
+          'data': 'invested_amount'
+        }, {
+          'data': 'accrude'
+        }, {
+          'data': 'paid'
+        }, {
+          'data': 'due'
+        }, {
+          'data': 'action',
+          "orderable": false
+        }
+      ],
+      'columnDefs': [
+        {
+          'targets': 'col-visble',
+          'visible': false
+        }
+      ]
+    });
+    $('body').on('click', '.alter-businessclient-table', function() {
+      $('.inv-cli-cols').each(function() {
+        var colIndex;
+        colIndex = $(this).val();
+        if ($(this).is(':checked')) {
+          return businessClientTable.column(colIndex).visible(true);
+        } else {
+          return businessClientTable.column(colIndex).visible(false);
+        }
+      });
+      $('#columnVisibility').modal('hide');
+    });
+    $('body').on('click', '.apply-businessclient-filters', function() {
+      var urlParams;
+      urlParams = '';
+      if ($('select[name="firm_name"]').val() !== "") {
+        urlParams += 'firm=' + $('select[name="firm_name"]').val();
+      }
+      if ($('select[name="investment"]').val() !== "") {
+        urlParams += '&investment=' + $('select[name="investment"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      window.history.pushState("", "", "?" + urlParams);
+      businessClientTable.ajax.reload();
+    });
+    $('body').on('click', '.reset-businessclient-filters', function() {
+      $('select[name="firm_name"]').val('').trigger('change');
+      $('select[name="investment"]').val('');
+      $('input[name="duration_from"]').val('');
+      $('input[name="duration_to"]').val('');
+      window.history.pushState("", "", "?");
+      businessClientTable.ajax.reload();
+    });
+    $('.download-businessclient-report').click(function() {
+      var type, urlParams;
+      type = $(this).attr('report-type');
+      urlParams = '';
+      if ($('input[name="firm_ids"]').val() !== "") {
+        urlParams += 'firm_ids=' + $('input[name="firm_ids"]').val();
+      }
+      if ($('input[name="business_ids"]').val() !== "") {
+        urlParams += '&business_ids=' + $('input[name="business_ids"]').val();
+      }
+      if ($('select[name="firm_name"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm_name"]').val();
+      }
+      if ($('select[name="investment"]').val() !== "") {
+        urlParams += '&investment=' + $('select[name="investment"]').val();
+      }
+      if ($('input[name="duration_from"]').val() !== "") {
+        urlParams += '&duration_from=' + $('input[name="duration_from"]').val();
+      }
+      if ($('input[name="duration_to"]').val() !== "") {
+        urlParams += '&duration_to=' + $('input[name="duration_to"]').val();
+      }
+      if (type === 'csv') {
+        return window.open("/backoffice/financials/export-businessclient?" + urlParams);
+      } else if (type === 'pdf') {
+        return window.open("/backoffice/financials/businessclient-pdf?" + urlParams);
+      }
+    });
+    $('body').on('click', 'input[name="ck_business"]', function() {
+      var textVal;
+      textVal = '';
+      $('input[name="ck_business"]:checked').each(function() {
+        return textVal += ',' + $(this).val();
+      });
+      return $('input[name="business_ids"]').val(textVal);
+    });
+    $('body').on('click', '.add-fees', function() {
+      var businessId, investorId, type;
+      investorId = $(this).attr('investor');
+      businessId = $(this).attr('business');
+      type = $(this).attr('type');
+      $("#addFeesModel").find('input[name="investor_id"]').val(investorId);
+      $("#addFeesModel").find('input[name="type"]').val(type);
+      $("#addFeesModel").find('input[name="business_id"]').val(businessId);
+      return $("#addFeesModel").modal('show');
+    });
+    $('body').on('click', '.save-investment-fees', function() {
+      var amount, businessId, comment, investorId, type;
+      investorId = $('input[name="investor_id"]').val();
+      businessId = $('input[name="business_id"]').val();
+      type = $('input[name="type"]').val();
+      amount = $('input[name="amount"]').val();
+      comment = $('textarea[name="comments"]').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/financials/save-commission',
+        data: {
+          'investor_id': investorId,
+          'business_id': businessId,
+          'type': type,
+          'comment': comment,
+          'amount': amount
+        },
+        success: function(data) {
+          if (type === 'wm') {
+            investmentClientTable.ajax.reload();
+          } else {
+            businessClientTable.ajax.reload();
+          }
+          return $("#addFeesModel").modal('hide');
+        }
+      });
+    });
+    $('.transfer-asset').on('change', 'select[name="investor"]', function() {
+      var investorId;
+      investorId = $(this).val();
+      if (investorId !== '') {
+        $('.name_of_client_summary').html($(this).find("option:selected").text());
+        return $.ajax({
+          type: 'post',
+          url: '/backoffice/transfer-asset/investor-assets',
+          data: {
+            'investor_id': investorId
+          },
+          success: function(data) {
+            $('.data_container').html(data.businesslisting_html);
+            $('a[part="part-2"]').removeClass('d-none');
+            return $('[data-toggle="tooltip"]').tooltip();
+          }
+        });
+      } else {
+        $('a[part="part-2"]').addClass('d-none');
+        return $('.data_container').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>');
+      }
+    });
+    $('.transfer-asset').on('click', '.savetransferasset_asset', function() {
+      var $obj, assetid, status;
+      $obj = $(this);
+      assetid = $(this).attr('assetid');
+      status = $(this).closest('td').find('.transferasset_status').val();
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/save-status',
+        data: {
+          'assetid': assetid,
+          'status': status
+        },
+        success: function(data) {
+          if (data.status === true) {
+            $obj.closest('td').find('.transferasset-msg').removeClass('d-none').addClass('text-success').html('<br>Transfer asset status updated Successfully.').delay(5000).fadeOut();
+          }
+          return console.log(data.status);
+        }
+      });
+    });
+    $('.transfer-asset').on('click', '.toggle-download-doc', function() {
+      var assetId;
+      assetId = $(this).attr('assetid');
+      if ($('.download-doc-' + assetId).hasClass('d-none')) {
+        return $('.download-doc-' + assetId).removeClass('d-none');
+      } else {
+        return $('.download-doc-' + assetId).addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('click', '.toggle-download-uploaded-doc', function() {
+      var assetId;
+      assetId = $(this).attr('assetid');
+      if ($('.download-uploaded-doc-' + assetId).hasClass('d-none')) {
+        return $('.download-uploaded-doc-' + assetId).removeClass('d-none');
+      } else {
+        return $('.download-uploaded-doc-' + assetId).addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('click', '.delete_tranferasset', function() {
+      var assetid, rowObj;
+      rowObj = $(this);
+      assetid = $(this).attr('assetid');
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/delete-asset',
+        data: {
+          'assetid': assetid,
+          'status': status
+        },
+        success: function(data) {
+          return rowObj.closest('tr').remove();
+        }
+      });
+    });
+    $('.transfer-asset').on('click', '.display-section', function() {
+      var part, takeNext;
+      part = $(this).attr('part');
+      takeNext = false;
+      if (part === 'part-1') {
+        takeNext = true;
+        $('.progress-indicator').find('li[part="part-2"]').removeClass('active');
+      }
+      if (part === 'part-2') {
+        $('.progress-indicator').find('li[part="part-1"]').addClass('active');
+        $('.progress-indicator').find('li[part="part-3"]').removeClass('active');
+        $('select[name="investor"]').parsley().validate();
+        takeNext = $('select[name="investor"]').parsley().isValid();
+      }
+      if (part === 'part-3') {
+        $('.progress-indicator').find('li[part="part-1"]').addClass('active');
+        $('.progress-indicator').find('li[part="part-2"]').addClass('active');
+        $('select[name="type_of_asset"]').parsley().validate();
+        takeNext = $('select[name="type_of_asset"]').parsley().isValid();
+        if ($('select[name="type_of_asset"]').val() === 'single_company') {
+          $('select[name="companies"]').parsley().validate();
+          takeNext = $('select[name="companies"]').parsley().isValid();
+        } else {
+          $('select[name="providers"]').parsley().validate();
+          takeNext = $('select[name="providers"]').parsley().isValid();
+        }
+      }
+      if (takeNext) {
+        $(this).closest('.part-container').addClass('d-none');
+        $('.' + part).removeClass('d-none');
+        return $('.progress-indicator').find('li[part="' + part + '"]').addClass('active');
+      }
+    });
+    $('.transfer-asset').on('change', 'select[name="type_of_asset"]', function() {
+      var assetType;
+      assetType = $(this).val();
+      if ($(this).val() !== '') {
+        if ($(this).val() === 'single_company') {
+          $('.company-section').removeClass('d-none');
+          $('select[name="companies"]').attr('data-parsley-required', 'true');
+          $('input[name="company[assets_cmpname]"]').attr('data-parsley-required', 'true');
+          $('select[name="providers"]').attr('data-parsley-required', 'false');
+          $('input[name="provider[assets_providername]"]').attr('data-parsley-required', 'false');
+          $('.provider-section').addClass('d-none');
+        } else {
+          $('.company-section').addClass('d-none');
+          $('.provider-section').removeClass('d-none');
+          $('select[name="companies"]').attr('data-parsley-required', 'false');
+          $('input[name="company[assets_cmpname]"]').attr('data-parsley-required', 'false');
+          $('select[name="providers"]').attr('data-parsley-required', 'true');
+          $('input[name="provider[assets_providername]"]').attr('data-parsley-required', 'true');
+          $('select[name="providers"]> option').each(function(id, value) {
+            $(this).removeClass('d-none');
+            if ($(this).attr('type') !== assetType) {
+              return $(this).addClass('d-none');
+            }
+          });
+          if ($(this).val() === 'vct') {
+            $('.vct-section').removeClass('d-none');
+          } else {
+            $('.vct-section').addClass('d-none');
+          }
+        }
+        $('.upload-files-section').removeClass('d-none');
+        return $('.type_of_asset_summary').html($(this).find("option:selected").text());
+      } else {
+        $('.upload-files-section').addClass('d-none');
+        $('.provider-section').addClass('d-none');
+        return $('.company-section').addClass('d-none');
+      }
+    });
+    updateTransferAssetSummaryValues = function(inpObj) {
+      var eleClass, eleValue;
+      eleClass = inpObj.attr('input_name') + '_summary';
+      eleValue = inpObj.val();
+      if (inpObj.is('select')) {
+        eleValue = inpObj.find("option:selected").text();
+      }
+      if (eleClass === 'typeoftransfer_summary') {
+        eleValue = inpObj.attr('display-text');
+      }
+      console.log(eleClass);
+      console.log(eleValue);
+      return $('.' + eleClass).html(eleValue);
+    };
+    $('.transfer-asset').on('change', 'select[name="companies"]', function() {
+      var company_no, email, name, phone;
+      name = $(this).find("option:selected").attr('name');
+      company_no = $(this).find("option:selected").attr('company_no');
+      email = $(this).find("option:selected").attr('email');
+      phone = $(this).find("option:selected").attr('phone');
+      $('.company_name').val(name).attr('readonly', true);
+      $('.company_no').val(company_no).attr('readonly', true);
+      $('.company_email').val(email).attr('readonly', true);
+      $('.company_tel').val(phone).attr('readonly', true);
+      $('.update-summary').each(function(id, value) {
+        return updateTransferAssetSummaryValues($(this));
+      });
+      if ($(this).val() !== '') {
+        $('a[part="part-3"]').removeClass('d-none');
+      } else {
+        $('a[part="part-3"]').addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('change', 'select[name="providers"]', function() {
+      var email, name, phone, product;
+      name = $(this).find("option:selected").attr('name');
+      product = $(this).find("option:selected").attr('product');
+      email = $(this).find("option:selected").attr('email');
+      phone = $(this).find("option:selected").attr('phone');
+      $('.provider_name').val(name).attr('readonly', true);
+      $('.provider_product').val(product).attr('readonly', true);
+      $('.provider_email').val(email).attr('readonly', true);
+      $('.provider_tel').val(phone).attr('readonly', true);
+      $('.update-summary').each(function(id, value) {
+        return updateTransferAssetSummaryValues($(this));
+      });
+      if ($(this).val() !== '') {
+        $('a[part="part-3"]').removeClass('d-none');
+      } else {
+        $('a[part="part-3"]').addClass('d-none');
+      }
+    });
+    $('.transfer-asset').on('change', '.update-summary', function() {
+      return updateTransferAssetSummaryValues($(this));
+    });
+    return $('.transfer-asset').on('click', '.esign_doc', function() {
+      var assetid, assettype, rowObj, typeTxt;
+      rowObj = $(this);
+      assetid = $(this).attr('assetid');
+      assettype = $(this).attr('assettype');
+      typeTxt = $(this).attr('asset-type-text');
+      rowObj.find('.btn-spinner').removeClass('d-none');
+      return $.ajax({
+        type: 'post',
+        url: '/backoffice/transfer-asset/esign-doc',
+        data: {
+          'assetid': assetid,
+          'assettype': assettype
+        },
+        success: function(data) {
+          rowObj.find('.btn-spinner').addClass('d-none');
+          $('#' + assettype + '_msg').html(typeTxt + ' is sent for e-signature on registered email id of the investor').addClass('text-success').delay(5000).fadeOut();
+          return rowObj.prop('disabled', true).attr('data-toggle', 'tooltip').attr('title', typeTxt + ' already sent for signature').attr('data-original-title', typeTxt + ' already sent for signature').tooltip();
+        }
+      });
     });
   });
 

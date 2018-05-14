@@ -4,7 +4,7 @@
     <div class="col-sm-6 border">
         <div class="row bg-primary text-white py-2 px-3">
             <div class="col-9">Activity Group</div>
-            <div class="col-3">Count</div>
+            <div class="col-3 text-center">Count</div>
         </div>
         @php
             $i = 0;
@@ -48,7 +48,7 @@
     <div class="col-sm-6 border">
         <div class="row bg-primary text-white py-2 px-3">
             <div class="col-9">Activity Group</div>
-            <div class="col-3">Count</div>
+            <div class="col-3 text-center">Count</div>
         </div>
         @php
             $i = 1;

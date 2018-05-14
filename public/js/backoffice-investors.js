@@ -14,6 +14,7 @@
         data: function(data) {
           var filters;
           filters = {};
+          filters.firm_ids = $('input[name="firm_ids"]').val();
           filters.firm_name = $('select[name="firm_name"]').val();
           filters.investor_name = $('select[name="investor_name"]').val();
           filters.client_category = $('select[name="client_category"]').val();
@@ -39,8 +40,7 @@
           'data': 'parent_firm',
           "orderable": false
         }, {
-          'data': 'registered_date',
-          "orderable": false
+          'data': 'registered_date'
         }, {
           'data': 'action',
           "orderable": false
@@ -58,7 +58,8 @@
       investorTable.ajax.reload();
     });
     $('.download-investor-csv').click(function() {
-      var client_category, client_certification, firm_name, idverified, investor_name, investor_nominee, userIds;
+      var client_category, client_certification, firm_ids, firm_name, idverified, investor_name, investor_nominee, userIds;
+      firm_ids = $('input[name="firm_ids"]').val();
       firm_name = $('select[name="firm_name"]').val();
       investor_name = $('select[name="investor_name"]').val();
       client_category = $('select[name="client_category"]').val();
@@ -71,7 +72,7 @@
           return userIds += $(this).val() + ',';
         }
       });
-      return window.open("/backoffice/investor/export-investors?firm_name=" + firm_name + "&investor_name=" + investor_name + "&client_category=" + client_category + "&client_certification=" + client_certification + "&investor_nominee=" + investor_nominee + "&idverified=" + idverified + "&user_ids=" + userIds);
+      return window.open("/backoffice/investor/export-investors?firm_ids=" + firm_ids + "&firm_name=" + firm_name + "&investor_name=" + investor_name + "&client_category=" + client_category + "&client_certification=" + client_certification + "&investor_nominee=" + investor_nominee + "&idverified=" + idverified + "&user_ids=" + userIds);
     });
     $('.investorSearchinput').change(function() {
       var urlParams;
@@ -734,6 +735,8 @@
           filters.sector = $('select[name="sector"]').val();
           filters.type = $('select[name="type"]').val();
           filters.manager = $('select[name="manager"]').val();
+          filters.investor = $('select[name="investor"]').val();
+          filters.firm = $('select[name="firm"]').val();
           status = '';
           $('input[name="tax_status[]"]').each(function() {
             if ($(this).is(':checked')) {
@@ -810,6 +813,12 @@
       if ($('select[name="manager"]').val() !== "") {
         urlParams += '&manager=' + $('select[name="manager"]').val();
       }
+      if ($('select[name="investor"]').val() !== "") {
+        urlParams += '&investor=' + $('select[name="investor"]').val();
+      }
+      if ($('select[name="firm"]').val() !== "") {
+        urlParams += '&firm=' + $('select[name="firm"]').val();
+      }
       status = '';
       $('input[name="tax_status[]"]').each(function() {
         if ($(this).is(':checked')) {
@@ -827,6 +836,8 @@
       $('select[name="sector"]').val('');
       $('select[name="type"]').val('');
       $('select[name="manager"]').val('');
+      $('select[name="investor"]').val('');
+      $('select[name="firm"]').val('');
       $('input[name="tax_status[]"]').prop('checked', false);
       window.history.pushState("", "", "?");
       investorInvestTable.ajax.reload();

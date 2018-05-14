@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Firm;
 use App\FirmData;
+use App\BusinessListing;
+
+use App\User;
 use Illuminate\Http\Request;
 use Session;
+use Spatie\Permission\Models\Role;
 
 class FirmController extends Controller
 {
@@ -79,6 +83,14 @@ class FirmController extends Controller
         $data['firm_types']     = $firm->getFirmTypes();
         $data['mode']           = 'edit';
         $data['invite_content'] = $invite_content;
+
+        $profilePic      = $firm->getFirmLogo('medium_1x1');
+        $backgroundImage = $firm->getBackgroundImage('medium_2_58x1');
+
+        $data['firmLogo']           = $profilePic['url'];
+        $data['hasFirmLogo']        = $profilePic['hasImage'];
+        $data['backgroundImage']    = $backgroundImage['url'];
+        $data['hasBackgroundImage'] = $backgroundImage['hasImage'];
 
         return view('backoffice.firm.add-edit-firm')->with($data);
     }
@@ -206,6 +218,13 @@ class FirmController extends Controller
         // print_r($invite_content->getAttribute('data_value'));
         // die();
 
+        $profilePic      = $firm->getFirmLogo('medium_1x1');
+        $backgroundImage = $firm->getBackgroundImage('medium_2_58x1');
+
+        $data['firmLogo']           = $profilePic['url'];
+        $data['hasFirmLogo']        = $profilePic['hasImage'];
+        $data['backgroundImage']    = $backgroundImage['url'];
+        $data['hasBackgroundImage'] = $backgroundImage['hasImage'];
         $data['countyList']         = getCounty();
         $data['countryList']        = getCountry();
         $data['network_firms']      = $network_firm->getAllParentFirms();
@@ -214,6 +233,7 @@ class FirmController extends Controller
         $data['additional_details'] = (!empty($additional_info)) ? $additional_info->data_value : [];
         $data['invite_content']     = (!empty($invite_content)) ? $invite_content->data_value : [];
         $data['mode']               = 'view';
+        $data['firmActiveMenu']     = 'firm-details';
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
@@ -279,6 +299,209 @@ class FirmController extends Controller
 
         Session::flash('success_message', 'Firm Invite content saved successfully.');
         return redirect()->back()->withInput();
+
+    }
+
+    public function getFirmUsers($giCode)
+    {
+        $firm       = Firm::where('gi_code', $giCode)->first();
+        $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray();
+
+        if (empty($firm)) {
+            abort(404);
+        }
+        $firmIds   = $childFirms;
+        $firmIds[] = $firm->id;
+        $cond      = ['firm_id' => $firmIds];
+        $user      = new User;
+        $users     = $user->allUsers([], $cond);
+
+        $data['roles']          = Role::where('type', 'backoffice')->pluck('display_name');
+        $data['users']          = $users;
+        $data['firm']           = $firm;
+        $data['firmActiveMenu'] = 'firm-users';
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'View Firm Users'];
+
+        $data['breadcrumbs'] = $breadcrumbs;
+
+        return view('backoffice.firm.firm-users')->with($data);
+    }
+
+    public function firmInvestors(Request $request, $giCode)
+    {
+        $firm       = Firm::where('gi_code', $giCode)->first();
+        $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray();
+
+        if (empty($firm)) {
+            abort(404);
+        }
+        $firmIds    = $childFirms;
+        $firmIds[]  = $firm->id;
+        $inCond     = ['firm_id' => $firmIds];
+        $firmInCond = ['id' => $firmIds];
+        $user       = new User;
+
+        $investors = $user->getInvestorUsers([], $inCond);
+
+        $requestFilters = $request->all();
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc'], $firmInCond);
+        $firms     = $firmsList['list'];
+
+        $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
+        $clientCategories     = $clientCategoriesList['list'];
+
+        $certificationTypes = certificationTypes();
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+
+        $data['certificationTypes'] = $certificationTypes;
+        $data['clientCategories']   = $clientCategories;
+        $data['requestFilters']     = $requestFilters;
+        $data['firm']               = $firm;
+        $data['firms']              = $firms;
+        $data['firm_ids']           = $firmIds;
+        $data['investors']          = $investors;
+        $data['breadcrumbs']        = $breadcrumbs;
+        $data['pageTitle']          = 'Investors';
+        $data['firmActiveMenu']     = 'investors';
+
+        return view('backoffice.firm.firm-investors')->with($data);
+    }
+
+    public function exportFirmUsers($giCode)
+    {
+        $firm       = Firm::where('gi_code', $giCode)->first();
+        $childFirms = Firm::where('parent_id', $firm->id)->pluck('id')->toArray();
+
+        if (empty($firm)) {
+            abort(404);
+        }
+        $firmIds   = $childFirms;
+        $firmIds[] = $firm->id;
+        $cond      = ['firm_id' => $firmIds];
+        $userObj   = new User;
+        $users     = $userObj->allUsers([], $cond);
+
+        $fileName = 'approved_intermediary';
+
+        $header = ['Platform GI Code', 'Name', 'Email', 'Role', 'Firm', 'Telephone No'];
+
+        $userData = [];
+
+        foreach ($users as $user) {
+            $userData[] = [$user->gi_code,
+                title_case($user->first_name . ' ' . $user->last_name),
+                $user->email,
+                title_case($user->roles()->pluck('display_name')->implode(' ')),
+                (!empty($user->firm)) ? $user->firm->name : '',
+                $user->telephone_no,
+            ];
+        }
+
+        generateCSV($header, $userData, $fileName);
+
+        return true;
+
+    }
+
+    public function firmInvestmentClients(Request $request, $firmGiCode = '')
+    {
+        $requestFilters = $request->all();
+        $firm           = Firm::where('gi_code', $firmGiCode)->first();
+        $firmCond       = [];
+
+        if (empty($firm)) {
+            abort(404);
+        }
+
+        $firms = Firm::where('parent_id', $firm->id)->get();
+        $firms->push($firm);
+        $firmIds  = $firms->pluck('id')->toArray();
+        $firmCond = ['firm_id' => $firm->id];
+
+        $user                 = new User;
+        $investors            = $user->getInvestorUsers([],['firm_id' => $firmIds]);
+        $clientCategoriesList = getModelList('App\Defaults', ['type' => 'certification'], 0, 0, ['name' => 'asc']);
+        $clientCategories     = $clientCategoriesList['list'];
+
+        $investmentList = BusinessListing::select('business_listings.*')->join('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['funded']);
+        })->leftjoin('users', function ($join) {
+            $join->on('business_listings.owner_id', 'users.id');
+        })->whereIn('users.firm_id', $firmIds)->where('business_listings.business_status', 'listed')->groupBy('business_listings.id')->get();
+
+        $breadcrumbs   = [];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Investment Clients'];
+
+        $data['requestFilters']   = $requestFilters;
+        $data['firm']            = $firm;
+        $data['firms']            = $firms;
+        $data['firm_ids']         = $firmIds;
+        $data['investors']        = $investors;
+        $data['clientCategories'] = $clientCategories;
+        $data['investmentList']   = $investmentList;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Investment Clients';
+        $data['firmActiveMenu']   = 'firm-investment-clients';
+
+        return view('backoffice.firm.investment-clients')->with($data);
+
+    }
+
+    public function firmBusinessClients(Request $request, $firmGiCode = '')
+    {
+        $requestFilters = $request->all();
+        $firm           = Firm::where('gi_code', $firmGiCode)->first();
+        $firmCond       = [];
+
+        if (empty($firm)) {
+            abort(404);
+        }
+
+        $firms = Firm::where('parent_id', $firm->id)->get();
+        $firms->push($firm);
+        $firmIds  = $firms->pluck('id')->toArray();
+        $firmCond = ['firm_id' => $firm->id];
+
+       
+
+        $investmentList = BusinessListing::select('business_listings.*')->join('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['funded']);
+        })->leftjoin('users', function ($join) {
+            $join->on('business_listings.owner_id', 'users.id');
+        })->whereIn('users.firm_id', $firmIds)->where('business_listings.business_status', 'listed')->groupBy('business_listings.id')->get();
+
+        $breadcrumbs   = [];
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+        $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Business Clients'];
+
+        $data['requestFilters']   = $requestFilters;
+        $data['firm']            = $firm;
+        $data['firms']            = $firms;
+        $data['firm_ids']         = $firmIds;
+        $data['investmentList']   = $investmentList;
+        $data['breadcrumbs']      = $breadcrumbs;
+        $data['pageTitle']        = 'Business Clients';
+        $data['firmActiveMenu']   = 'firm-business-clients';
+
+        return view('backoffice.firm.business-clients')->with($data);
 
     }
 

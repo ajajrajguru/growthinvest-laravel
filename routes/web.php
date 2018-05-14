@@ -19,6 +19,15 @@ Route::get('investment-opportunities/{type}', 'BusinessListingController@investm
 Route::post('investment-opportunities/filter-listings', 'BusinessListingController@getFilteredInvestmentOpportunity');
 
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('download-file/{id}', 'UserController@downloadS3File');
+    Route::post('upload-files', 'UserController@uploadTempFiles');
+    Route::post('upload-cropper-image', 'UserController@uploadTempImage');
+    Route::post('crop-image', 'UserController@uploadCroppedImage');
+    Route::post('delete-image', 'UserController@deleteImage');
+});
+
+// backoffice
 
 Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffice'], function () {
     //firms
@@ -27,8 +36,15 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('firms/save-firm-invite', 'FirmController@saveFirmInvite');
     Route::get('firms/{giCode}', 'FirmController@show');
     Route::get('firm/export-firm', 'FirmController@exportFirms');
+    Route::get('firm/{giCode}/users', 'FirmController@getFirmUsers');
+    Route::get('firm/{giCode}/intermediary-registration', 'UserController@addUserStepOne');
+    Route::get('firm/{giCode}/export-users', 'FirmController@exportFirmUsers');
+    Route::get('firm/{giCode}/investors', 'FirmController@firmInvestors');
+    Route::get('firm/{giCode}/investor/registration', 'InvestorController@registration');
+    Route::get('firm/{giCode}/investment-clients', 'FirmController@firmInvestmentClients');
+    Route::get('firm/{giCode}/business-clients', 'FirmController@firmBusinessClients');
     Route::resource('firm', 'FirmController');
-
+ 
     //users
     Route::get('user/add/intermediary-registration', 'UserController@addUserStepOne');
     Route::get('user/{giCode}/intermediary-registration', 'UserController@userStepOneData');
@@ -53,13 +69,15 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('activity/summary', 'ActivityController@activitySummary');
     Route::post('activity/activity-summary', 'ActivityController@getActivitySummary');
 
+    Route::get('investment-offers', 'InvestorController@investmentOffers');
+
 
     //investors
     Route::get('investor/export-investors', 'InvestorController@exportInvestors');
     Route::get('investor/export-investors-activity', 'ActivityController@exportInvestorsActivity');
     Route::get('investor/investors-activity-pdf', 'ActivityController@generateInvestorsActivityPdf');
     Route::get('investor/registration', 'InvestorController@registration');
-    Route::get('investor/download-certification/{fileid}', 'InvestorController@downloadCertification');
+    Route::get('investor/download-certification/{gi_code}', 'InvestorController@downloadCertification');
     Route::get('investor/{giCode}/registration', 'InvestorController@editRegistration');
     Route::get('investor/{giCode}/client-categorisation', 'InvestorController@clientCategorisation');
     Route::post('investor/{giCode}/save-client-categorisation', 'InvestorController@saveClientCategorisation');
@@ -100,6 +118,38 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::get('firm-invite/{giCode}/{type}', 'FirmController@getInvite');
     Route::get('dashboard/', 'UserController@showDashboard');
 
+    // financials
+    Route::get('financials/investment-clients', 'BusinessListingController@investmentClients');
+    Route::post('financials/get-investment-client', 'BusinessListingController@getInvestmentClients');
+    Route::get('financials/export-investmentclient', 'BusinessListingController@exportInvestmentClients');
+    Route::get('financials/investmentclient-pdf', 'BusinessListingController@generateInvestmentClientsPdf');
+    Route::get('financials/business-clients', 'BusinessListingController@businessClients');
+    Route::post('financials/get-business-client', 'BusinessListingController@getBusinessClients');
+    Route::get('financials/export-businessclient', 'BusinessListingController@exportBusinessClients');
+    Route::get('financials/businessclient-pdf', 'BusinessListingController@generateBusinessClientsPdf');
+    Route::post('financials/save-commission', 'BusinessListingController@saveCommission');
+
+    // portfolio
+    Route::get('portfolio', 'PortfolioController@index');
+    Route::post('portfolio/get-portfolio-data', 'PortfolioController@getPortfolioData');
+    Route::get('portfolio/export-report', 'PortfolioController@exportPortfolioReportXlsx');
+
+
+
+    // transfer-asset 
+    Route::get('transfer-asset', 'TransferAssetController@transferAsset');
+    Route::get('transfer-asset/offline', 'TransferAssetController@offlineTransferAsset');
+    Route::get('transfer-asset/online', 'TransferAssetController@onlineTransferAsset');
+    Route::get('transfer-asset/online/{id}', 'TransferAssetController@onlineTransferAssetSummary');
+    Route::post('transfer-asset/save-online-asset', 'TransferAssetController@saveOnlineTransferAsset');
+    Route::post('transfer-asset/investor-assets', 'TransferAssetController@getInvestorAssets');
+    Route::post('transfer-asset/save-status', 'TransferAssetController@saveAssetStatus');
+    Route::post('transfer-asset/delete-asset', 'TransferAssetController@deleteAsset');
+    Route::get('transfer-asset/{id}/download/{type}', 'TransferAssetController@downloadTransferAsset');
+    Route::post('transfer-asset/esign-doc', 'TransferAssetController@adobeSignataureTransferAsset');
+
+
+
     /*Coming soon routes on dashboard */
     Route::get('dashboard', ['type' => 'home', 'uses' => 'UserController@showDashboard']);
     Route::get('dashboard/portfolio', ['type' => 'portfolio', 'uses' => 'UserController@showDashboard']);
@@ -120,6 +170,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
 
 
 
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'], function () {
@@ -131,14 +182,12 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 });
 
 Route::post('investor/adobe/signed-doc-callback', 'InvestorController@updateInvestorNomineePdf');
+Route::post('transfer-asset/adobe/signed-doc-callback', 'TransferAssetController@updateTransferAssetDockey');
 Route::post('onfido-webhook', 'InvestorController@onfidoWebhook');
 
 Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController');
 Route::resource('permissions', 'PermissionController');
-
-Route::group(['middleware' => ['auth']], function () {
-});
 
 
 //migration

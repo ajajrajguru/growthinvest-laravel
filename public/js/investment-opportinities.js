@@ -8,106 +8,177 @@
   $(document).ready(function() {
     var getInvestmentOpportunity;
     getInvestmentOpportunity = function() {
-      var aic_sector, business_stage, due_deligence, filters, fund_investmentobjective, fund_status, fund_type, funded_per, investment_sought, sectors, status, vct_investmentstrategy, vct_offeringtype, vct_type;
+      var aic_sector, aic_sector_slug, business_stage, business_stage_slug, due_deligence, due_deligence_slug, filters, fund_investmentobjective, fund_investmentobjective_slug, fund_status, fund_status_slug, fund_type, fund_type_slug, funded_per, funded_per_slug, investment_sought, investment_sought_slug, search_title, sectors, sectors_slug, status, status_slug, urlParams, vct_investmentstrategy, vct_investmentstrategy_slug, vct_offeringtype, vct_offeringtype_slug, vct_type, vct_type_slug;
       $('.investment-loader').addClass('d-flex').removeClass('d-none');
       $('.no-data-conatiner').removeClass('d-flex').addClass('d-none');
       $('.business-listing').html('');
       $('.platform-listing').html('');
+      urlParams = '';
       filters = {};
       filters.business_listing_type = $('input[name="business_listing_type"]').val();
       filters.order_by = $('select[name="order_by"]').val();
       status = '';
+      status_slug = '';
       $('input[name="tax_status[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return status += $(this).val() + ',';
+          status += $(this).val() + ',';
+          return status_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.tax_status = status;
+      if (status_slug !== '') {
+        urlParams += '&investment-type=' + status_slug;
+      }
       sectors = '';
+      sectors_slug = '';
       $('input[name="business_sector[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return sectors += $(this).val() + ',';
+          sectors += $(this).val() + ',';
+          return sectors_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.sectors = sectors;
+      if (sectors_slug !== '') {
+        urlParams += '&business-sector=' + sectors_slug;
+      }
       due_deligence = '';
+      due_deligence_slug = '';
       $('input[name="due_deligence[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return due_deligence += $(this).val() + ',';
+          due_deligence += $(this).val() + ',';
+          return due_deligence_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.due_deligence = due_deligence;
+      if (due_deligence_slug !== '') {
+        urlParams += '&due-diligence=' + due_deligence_slug;
+      }
       business_stage = '';
+      business_stage_slug = '';
       $('input[name="business_stage[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return business_stage += $(this).val() + ',';
+          business_stage += $(this).val() + ',';
+          return business_stage_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.business_stage = business_stage;
+      if (business_stage_slug !== '') {
+        urlParams += '&business-stage=' + business_stage_slug;
+      }
       funded_per = '';
+      funded_per_slug = '';
       $('input[name="funded_per[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return funded_per += $(this).val() + ',';
+          funded_per += $(this).val() + ',';
+          return funded_per_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.funded_per = funded_per;
+      if (funded_per_slug !== '') {
+        urlParams += '&funded=' + funded_per_slug;
+      }
       investment_sought = '';
+      investment_sought_slug = '';
       $('input[name="investment_sought[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return investment_sought += $(this).val() + ',';
+          investment_sought += $(this).val() + ',';
+          return investment_sought_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.investment_sought = investment_sought;
-      filters.search_title = $('input[name="search_title"]').val();
+      if (investment_sought_slug !== '') {
+        urlParams += '&investment-sought=' + investment_sought_slug;
+      }
+      search_title = $('input[name="search_title"]').val();
+      filters.search_title = search_title;
+      if (search_title !== '') {
+        urlParams += '&title=' + search_title;
+      }
       fund_type = '';
+      fund_type_slug = '';
       $('input[name="fund_type[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return fund_type += $(this).val() + ',';
+          fund_type += $(this).val() + ',';
+          return fund_type_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.fund_type = fund_type;
+      if (fund_type_slug !== '') {
+        urlParams += '&fund-regulatory-status=' + fund_type_slug;
+      }
       fund_status = '';
+      fund_status_slug = '';
       $('input[name="fund_status[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return fund_status += $(this).val() + ',';
+          fund_status += $(this).val() + ',';
+          return fund_status_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.fund_status = fund_status;
+      if (fund_status_slug !== '') {
+        urlParams += '&fund-status=' + fund_status_slug;
+      }
       fund_investmentobjective = '';
+      fund_investmentobjective_slug = '';
       $('input[name="fund_investmentobjective[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return fund_investmentobjective += $(this).val() + ',';
+          fund_investmentobjective += $(this).val() + ',';
+          return fund_investmentobjective_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.fund_investmentobjective = fund_investmentobjective;
+      if (fund_investmentobjective_slug !== '') {
+        urlParams += '&investment-focus=' + fund_investmentobjective_slug;
+      }
       vct_type = '';
+      vct_type_slug = '';
       $('input[name="vct_type[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return vct_type += $(this).val() + ',';
+          vct_type += $(this).val() + ',';
+          return vct_type_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.vct_type = vct_type;
+      if (vct_type_slug !== '') {
+        urlParams += '&vct-type=' + vct_type_slug;
+      }
       vct_investmentstrategy = '';
+      vct_investmentstrategy_slug = '';
       $('input[name="vct_investmentstrategy[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return vct_investmentstrategy += $(this).val() + ',';
+          vct_investmentstrategy += $(this).val() + ',';
+          return vct_investmentstrategy_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.vct_investmentstrategy = vct_investmentstrategy;
+      if (vct_investmentstrategy_slug !== '') {
+        urlParams += '&vct-investment-strategy=' + vct_investmentstrategy_slug;
+      }
       vct_offeringtype = '';
+      vct_offeringtype_slug = '';
       $('input[name="vct_offeringtype[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return vct_offeringtype += $(this).val() + ',';
+          vct_offeringtype += $(this).val() + ',';
+          return vct_offeringtype_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.vct_offeringtype = vct_offeringtype;
+      if (vct_offeringtype_slug !== '') {
+        urlParams += '&vct-offering-type=' + vct_offeringtype_slug;
+      }
       aic_sector = '';
+      aic_sector_slug = '';
       $('input[name="aic_sector[]"]').each(function() {
         if ($(this).is(':checked')) {
-          return aic_sector += $(this).val() + ',';
+          aic_sector += $(this).val() + ',';
+          return aic_sector_slug += $(this).attr('slug-val') + ',';
         }
       });
       filters.aic_sector = aic_sector;
+      if (aic_sector_slug !== '') {
+        urlParams += '&aic-sector=' + aic_sector_slug;
+      }
+      window.history.pushState("", "", "?" + urlParams);
       return $.ajax({
         type: 'post',
         url: '/investment-opportunities/filter-listings',

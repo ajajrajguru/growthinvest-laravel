@@ -147,7 +147,7 @@
 
 			<div class="d-sm-flex justify-content-sm-between mb-3">
 				<div class="input-group mt-3 mt-sm-0 mb-3 mb-sm-0 mr-sm-5 media-body">
-					<input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" name="search_title" aria-describedby="basic-addon2">
+					<input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" name="search_title" aria-describedby="basic-addon2" value="{{ (isset($requestFilters['title']) && $requestFilters['title'] != '')? $requestFilters['title'] : '' }}">
 				  	<div class="input-group-append">
 				    	<button class="btn btn-outline-secondary search-by-title" type="button"><i class="fa fa-search"></i></button>
 				  	</div>

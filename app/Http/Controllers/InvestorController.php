@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
-use App\ActivityGroup;
 use App\AdobeSignature;
+use App\BusinessInvestment;
 use App\BusinessListing;
 use App\Comment;
 use App\Defaults;
-use App\DocumentFile;
 use App\Firm;
 use App\InvestorPdfHtml;
 use App\NomineeApplication;
@@ -17,10 +15,12 @@ use App\UserData;
 use App\UserHasCertification;
 use Auth;
 use DB;
+use File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 //Importing laravel-permission models
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Session;
 use Spipu\Html2Pdf\Html2Pdf;
 use View;
@@ -36,7 +36,7 @@ class InvestorController extends Controller
      */
     public function index(Request $request)
     {
-       
+
         $user      = new User;
         $investors = $user->getInvestorUsers();
 
@@ -59,6 +59,7 @@ class InvestorController extends Controller
         $data['clientCategories']   = $clientCategories;
         $data['requestFilters']     = $requestFilters;
         $data['firms']              = $firms;
+        $data['firm_ids']           = [];
         $data['investors']          = $investors;
         $data['breadcrumbs']        = $breadcrumbs;
         $data['pageTitle']          = 'Investors';
@@ -81,6 +82,7 @@ class InvestorController extends Controller
             '1' => 'users.first_name',
             '2' => 'user_has_certifications.created_at',
             '3' => 'user_has_certifications.active',
+            '5' => 'users.created_at',
         );
 
         $columnName = 'users.first_name';
@@ -132,12 +134,14 @@ class InvestorController extends Controller
 
             $active = (!empty($userCertification) && $userCertification->active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>';
 
+            $firmLink = (!empty($investor->firm)) ? '<a href="' . url('backoffice/firms/' . $investor->firm->gi_code) . '" target="_blank">' . title_case($investor->firm->name) . '</a>' : '';
+
             $investorsData[] = [
                 '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investor->id . '" class="custom-control-input ck_investor" name="ck_investor" id="ch' . $investor->id . '"><label class="custom-control-label" for="ch' . $investor->id . '"></label></div> ',
                 'name'                  => $nameHtml,
                 'certification_date'    => $certificationDate,
                 'client_categorisation' => $active,
-                'parent_firm'           => (!empty($investor->firm)) ? $investor->firm->name : '',
+                'parent_firm'           => $firmLink,
                 'registered_date'       => date('d/m/Y', strtotime($investor->created_at)),
                 'action'                => $actionHtml,
 
@@ -170,8 +174,14 @@ class InvestorController extends Controller
         })->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
 
         $investorQuery->whereIn('roles.name', ['investor', 'yet_to_be_approved_investor']);
+
         if (isset($filters['firm_name']) && $filters['firm_name'] != "") {
             $investorQuery->where('users.firm_id', $filters['firm_name']);
+        }
+
+        if (isset($filters['firm_ids']) && $filters['firm_ids'] != "") {
+            $firmIds = explode(',', $filters['firm_ids']);
+            $investorQuery->whereIn('users.firm_id', $firmIds);
         }
 
         if (isset($filters['user_ids']) && $filters['user_ids'] != "") {
@@ -186,7 +196,7 @@ class InvestorController extends Controller
         }
 
         if (isset($filters['client_category']) && $filters['client_category'] != "") {
-            $investorQuery->where('user_has_certifications.last_active','1')->where('user_has_certifications.certification_default_id', $filters['client_category']);
+            $investorQuery->where('user_has_certifications.last_active', '1')->where('user_has_certifications.certification_default_id', $filters['client_category']);
 
             // $investorQuery->whereIn('users.id', function ($query) use ($filters) {
             //     $query->select('user_id')
@@ -317,18 +327,35 @@ class InvestorController extends Controller
 
     }
 
-    public function registration()
+    public function registration($firmGiCode = '')
     {
 
         $investor  = new User;
-        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firmCond  = ($firmGiCode != '') ? ['gi_code' => $firmGiCode] : [];
+        $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
-        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
-        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+        $breadcrumbs = [];
+        if ($firmGiCode == '') {
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Dashboard"];
+            $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Add Clients'];
+            $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Investor'];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Registration'];
+
+            $data['is_firm_investor'] = 'no';
+            $viewFile                 = 'backoffice.clients.registration';
+        } else {
+            $firm          = Firm::where('gi_code', $firmGiCode)->first();
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+            $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+            $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+            $data['firm']             = $firm;
+            $data['is_firm_investor'] = 'yes';
+            $data['firmActiveMenu']   = 'investors';
+            $viewFile                 = 'backoffice.firm.investor-registration';
+        }
 
         $data['countyList']              = getCounty();
         $data['countryList']             = getCountry();
@@ -340,7 +367,7 @@ class InvestorController extends Controller
         $data['mode']                    = 'edit';
         $data['activeMenu']              = 'add_clients';
 
-        return view('backoffice.clients.registration')->with($data);
+        return view($viewFile)->with($data);
 
     }
 
@@ -646,7 +673,6 @@ class InvestorController extends Controller
 
         $investor->current_certification = $hasCertification->certification_default_id;
         $investor->save();
-        
 
         if (!$investor->hasRole('investor')) {
             $investor->removeRole('yet_to_be_approved_investor');
@@ -680,9 +706,8 @@ class InvestorController extends Controller
             $registeredBy = 'N/A';
         }
 
-        $certificationOf = (Auth::user()->id == $investor->id) ? 'Self' :$investor->displayName();
-        $certificationBy = (Auth::user()->id == $investor->id) ? 'Self' :Auth::user()->displayName();
-
+        $certificationOf = (Auth::user()->id == $investor->id) ? 'Self' : $investor->displayName();
+        $certificationBy = (Auth::user()->id == $investor->id) ? 'Self' : Auth::user()->displayName();
 
         $certification = $hasCertification->certification()->name;
 
@@ -724,13 +749,30 @@ class InvestorController extends Controller
         $data['template_data'] = ['name' => $investor->displayName(), 'firmName' => $firmName, 'invHasCertification' => $invHasCertification];
 
         if ($fileId) {
-            $filename        = DocumentFile::find($fileId)->file_url;
-            $destination_dir = public_path() . '/userdocs/';
+            // $filename        = DocumentFile::find($fileId)->file_url;
+            // $destination_dir = public_path() . '/userdocs/';
 
-            $filePath       = $destination_dir . '/' . $filename;
-            $ext            = pathinfo($filePath, PATHINFO_EXTENSION);
-            $mimeType       = getFileMimeType($ext);
-            $file           = \File::get($filePath);
+            // $filePath       = $destination_dir . '/' . $filename;
+            // $ext            = pathinfo($filePath, PATHINFO_EXTENSION);
+            // $mimeType       = getFileMimeType($ext);
+            // $file           = \File::get($filePath);
+
+            $certification = $investor->getFiles('certification');
+            $filePath      = '';
+            $filename      = '';
+            $fileid        = '';
+            foreach ($certification as $key => $file) {
+                $fileid   = $file['id'];
+                $filePath = $file['url'];
+                $filename = $file['name'];
+                $hasImage = true;
+
+            }
+
+            $ext      = pathinfo($filePath, PATHINFO_EXTENSION);
+            $mimeType = getFileMimeType($ext);
+            $file     = $investor->getSingleFile($fileid);
+
             $data['attach'] = [['file' => base64_encode($file), 'as' => $filename, 'mime' => $mimeType]];
         }
         sendEmail($templateForinvestor, $data);
@@ -914,38 +956,78 @@ class InvestorController extends Controller
         $pattern = '/&([#0-9A-Za-z]+);/';
         $pdfName = preg_replace($pattern, '', $pdfName);
 
-        $docmentFile                = new DocumentFile;
-        $docmentFile->name          = $pdfName . '.pdf';
-        $docmentFile->file_url      = $filename . '.pdf';
-        $docmentFile->uploaded_by   = Auth::user()->id;
-        $docmentFile->document_type = "userdocs";
-        $docmentFile->object_id     = $investor->id;
-        $docmentFile->object_type   = 'App\User';
-        $docmentFile->folder_id     = 1;
-        $docmentFile->save();
+        // $docmentFile                = new DocumentFile;
+        // $docmentFile->name          = $pdfName . '.pdf';
+        // $docmentFile->file_url      = $filename . '.pdf';
+        // $docmentFile->uploaded_by   = Auth::user()->id;
+        // $docmentFile->document_type = "userdocs";
+        // $docmentFile->object_id     = $investor->id;
+        // $docmentFile->object_type   = 'App\User';
+        // $docmentFile->folder_id     = 1;
+        // $docmentFile->save();
 
-        return $docmentFile->id;
+        // return $docmentFile->id;
+
+        $uploadedFile = new UploadedFile($outputLink, $filename . '.pdf');
+
+        $id = $investor->uploadFile($uploadedFile, false, $pdfName . '.pdf');
+        $investor->remapFiles([$id], 'certification');
+
+        //delete temp file
+        if (File::exists($outputLink)) {
+            File::delete($outputLink);
+        }
+
+        return $id;
 
     }
 
-    public function downloadCertification($fileId)
+    // public function downloadCertification($fileId)
+    // {
+
+    //     $docmentFile = DocumentFile::find($fileId);
+    //     if (empty($docmentFile)) {
+    //         abort(404);
+    //     }
+
+    //     $filePath = public_path() . '/userdocs/' . $docmentFile->file_url;
+    //     $filename = $docmentFile->name;
+    //     header('Content-type: text/csv');
+    //     header('Content-Length: ' . filesize($filePath));
+    //     header('Content-Disposition: attachment; filename=' . $filename);
+    //     while (ob_get_level()) {
+    //         ob_end_clean();
+    //     }
+    //     readfile($filePath);
+
+    //     exit();
+    // }
+
+    public function downloadCertification($giCode)
     {
-        $docmentFile = DocumentFile::find($fileId);
-        if (empty($docmentFile)) {
-            abort(404);
+
+        $investor      = User::where('gi_code', $giCode)->first();
+        $certification = $investor->getFiles('certification');
+        $filePath      = '';
+        $filename      = '';
+        $fileid        = '';
+        foreach ($certification as $key => $file) {
+            $fileid   = $file['id'];
+            $filePath = $file['url'];
+            $filename = $file['name'];
+            $hasImage = true;
+
         }
 
-        $filePath = public_path() . '/userdocs/' . $docmentFile->file_url;
-        $filename = $docmentFile->name;
-        header('Content-type: text/csv');
-        header('Content-Length: ' . filesize($filePath));
-        header('Content-Disposition: attachment; filename=' . $filename);
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        readfile($filePath);
+        $ext      = pathinfo($filePath, PATHINFO_EXTENSION);
+        $mimeType = getFileMimeType($ext);
+        $file     = $investor->getSingleFile($fileid);
 
-        exit();
+        return response($file)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Disposition', "attachment; filename={$filename}")
+            ->header('Filename', $filename);
     }
 
     public function additionalInformation($giCode)
@@ -968,6 +1050,9 @@ class InvestorController extends Controller
         $sectors        = getSectors();
         sort($sectors);
 
+        $profilePic             = $investor->getProfilePicture('medium_1x1');
+        $data['profilePic']     = $profilePic['url'];
+        $data['hasProfilePic']  = $profilePic['hasImage'];
         $data['countyList']     = getCounty();
         $data['countryList']    = getCountry();
         $data['investor']       = $investor;
@@ -1399,6 +1484,11 @@ class InvestorController extends Controller
             $action   = 'Start Adobe Sign';
             $activity = saveActivityLog('User', Auth::user()->id, 'start_adobe_sign', $investor->id, $action, '', $investor->firm_id);
 
+            //delete temp file
+            if (File::exists($output_link)) {
+                File::delete($output_link);
+            }
+
         }
     }
 
@@ -1528,28 +1618,27 @@ class InvestorController extends Controller
 
     }
 
-
     public function saveOnfidoReportStatus(Request $request)
     {
 
         $onfidoRequest = $request->all();
 
-        $investor_id            = $onfidoRequest['investor_id'];
-        $identity_report_status = $onfidoRequest['identity_report_status'];
-        $aml_report_status      = $onfidoRequest['aml_report_status'];
+        $investor_id             = $onfidoRequest['investor_id'];
+        $identity_report_status  = $onfidoRequest['identity_report_status'];
+        $aml_report_status       = $onfidoRequest['aml_report_status'];
         $watchlist_report_status = $onfidoRequest['watchlist_report_status'];
-        
-        $reports                = array();
+
+        $reports  = array();
         $investor = User::where('gi_code', $investor_id)->first();
 
-        if(empty($investor))
+        if (empty($investor)) {
             return response()->json(['success' => false]);
+        }
 
-
-        $args = array('identity_report_status'=> $identity_report_status,
-                  'aml_report_status'     => $aml_report_status,
-                  'watchlist_report_status'=> $watchlist_report_status
-                 );
+        $args = array('identity_report_status' => $identity_report_status,
+            'aml_report_status'                    => $aml_report_status,
+            'watchlist_report_status'              => $watchlist_report_status,
+        );
 
         $onfido_report_meta = $investor->userOnfidoApplicationReports();
 
@@ -1565,41 +1654,36 @@ class InvestorController extends Controller
                 $investor_onfido_applicant_id = $investor_onfido_applicant_id->data_value;
                 $report_data                  = get_onfido_reports_meta_by_applicant_id($investor_onfido_applicant_id, $args);
 
-                if(isset($report_data['check']['reports']) && empty($report_data['check']['reports'])){
+                if (isset($report_data['check']['reports']) && empty($report_data['check']['reports'])) {
 
-                    $reports = createOnfidoReportObject([],$args);
+                    $reports                         = createOnfidoReportObject([], $args);
                     $report_data['check']['reports'] = $reports;
                 }
 
-                if(isset($report_data['reports']) && empty($report_data['reports'])){
-                    $reports = createOnfidoReportObject([],$args);
+                if (isset($report_data['reports']) && empty($report_data['reports'])) {
+                    $reports                = createOnfidoReportObject([], $args);
                     $report_data['reports'] = $reports;
-                }
-                elseif(!isset($report_data['reports'])){
-                    $reports = createOnfidoReportObject([],$args);
+                } elseif (!isset($report_data['reports'])) {
+                    $reports                = createOnfidoReportObject([], $args);
                     $report_data['reports'] = $reports;
                 }
 
             } else {
 
-                
+                $reports = createOnfidoReportObject([], $args);
 
-                $reports = createOnfidoReportObject([],$args);
-
-
-                $report_data = array( 'applicant_id'    => '',
-                                      'check'           => array('id'               => '',
-                                                             'check_status'         => '',
-                                                             'check_type'           => '',
-                                                             'check_result_url'     => '',
-                                                             'check_download_url'   => '',
-                                                             'check_form_url'       => '',
-                                                             'check_paused'         => '',
-                                                             'reports'              => $reports
-                                                            ),
-                                      'reports'              => $reports
-                                     );
-
+                $report_data = array('applicant_id' => '',
+                    'check'                             => array('id' => '',
+                        'check_status'                                    => '',
+                        'check_type'                                      => '',
+                        'check_result_url'                                => '',
+                        'check_download_url'                              => '',
+                        'check_form_url'                                  => '',
+                        'check_paused'                                    => '',
+                        'reports'                                         => $reports,
+                    ),
+                    'reports'                           => $reports,
+                );
 
             }
 
@@ -1613,13 +1697,13 @@ class InvestorController extends Controller
             $report_data = (!empty($onfido_report_meta)) ? $onfido_report_meta->data_value : [];
             // dd($report_data);
 
-            $onfido_check   = $report_data['check'];
-            $onfido_reports = $onfido_check['reports'];
+            $onfido_check            = $report_data['check'];
+            $onfido_reports          = $onfido_check['reports'];
             $watchlist_report_exists = false;
 
             foreach ($onfido_reports as $key => $value) {
 
-                if($value->name=="watchlist"){
+                if ($value->name == "watchlist") {
                     $watchlist_report_exists = true;
                 }
 
@@ -1627,20 +1711,20 @@ class InvestorController extends Controller
 
             }
 
-            if($watchlist_report_exists==false){
+            if ($watchlist_report_exists == false) {
 
-                $watchlist_report_obj = new \stdClass;
-                $watchlist_report_obj->name = 'watchlist';
-                $watchlist_report_obj->variant = 'full';
-                $watchlist_report_obj->id = '';
+                $watchlist_report_obj                      = new \stdClass;
+                $watchlist_report_obj->name                = 'watchlist';
+                $watchlist_report_obj->variant             = 'full';
+                $watchlist_report_obj->id                  = '';
                 $watchlist_report_obj->status_growthinvest = $watchlist_report_status;
-                $reports[] = $watchlist_report_obj;
+                $reports[]                                 = $watchlist_report_obj;
 
             }
 
             $onfido_check['reports'] = $reports;
             $report_data['check']    = $onfido_check;
-            $report_data['reports'] = $reports;
+            $report_data['reports']  = $reports;
 
         }
 
@@ -1654,7 +1738,6 @@ class InvestorController extends Controller
 
         $onfido_report_meta->data_value = $report_data;
         $onfido_report_meta->save();
-            
 
         return response()->json(['success' => true]);
 
@@ -1667,10 +1750,9 @@ class InvestorController extends Controller
             abort(404);
         }
 
-        $investorCertification = $investor->getActiveCertification(); 
-        $onfidoReportMeta = $investor->userOnfidoApplicationReports();
-        $onfidoReport = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value:[];
-        
+        $investorCertification = $investor->getActiveCertification();
+        $onfidoReportMeta      = $investor->userOnfidoApplicationReports();
+        $onfidoReport          = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value : [];
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
@@ -1679,9 +1761,11 @@ class InvestorController extends Controller
         $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
         $breadcrumbs[] = ['url' => '', 'name' => 'View Profile'];
 
+        $profilePic                    = $investor->getProfilePicture('thumb_1x1');
+        $data['profilePic']            = $profilePic['url'];
         $data['investor']              = $investor;
         $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
-        $data['onfidoReports']      = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])  ) ? $onfidoReport['check']['reports'] : [];
+        $data['onfidoReports']         = (isset($onfidoReport['check']['reports']) && !empty($onfidoReport['check']['reports'])) ? $onfidoReport['check']['reports'] : [];
         $data['breadcrumbs']           = $breadcrumbs;
         $data['pageTitle']             = 'View Profile';
         $data['activeMenu']            = 'manage_clients';
@@ -1774,17 +1858,20 @@ class InvestorController extends Controller
 
         foreach ($businessListings as $key => $businessListing) {
 
+            $plegedAmount          = BusinessInvestment::select(\DB::raw('SUM(amount) as total_pledged_amount'))->where('status', 'pledged')->where('business_id', $businessListing->id)->groupBy('business_id')->first();
+            $totalPledgedAmount    = (!empty($plegedAmount)) ? $plegedAmount->total_pledged_amount : 0;
             $businessListingData[] = [
-                'offer'       => '<a href="">' . ucfirst($businessListing->title) . '</a>',
-                'manager'     => ucfirst($businessListing->manager),
-                'tax_status'  => $businessListing->tax_status,
-                'type'        => (isset($investmentOfferType[$businessListing->type])) ? ucfirst($investmentOfferType[$businessListing->type]) : '',
-                'focus'       => $businessListing->investment_objective,
-                'taget_raise' => format_amount($businessListing->target_amount, 0, true),
-                'min_inv'     => format_amount($businessListing->minimum_investment, 0, true),
-                'amt_raised'  => format_amount($businessListing->amount_raised, 0, true),
-                'invest'      => '<a href="#" class="btn btn-primary">Invest</a>',
-                'download'    => '<a href="#" class="btn btn-link">Download</a>',
+                'offer'                => '<a href="">' . ucfirst($businessListing->title) . '</a>',
+                'manager'              => ucfirst($businessListing->manager),
+                'tax_status'           => $businessListing->tax_status,
+                'type'                 => (isset($investmentOfferType[$businessListing->type])) ? ucfirst($investmentOfferType[$businessListing->type]) : '',
+                'focus'                => $businessListing->investment_objective,
+                'taget_raise'          => format_amount($businessListing->target_amount, 0, true),
+                'min_inv'              => format_amount($businessListing->minimum_investment, 0, true),
+                'amt_raised'           => format_amount($businessListing->amount_raised, 0, true),
+                'total_pledged_amount' => format_amount($totalPledgedAmount, 0),
+                'invest'               => '<a href="#" class="btn btn-primary">Invest</a>',
+                'download'             => '<a href="#" class="btn btn-link">Download</a>',
 
             ];
 
@@ -1804,9 +1891,9 @@ class InvestorController extends Controller
     public function getFilteredBusinessListing($filters, $skip, $length, $orderDataBy)
     {
 
-        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->where('business_listings.invest_listing', 'yes')->where('business_listings.status', 'publish')->leftjoin('business_investments', function ($join) {
-            $join->on('business_listings.id', 'business_investments.business_id');
-        })->whereIn('business_investments.status', ['pledged', 'funded']);
+        $businessListingQuery = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
+            $join->on('business_listings.id', 'business_investments.business_id')->whereIn('business_investments.status', ['pledged', 'funded']);
+        })->where('business_listings.invest_listing', 'yes')->where('business_listings.status', 'publish');
 
         if (isset($filters['company']) && $filters['company'] != "") {
             $businessListingQuery->where('business_listings.id', $filters['company']);
@@ -1824,6 +1911,16 @@ class InvestorController extends Controller
 
         if (isset($filters['manager']) && $filters['manager'] != "") {
             $businessListingQuery->where('business_listings.manager', $filters['manager']);
+        }
+
+        if (isset($filters['investor']) && $filters['investor'] != "") {
+            $businessListingQuery->where('business_investments.investor_id', $filters['investor']);
+        }
+
+        if (isset($filters['firm']) && $filters['firm'] != "") {
+            $businessListingQuery->leftjoin('users', function ($join) {
+                $join->on('business_listings.owner_id', 'users.id');
+            })->where('users.firm_id', $filters['firm']);
         }
 
         if (isset($filters['tax_status']) && $filters['tax_status'] != "") {
@@ -1956,6 +2053,46 @@ class InvestorController extends Controller
         return response()->json($json_data);
     }
 
-    
+    public function investmentOffers(Request $request){
+        $requestFilters = $request->all();
+        if (isset($requestFilters['status'])) {
+            $status                   = explode(',', $requestFilters['status']);
+            $requestFilters['status'] = array_filter($status);
+
+        }
+        $investor      = new User;
+        $investors = $investor->getInvestorUsers();
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+ 
+        $businessListings = new BusinessListing;
+        $companyNames     = $businessListings->getCompanyNames();
+        $sectors          = getBusinessSectors();
+        $managers         = [];
+        if (!empty($companyNames)) {
+            $compManagers = collect($companyNames->toArray());
+            $managers     = $compManagers->pluck('manager')->unique();
+            $managers     = array_filter($managers->toArray());
+        }
+
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Investment Offers'];
+
+        $data['investor']            = $investor;
+        $data['companyNames']        = (!empty($companyNames)) ? $companyNames : [];
+        $data['investmentOfferType'] = investmentOfferType();
+        $data['sectors']             = $sectors;
+        $data['managers']            = $managers;
+        $data['requestFilters']      = $requestFilters;
+        $data['firms']              = $firms;
+        $data['investors']          = $investors;
+        $data['breadcrumbs']         = $breadcrumbs;
+        $data['pageTitle']           = 'Investment Offers';
+        $data['activeMenu']          = 'investment_offers';
+
+        return view('backoffice.investments.investments')->with($data);
+
+    }
 
 }

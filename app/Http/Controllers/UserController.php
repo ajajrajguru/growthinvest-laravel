@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Cropper;
+use App\Firm;
 use App\User;
 use App\UserData;
 use Auth;
+use File;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\UploadedFile;
 //Importing laravel-permission models
 use Illuminate\Support\Facades\Hash;
 use Session;
+use Spatie\Permission\Models\Role;
+use Ajency\FileUpload\models\FileUpload_Files;
 
 //Enables us to output flash messaging
-use Spatie\Permission\Models\Role;
+use Storage;
 
 class UserController extends Controller
 {
@@ -80,17 +85,35 @@ class UserController extends Controller
     get list of all required data to be populated in form
     send empty user object to form in create mode
     by default mode will be edit when user is created first time
+    $firmGiCode - request from firm to add user
      */
-    public function addUserStepOne()
+    public function addUserStepOne($firmGiCode = '')
     {
         $user      = new User;
-        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firmCond  = ($firmGiCode != '') ? ['gi_code' => $firmGiCode] : [];
+        $firmsList = getModelList('App\Firm', $firmCond, 0, 0, ['name' => 'asc']);
         $firms     = $firmsList['list'];
 
-        $breadcrumbs   = [];
-        $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
-        $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
-        $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+        $breadcrumbs = [];
+        if ($firmGiCode == '') {
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+            $breadcrumbs[] = ['url' => url('/backoffice/user/all'), 'name' => 'Users'];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+            $data['is_firm_user'] = 'no';
+            $viewFile             = 'backoffice.user.step-one';
+        } else {
+            $firm          = Firm::where('gi_code', $firmGiCode)->first();
+            $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
+            $breadcrumbs[] = ['url' => '/backoffice/firm', 'name' => 'Firm'];
+            $breadcrumbs[] = ['url' => '', 'name' => $firm->name];
+            $breadcrumbs[] = ['url' => '', 'name' => 'Add User'];
+
+            $data['firm']           = $firm;
+            $data['is_firm_user']   = 'yes';
+            $data['firmActiveMenu'] = 'firm-users';
+            $viewFile               = 'backoffice.firm.intermediary-registration';
+        }
 
         $data['roles']              = Role::where('type', 'backoffice')->get();
         $data['countyList']         = getCounty();
@@ -102,7 +125,7 @@ class UserController extends Controller
         $data['pageTitle']          = 'Add User';
         $data['mode']               = 'edit';
 
-        return view('backoffice.user.step-one')->with($data);
+        return view($viewFile)->with($data);
     }
 
     /**
@@ -134,15 +157,16 @@ class UserController extends Controller
         $firm               = $requestData['firm'];
         $isSuspended        = (isset($requestData['is_suspended'])) ? 1 : 0;
         $giCode             = $requestData['gi_code'];
+        // $isFirmUser             = $requestData['is_firm_user'];
 
         $giArgs = array('prefix' => "GIIM", 'min' => 20000001, 'max' => 30000000);
 
         $sendmail = false;
         if ($giCode == '') {
-            $sendmail = true;
+            $sendmail  = true;
             $userExist = User::where('email', $email)->first();
-            if(!empty($userExist)){
-                Session::flash('error_message', 'User with '.$email.' already exist.');
+            if (!empty($userExist)) {
+                Session::flash('error_message', 'User with ' . $email . ' already exist.');
                 return redirect()->back()->withInput();
             }
 
@@ -186,7 +210,7 @@ class UserController extends Controller
         $user->firm_id      = $firm;
         $user->deleted      = 0;
         $user->lgbr         = 'No';
-        $user->suspended = $isSuspended;
+        $user->suspended    = $isSuspended;
         $user->save();
 
         $userId = $user->id;
@@ -214,9 +238,9 @@ class UserController extends Controller
             $user->assignRole($role);
         }
 
-        if($sendmail){
+        if ($sendmail) {
 
-            $firmName = (!empty($user->firm)) ? $user->firm->name : 'N/A';
+            $firmName              = (!empty($user->firm)) ? $user->firm->name : 'N/A';
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
@@ -226,29 +250,27 @@ class UserController extends Controller
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'accountType' => ''];
             sendEmail('add-intermediary', $data);
 
-            $registeredBy          = (!empty($user->registeredBy)) ? $user->registeredBy->displayName() : 'N/A';
-            $role = title_case($user->roles()->pluck('display_name')->implode(' '));
-            $recipients = getRecipientsByCapability([],array('manage_backoffice'));
-            $data                  = [];
-            $data['from']          = config('constants.email_from');
-            $data['name']          = config('constants.email_from_name');
-            $data['cc']            = [];
-            $data['subject']       = 'Notification: New User account created for '.$user->displayName().' by '.$registeredBy.' in firm '.$firmName.' with the role '.$role.'.';
+            $registeredBy    = (!empty($user->registeredBy)) ? $user->registeredBy->displayName() : 'N/A';
+            $role            = title_case($user->roles()->pluck('display_name')->implode(' '));
+            $recipients      = getRecipientsByCapability([], array('manage_backoffice'));
+            $data            = [];
+            $data['from']    = config('constants.email_from');
+            $data['name']    = config('constants.email_from_name');
+            $data['cc']      = [];
+            $data['subject'] = 'Notification: New User account created for ' . $user->displayName() . ' by ' . $registeredBy . ' in firm ' . $firmName . ' with the role ' . $role . '.';
 
             foreach ($recipients as $recipientEmail => $recipientName) {
                 $data['to']            = $recipientEmail;
-                $data['template_data'] = ['toName'=>$recipientName,'name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1,'registeredBy' => $registeredBy,'role' => $role,'giCode' => $user->gi_code];
+                $data['template_data'] = ['toName' => $recipientName, 'name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'address' => $user->address_1, 'registeredBy' => $registeredBy, 'role' => $role, 'giCode' => $user->gi_code];
                 sendEmail('intermediary-register-notification', $data);
             }
-            
-
 
             $data                  = [];
             $data['from']          = config('constants.email_from');
             $data['name']          = config('constants.email_from_name');
             $data['to']            = ['x+52703011248957@mail.asana.com'];
             $data['cc']            = [];
-            $data['subject']       = $user->displayName().' New from '.$firmName;
+            $data['subject']       = $user->displayName() . ' New from ' . $firmName;
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'email' => $email, 'telephone' => $user->telephone_no, 'registeredBy' => $registeredBy];
             sendEmail('intermediary-reg-automated', $data);
 
@@ -261,13 +283,13 @@ class UserController extends Controller
             $data['template_data'] = ['name' => $user->displayName(), 'firmName' => $firmName, 'password' => $password];
             sendEmail('intermediary-changed-password', $data);
 
-            $action="New Registration on ".$firmName;
-            saveActivityLog('User',Auth::user()->id,'registration',$userId,$action,'',$user->firm_id);
+            $action = "New Registration on " . $firmName;
+            saveActivityLog('User', Auth::user()->id, 'registration', $userId, $action, '', $user->firm_id);
 
         }
 
-
         Session::flash('success_message', 'Intermediary Registration Has Been Successfully Updated.');
+
         return redirect(url('backoffice/user/' . $giCode . '/intermediary-registration'));
 
     }
@@ -320,6 +342,8 @@ class UserController extends Controller
         if (empty($user)) {
             abort(404);
         }
+        $profilePic  = $user->getProfilePicture('medium_1x1');
+        $companyLogo = $user->getCompanyLogo('medium_1x1');
 
         $breadcrumbs   = [];
         $breadcrumbs[] = ['url' => url('/'), 'name' => "Manage"];
@@ -330,6 +354,10 @@ class UserController extends Controller
         $intermidiatData            = $user->userIntermidaiteCompInfo();
         $taxstructureInfo           = $user->taxstructureInfo();
         $data['user']               = $user;
+        $data['profilePic']         = $profilePic['url'];
+        $data['hasProfilePic']      = $profilePic['hasImage'];
+        $data['companyLogo']        = $companyLogo['url'];
+        $data['hasCompanyLogo']     = $companyLogo['hasImage'];
         $data['intermidiatData']    = (!empty($intermidiatData)) ? $intermidiatData->data_value : [];
         $data['taxstructureInfo']   = (!empty($taxstructureInfo)) ? $taxstructureInfo->data_value : [];
         $data['regulationTypes']    = getRegulationTypes();
@@ -711,6 +739,159 @@ class UserController extends Controller
         }
 
         return view('backoffice.dashboard-coming-soon.manage')->with($data);
+    }
+
+    public function uploadTempImage(Request $request)
+    {
+        if (!File::exists(public_path() . '/uploads/tmp')) {
+            File::makeDirectory(public_path() . '/uploads/tmp', 0777);
+        }
+
+        $image         = $request->file('file');
+        $imageFileName = 'temp_profile_pic_' . date('YmdHis') . '.' . $image->getClientOriginalExtension();
+
+        $destinationPath = public_path() . '/uploads/tmp/';
+        $url             = url('/uploads/tmp/'); //dd($url);
+        $fileUrl         = url('/uploads/tmp/' . $imageFileName); //dd($url);
+        $request->file('file')->move($destinationPath, $imageFileName);
+
+        return response()->json([
+            'code'    => 'image_uploaded',
+            'message' => 'success',
+            'data'    => [
+                'image_path' => $fileUrl,
+            ],
+        ], 200);
+
+    }
+
+    public function uploadCroppedImage(Request $request)
+    {
+        if (!File::exists(public_path() . '/uploads/img')) {
+            File::makeDirectory(public_path() . '/uploads/img', 0777);
+        }
+
+        $requestData = $request->all();
+
+        $crop = new Cropper(
+            isset($requestData['original_image']) ? $requestData['original_image'] : null,
+            isset($requestData['crop_data']) ? $requestData['crop_data'] : null,
+            isset($requestData['crop_file']) ? $requestData['crop_file'] : null
+        );
+
+        $objectType  = $requestData['object_type'];
+        $objectId    = $requestData['object_id'];
+        $imageType   = $requestData['image_type'];
+        $displaySize = $requestData['display_size'];
+
+        $url = $crop->getResult();
+
+        if ($crop->getMsg() != null) {
+            $model = $objectType::find($objectId);
+
+            //move from temp dir to s3
+            $source   = pathinfo($url);
+            $basename = $source['basename'];
+
+            $currentPath  = public_path() . '/uploads/tmp/' . $basename;
+            $uploadedFile = new UploadedFile($currentPath, $basename);
+
+            $id = $model->uploadImage($uploadedFile, $imageType);
+            $model->remapImages([$id], $imageType);
+
+            $uploadImages = $model->getImages($imageType);
+
+            foreach ($uploadImages as $key => $image) {
+                if (isset($image[$displaySize])) {
+                    $url = $image[$displaySize];
+                }
+            }
+
+            //delete temp file
+            if (File::exists($currentPath)) {
+                File::delete($currentPath);
+            }
+
+        }
+
+        return response()->json([
+            'code'       => 'image_uploaded',
+            'message'    => 'success',
+            'image_path' => $url,
+        ], 200);
+
+    }
+
+    public function deleteImage(Request $request)
+    {
+
+        $requestData = $request->all();
+
+        $objectType = $requestData['object_type'];
+        $objectId   = $requestData['object_id'];
+        $imageType  = $requestData['image_type'];
+
+        $model = $objectType::find($objectId);
+
+        $defaultImage     = getDefaultImages($imageType);
+        $profilePicImages = $model->getImages($imageType);
+        foreach ($profilePicImages as $key => $profilePicImage) {
+            $fileId = $profilePicImage['id'];
+            $model->unmapImage($fileId);
+        }
+
+        return response()->json([
+            'code'       => 'image_uploaded',
+            'message'    => 'success',
+            'image_path' => $defaultImage,
+        ], 200);
+
+    }
+
+    public function uploadTempFiles(Request $request)
+    {
+        if (!File::exists(public_path() . '/uploads/tmp')) {
+            File::makeDirectory(public_path() . '/uploads/tmp', 0777);
+        }
+
+        $file     = $request->file('file');
+        $fileName     = $request->input('name');
+         
+        $destinationPath = public_path() . '/uploads/tmp/';
+        $url             = url('/uploads/tmp/'); //dd($url);
+        $fileUrl         = url('/uploads/tmp/' . $fileName); //dd($url);
+        $request->file('file')->move($destinationPath, $fileName);
+
+        return response()->json([
+            'code'    => 'image_uploaded',
+            'message' => 'success',
+            'data'    => [
+                'image_path' => $fileUrl,
+            ],
+        ], 200);
+
+    }
+
+    public function downloadS3File($id)
+    {
+
+        
+        $file      = FileUpload_Files::find($id); 
+      
+        $filePath = $file->url;
+        $filename = $file->name;
+
+        $user = User::first();
+        
+        $ext      = pathinfo($filePath, PATHINFO_EXTENSION);
+        $mimeType = getFileMimeType($ext);
+        $file     = $user->getSingleFile($id);
+        
+        return response($file)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Disposition', "attachment; filename={$filename}")
+            ->header('Filename', $filename);
     }
 
 }

@@ -566,9 +566,540 @@ $(document).ready ->
 
 	$('.download-current-business-valuation-csv').click ->		 
 		window.open("/backoffice/current-valuations/export-current-valuations");
+
+
+	investmentClientTable = $('#datatable-investment-client').DataTable(
+	    'paging': false
+	    'processing': false
+	    'serverSide': true
+	    'bAutoWidth': false
+	    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
+	    'aaSorting': [[1,'asc']]
+	    'ajax':
+	      url: '/backoffice/financials/get-investment-client'
+	      type: 'post'
+	      dataSrc: (json) ->
+	      	console.log json
+	      	$("#total_invested").html(json.totalInvested)
+	      	$("#total_accrude").html(json.totalAccrude)
+	      	$("#total_paid").html(json.totalPaid)
+	      	$("#total_due").html(json.totalDue)
+
+	      	return json.data
+	      data: (data) ->
+
+	        filters = {}
+
+	        filters.firm_ids = $('input[name="firm_ids"]').val()
+	        filters.firm_name = $('select[name="firm_name"]').val()
+	        filters.investor_name = $('select[name="investor_name"]').val()
+	        filters.client_category = $('select[name="client_category"]').val()
+	        filters.investment = $('select[name="investment"]').val()
+	        filters.duration_from = $('input[name="duration_from"]').val()
+	        filters.duration_to = $('input[name="duration_to"]').val()
+	        data.filters = filters
+	        data
+
+	      error: ->
+	        return
+
+	    'columns': [
+	      { 'data': '#' , "orderable": false}
+	      { 'data': 'invested_date' }
+	      { 'data': 'investment'}
+	      { 'data': 'investor' }
+	      { 'data': 'firm' }
+	      { 'data': 'invested_amount' }
+	      { 'data': 'accrude'}
+	      { 'data': 'paid'}
+	      { 'data': 'due'}
+	      { 'data': 'parent_firm'}
+	      { 'data': 'investment_gi_code', "orderable": false}
+	      { 'data': 'investor_gi_code', "orderable": false}
+	      { 'data': 'firm_gi_code', "orderable": false}
+	      { 'data': 'transaction_type', "orderable": false}
+	      { 'data': 'action' , "orderable": false}
+	    ]
+	    'columnDefs': [
+	      {
+	        'targets': 'col-visble'
+	        'visible': false
+	      }
+	    ]
+	    )
+
+	$('body').on 'click', '.alter-investmentclient-table', ->
+	    $('.inv-cli-cols').each ->
+	      colIndex = $(this).val()
+	      if $(this).is(':checked')
+	        investmentClientTable.column( colIndex ).visible( true );
+	      else
+	        investmentClientTable.column( colIndex ).visible( false );
+
+	    $('#columnVisibility').modal('hide')
+	    return
+
+	$('body').on 'click', '.apply-investmentclient-filters', ->
+	    urlParams = ''
+
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+
+	    if($('select[name="investor_name"]').val()!="")
+	      urlParams +='&investor='+$('select[name="investor_name"]').val()
+
+	    if($('select[name="client_category"]').val()!="")
+	      urlParams +='&client-category='+$('select[name="client_category"]').val()
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+	    window.history.pushState("", "", "?"+urlParams);
+	    investmentClientTable.ajax.reload()
+	    return
+
+	$('body').on 'click', '.reset-investmentclient-filters', ->
+		$('select[name="firm_name"]').val('').trigger('change')
+		$('select[name="investor_name"]').val('').trigger('change')
+		$('select[name="client_category"]').val('')
+		$('select[name="investment"]').val('')
+		$('input[name="duration_from"]').val('')
+		$('input[name="duration_to"]').val('')
+		window.history.pushState("", "", "?");
+		investmentClientTable.ajax.reload()
+
+		return
+
+	$('.download-investmentclient-report').click ->
+	    type = $(this).attr('report-type')
+	    urlParams = ''
+
+	    if($('input[name="firm_ids"]').val()!="")
+	      urlParams +='firm_ids='+$('input[name="firm_ids"]').val() 
+	      
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='&firm='+$('select[name="firm_name"]').val() 
+
+	    if($('select[name="investor_name"]').val()!="")
+	      urlParams +='&investor_name='+$('select[name="investor_name"]').val()
+
+	    if($('select[name="client_category"]').val()!="")
+	      urlParams +='&client_category='+$('select[name="client_category"]').val()
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+	       
+	    if($('input[name="business_ids"]').val()!="")
+	      urlParams +='&business_ids='+$('input[name="business_ids"]').val() 
+
+	    if(type == 'csv')  
+	      window.open("/backoffice/financials/export-investmentclient?"+urlParams)
+	    else if(type == 'pdf')  
+	      window.open("/backoffice/financials/investmentclient-pdf?"+urlParams)
+
+
+
+	businessClientTable = $('#datatable-business-client').DataTable(
+	    'paging': false
+	    'processing': false
+	    'serverSide': true
+	    'bAutoWidth': false
+	    "dom": '<"top d-sm-flex justify-content-sm-between w-100"li>t<"bottom d-sm-flex justify-content-sm-between w-100"ip>' 
+	    'aaSorting': [[1,'asc']]
+	    'ajax':
+	      url: '/backoffice/financials/get-business-client'
+	      type: 'post'
+	      dataSrc: (json) ->
+	      	console.log json
+	      	$("#total_invested").html(json.totalInvested)
+	      	$("#total_accrude").html(json.totalAccrude)
+	      	$("#total_paid").html(json.totalPaid)
+	      	$("#total_due").html(json.totalDue)
+
+	      	return json.data
+	      data: (data) ->
+
+	        filters = {}
+
+	        filters.firm_ids = $('input[name="firm_ids"]').val()
+	        filters.firm_name = $('select[name="firm_name"]').val()
+	        filters.investment = $('select[name="investment"]').val()
+	        filters.duration_from = $('input[name="duration_from"]').val()
+	        filters.duration_to = $('input[name="duration_to"]').val()
+	        data.filters = filters
+	        data
+
+	      error: ->
+	        return
+
+	    'columns': [
+	      { 'data': '#' , "orderable": false}
+	      { 'data': 'investment'}
+	      { 'data': 'invested_amount'}
+	      { 'data': 'accrude'}
+	      { 'data': 'paid'}
+	      { 'data': 'due' }
+	      { 'data': 'action' , "orderable": false}
+	    ]
+	    'columnDefs': [
+	      {
+	        'targets': 'col-visble'
+	        'visible': false
+	      }
+	    ]
+	    )
+
+	$('body').on 'click', '.alter-businessclient-table', ->
+	    $('.inv-cli-cols').each ->
+	      colIndex = $(this).val()
+	      if $(this).is(':checked')
+	        businessClientTable.column( colIndex ).visible( true );
+	      else
+	        businessClientTable.column( colIndex ).visible( false );
+
+	    $('#columnVisibility').modal('hide')
+	    return
+
+	$('body').on 'click', '.apply-businessclient-filters', ->
+	    urlParams = ''
+
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='firm='+$('select[name="firm_name"]').val() 
+ 
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+
+	    window.history.pushState("", "", "?"+urlParams);
+	    businessClientTable.ajax.reload()
+	    return
+
+	$('body').on 'click', '.reset-businessclient-filters', ->
+		$('select[name="firm_name"]').val('').trigger('change')
+		$('select[name="investment"]').val('')
+		$('input[name="duration_from"]').val('')
+		$('input[name="duration_to"]').val('')
+		window.history.pushState("", "", "?");
+		businessClientTable.ajax.reload()
+
+		return
+
+	$('.download-businessclient-report').click ->
+	    type = $(this).attr('report-type')
+	    urlParams = ''
+
+	    if($('input[name="firm_ids"]').val()!="")
+	      urlParams +='firm_ids='+$('input[name="firm_ids"]').val() 
+
+	    if($('input[name="business_ids"]').val()!="")
+	      urlParams +='&business_ids='+$('input[name="business_ids"]').val() 
+	      
+	    if($('select[name="firm_name"]').val()!="")
+	      urlParams +='&firm='+$('select[name="firm_name"]').val() 
+
+
+	    if($('select[name="investment"]').val()!="")
+	      urlParams +='&investment='+$('select[name="investment"]').val()
+
+	    if($('input[name="duration_from"]').val()!="")
+	      urlParams +='&duration_from='+$('input[name="duration_from"]').val()
+
+	    if($('input[name="duration_to"]').val()!="")
+	      urlParams +='&duration_to='+$('input[name="duration_to"]').val()
+	       
+
+	    if(type == 'csv')  
+	      window.open("/backoffice/financials/export-businessclient?"+urlParams)
+	    else if(type == 'pdf')  
+	      window.open("/backoffice/financials/businessclient-pdf?"+urlParams)
+
+
+	$('body').on 'click', 'input[name="ck_business"]', ->
+		textVal = ''
+		$('input[name="ck_business"]:checked').each ->
+			textVal += ','+$(this).val()
+
+		$('input[name="business_ids"]').val textVal
+
+
+	$('body').on 'click', '.add-fees', ->
+		investorId = $(this).attr('investor')
+		businessId = $(this).attr('business')
+		type = $(this).attr('type')
+		$("#addFeesModel").find('input[name="investor_id"]').val(investorId)
+		$("#addFeesModel").find('input[name="type"]').val(type)
+		$("#addFeesModel").find('input[name="business_id"]').val(businessId)
+		$("#addFeesModel").modal('show')
+
+	$('body').on 'click', '.save-investment-fees', ->
+		investorId = $('input[name="investor_id"]').val()
+		businessId = $('input[name="business_id"]').val()
+		type = $('input[name="type"]').val()
+		amount = $('input[name="amount"]').val()
+		comment = $('textarea[name="comments"]').val()
+
+		$.ajax
+			type: 'post'
+			url: '/backoffice/financials/save-commission'
+			data:
+				'investor_id': investorId
+				'business_id': businessId
+				'type': type
+				'comment': comment
+				'amount': amount
+			success: (data) ->
+				 
+				if type == 'wm'
+					investmentClientTable.ajax.reload()
+				else
+					businessClientTable.ajax.reload()
+
+				$("#addFeesModel").modal('hide')
+
+
+	$('.transfer-asset').on 'change', 'select[name="investor"]', ->
+		investorId = $(this).val()
+		if(investorId!='')
+			$('.name_of_client_summary').html $(this).find("option:selected").text()
+			
+			$.ajax
+				type: 'post'
+				url: '/backoffice/transfer-asset/investor-assets'
+				data:
+					'investor_id': investorId
+				success: (data) ->
+					$('.data_container').html(data.businesslisting_html)
+					$('a[part="part-2"]').removeClass('d-none')
+					$('[data-toggle="tooltip"]').tooltip()
+		else
+			$('a[part="part-2"]').addClass('d-none')
+			$('.data_container').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>')
+
+	$('.transfer-asset').on 'click', '.savetransferasset_asset', ->
+		$obj = $(this)
+		assetid = $(this).attr('assetid')
+		status = $(this).closest('td').find('.transferasset_status').val()
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/save-status'
+			data:
+				'assetid': assetid
+				'status': status
+
+			success: (data) ->
+				if data.status == true
+					$obj.closest('td').find('.transferasset-msg').removeClass('d-none').addClass('text-success').html('<br>Transfer asset status updated Successfully.').delay(5000).fadeOut()
+				
+				console.log data.status
+
+
+	$('.transfer-asset').on 'click', '.toggle-download-doc', ->
+		assetId= $(this).attr('assetid')
+		if($('.download-doc-'+assetId).hasClass('d-none'))
+			$('.download-doc-'+assetId).removeClass('d-none')
+		else
+			$('.download-doc-'+assetId).addClass('d-none')
+
+
+	$('.transfer-asset').on 'click', '.toggle-download-uploaded-doc', ->
+		assetId= $(this).attr('assetid')
+		if($('.download-uploaded-doc-'+assetId).hasClass('d-none'))
+			$('.download-uploaded-doc-'+assetId).removeClass('d-none')
+		else
+			$('.download-uploaded-doc-'+assetId).addClass('d-none')
+
+
+
+	$('.transfer-asset').on 'click', '.delete_tranferasset', ->
+		rowObj = $(this)
+		assetid = $(this).attr('assetid')
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/delete-asset'
+			data:
+				'assetid': assetid
+				'status': status
+
+			success: (data) ->
+				rowObj.closest('tr').remove();
+
+
+ 
+	$('.transfer-asset').on 'click', '.display-section', ->
+		part = $(this).attr('part')
+		takeNext = false
+		if(part == 'part-1')
+			takeNext = true
+			$('.progress-indicator').find('li[part="part-2"]').removeClass('active')
+		if(part == 'part-2')
+			$('.progress-indicator').find('li[part="part-1"]').addClass('active')
+			$('.progress-indicator').find('li[part="part-3"]').removeClass('active')
+			$('select[name="investor"]').parsley().validate()
+			takeNext = $('select[name="investor"]').parsley().isValid()
+		if(part == 'part-3')
+			$('.progress-indicator').find('li[part="part-1"]').addClass('active')
+			$('.progress-indicator').find('li[part="part-2"]').addClass('active')
+			$('select[name="type_of_asset"]').parsley().validate()
+			takeNext = $('select[name="type_of_asset"]').parsley().isValid()
+			if($('select[name="type_of_asset"]').val()=='single_company')
+				$('select[name="companies"]').parsley().validate()
+				takeNext = $('select[name="companies"]').parsley().isValid()
+			else
+				$('select[name="providers"]').parsley().validate()
+				takeNext = $('select[name="providers"]').parsley().isValid()
+
+
+		if(takeNext)
+			$(this).closest('.part-container').addClass('d-none')
+			$('.'+part).removeClass('d-none')
+			# $('.progress-indicator').find('li').removeClass('active')
+			$('.progress-indicator').find('li[part="'+part+'"]').addClass('active')
+
+	$('.transfer-asset').on 'change', 'select[name="type_of_asset"]', ->
+		assetType  = $(this).val()
+		if($(this).val()!='')
+			if($(this).val()=='single_company')
+				$('.company-section').removeClass('d-none')
+				$('select[name="companies"]').attr('data-parsley-required','true')
+				$('input[name="company[assets_cmpname]"]').attr('data-parsley-required','true')
+				$('select[name="providers"]').attr('data-parsley-required','false')
+				$('input[name="provider[assets_providername]"]').attr('data-parsley-required','false')
+				$('.provider-section').addClass('d-none')
+			else
+				$('.company-section').addClass('d-none')
+				$('.provider-section').removeClass('d-none')
+				$('select[name="companies"]').attr('data-parsley-required','false')
+				$('input[name="company[assets_cmpname]"]').attr('data-parsley-required','false')
+				$('select[name="providers"]').attr('data-parsley-required','true')
+				$('input[name="provider[assets_providername]"]').attr('data-parsley-required','true')
+
+				$('select[name="providers"]> option').each (id,value) ->
+					$(this).removeClass('d-none')
+					if($(this).attr('type')!=assetType)
+						$(this).addClass('d-none')
+
+				if($(this).val()=='vct')
+					$('.vct-section').removeClass('d-none')
+				else
+					$('.vct-section').addClass('d-none')
+
+			$('.upload-files-section').removeClass('d-none')
+			$('.type_of_asset_summary').html $(this).find("option:selected").text()
+			
+		else
+			$('.upload-files-section').addClass('d-none')
+			$('.provider-section').addClass('d-none')
+			$('.company-section').addClass('d-none')
+
+
+	updateTransferAssetSummaryValues = (inpObj) ->
+		eleClass = inpObj.attr('input_name')+'_summary'
+		eleValue = inpObj.val()
+		
+		if(inpObj.is('select'))
+			eleValue =inpObj.find("option:selected").text();
+
+		if(eleClass == 'typeoftransfer_summary')
+			eleValue =inpObj.attr('display-text');
+
+		console.log eleClass
+		console.log eleValue
+		$('.'+eleClass).html eleValue
+
+	$('.transfer-asset').on 'change', 'select[name="companies"]', ->
+		name = $(this).find("option:selected").attr('name')
+		company_no = $(this).find("option:selected").attr('company_no')
+		email = $(this).find("option:selected").attr('email')
+		phone = $(this).find("option:selected").attr('phone')
+
+		$('.company_name').val(name).attr('readonly',true)
+		$('.company_no').val(company_no).attr('readonly',true)
+		$('.company_email').val(email).attr('readonly',true)
+		$('.company_tel').val(phone).attr('readonly',true)
+
+		$('.update-summary').each (id,value) ->
+			updateTransferAssetSummaryValues($(this))
+
+		if $(this).val()!=''
+			$('a[part="part-3"]').removeClass('d-none')
+		else
+			$('a[part="part-3"]').addClass('d-none')
+
+		return
+
+
+	$('.transfer-asset').on 'change', 'select[name="providers"]', ->		
+		name = $(this).find("option:selected").attr('name')
+		product = $(this).find("option:selected").attr('product')
+		email = $(this).find("option:selected").attr('email')
+		phone = $(this).find("option:selected").attr('phone')
+		
+		$('.provider_name').val(name).attr('readonly',true)
+		$('.provider_product').val(product).attr('readonly',true)
+		$('.provider_email').val(email).attr('readonly',true)
+		$('.provider_tel').val(phone).attr('readonly',true)
+
+		$('.update-summary').each (id,value) ->
+			updateTransferAssetSummaryValues($(this))
+
+		if $(this).val()!=''
+			$('a[part="part-3"]').removeClass('d-none')
+		else
+			$('a[part="part-3"]').addClass('d-none')
+
+		return
+		
+
+	$('.transfer-asset').on 'change', '.update-summary', ->
+		updateTransferAssetSummaryValues($(this))
+
+	
+	$('.transfer-asset').on 'click', '.esign_doc', ->
+		rowObj = $(this)
+		assetid = $(this).attr('assetid')
+		assettype = $(this).attr('assettype')
+		typeTxt = $(this).attr('asset-type-text')
+		
+		rowObj.find('.btn-spinner').removeClass('d-none')
+		$.ajax
+			type: 'post'
+			url: '/backoffice/transfer-asset/esign-doc'
+			data:
+				'assetid': assetid
+				'assettype': assettype
+
+			success: (data) ->
+				rowObj.find('.btn-spinner').addClass('d-none')
+				$('#'+assettype+'_msg').html(typeTxt+' is sent for e-signature on registered email id of the investor').addClass('text-success').delay(5000).fadeOut()
+				rowObj.prop('disabled',true).attr('data-toggle','tooltip').attr('title', typeTxt+' already sent for signature').attr('data-original-title', typeTxt+' already sent for signature').tooltip()
+						 
+ 
+				
+
+				
+		
+
+
+
 				 
 	 		 
-
-
 
 

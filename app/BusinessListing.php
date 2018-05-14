@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Ajency\FileUpload\FileUpload;
 
 class BusinessListing extends Model
 {
+    use FileUpload;
     protected $table = 'business_listings';
 
     public function getTaxStatusAttribute( $value ) { 
@@ -39,6 +41,21 @@ class BusinessListing extends Model
             return $business_list;
         }
 
+    }
+
+    public Function getBusinessLogo($type){
+        $hasImage = false;
+        $businessLogo  = getDefaultImages('business_logo');
+        $businessLogos = $this->getImages('business_logo'); 
+        foreach ($businessLogos as $key => $logo) { 
+            if(isset($logo[$type])) {
+                $businessLogo = $logo[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$businessLogo,'hasImage'=>$hasImage]; 
     }
 
     public function owner()

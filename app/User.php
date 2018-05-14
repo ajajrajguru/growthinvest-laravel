@@ -9,11 +9,13 @@ use App\User;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ajency\FileUpload\FileUpload;
+
     
 use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles,SoftDeletes;
+    use Notifiable, HasRoles,SoftDeletes,FileUpload;
  
 
     // protected $guard_name = 'backoffice';
@@ -136,6 +138,54 @@ class User extends Authenticatable
         return $userData;
     }
 
+    public Function getProfilePicture($type){
+        $hasImage = false;
+        $profilePic  = getDefaultImages('profile_picture');
+        $profilePicImages = $this->getImages('profile_picture'); 
+        foreach ($profilePicImages as $key => $image) { 
+            if(isset($image[$type])) {
+                $profilePic = $image[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$profilePic,'hasImage'=>$hasImage];
+    }
+
+    public Function getCompanyLogo($type){
+        $hasImage = false;
+        $companyLogo  = getDefaultImages('company_logo');
+        $companyLogos = $this->getImages('company_logo'); 
+        foreach ($companyLogos as $key => $logo) { 
+            if(isset($logo[$type])) {
+                $companyLogo = $logo[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$companyLogo,'hasImage'=>$hasImage]; 
+    }
+
+    public Function getUserFile($type){
+        $hasImage = false;
+        $files = $this->getFiles($type); 
+        $fileUrl =  '';
+        $fileid =  '';
+        foreach ($files as $key => $file) { 
+            $fileid = $file['id'];
+            $fileUrl = $file['url'];
+            $hasImage = true;
+             
+             
+        }
+
+        return ['url'=>$fileUrl,'fileid'=>$fileid,'hasImage'=>$hasImage];
+    }
+
+
+
     public function isCompanyWealthManager(){
         $compInfo = (!empty($this->userAdditionalInfo())) ? $this->userAdditionalInfo()->data_value : [];  
         if(isset($compInfo['typeaccount']) && $compInfo['typeaccount'] == 'Wealth Manager')
@@ -191,7 +241,7 @@ class User extends Authenticatable
     }
 
 
-    public function allUsers($cond=[]){
+    public function allUsers($cond=[],$inCond=[]){
         $backOfficeRoleIds = $this->getbackOfficeAccessRoleIds();
 
         $users = User::join('model_has_roles', function ($join) {
@@ -200,7 +250,12 @@ class User extends Authenticatable
                     })->join('roles', function ($join)use($backOfficeRoleIds) {
                         $join->on('model_has_roles.role_id', '=', 'roles.id')
                             ->where('roles.name','!=', 'yet_to_be_approved_intermediary')->whereIn('roles.id',$backOfficeRoleIds);
-                    })->where($cond)->select('users.*')->orderBy('first_name','asc')->get();
+                    });
+        foreach ($inCond as $key => $values) {
+            $users = $users->whereIn($key,$values);
+        }
+        $users = $users->select('users.*')->orderBy('first_name','asc')->get(); 
+       
 
         return $users; 
       
@@ -268,7 +323,7 @@ class User extends Authenticatable
     }
 
 
-    public function getInvestorUsers($cond=[]){
+    public function getInvestorUsers($cond=[],$inCond=[]){
 
         $users = User::join('model_has_roles', function ($join) {
                         $join->on('users.id', '=', 'model_has_roles.model_id')
@@ -277,9 +332,14 @@ class User extends Authenticatable
                             $join->on('model_has_roles.role_id', '=', 'roles.id')
 
                                 ->whereIn('roles.name', ['investor','yet_to_be_approved_investor']);
-                        })->where($cond)->select('users.*')->get();
+                        })->where($cond);
 
-
+        foreach ($inCond as $key => $values) {
+            $users = $users->whereIn($key,$values);
+        }
+        $users = $users->select('users.*')->get(); 
+       
+       
         return $users; 
     }
 
@@ -358,6 +418,8 @@ class User extends Authenticatable
         return $user_info;
 
     }
+
+    
 
 
 }

@@ -19,15 +19,15 @@
 	      <div class="card-body ">
 	        <div class="filter-options">
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_esis" value="eis" >
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_esis" value="eis" slug-val="all" @if(isset($requestFilters['investment-type']) && in_array('all',$requestFilters['investment-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_esis">EIS</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_sesis" value="seis">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_sesis" value="seis" slug-val="seis" @if(isset($requestFilters['investment-type']) && in_array('seis',$requestFilters['investment-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_sesis">SEIS</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_combined" value="combined">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="tax_status[]" id="ch_combined" value="combined" slug-val="combined" @if(isset($requestFilters['investment-type']) && in_array('combined',$requestFilters['investment-type'])) checked @endif>
 				  <label class="custom-control-label" for="ch_combined">Combined</label>
 				</div>
 			 
@@ -48,7 +48,7 @@
 	        <div class="filter-options">
 				@foreach($dueDeligence as $dueDeligenceValue)
 	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="due_deligence[]" id="ch_{{ $dueDeligenceValue->id }}" value="{{ $dueDeligenceValue->id }}">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="due_deligence[]" id="ch_{{ $dueDeligenceValue->id }}" value="{{ $dueDeligenceValue->id }}" slug-val="{{ $dueDeligenceValue->slug }}" @if(isset($requestFilters['due-diligence']) && in_array($dueDeligenceValue->slug,$requestFilters['due-diligence'])) checked @endif>
 					  <label class="custom-control-label" for="ch_{{ $dueDeligenceValue->id }}">{{ ucfirst($dueDeligenceValue->name) }}</label>
 					</div>
 	             @endforeach
@@ -69,7 +69,7 @@
 	        <div class="filter-options">
 	        	@foreach($sectors as $sector)
 	                <div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_sector[]" id="ch_{{ $sector->id }}" value="{{ $sector->id }}">
+					  <input type="checkbox" class="custom-control-input filter-business-list" name="business_sector[]" id="ch_{{ $sector->id }}" value="{{ $sector->id }}" slug-val="{{ $sector->slug }}" @if(isset($requestFilters['business-sector']) && in_array($sector->slug,$requestFilters['business-sector'])) checked @endif>
 					  <label class="custom-control-label" for="ch_{{ $sector->id }}">{{ ucfirst($sector->name) }}</label>
 					</div>
 	             @endforeach
@@ -91,17 +91,17 @@
 	        <div class="filter-options">
 				 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Approved_Fund" value="Approved_Fund">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Approved_Fund" value="Approved_Fund" slug-val="approved-fund" @if(isset($requestFilters['fund-regulatory-status']) && in_array('approved-fund',$requestFilters['fund-regulatory-status'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Approved_Fund">Approved Fund</label>
 				</div>
 
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Unapproved_Fund" value="Unapproved_Fund">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Unapproved_Fund" value="Unapproved_Fund" slug-val="unapproved-fund" @if(isset($requestFilters['fund-regulatory-status']) && in_array('unapproved-fund',$requestFilters['fund-regulatory-status'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Unapproved_Fund">Unapproved Fund</label>
 				</div>
 
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Managed_portfolio" value="Managed_portfolio">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_type[]" id="ch_Managed_portfolio" value="managed-portfolio" slug-val="managed-portfolio" @if(isset($requestFilters['fund-regulatory-status']) && in_array('managed-portfolio',$requestFilters['fund-regulatory-status'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Managed_portfolio">Managed portfolio</label>
 				</div>
 	              
@@ -122,15 +122,15 @@
 	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_open" value="open">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_open" value="open" slug-val="open" @if(isset($requestFilters['fund-status']) && in_array('open',$requestFilters['fund-status'])) checked @endif>
 				  <label class="custom-control-label" for="ch_open"> Single/Non Evergreen </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_closed" value="closed">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_closed" value="closed" slug-val="closed" @if(isset($requestFilters['fund-status']) && in_array('closed',$requestFilters['fund-status'])) checked @endif>
 				  <label class="custom-control-label" for="ch_closed"> Closed </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_evergreen" value="evergreen">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_status[]" id="ch_evergreen" value="evergreen" slug-val="evergreen" @if(isset($requestFilters['fund-status']) && in_array('evergreen',$requestFilters['fund-status'])) checked @endif>
 				  <label class="custom-control-label" for="ch_evergreen"> Evergreen </label>
 				</div>
 	             
@@ -151,19 +151,19 @@
 	        <div class="filter-options">
 	        	 
                 <div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Capital_Preservation" value="Capital Preservation">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Capital_Preservation" value="Capital Preservation" slug-val="capital-preservation" @if(isset($requestFilters['investment-focus']) && in_array('capital-preservation',$requestFilters['investment-focus'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Capital_Preservation">Capital Preservation</label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Mixed" value="Mixed (Preservation & Growth)">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Mixed" value="Mixed (Preservation & Growth)" slug-val="mixed" @if(isset($requestFilters['investment-focus']) && in_array('mixed',$requestFilters['investment-focus'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Mixed"> Mixed </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Growth" value="Growth">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_Growth" value="Growth" slug-val="growth" @if(isset($requestFilters['investment-focus']) && in_array('growth',$requestFilters['investment-focus'])) checked @endif>
 				  <label class="custom-control-label" for="ch_Growth">  Growth </label>
 				</div>
 				<div class="custom-control custom-checkbox">
-				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_High Growth" value="High Growth">
+				  <input type="checkbox" class="custom-control-input filter-business-list" name="fund_investmentobjective[]" id="ch_High Growth" value="High Growth" slug-val="high-growth" @if(isset($requestFilters['investment-focus']) && in_array('high-growth',$requestFilters['investment-focus'])) checked @endif>
 				  <label class="custom-control-label" for="ch_High Growth">  High Growth </label>
 				</div>
 			 
