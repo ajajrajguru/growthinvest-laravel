@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessInvestment;
 use App\BusinessListing;
+use App\BusinessListingData;
 use App\Commission;
 use App\Firm;
 use App\InvestorPdfHtml;
@@ -1639,6 +1640,50 @@ class BusinessListingController extends Controller
 
     }
 
+
+    // enterpreneur business proposals
+    public function getUserBusinessProposals(){
+
+        $user = Auth::user();
+        $userId = $user->id;
+
+        $businessListings = BusinessListing::where('owner_id', $userId)->whereIn('status', ['publish','draft'])->get();
+        
+        $businessListings = $businessListings->filter(function($businessListing){
+                     
+            $investedAmount = BusinessInvestment::select(\DB::raw('SUM(amount) as invested'))->where('status','funded')->where('business_id',$businessListing->id)->groupBy('business_id')->first();
+            if(!empty($investedAmount))
+                 $investedAmount = $investedAmount->invested;
+             else
+                $investedAmount = 0;
+
+            $investedCount = BusinessInvestment::where('status','pledged')->where('business_id',$businessListing->id)->count();
+            $pledgeCount = BusinessInvestment::where('status','funded')->where('business_id',$businessListing->id)->count();
+            $watchListCount = BusinessInvestment::where('status','watch_list')->where('business_id',$businessListing->id)->count();
+            $questionCount = 0;
+
+            $businessListing['investedAmount'] = format_amount($investedCount, 0, true);
+            $businessListing['investedCount'] = $investedCount;
+            $businessListing['pledgeCount'] = $pledgeCount;
+            $businessListing['watchListCount'] = $watchListCount;
+            $businessListing['questionCount'] = $questionCount;
+             
+            return $businessListing;
+        });
+
+        $data['businessListings'] = $businessListings;
+        $data['user'] = $user;
+
+        
+        $data['active_menu'] = 'business-proposals';
+
+       
+
+        return view('frontend.entrepreneur.business-proposals')->with($data);
+    }
+
+
+
 /**
  * Show the form for creating a new resource.
  *
@@ -1646,7 +1691,18 @@ class BusinessListingController extends Controller
  */
     public function create()
     {
-        //
+        $sectors         = getDefaultValues('business-sector');
+        $stageOfBusiness = getDefaultValues('stage_of_business');
+        $milestones = getDefaultValues('milestone');
+
+        $businessListing = new BusinessListing;
+        $data['active_menu'] = 'business-proposals';
+        $data['mode'] = 'edit';
+        $data['businessListing'] = $businessListing;
+        $data['sectors'] = $sectors;
+        $data['stageOfBusiness'] = $stageOfBusiness;
+        $data['milestones'] = $milestones;
+        return view('frontend.entrepreneur.add-business-proposals')->with($data);
     }
 
 /**
@@ -1657,7 +1713,69 @@ class BusinessListingController extends Controller
  */
     public function store(Request $request)
     {
-        //
+        $requestData = $request->all();
+
+        $submitType = $requestData['submit_type'];
+        $formData = $requestData['form_data']; 
+        $submitData = [];
+        foreach ($formData as $key => $data) {
+            $submitData[$data['name']] = $data['value'];
+        }
+        $giCode = $submitData['gi_code'];
+        $redirect = false;
+
+        if($giCode == ''){
+            $redirect = true;
+            $giArgs = array('prefix' => "GIBP", 'min'=>60000001,'max' => 70000000);
+
+            $businessListing = new BusinessListing;
+            $giCode   = generateGICode($businessListing, 'gi_code', $giArgs);
+
+            $businessListing->slug = str_slug($submitData['title']);
+            $businessListing->status = 'draft';
+            $businessListing->gi_code = $giCode;
+            $businessListing->investment_opportunities = 'no';
+            $businessListing->disp_to_nonloggedin = 'no';
+            $businessListing->owner_id = Auth::user()->id;
+
+        }
+        else
+           $businessListing = BusinessListing::where('gi_code',$giCode)->first(); 
+
+        $businessListing->title = $submitData['title'];
+        $businessListing->save();
+
+        if($submitType == 'business_idea'){
+            $this->saveBusinessIdeas($businessListing,$submitData);   
+        }
+
+
+        $json_data = array(
+            "gi_code"            => $businessListing->gi_code,
+            "redirect"            => $redirect,
+            "status"            => true,
+        );
+
+        return response()->json($json_data);
+
+        
+         
+    }
+
+    public function saveBusinessIdeas($businessListing,$submitData){
+        $data = ['aboutbusiness'=>$submitData['aboutbusiness'],'businessstage'=>$submitData['businessstage'],'businessfunded'=>$submitData['businessfunded'],'incomegenerated'=>$submitData['incomegenerated'],'aboutteam'=>$submitData['aboutteam'],'marketscope'=>$submitData['marketscope'],'exit_strategy'=>$submitData['exit_strategy']];
+
+        $businessIdeas = $businessListing->getBusinessIdeas();
+        if(empty($businessIdeas)){
+            $businessIdeas = new BusinessListingData;
+            $businessIdeas->business_id = $businessListing->id;
+            $businessIdeas->data_key = 'business_ideas'; 
+        }
+
+        $businessIdeas->data_value = serialize($data);
+        $businessIdeas->save();
+        
+
     }
 
 /**

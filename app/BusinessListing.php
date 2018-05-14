@@ -296,6 +296,14 @@ class BusinessListing extends Model
         
         return $data;
     }
+
+
+    /**
+    get business data  
+     */
+    public function getBusinessIdeas(){
+       return $this->businessListingData()->where('data_key','business_ideas')->first(); 
+    }
  
  
 

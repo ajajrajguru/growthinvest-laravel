@@ -1194,6 +1194,10 @@ function aicSectors()
         'specialist_infrastructure' => 'Specialist: Infrastructure'];
 }
 
+function getDefaultValues($type){
+    return \App\Defaults::where('type', $type)->where('status', '1')->get();
+}
+
 function getDueDeligence()
 {
     // return \App\Defaults::where('type', 'approver')->where('status', '1')->get();

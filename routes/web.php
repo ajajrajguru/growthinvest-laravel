@@ -26,6 +26,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('upload-cropper-image', 'UserController@uploadTempImage');
     Route::post('crop-image', 'UserController@uploadCroppedImage');
     Route::post('delete-image', 'UserController@deleteImage');
+
+    // frontoffice entrepreneurs
+    Route::get('/add-business-proposals', 'BusinessListingController@create');
+    Route::post('/business-proposals/save', 'BusinessListingController@store');
+    Route::get('/investment-opportunities/{slug}/edit', 'BusinessListingController@edit');
 });
 
 // backoffice
@@ -182,9 +187,12 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 
 });
 
-// frontoffice entrepreneurs
+
+
 Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function () {
     Route::get('/', 'UserController@userDashboard');
+    Route::get('/business-proposals', 'BusinessListingController@getUserBusinessProposals');
+
     
 
 });
