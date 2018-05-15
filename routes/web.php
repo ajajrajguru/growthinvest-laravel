@@ -30,7 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
     // frontoffice entrepreneurs
     Route::get('/add-business-proposals', 'BusinessListingController@create');
     Route::post('/business-proposals/save', 'BusinessListingController@store');
-    Route::get('/investment-opportunities/{slug}/edit', 'BusinessListingController@edit');
+    Route::get('/investment-opportunities/{slug}/edit', 'BusinessListingController@create');
 });
 
 // backoffice

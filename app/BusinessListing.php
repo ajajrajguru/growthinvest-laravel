@@ -304,6 +304,22 @@ class BusinessListing extends Model
     public function getBusinessIdeas(){
        return $this->businessListingData()->where('data_key','business_ideas')->first(); 
     }
+
+    public function getBusinessProposalDetails(){
+       return $this->businessListingData()->where('data_key','business_proposal_details')->first(); 
+    }
+
+    public function getBusinessHmrcStatus(){
+       return $this->businessListingData()->where('data_key','hmrc_status')->first(); 
+    }
+
+    public function getFundingRequirement(){
+       return $this->businessListingData()->where('data_key','funding_requirement')->first(); 
+    }
+
+    public function getFinancials(){
+       return $this->businessListingData()->where('data_key','financials')->first(); 
+    }
  
  
 

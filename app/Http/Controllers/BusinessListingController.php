@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessHasDefault;
 use App\BusinessInvestment;
 use App\BusinessListing;
 use App\BusinessListingData;
@@ -655,19 +656,20 @@ class BusinessListingController extends Controller
             $businessListingType = 'vct';
         }
 
-        $requestFilters = $request->all(); 
+        $requestFilters = $request->all();
 
-        if(!empty($requestFilters)){
+        if (!empty($requestFilters)) {
             foreach ($requestFilters as $key => $values) {
-                if($key == 'title')
+                if ($key == 'title') {
                     continue;
+                }
 
-                $values = explode(',', $values); 
+                $values               = explode(',', $values);
                 $requestFilters[$key] = array_filter($values);
 
             }
         }
- 
+
         $sectors         = getBusinessSectors();
         $dueDeligence    = getDueDeligence();
         $stageOfBusiness = getStageOfBusiness();
@@ -710,10 +712,10 @@ class BusinessListingController extends Controller
 
         $filterDefaultIds = [];
         if (isset($filters['sectors']) && $filters['sectors'] != "") {
-            $sectors = $filters['sectors'];
-            $sectors = explode(',', $sectors);
-            $sectors = array_filter($sectors);
-            $filterDefaultIds = array_merge($sectors,$filterDefaultIds);
+            $sectors          = $filters['sectors'];
+            $sectors          = explode(',', $sectors);
+            $sectors          = array_filter($sectors);
+            $filterDefaultIds = array_merge($sectors, $filterDefaultIds);
 
             $businessListingQuery->leftjoin('business_has_defaults as bds', function ($join) {
                 $join->on('business_listings.id', 'bds.business_id');
@@ -722,36 +724,33 @@ class BusinessListingController extends Controller
         }
 
         if (isset($filters['due_deligence']) && $filters['due_deligence'] != "") {
-            $dueDeligence = $filters['due_deligence'];
-            $dueDeligence = explode(',', $dueDeligence);
-            $dueDeligence = array_filter($dueDeligence);
-            $filterDefaultIds = array_merge($dueDeligence,$filterDefaultIds);
+            $dueDeligence     = $filters['due_deligence'];
+            $dueDeligence     = explode(',', $dueDeligence);
+            $dueDeligence     = array_filter($dueDeligence);
+            $filterDefaultIds = array_merge($dueDeligence, $filterDefaultIds);
 
             $businessListingQuery->leftjoin('business_has_defaults  as bddd', function ($join) {
                 $join->on('business_listings.id', 'bddd.business_id');
             })->whereIn('bddd.default_id', $dueDeligence);
-             
+
         }
 
         if (isset($filters['business_stage']) && $filters['business_stage'] != "") {
-            $businessStage = $filters['business_stage'];
-            $businessStage = explode(',', $businessStage);
-            $businessStage = array_filter($businessStage);
-            $filterDefaultIds = array_merge($businessStage,$filterDefaultIds);
+            $businessStage    = $filters['business_stage'];
+            $businessStage    = explode(',', $businessStage);
+            $businessStage    = array_filter($businessStage);
+            $filterDefaultIds = array_merge($businessStage, $filterDefaultIds);
 
-             
             $businessListingQuery->leftjoin('business_has_defaults  as bdbs', function ($join) {
                 $join->on('business_listings.id', 'bdbs.business_id');
             })->whereIn('bdbs.default_id', $businessStage);
         }
 
- 
         if (isset($filters['fund_type']) && $filters['fund_type'] != "") {
             $fundTypes = $filters['fund_type'];
             $fundTypes = explode(',', $fundTypes);
             $fundTypes = array_filter($fundTypes);
 
- 
             $businessListingQuery->leftjoin('business_listing_datas as bldft', function ($join) {
                 $join->on('business_listings.id', 'bldft.business_id');
             })->whereIn('bldft.data_value', $fundTypes)->where('bldft.data_key', 'fund_typeoffund');
@@ -762,7 +761,6 @@ class BusinessListingController extends Controller
             $fundStatus = explode(',', $fundStatus);
             $fundStatus = array_filter($fundStatus);
 
-            
             $businessListingQuery->leftjoin('business_listing_datas as bldfs', function ($join) {
                 $join->on('business_listings.id', 'bldfs.business_id');
             })->whereIn('bldfs.data_value', $fundStatus)->where('bldfs.data_key', 'fund_openclosed');
@@ -773,7 +771,6 @@ class BusinessListingController extends Controller
             $fundInvestmentObjective = explode(',', $fundInvestmentObjective);
             $fundInvestmentObjective = array_filter($fundInvestmentObjective);
 
-        
             $businessListingQuery->leftjoin('business_listing_datas as bldfio', function ($join) {
                 $join->on('business_listings.id', 'bldfio.business_id');
             })->whereIn('bldfio.data_value', $fundInvestmentObjective)->where('bldfio.data_key', 'fund_investmentobjective');
@@ -794,7 +791,6 @@ class BusinessListingController extends Controller
             $vctInvestmentstrategy = explode(',', $vctInvestmentstrategy);
             $vctInvestmentstrategy = array_filter($vctInvestmentstrategy);
 
-        
             $businessListingQuery->leftjoin('business_listing_datas as bldfvis', function ($join) {
                 $join->on('business_listings.id', 'bldfvis.business_id');
             })->whereIn('bldfvis.data_value', $vctInvestmentstrategy)->where('bldfvis.data_key', 'investmentstrategy');
@@ -805,7 +801,6 @@ class BusinessListingController extends Controller
             $vctOfferingtype = explode(',', $vctOfferingtype);
             $vctOfferingtype = array_filter($vctOfferingtype);
 
-          
             $businessListingQuery->leftjoin('business_listing_datas as bldfvot', function ($join) {
                 $join->on('business_listings.id', 'bldfvot.business_id');
             })->whereIn('bldfvot.data_value', $vctOfferingtype)->where('bldfvot.data_key', 'offeringtype');
@@ -816,7 +811,6 @@ class BusinessListingController extends Controller
             $aicsector = explode(',', $aicsector);
             $aicsector = array_filter($aicsector);
 
-          
             $businessListingQuery->leftjoin('business_listing_datas as bldfas', function ($join) {
                 $join->on('business_listings.id', 'bldfas.business_id');
             })->whereIn('bldfas.data_value', $aicsector)->where('bldfas.data_key', 'aicsector');
@@ -1166,11 +1160,10 @@ class BusinessListingController extends Controller
                 $businessLink = url("investment-opportunities/single-company/" . $investmentClient->slug);
             }
 
- 
             $investmentClientsData[] = [
                 '#'                     => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $investmentClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $investmentClient->investment_id . '"><label class="custom-control-label" for="ch' . $investmentClient->investment_id . '"></label></div> ',
                 'invested_date'         => date('d/m/Y', strtotime($investmentClient->investment_date)),
-                'investment'            => '<a href="'.$businessLink.'" target="_blank">' .title_case($investmentClient->title). '</a>',
+                'investment'            => '<a href="' . $businessLink . '" target="_blank">' . title_case($investmentClient->title) . '</a>',
                 'investor'              => '<a href="' . url('backoffice/investor/' . $investmentClient->investorgicode . '/investor-profile') . '" target="_blank">' . title_case($investmentClient->investorname) . '</a>',
                 'firm'                  => '<a href="' . url('backoffice/firms/' . $investmentClient->firm_gi_code . '/') . '" target="_blank">' . title_case($investmentClient->firm_name) . '</a>',
                 'invested_amount'       => format_amount($investmentClient->invested, 0, true),
@@ -1465,7 +1458,7 @@ class BusinessListingController extends Controller
 
             $businessClientsData[] = [
                 '#'               => '<div class="custom-checkbox custom-control"><input type="checkbox" value="' . $businessClient->id . '" class="custom-control-input ck_business" name="ck_business" id="ch' . $businessClient->id . '"><label class="custom-control-label" for="ch' . $businessClient->id . '"></label></div> ',
-                'investment'      => '<a href="'.$businessLink.'" target="_blank">' .title_case($businessClient->title) . $owenerEmail.'</a>',
+                'investment'      => '<a href="' . $businessLink . '" target="_blank">' . title_case($businessClient->title) . $owenerEmail . '</a>',
                 'invested_amount' => format_amount($businessClient->investment_raised, 0, true),
                 'accrude'         => format_amount($accrude, 0, true),
                 'paid'            => format_amount($paid, 0, true),
@@ -1640,68 +1633,82 @@ class BusinessListingController extends Controller
 
     }
 
-
     // enterpreneur business proposals
-    public function getUserBusinessProposals(){
+    public function getUserBusinessProposals()
+    {
 
-        $user = Auth::user();
+        $user   = Auth::user();
         $userId = $user->id;
 
-        $businessListings = BusinessListing::where('owner_id', $userId)->whereIn('status', ['publish','draft'])->get();
-        
-        $businessListings = $businessListings->filter(function($businessListing){
-                     
-            $investedAmount = BusinessInvestment::select(\DB::raw('SUM(amount) as invested'))->where('status','funded')->where('business_id',$businessListing->id)->groupBy('business_id')->first();
-            if(!empty($investedAmount))
-                 $investedAmount = $investedAmount->invested;
-             else
-                $investedAmount = 0;
+        $businessListings = BusinessListing::where('owner_id', $userId)->whereIn('status', ['publish', 'draft'])->get();
 
-            $investedCount = BusinessInvestment::where('status','pledged')->where('business_id',$businessListing->id)->count();
-            $pledgeCount = BusinessInvestment::where('status','funded')->where('business_id',$businessListing->id)->count();
-            $watchListCount = BusinessInvestment::where('status','watch_list')->where('business_id',$businessListing->id)->count();
-            $questionCount = 0;
+        $businessListings = $businessListings->filter(function ($businessListing) {
+
+            $investedAmount = BusinessInvestment::select(\DB::raw('SUM(amount) as invested'))->where('status', 'funded')->where('business_id', $businessListing->id)->groupBy('business_id')->first();
+            if (!empty($investedAmount)) {
+                $investedAmount = $investedAmount->invested;
+            } else {
+                $investedAmount = 0;
+            }
+
+            $investedCount  = BusinessInvestment::where('status', 'pledged')->where('business_id', $businessListing->id)->count();
+            $pledgeCount    = BusinessInvestment::where('status', 'funded')->where('business_id', $businessListing->id)->count();
+            $watchListCount = BusinessInvestment::where('status', 'watch_list')->where('business_id', $businessListing->id)->count();
+            $questionCount  = 0;
 
             $businessListing['investedAmount'] = format_amount($investedCount, 0, true);
-            $businessListing['investedCount'] = $investedCount;
-            $businessListing['pledgeCount'] = $pledgeCount;
+            $businessListing['investedCount']  = $investedCount;
+            $businessListing['pledgeCount']    = $pledgeCount;
             $businessListing['watchListCount'] = $watchListCount;
-            $businessListing['questionCount'] = $questionCount;
-             
+            $businessListing['questionCount']  = $questionCount;
+
             return $businessListing;
         });
 
         $data['businessListings'] = $businessListings;
-        $data['user'] = $user;
+        $data['user']             = $user;
 
-        
         $data['active_menu'] = 'business-proposals';
-
-       
 
         return view('frontend.entrepreneur.business-proposals')->with($data);
     }
-
-
 
 /**
  * Show the form for creating a new resource.
  *
  * @return \Illuminate\Http\Response
  */
-    public function create()
+    public function create($giCode = '')
     {
         $sectors         = getDefaultValues('business-sector');
         $stageOfBusiness = getDefaultValues('stage_of_business');
-        $milestones = getDefaultValues('milestone');
+        $milestones      = getDefaultValues('milestone');
 
-        $businessListing = new BusinessListing;
-        $data['active_menu'] = 'business-proposals';
-        $data['mode'] = 'edit';
-        $data['businessListing'] = $businessListing;
-        $data['sectors'] = $sectors;
-        $data['stageOfBusiness'] = $stageOfBusiness;
-        $data['milestones'] = $milestones;
+        if ($giCode == '') {
+            $businessListing = new BusinessListing;
+        } else {
+            $businessListing = BusinessListing::where('gi_code', $giCode)->first();
+        }
+
+        $businessIdeas           = $businessListing->getBusinessIdeas();
+        $businessProposalDetails = $businessListing->getBusinessProposalDetails();
+        $fundingRequirement      = $businessListing->getFundingRequirement(); 
+        $businessHmrcStatus      = $businessListing->getBusinessHmrcStatus();
+        $financials      = $businessListing->getFinancials();
+        $defaultIds              = $businessListing->businessDefaults()->pluck('default_id')->toArray();
+
+        $data['active_menu']             = 'business-proposals';
+        $data['mode']                    = 'edit';
+        $data['businessListing']         = $businessListing;
+        $data['businessProposalDetails'] = (!empty($businessProposalDetails)) ? unserialize($businessProposalDetails->data_value) : [];
+        $data['businessHmrcStatus']      = (!empty($businessHmrcStatus)) ? $businessHmrcStatus->data_value : '';
+        $data['defaultIds']              = $defaultIds;
+        $data['businessIdeas']           = $businessIdeas;
+        $data['sectors']                 = $sectors;
+        $data['stageOfBusiness']         = $stageOfBusiness;
+        $data['fundingRequirement']      = (!empty($fundingRequirement)) ? unserialize($fundingRequirement->data_value) : [];
+        $data['financials']      = (!empty($financials)) ? unserialize($financials->data_value) : [];
+        $data['milestones']              = $milestones;
         return view('frontend.entrepreneur.add-business-proposals')->with($data);
     }
 
@@ -1714,69 +1721,213 @@ class BusinessListingController extends Controller
     public function store(Request $request)
     {
         $requestData = $request->all();
-
+        // dd($requestData);
         $submitType = $requestData['submit_type'];
-        $formData = $requestData['form_data']; 
+        $formData   = $requestData['form_data'];
         $submitData = [];
         foreach ($formData as $key => $data) {
-            $submitData[$data['name']] = $data['value'];
+            if (in_array($data['name'], ['exp_tax_status', 'tags_input', 'chk_milestones','use_of_funds','use_of_funds_amount'])) {
+                $submitData[$data['name']][] = $data['value'];
+            } else {
+                $submitData[$data['name']] = $data['value'];
+
+            }
+
         }
-        $giCode = $submitData['gi_code'];
+
+        $giCode   = $submitData['gi_code'];
         $redirect = false;
 
-        if($giCode == ''){
+        if ($giCode == '') {
             $redirect = true;
-            $giArgs = array('prefix' => "GIBP", 'min'=>60000001,'max' => 70000000);
+            $giArgs   = array('prefix' => "GIBP", 'min' => 60000001, 'max' => 70000000);
 
             $businessListing = new BusinessListing;
-            $giCode   = generateGICode($businessListing, 'gi_code', $giArgs);
+            $giCode          = generateGICode($businessListing, 'gi_code', $giArgs);
 
-            $businessListing->slug = str_slug($submitData['title']);
-            $businessListing->status = 'draft';
-            $businessListing->gi_code = $giCode;
+            $businessListing->slug                     = str_slug($submitData['title']);
+            $businessListing->status                   = 'draft';
+            $businessListing->gi_code                  = $giCode;
             $businessListing->investment_opportunities = 'no';
-            $businessListing->disp_to_nonloggedin = 'no';
-            $businessListing->owner_id = Auth::user()->id;
+            $businessListing->disp_to_nonloggedin      = 'no';
+            $businessListing->owner_id                 = Auth::user()->id;
 
+        } else {
+            $businessListing = BusinessListing::where('gi_code', $giCode)->first();
         }
-        else
-           $businessListing = BusinessListing::where('gi_code',$giCode)->first(); 
 
         $businessListing->title = $submitData['title'];
         $businessListing->save();
 
-        if($submitType == 'business_idea'){
-            $this->saveBusinessIdeas($businessListing,$submitData);   
+        if ($submitType == 'business_idea') {
+            $this->saveBusinessIdeas($businessListing, $submitData);
+        } elseif ($submitType == 'business_proposal_details') {
+            $this->saveBusinessProposalDetails($businessListing, $submitData);
+        }
+        elseif ($submitType == 'funding_requirement') {
+            $this->saveFundingRequirement($businessListing, $submitData);
+        }
+        elseif ($submitType == 'financials') {
+            $this->saveFinancials($businessListing, $submitData);
         }
 
-
         $json_data = array(
-            "gi_code"            => $businessListing->gi_code,
-            "redirect"            => $redirect,
-            "status"            => true,
+            "gi_code"  => $businessListing->gi_code,
+            "redirect" => $redirect,
+            "status"   => true,
         );
 
         return response()->json($json_data);
 
-        
-         
     }
 
-    public function saveBusinessIdeas($businessListing,$submitData){
-        $data = ['aboutbusiness'=>$submitData['aboutbusiness'],'businessstage'=>$submitData['businessstage'],'businessfunded'=>$submitData['businessfunded'],'incomegenerated'=>$submitData['incomegenerated'],'aboutteam'=>$submitData['aboutteam'],'marketscope'=>$submitData['marketscope'],'exit_strategy'=>$submitData['exit_strategy']];
+    public function saveBusinessIdeas($businessListing, $submitData)
+    {
+        $data = ['aboutbusiness' => $submitData['aboutbusiness'], 'businessstage' => $submitData['businessstage'], 'businessfunded' => $submitData['businessfunded'], 'incomegenerated' => $submitData['incomegenerated'], 'aboutteam' => $submitData['aboutteam'], 'marketscope' => $submitData['marketscope'], 'exit_strategy' => $submitData['exit_strategy']];
 
         $businessIdeas = $businessListing->getBusinessIdeas();
-        if(empty($businessIdeas)){
-            $businessIdeas = new BusinessListingData;
+        if (empty($businessIdeas)) {
+            $businessIdeas              = new BusinessListingData;
             $businessIdeas->business_id = $businessListing->id;
-            $businessIdeas->data_key = 'business_ideas'; 
+            $businessIdeas->data_key    = 'business_ideas';
         }
 
         $businessIdeas->data_value = serialize($data);
         $businessIdeas->save();
-        
 
     }
+
+    public function saveBusinessProposalDetails($businessListing, $submitData)
+    {
+        $data = ['business_proposal_details' => $submitData['business_proposal_details'], 'address' => $submitData['address'], 'postcode' => $submitData['postcode'], 'website' => $submitData['website'], 'social-facebook' => $submitData['social-facebook'], 'social-linkedin' => $submitData['social-linkedin'], 'social-twitter' => $submitData['social-twitter'], 'social-google' => $submitData['social-google'], 'social-companyhouse' => $submitData['social-companyhouse'], 'started-trading' => $submitData['started-trading'], 'started-trading' => $submitData['started-trading']];
+
+        $businessProposalDetails = $businessListing->getBusinessProposalDetails();
+        if (empty($businessProposalDetails)) {
+            $businessProposalDetails              = new BusinessListingData;
+            $businessProposalDetails->business_id = $businessListing->id;
+            $businessProposalDetails->data_key    = 'business_proposal_details';
+        }
+
+        $businessProposalDetails->data_value = serialize($data);
+        $businessProposalDetails->save();
+
+        $round           = $submitData['proposal_round'];
+        $taxStatus       = $submitData['exp_tax_status'];
+        $hmrcStatus      = $submitData['hmrc_status'];
+        $businessSectors = $submitData['tags_input'];
+        $businessStage   = $submitData['lst_stages_of_business'];
+        $milestones      = $submitData['chk_milestones'];
+
+        $businessListing->tax_status = $taxStatus;
+        $businessListing->round      = $round;
+        $businessListing->save();
+
+        $businessHmrcStatus = $businessListing->getBusinessHmrcStatus();
+        if (empty($businessHmrcStatus)) {
+            $businessHmrcStatus              = new BusinessListingData;
+            $businessHmrcStatus->business_id = $businessListing->id;
+            $businessHmrcStatus->data_key    = 'hmrc_status';
+        }
+        $businessHmrcStatus->data_value = $hmrcStatus;
+        $businessHmrcStatus->save();
+
+        BusinessHasDefault::join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'business-sector')->where('business_has_defaults.business_id', $businessListing->id)->delete();
+        if (!empty($businessSectors)) {
+
+            foreach ($businessSectors as $businessSector) {
+
+                $businessHasDefault              = new BusinessHasDefault;
+                $businessHasDefault->business_id = $businessListing->id;
+                $businessHasDefault->default_id  = $businessSector;
+                $businessHasDefault->save();
+
+            }
+        }
+
+        BusinessHasDefault::join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'milestone')->where('business_has_defaults.business_id', $businessListing->id)->delete();
+        if (!empty($milestones)) {
+
+            foreach ($milestones as $milestone) {
+                $businessHasDefault              = new BusinessHasDefault;
+                $businessHasDefault->business_id = $businessListing->id;
+                $businessHasDefault->default_id  = $milestone;
+                $businessHasDefault->save();
+            }
+        }
+
+        BusinessHasDefault::select('business_has_defaults.*')->join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'stage_of_business')->where('business_has_defaults.business_id', $businessListing->id)->delete();
+
+        if (!empty($businessStage)) {
+
+            $businessHasDefault              = new BusinessHasDefault;
+            $businessHasDefault->business_id = $businessListing->id;
+            $businessHasDefault->default_id  = $businessStage;
+            $businessHasDefault->save();
+
+        }
+
+    }
+
+    public function saveFundingRequirement($businessListing, $submitData)
+    {
+        $notSureRaise = (isset($submitData['not-sure-raise'])) ? $submitData['not-sure-raise'] : '';
+        $notCalculatedShare = (isset($submitData['not-calculated-share'])) ? $submitData['not-calculated-share'] : '';
+        $data = ['not-sure-raise' => $notSureRaise, 'not-calculated-share' => $notCalculatedShare, 'investment-sought' => $submitData['investment-sought'], 'minimum-investment' => $submitData['minimum-investment'], 'minimum-raise' => $submitData['minimum-raise'], 'post-money-valuation' => $submitData['post-money-valuation'], 'pre-money-valuation' => $submitData['pre-money-valuation'], 'percentage-giveaway' => $submitData['percentage-giveaway'], 'deadline-subscription' => $submitData['deadline-subscription']];
+
+        $data['use_of_funds']=[];
+        $amount = $submitData['use_of_funds_amount'];
+        foreach ($submitData['use_of_funds'] as $key => $useOfFunds) {
+            $data['use_of_funds'][] = ['value'=>$useOfFunds,'amount'=>$amount[$key]];
+        }
+
+        $fundingRequirement = $businessListing->getFundingRequirement();
+        if (empty($fundingRequirement)) {
+            $fundingRequirement              = new BusinessListingData;
+            $fundingRequirement->business_id = $businessListing->id;
+            $fundingRequirement->data_key    = 'funding_requirement';
+        }
+
+        $fundingRequirement->data_value = serialize($data);
+        $fundingRequirement->save();
+
+    }
+
+    public function saveFinancials($businessListing, $submitData)
+    {
+        $data = ['revenue_year1' => $submitData['revenue_year1'], 'revenue_year2' => $submitData['revenue_year2'], 'revenue_year3' => $submitData['revenue_year3'], 'sale_year1' => $submitData['sale_year1'], 'sale_year2' => $submitData['sale_year2'], 'sale_year3' => $submitData['sale_year3'], 'expences_year1' => $submitData['expences_year1'],'expences_year2' => $submitData['expences_year2'],'expences_year3' => $submitData['expences_year3'],'ebitda_year_1' => $submitData['ebitda_year_1'],'ebitda_year_2' => $submitData['ebitda_year_2'],'ebitda_year_3' => $submitData['ebitda_year_3']];
+
+
+        $data['use_of_funds']=[];
+        $amount = $submitData['use_of_funds_amount'];
+        foreach ($submitData['use_of_funds'] as $key => $useOfFunds) {
+            $data['use_of_funds'][] = ['value'=>$useOfFunds,'amount'=>$amount[$key]];
+        }
+
+        $fundingRequirement = $businessListing->getFinancials();
+        if (empty($fundingRequirement)) {
+            $fundingRequirement              = new BusinessListingData;
+            $fundingRequirement->business_id = $businessListing->id;
+            $fundingRequirement->data_key    = 'financials';
+        }
+
+        $fundingRequirement->data_value = serialize($data);
+        $fundingRequirement->save();
+
+    }
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Display the specified resource.
