@@ -85,3 +85,42 @@
 		}
 	}
 }
+
+.arrow-steps,
+.img-steps {
+	position: relative;
+	& > li:not(:last-child) {
+		margin-bottom: 15px;
+		&:after {
+			font-family: FontAwesome;
+    		content: "\f178";
+			position: absolute;
+			right: -7px;
+			top: 14px;
+			color: @brand-primary;
+			@media (max-width: 768px) {
+				// content: "\f3c1";
+				transform: rotate(90deg);
+				left: 0;
+				right: 0;
+				top: initial;
+				bottom: -10px;
+				text-align: center;
+
+			}
+		}
+	}
+}
+
+.arrow-steps {
+	&.img-steps {
+		& > li:not(:last-child) {
+			&:after {
+				top: 50px;
+				@media (max-width: 768px) {
+					display: none;
+				}
+			}
+		}
+	}
+}
