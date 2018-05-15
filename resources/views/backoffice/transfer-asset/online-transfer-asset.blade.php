@@ -54,7 +54,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
          Please follow the instructions below for the online completion of asset transfers. If you require assistance or have any questions please do not hesitate to contact our help team on 020 7071 3945
          <br>
          <br>
-         <div class="card-header">Transfer Asset</div>
+         <div class="p-2 bg-primary text-white mb-3">Transfer Asset</div>
          Please select your client from the dropdown list below to view existing asset transfers or start a new one. Please note that only fully registered clients with nominee accounts will appear in the dropdown list.
          <ul class="progress-indicator my-5">
             <li class="active" part="part-1">
@@ -72,71 +72,82 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
          </ul>
           <form method="post" name="online_transfer_asset" action="{{ url('backoffice/transfer-asset/save-online-asset') }}" data-parsley-validate name="add-investor-reg" id="add-investor-reg" enctype="multipart/form-data">
          <div class="part-container part-1">
-            <div class="row">
-               <div class="col-md-3 text-center" >
-                  <div class="form-group">
-                     <label>Select Client <span class="text-danger">*</span></label>
-                     <select name="investor" class="form-control select2-single" data-parsley-required >
-                        <option value="">-select-</option>
-                        @foreach($investors as $investor)
-                        <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
-                        @endforeach
-                     </select>
+            
+            <div class="">
+               <div class="d-sm-flex justify-content-sm-between align-items-sm-center mb-3">
+                  <h3 class="mb-sm-0">View Assets</h3>
+
+                  <div class="">
+                     <div class="" >
+                        <div class="d-sm-flex align-items-sm-center w-sm-300">
+                           <label class="mb-0 text-nowrap">Select Client <span class="text-danger">*</span></label>
+                           <select name="investor" class="form-control select2-single" data-parsley-required >
+                              <option value="">-select-</option>
+                              @foreach($investors as $investor)
+                              <option value="{{ $investor->id }}">{{ $investor->first_name.' '.$investor->last_name }}</option>
+                              @endforeach
+                           </select>
+                        </div>
+                     </div>
                   </div>
                </div>
-            </div>
-            <div class="row">
-               <h3>View Assets</h3>
-               <table class="table table-bordered cust-table" id="view_all_firms_table">
+               
+               <div class="table-responsive">
+               <table class="table table-bordered table-striped cust-table" id="view_all_firms_table">
                   <thead>
                      <tr class="">
-                        <th width="10%">
+                        <th width="7.69%">
                            Type of Assets
                         </th>
-                        <th  width="10%">
+                        <th  width="7.69%">
                            Company Name
                         </th>
-                        <th class="subheader_cell-cust" width="10%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Type of Share
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            No of Shares to be transferred
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Current name on share certificate
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Name of Product
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Client Account Number
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Transfer Type
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Custody/Non-Custody
                         </th>
-                        <th class="subheader_cell-cust" width="9%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Amount
                         </th>
-                        <th class="subheader_cell-cust" width="10%">
+                        <th class="subheader_cell-cust" width="7.69%">
                            Documents / Underlying Companies
                         </th>
-                        <th class="subheader_cell-cust" width="6%">
+                        <th class="subheader_cell-cust text-center" width="7.69%">
                            Action
                         </th>
-                        <th class="subheader_cell-cust" width="6%">
+                        <th class="subheader_cell-cust text-center" width="7.69%">
                            Status
                         </th>
                         <!--<th class="subheader_cell firm_user_manager ">WM Commission Collected</th>            <th class="subheader_cell firm_user_manager ">Introducer Commission Due</th>            <th class="subheader_cell firm_user_manager ">Introducer Commission Collected</th>-->
                      </tr>
                   </thead>
-                  <tbody class="data_container">
+                  <tbody class="data_container text-nowrap">
                       <tr><td  colspan="13" class="text-center"> No Data Found</td></tr>
                   </tbody>
                </table>
-               <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-2"><i class="fa fa-angle-double-right"></i> Next</a>
+               </div>
+
+               <div class="text-right">
+                  <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-2"> Next <i class="fa fa-angle-double-right"></i></a>
+               </div>
+               
             </div> 
          </div>
          <!--  -->
@@ -360,7 +371,7 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                <div class="uploaded-file-path"></div>
             </div>
             <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section" part="part-1"><i class="fa fa-angle-double-left"></i> Prev</a>
-            <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-3"><i class="fa fa-angle-double-right"></i> Next</a>
+            <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-3"> Next <i class="fa fa-angle-double-right"></i></a>
          </div>
          <!--  -->
          <div class="part-container part-3 d-none">

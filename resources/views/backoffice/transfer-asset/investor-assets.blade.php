@@ -49,8 +49,8 @@
             <a href="javascipt:void(0)" class="toggle-download-uploaded-doc " assetid="{{ $transferasset->id }}">View</a>
         </td>
         <td class="subheader_cell-cust" width="6%">
-           <a class="toggle-download-doc " href="javascipt:void(0)" assetid="{{ $transferasset->id }}" investorid="{{ $transferasset->investor_id }}" ><i class="fa fa-download"></i></a> | 
-           <a href="javascipt:void(0)" class="delete_tranferasset  cup" assetid="{{ $transferasset->id }}"><i class="fa fa-trash fa-lg"></i></a>
+           <a class="toggle-download-doc btn btn-link" href="javascipt:void(0)" assetid="{{ $transferasset->id }}" investorid="{{ $transferasset->investor_id }}" ><i class="fa fa-download"></i></a> | 
+           <a href="javascipt:void(0)" class="delete_tranferasset btn btn-link" assetid="{{ $transferasset->id }}"><i class="fa fa-trash fa-lg"></i></a>
         </td>
         <td class="subheader_cell-cust" width="6%">
            <select class="transferasset_status form-control" style="width:115px; display: inline-block;">
@@ -58,7 +58,7 @@
               <option value="completed" @if($transferasset->status=="completed") selected @endif>completed</option>                    
            </select>
 
-           <a class="m-l-10 savetransferasset_asset" href="javascipt:void(0);" assetid="{{ $transferasset->id }}"><i class="fa fa-save fa-lg "></i></a>
+           <a class="btn btn-link savetransferasset_asset" href="javascipt:void(0);" assetid="{{ $transferasset->id }}"><i class="fa fa-save fa-lg "></i></a>
 
            <span class="transferasset-msg d-none"></span>
         </td>
