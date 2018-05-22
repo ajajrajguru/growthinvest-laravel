@@ -1,10 +1,21 @@
 @extends('layouts.frontend')
 
- 
+ @section('css')
+  @parent
+    <link  href="{{ asset('bower_components/cropper/dist/cropper.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('/bower_components/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css') }}" >
+@endsection
 @section('js')
   @parent
 
   <script type="text/javascript" src="{{ asset('js/business-proposals.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/cropper/dist/cropper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/plupload/js/plupload.full.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bower_components/plupload/js/jquery.plupload.queue/jquery.plupload.queue.min.js') }}"></script>
+  
+  
+  <script type="text/javascript" src="{{ asset('js/aj-uploads.js') }}"></script>
+
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -14,8 +25,52 @@
         });
 
         $('[data-toggle="tooltip"]').tooltip()
+
+        uploadFiles('public-additional-doc','{{ url("upload-files") }}','public');
+        uploadFiles('private-addtional-doc','{{ url("upload-files") }}','private');
+
+        @php
+            $memberCount = 0;
+        @endphp
+        @if(isset($teamMemberDetails['team-members']) && !empty($teamMemberDetails['team-members']))
+            @foreach($teamMemberDetails['team-members'] as $teamMemberDetail)
+                @php
+                    $memberCount = $memberCount+1;
+                    $containerId   = 'member-picture-' . $memberCount;
+                    $pickFile      = 'mem-picfile-' . $memberCount;
+                    $imageCLass    = 'member-profile-picture-' . $memberCount;
+                    $postUrl       = url("upload-cropper-image");
+                @endphp
+
+                uploadCropImage('{{ $containerId }}','{{ $pickFile }}','{{ $imageCLass }}','{{ $postUrl }}');
+            @endforeach
+        @endif
+
+        uploadSingleFile('upload-proposal-summary','proposal-summary','{{ url("upload-files") }}');
+        uploadSingleFile('upload-generate-summary','generate-summary','{{ url("upload-files") }}');
+        uploadSingleFile('upload-information-memorandum','information-memorandum','{{ url("upload-files") }}');
+        uploadSingleFile('upload-kid-document','kid-document','{{ url("upload-files") }}');
+        uploadSingleFile('upload-application-form-1','application-form-1','{{ url("upload-files") }}');
+        uploadSingleFile('upload-application-form-2','application-form-2','{{ url("upload-files") }}');
+        uploadSingleFile('upload-application-form-3','application-form-3','{{ url("upload-files") }}');
+        uploadSingleFile('upload-presentation','presentation','{{ url("upload-files") }}');
+        uploadSingleFile('upload-financial-projection','financial-projection','{{ url("upload-files") }}');
+
+        uploadSingleFile('upload-due-deligence-report','due-deligence-report','{{ url("upload-files") }}');
+        uploadSingleFile('upload-hardman-document','hardman-document','{{ url("upload-files") }}');
+        uploadSingleFile('upload-tax-efficient-review','tax-efficient-review','{{ url("upload-files") }}');
+        uploadSingleFile('upload-allenbridge','allenbridge','{{ url("upload-files") }}');
+        uploadSingleFile('upload-micap','micap','{{ url("upload-files") }}');
+        uploadSingleFile('upload-all-street','all-street','{{ url("upload-files") }}');
+
+        uploadCropImage('business-logo-picture','pickfiles','business-logo-img','{{ url("upload-cropper-image") }}');
+        uploadCropImage('business-background-cont','pickbackground','business-background-img','{{ url("upload-cropper-image") }}');
+
+
+       
     });
         
+
 
   </script>
 @endsection
@@ -48,7 +103,7 @@
 
 		If you have any questions or queries, please do not hesitate to contact us at any time on Email support@growthinvest.com, phone 020 7071 3945, or via our online form here</p>
  		
- 		<form method="post" data-parsley-validate name="add-business" id="add-business" enctype="multipart/form-data">
+ 		<form method="post"  data-parsley-validate name="add-business" id="add-business" enctype="multipart/form-data">
 		<div id="" role="tablist" class="gi-collapse">
             <div class="card">
                 <div class="card-header" role="tab" id="headingOne">
@@ -518,12 +573,695 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-header" role="tab" id="headingFive">
+                        <a data-toggle="collapse" href="#collapse5" role="button" class="collapsed" aria-expanded="false">
+                            <span class="px-0 col-md-10 col-8">
+                              Management Team
+                                <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
+                            </span>
+                            <span class="text-md-right text-center px-0 col-md-2 col-4">
+
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <i class="fa fa-lg fa-plus-square-o"></i>
+                                <i class="fa fa-lg fa-minus-square-o"></i>
+                                <input type="hidden" name="section_status[5]" class="section1-status-input sectionstatus-input" value="">
+                            </span>
+                        </a>
+                    </div>
+
+                    <div id="collapse5" class="collapse parent-tabpanel" role="tabpanel" data-section='5' >
+                        <div class="card-body">
+                            <div class="row">
+                                 <div class="col-sm-12">
+                                    <div class="team-member-container">
+                                        @php
+                                        $memberCounter = 0;
+                                        if(isset($teamMemberDetails['team-members']) && !empty($teamMemberDetails['team-members'])){
+                                                     
+                                            $data['businessListing'] = $businessListing;
+                                            foreach($teamMemberDetails['team-members'] as $teamMemberDetail){
+                                                $memberCounter = $memberCounter+1;
+                                                $data['memberCount']     = $memberCounter;
+                                                $data['teamMemberDetail'] = $teamMemberDetail;
+                                                echo View::make('frontend.entrepreneur.add-team-member-card')->with($data)->render();
+                                            }
+                                        }
+                                              
+                                        @endphp
+                                        <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif add-team-member" >Add team member</button>
+                                        <input type="hidden" class="member-counter" name="member_counter" value="{{ $memberCounter }}">
+                                    </div>
+                                    
+                                    
+                                    <br>
+                             
+                                    <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="team-members" >Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-header" role="tab" id="headingSix">
+                        <a data-toggle="collapse" href="#collapse6" role="button" class="collapsed" aria-expanded="false">
+                            <span class="px-0 col-md-10 col-8">
+                               Company Details
+                                <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
+                            </span>
+                            <span class="text-md-right text-center px-0 col-md-2 col-4">
+
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <i class="fa fa-lg fa-plus-square-o"></i>
+                                <i class="fa fa-lg fa-minus-square-o"></i>
+                                <input type="hidden" name="section_status[5]" class="section1-status-input sectionstatus-input" value="">
+                            </span>
+                        </a>
+                    </div>
+
+                    <div id="collapse6" class="collapse parent-tabpanel" role="tabpanel" data-section='6' >
+                        <div class="card-body">
+                            <div class="row">
+                             
+                                <div class="col-sm-12">
+    
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label>Company Number</label>
+                                            <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_number" placeholder=""   value="@if(isset($companyDetails['detail_number'])){{ $companyDetails['detail_number'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Company Type</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_type" placeholder=""   value="@if(isset($companyDetails['detail_type'])){{ $companyDetails['detail_type'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Telephone No.</label>
+                                            <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_telephone" placeholder=""   value="@if(isset($companyDetails['detail_telephone'])){{ $companyDetails['detail_telephone'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>SIC 2003</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_sic2003" placeholder=""   value="@if(isset($companyDetails['detail_sic2003'])){{ $companyDetails['detail_sic2003'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Types of Accounts</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_typeofaccount" placeholder=""   value="@if(isset($companyDetails['detail_typeofaccount'])){{ $companyDetails['detail_typeofaccount'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Latest Annual Returns</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualreturns" placeholder=""   value="@if(isset($companyDetails['detail_latestannualreturns'])){{ $companyDetails['detail_latestannualreturns'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Next Annual Returns Due</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualreturnsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualreturnsdue'])){{ $companyDetails['detail_nextannualreturnsdue'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Latest Annual Accounts</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualaccounts" placeholder=""   value="@if(isset($companyDetails['detail_latestannualaccounts'])){{ $companyDetails['detail_latestannualaccounts'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Next Annual Accounts Due</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualaccountsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualaccountsdue'])){{ $companyDetails['detail_nextannualaccountsdue'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>SIC 2007</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_sic2007" placeholder=""   value="@if(isset($companyDetails['detail_sic2007'])){{ $companyDetails['detail_sic2007'] }}@endif" >
+
+                                        </div>  
+
+                                        <div class="form-group">
+                                            <label>Trading Address</label>
+                                            <textarea class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_tradingaddress" placeholder="" >@if(!empty($companyDetails) && isset($companyDetails['detail_tradingaddress'])) {{ $companyDetails['detail_tradingaddress'] }}  @endif</textarea>
+                                           
+                                            
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Incorporation Date</label>
+                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_incorporationdate" placeholder=""   value="@if(isset($companyDetails['detail_incorporationdate'])){{ $companyDetails['detail_incorporationdate'] }}@endif" >
+
+                                        </div>  
+            
+                                            
+                                             
+
+                                        
+                                    </div>
+                                         
+                              
+                                    </div>
+
+                                   <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="company-details" >Save</button>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-header" role="tab" id="headingSeven">
+                        <a data-toggle="collapse" href="#collapse7" role="button" class="collapsed" aria-expanded="false">
+                            <span class="px-0 col-md-10 col-8">
+                              Document Upload
+                                <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
+                            </span>
+                            <span class="text-md-right text-center px-0 col-md-2 col-4">
+
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <i class="fa fa-lg fa-plus-square-o"></i>
+                                <i class="fa fa-lg fa-minus-square-o"></i>
+                                <input type="hidden" name="section_status[7]" class="section1-status-input sectionstatus-input" value="">
+                            </span>
+                        </a>
+                    </div>
+
+                    <div id="collapse7" class="collapse parent-tabpanel" role="tabpanel" data-section='7' >
+                        <div class="card-body">
+                            <div class="row">
+                                 <div class="col-sm-12">
+                                     <fieldset>
+                                        <legend>Key Documents</legend>                   
+                                            <p>Tick to set as Primary Summary</p>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-proposal-summary">
+                                              <input type="radio" id="proposalsummaryoption_customupload" name="proposalsummaryoption" class="custom-control-input checked-input-status completion_status" value="customupload" @if(isset($documentUploads['proposalsummaryoption']) && $documentUploads['proposalsummaryoption']=='customupload') checked @endif>
+                                              <label class="custom-control-label" for="proposalsummaryoption_customupload">Proposal Summary</label>
+
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="proposal-summary" object-type="App\BusinessListing" object-id="" file-type="proposal_summary">Select File</button>
+                                                  <input type="hidden" name="proposal_summary" value="" class="uploaded-file-path">
+
+                                                  <span class="file_name">
+                                       
+                                                      {!! getbusinessUploadedFileNamesHtml($businessFiles,'proposal_summary',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-generate-summary">
+                                              <input type="radio" id="proposalsummaryoption_auto" name="proposalsummaryoption" class="custom-control-input checked-input-status completion_status" value="auto" @if(isset($documentUploads['proposalsummaryoption']) && $documentUploads['proposalsummaryoption']=='auto') checked @endif>
+                                              <label class="custom-control-label" for="proposalsummaryoption_auto">Generate Summary</label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="generate-summary" object-type="App\BusinessListing" object-id="" file-type="generate_summary">Select File</button>
+                                                  <input type="hidden" name="generate_summary" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'generate_summary',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+                                       
+                                            <div class="form-group" id="upload-information-memorandum">
+                                             <label>Information Memorandum</label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="information-memorandum" object-type="App\BusinessListing" object-id="" file-type="information_memorandum">Select File</button>
+                                                  <input type="hidden" name="information_memorandum" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'information_memorandum',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+                                      
+                                            <div class="form-group" id="upload-kid-document">
+                                             <label>KID Document</label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="kid-document" object-type="App\BusinessListing" object-id="" file-type="kid_document">Select File</button>
+                                                  <input type="hidden" name="kid_document" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'kid_document',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+
+                                            <hr>
+                                            <p>Tick to set as primary application report</p>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-application-form-1">
+                                              <input type="radio" id="primaryapplicationform_propfundapplicationforms" name="primaryapplicationform" class="custom-control-input checked-input-status completion_status" value="propfundapplicationforms" @if(isset($documentUploads['primaryapplicationform']) && $documentUploads['primaryapplicationform']=='propfundapplicationforms') checked @endif>
+                                              <label class="custom-control-label" for="primaryapplicationform_propfundapplicationforms">Application Form 1 </label>
+
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="application-form-1" object-type="App\BusinessListing" object-id="" file-type="application_form_1">Select File</button>
+                                                  <input type="hidden" name="application_form_1" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'application_form_1',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-application-form-2">
+                                              <input type="radio" id="primaryapplicationform_propfundapplicationforms1" name="primaryapplicationform" class="custom-control-input checked-input-status completion_status" value="propfundapplicationforms1"  @if(isset($documentUploads['primaryapplicationform']) && $documentUploads['primaryapplicationform']=='propfundapplicationforms1') checked @endif >
+                                              <label class="custom-control-label" for="primaryapplicationform_propfundapplicationforms1">Application Form 2</label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="application-form-2" object-type="App\BusinessListing" object-id="" file-type="application_form_2">Select File</button>
+                                                  <input type="hidden" name="application_form_2" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'application_form_2',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-application-form-3">
+                                              <input type="radio" id="primaryapplicationform_propfundapplicationforms2" name="primaryapplicationform" class="custom-control-input checked-input-status completion_status" value="propfundapplicationforms2" @if(isset($documentUploads['primaryapplicationform']) && $documentUploads['primaryapplicationform']=='propfundapplicationforms2') checked @endif>
+                                              <label class="custom-control-label" for="primaryapplicationform_propfundapplicationforms2">Application Form 3</label>
+
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="application-form-3" object-type="App\BusinessListing" object-id="" file-type="application_form_3">Select File</button>
+                                                  <input type="hidden" name="application_form_3" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'application_form_3',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+                                       
+                                            <div class="form-group " id="upload-presentation">
+                                             <label>Presentation</label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="presentation" object-type="App\BusinessListing" object-id="" file-type="presentation">Select File</button>
+                                                  <input type="hidden" name="presentation" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'presentation',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+                                 
+                                            <div class="form-group " id="upload-financial-projection"> 
+                                             <label  >Financial Projection</label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="financial-projection" object-type="App\BusinessListing" object-id="" file-type="financial_projection">Select File</button>
+                                                  <input type="hidden" name="financial_projection" value="" class="uploaded-file-path">
+                                                  <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'financial_projection',$businessListing) !!}</span>
+                                              </div>
+                                            </div>
+
+                                            <p>In order to be able to review your proposals and make an informed decision, it is essential that you provide us with an extended business plan covering in detail the following aspects: Business Idea, Business Model, USP, revenue streams, team, market gap, analysis of your competition, market size, challenges and opportunities, success factors, use of funds, marketing, client acquisition, financial projections and exit strategies.</p>
+
+                                            <p>Public Additional Documents</p>
+                                            <div class="row upload-files-section">
+                                               <div id="public-additional-doc" object-type="App\BusinessListing" object-id="" file-type="public_additional_documents">
+                                                  <p></p>
+                                               </div>
+                                               <div class="uploaded-file-path"></div>
+                                               <br>
+                                               <div class="uploaded-files">
+                                                   @if(!empty($publicAdditionalDocs))
+                                                    @foreach($publicAdditionalDocs as $publicDocs)
+                                                    <div>
+                                                        <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="public_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="public_additional_documents_file_id" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
+                                                    </div>
+                                                    @endforeach
+                                                   @endif
+                                                </div>
+                                            </div>
+
+                                            <p>Private Additional Documents</p>
+
+                                            <div class="row upload-files-section">
+                                               <div id="private-addtional-doc" object-type="App\BusinessListing" object-id="" file-type="private_additional_documents">
+                                                  <p></p>
+                                               </div>
+                                               <div class="uploaded-file-path"></div>
+<br>                                            
+                                                <div class="uploaded-files">
+                                                   @if(!empty($privateAdditionalDocs))
+                                                    @foreach($privateAdditionalDocs as $privateDocs)
+                                                    <div>
+                                                       <p class="multi_file_name"> {{ $privateDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="private_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="private_additional_documents_file_id" class="file_id" value="{{ $privateDocs['fileid'] }}"></p>
+                                                   </div>
+                                                    @endforeach
+                                               @endif
+                                               </div>
+                                            </div>
+                                    </fieldset>
+                             
+                                    <!-- <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="document-upload" >Save</button> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-header" role="tab" id="headingEight">
+                        <a data-toggle="collapse" href="#collapse8" role="button" class="collapsed" aria-expanded="false">
+                            <span class="px-0 col-md-10 col-8">
+                            Platform Due Diligence Report Upload
+                                <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
+                            </span>
+                            <span class="text-md-right text-center px-0 col-md-2 col-4">
+
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <i class="fa fa-lg fa-plus-square-o"></i>
+                                <i class="fa fa-lg fa-minus-square-o"></i>
+                                <input type="hidden" name="section_status[7]" class="section1-status-input sectionstatus-input" value="">
+                            </span>
+                        </a>
+                    </div>
+
+                    <div id="collapse8" class="collapse parent-tabpanel" role="tabpanel" data-section='8' >
+                        <div class="card-body">
+                            <div class="row">
+                                 <div class="col-sm-12">
+                                    <fieldset>
+                                        <legend>Platform Due Diligence Report</legend>   
+                                        <div class="form-group">
+                                            <label>Platform Due Diligence Report Intro</label>
+                                            <textarea class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="desc_diligencereportsintro" placeholder="" >@if(!empty($dueDeligence) && isset($dueDeligence['desc_diligencereportsintro'])) {{ $dueDeligence['desc_diligencereportsintro'] }}  @endif</textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Due Diligence Report</label><br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-due-deligence-report">
+                                              <input type="radio" id="primaryplatformduediligence_duediligencedoc" name="primaryplatformduediligence" class="custom-control-input checked-input-status completion_status" value="duediligencedoc" @if(isset($dueDeligence['primaryplatformduediligence']) && $dueDeligence['primaryplatformduediligence']=='duediligencedoc') checked @endif>
+                                               <label class="custom-control-label" for="primaryplatformduediligence_duediligencedoc"></label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="due-deligence-report" object-type="App\BusinessListing" object-id="" file-type="due_deligence_report">Select File</button>
+                                                  <input type="hidden" name="due_deligence_report" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'due_deligence_report',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>External Due Diligence Reports</legend>   
+
+                                        <div class="form-group">
+                                            <label>Hardman Documents</label><br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-hardman-document">
+                                              <input type="radio" id="primaryplatformduediligence_harmandoc" name="primaryplatformduediligence" class="custom-control-input checked-input-status completion_status" value="harmandoc" @if(isset($dueDeligence['primaryplatformduediligence']) && $dueDeligence['primaryplatformduediligence']=='harmandoc') checked @endif>
+                                              <label class="custom-control-label" for="primaryplatformduediligence_harmandoc"></label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="hardman-document" object-type="App\BusinessListing" object-id="" file-type="hardman_document">Select File</button>
+                                                  <input type="hidden" name="hardman_document" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'hardman_document',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+
+                                            <p>Hardman Documents External document links</p>
+
+                                            <button type="button" class="btn btn-primary text-right add-external-links" link-type="hardman" id="" >Add External Link</button>
+
+                                            <div class="hardman-external-links">
+                                                @if(isset($dueDeligence['hardman-links']))
+                                                    @php
+                                                    $i=0;
+                                                    @endphp
+                                                @foreach($dueDeligence['hardman-links'] as $links)
+                                                    @php
+                                                    $i++;
+                                                    @endphp
+                                                <div class="row social-link-row">                    
+                                                  <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Title" name="hardman_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Path" name="hardman_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                      </div>                   
+                                                   
+                                                </div>
+                                                @endforeach
+                                                @endif
+                                            </div>
+                                            <input type="hidden" name="hardman-counter" value="{{ $i }}">
+                                        </div>
+
+                                        <!--  -->
+
+                                        <div class="form-group">
+                                            <label>Tax efficient review</label><br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-tax-efficient-review">
+                                              <input type="radio" id="primaryplatformduediligence_taxefficientreviewdoc" name="primaryplatformduediligence" class="custom-control-input checked-input-status completion_status" value="taxefficientreviewdoc" @if(isset($dueDeligence['primaryplatformduediligence']) && $dueDeligence['primaryplatformduediligence']=='taxefficientreviewdoc') checked @endif>
+                                              <label class="custom-control-label" for="primaryplatformduediligence_taxefficientreviewdoc"></label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="tax-efficient-review" object-type="App\BusinessListing" object-id="" file-type="tax_efficient_review">Select File</button>
+                                                  <input type="hidden" name="tax_efficient_review" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'tax_efficient_review',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+
+                                            <p>Tax Efficient Review Documents External document links</p>
+
+                                            <button type="button" class="btn btn-primary text-right add-external-links" link-type="tax-efficient-review" id="" >Add External Link</button>
+
+                                            <div class="tax-efficient-review-external-links">
+                                                @if(isset($dueDeligence['tax-efficient-review-links']))
+                                                    @php
+                                                    $i=0;
+                                                    @endphp
+                                                @foreach($dueDeligence['tax-efficient-review-links'] as $links)
+                                                    @php
+                                                    $i++;
+                                                    @endphp
+                                                <div class="row social-link-row">                    
+                                                  <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Title" name="tax-efficient-review_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Path" name="tax-efficient-review_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                      </div>                   
+                                                   
+                                                </div>
+                                                @endforeach
+                                                @endif
+                                            </div>
+                                            <input type="hidden" name="tax-efficient-review-counter" value="{{ $i }}">
+                                        </div>
+                                        <!--  -->
+
+
+                                        <div class="form-group">
+                                            <label>Allenbridge</label><br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-allenbridge">
+                                              <input type="radio" id="primaryplatformduediligence_allenbridge" name="primaryplatformduediligence" class="custom-control-input checked-input-status completion_status" value="allenbridgedoc" @if(isset($dueDeligence['primaryplatformduediligence']) && $dueDeligence['primaryplatformduediligence']=='allenbridgedoc') checked @endif>
+                                              <label class="custom-control-label" for="primaryplatformduediligence_allenbridge"></label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="allenbridge" object-type="App\BusinessListing" object-id="" file-type="allenbridge">Select File</button>
+                                                  <input type="hidden" name="allenbridge" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'allenbridge',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+
+                                            <p>Tax Efficient Review Documents External document links</p>
+
+                                            <button type="button" class="btn btn-primary text-right add-external-links" link-type="allenbridge" id="" >Add External Link</button>
+
+                                            <div class="allenbridge-external-links">
+                                                @if(isset($dueDeligence['allenbridge-links']))
+                                                    @php
+                                                    $i=0;
+                                                    @endphp
+                                                @foreach($dueDeligence['allenbridge-links'] as $links)
+                                                    @php
+                                                    $i++;
+                                                    @endphp
+                                                <div class="row social-link-row">                    
+                                                  <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Title" name="allenbridge_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Path" name="allenbridge_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                      </div>                   
+                                                   
+                                                </div>
+                                                @endforeach
+                                                @endif
+
+                                            </div>
+                                            <input type="hidden" name="allenbridge-counter" value="{{ $i }}">
+                                        </div>
+
+                                        <!--  -->
+
+                                        <div class="form-group">
+                                            <label>MICAP</label><br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-micap">
+                                              <input type="radio" id="primaryplatformduediligence_mykapdoc" name="primaryplatformduediligence" class="custom-control-input checked-input-status completion_status" value="mykapdoc" @if(isset($dueDeligence['primaryplatformduediligence']) && $dueDeligence['primaryplatformduediligence']=='mykapdoc') checked @endif>
+                                               <label class="custom-control-label" for="primaryplatformduediligence_mykapdoc"></label>
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="micap" object-type="App\BusinessListing" object-id="" file-type="micap">Select File</button>
+                                                  <input type="hidden" name="micap" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'micap',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+
+                                            <p>MICAP Documents External document links</p>
+
+                                            <button type="button" class="btn btn-primary text-right add-external-links" link-type="micap" id="" >Add External Link</button>
+
+                                            <div class="micap-external-links">
+                                                @if(isset($dueDeligence['micap-links']))
+                                                    @php
+                                                    $i=0;
+                                                    @endphp
+                                                @foreach($dueDeligence['micap-links'] as $links)
+                                                    @php
+                                                    $i++;
+                                                    @endphp
+                                                <div class="row social-link-row">                    
+                                                  <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Title" name="micap_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Path" name="micap_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                      </div>                   
+                                                   
+                                                </div>
+                                                @endforeach
+                                                @endif
+                                            </div>
+                                            <input type="hidden" name="micap-counter" value="{{ $i }}">
+                                        </div>
+
+                                        <!--  -->
+
+                                        <div class="form-group">
+                                            <label> All Street</label><br>
+                                            <div class="custom-control custom-radio custom-control-inline" id="upload-all-street">
+                                              <input type="radio" id="primaryplatformduediligence_allstreetdoc" name="primaryplatformduediligence" class="custom-control-input checked-input-status completion_status" value="allstreetdoc" @if(isset($dueDeligence['primaryplatformduediligence']) && $dueDeligence['primaryplatformduediligence']=='allstreetdoc') checked @endif>
+                                               <label class="custom-control-label" for="primaryplatformduediligence_allstreetdoc"></label>
+
+                                              <div class="upload-files-section">
+                                                  <button type="button" class="btn btn-primary text-right" id="all-street" object-type="App\BusinessListing" object-id="" file-type="all_street">Select File</button>
+                                                  <input type="hidden" name="all_street" value="" class="uploaded-file-path">
+                                                  <span class="file_name">
+                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'all_street',$businessListing) !!}
+
+                                                  </span>
+                                              </div>
+                                            </div>
+
+                                            <p>Allstreet Documents External document links</p>
+
+                                            <button type="button" class="btn btn-primary text-right add-external-links" link-type="all-street" id="" >Add External Link</button>
+
+                                            <div class="all-street-external-links">
+                                                @if(isset($dueDeligence['all-street-links']))
+                                                    @php
+                                                    $i=0;
+                                                    @endphp
+                                                @foreach($dueDeligence['all-street-links'] as $links)
+                                                    @php
+                                                    $i++;
+                                                    @endphp
+                                                <div class="row social-link-row">                    
+                                                  <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Title" name="all-street_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-4 text-center">
+                                                          <input type="text" placeholder="Add File Path" name="all-street_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
+                                                      </div> 
+                                                      <div class="col-sm-2 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                      </div>                   
+                                                   
+                                                </div>
+                                                @endforeach
+                                                @endif
+                                            </div>
+                                            <input type="hidden" name="all-street-counter" value="{{ $i }}">
+                                        </div>
+
+                                        <!--  -->
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-header" role="tab" id="headingNine">
+                        <a data-toggle="collapse" href="#collapse9" role="button" class="collapsed" aria-expanded="false">
+                            <span class="px-0 col-md-10 col-8">
+                             Images & Videos
+                                <span class="has-invalid-data d-none"><i class="fa fa-info-circle text-danger m-r-5 element-title" aria-hidden="true"></i></span>
+                            </span>
+                            <span class="text-md-right text-center px-0 col-md-2 col-4">
+
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <i class="fa fa-lg fa-plus-square-o"></i>
+                                <i class="fa fa-lg fa-minus-square-o"></i>
+                                <input type="hidden" name="section_status[7]" class="section1-status-input sectionstatus-input" value="">
+                            </span>
+                        </a>
+                    </div>
+
+                    <div id="collapse9" class="collapse parent-tabpanel" role="tabpanel" data-section='9' >
+                        <div class="card-body">
+                            <div class="row">
+                                 <div class="col-sm-12">
+                                     <div class="row mb-4">
+                                        <div class="col-md-3">
+                                            <label>Logo</label>
+                                        </div>
+                                        <div class="col-md-3 text-center" id="business-logo-picture">
+                                                 
+                                                <img src="{{ $businessLogo }}" alt="..." class="img-thumbnail business-logo-img">
+                                                <input type="hidden" name="logo_cropped_image_url" class="cropped_image_url">
+                                                <input type="hidden" name="logo_image_url" class="image_url" value="{{ $businessLogo }}"> 
+
+                                                <div class="action-btn"> 
+                                                <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBusinessLogo) d-none @endif" object-type="App\BusinessListing" object-id="" type="business_logo" image-class="business-logo-img"><i class="fa fa-trash text-danger editmode "></i></a>
+                                                </div>
+                                             
+ 
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-3">
+                                            <label>Background Image</label>
+                                        </div>
+                                        <div class="col-md-9" id="business-background-cont">
+                                            <img src="{{ $backgroundImage }}" alt="..." class="img-thumbnail business-background-img">
+                                               <input type="hidden" name="background_cropped_image_url" class="cropped_image_url">
+                                                <input type="hidden" name="background_url" class="image_url" value="{{ $backgroundImage }}">   
+                                                <div class="action-btn"> 
+                                                <button type="button" id="pickbackground" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBackgroundImage) d-none @endif" object-type="App\BusinessListing" object-id="" type="business_background_image" image-class="business-background-img"><i class="fa fa-trash text-danger editmode "></i></a>
+                                                </div>
+                                        </div>
+                                    </div>
+                             
+                                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
         <div class="d-md-flex justify-content-md-between ">
-	        <button type="submit" class="btn btn-primary editmode @if($mode=='view') d-none @endif" >Save</button>
+	        <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" >Save</button>
 	        <input type="hidden" name="_token" value="{{ csrf_token() }}">
 	        <input type="hidden" name="section">
 			<input type="hidden" name="gi_code" value="{{ $businessListing->gi_code }}">
@@ -542,6 +1280,35 @@
  
  
 </div> <!-- /container -->
- 
+<div id="crop-modal-container">
+@php
+    $memberCount = 0;
+@endphp
+@if(isset($teamMemberDetails['team-members']) && !empty($teamMemberDetails['team-members']))
+    @foreach($teamMemberDetails['team-members'] as $teamMemberDetail)
+        @php
+            $memberCount = $memberCount+1;
+            $memberPicType = 'member_picture_' . $memberCount;
+            $imageCLass    = 'member-profile-picture-' . $memberCount;
+
+            $cropModalData = ['objectType' => 'App\BusinessListing', 'objectId' => 0, 'aspectRatio' => 1, 'heading' => 'Crop Profile Image', 'imageClass' => $imageCLass, 'minContainerWidth' => 450, 'minContainerHeight' => 200, 'displaySize' => 'medium_1x1', 'imageType' => $memberPicType];
+
+            echo View::make('includes.crop-modal')->with($cropModalData)->render();
+        @endphp
+
+    @endforeach
+@endif 
+
+@php
+$cropModalData = ['objectType'=>'App\BusinessListing','objectId'=>'','aspectRatio'=>1,'heading'=>'Crop Business Logo','imageClass'=>'business-logo-img','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_1x1','imageType'=>'firm_logo'];
+@endphp
+{!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
+
+@php
+$cropModalData = ['objectType'=>'App\BusinessListing','objectId'=>'','aspectRatio'=>'2.858/1','heading'=>'Crop Background Image','imageClass'=>'business-background-img','minContainerWidth' =>450,'minContainerHeight'=>200,'displaySize'=>'medium_2_58x1','imageType'=>'background_image'];
+@endphp
+{!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
+
+</div>
 @include('includes.footer')
 @endsection

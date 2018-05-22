@@ -790,7 +790,7 @@ class UserController extends Controller
         if (!File::exists(public_path() . '/uploads/img')) {
             File::makeDirectory(public_path() . '/uploads/img', 0777);
         }
-
+        $mapped = false; 
         $requestData = $request->all();
 
         $crop = new Cropper(
@@ -809,27 +809,10 @@ class UserController extends Controller
         if ($crop->getMsg() != null) {
             $model = $objectType::find($objectId);
 
-            //move from temp dir to s3
-            $source   = pathinfo($url);
-            $basename = $source['basename'];
+            if($model){
 
-            $currentPath  = public_path() . '/uploads/tmp/' . $basename;
-            $uploadedFile = new UploadedFile($currentPath, $basename);
-
-            $id = $model->uploadImage($uploadedFile, $imageType);
-            $model->remapImages([$id], $imageType);
-
-            $uploadImages = $model->getImages($imageType);
-
-            foreach ($uploadImages as $key => $image) {
-                if (isset($image[$displaySize])) {
-                    $url = $image[$displaySize];
-                }
-            }
-
-            //delete temp file
-            if (File::exists($currentPath)) {
-                File::delete($currentPath);
+               $url = updateModelImage($model,$url,$imageType,$displaySize);
+               $mapped = true; 
             }
 
         }
@@ -837,10 +820,12 @@ class UserController extends Controller
         return response()->json([
             'code'       => 'image_uploaded',
             'message'    => 'success',
+            'mapped'    =>  $mapped,
             'image_path' => $url,
         ], 200);
 
     }
+
 
     public function deleteImage(Request $request)
     {
@@ -853,15 +838,18 @@ class UserController extends Controller
 
         $model = $objectType::find($objectId);
 
-        $defaultImage     = getDefaultImages($imageType);
-        $profilePicImages = $model->getImages($imageType);
-        foreach ($profilePicImages as $key => $profilePicImage) {
-            $fileId = $profilePicImage['id'];
-            $model->unmapImage($fileId);
-        }
 
+        $defaultImage     = getDefaultImages($imageType);
+        if($model){
+            $profilePicImages = $model->getImages($imageType);
+            foreach ($profilePicImages as $key => $profilePicImage) {
+                $fileId = $profilePicImage['id'];
+                $model->unmapImage($fileId);
+            }
+        }
+        
         return response()->json([
-            'code'       => 'image_uploaded',
+            'code'       => 'image_deleted',
             'message'    => 'success',
             'image_path' => $defaultImage,
         ], 200);
@@ -878,8 +866,8 @@ class UserController extends Controller
         $fileName     = $request->input('name');
          
         $destinationPath = public_path() . '/uploads/tmp/';
-        $url             = url('/uploads/tmp/'); //dd($url);
-        $fileUrl         = url('/uploads/tmp/' . $fileName); //dd($url);
+        $url             = url('/uploads/tmp/');  
+        $fileUrl         = url('/uploads/tmp/' . $fileName);  
         $request->file('file')->move($destinationPath, $fileName);
 
         return response()->json([
@@ -887,14 +875,40 @@ class UserController extends Controller
             'message' => 'success',
             'data'    => [
                 'image_path' => $fileUrl,
+                'file_name' => $fileName,
             ],
+        ], 200);
+
+    }
+
+    public function deleteFile(Request $request)
+    {
+
+        $requestData = $request->all();
+
+        $objectType = $requestData['object_type'];
+        $objectId   = $requestData['object_id'];
+        $fileType  = $requestData['file_type'];
+
+        $model = $objectType::find($objectId);
+
+        if($model){
+            $getFiles = $model->getFiles($fileType);
+            foreach ($getFiles as $key => $file) {
+                $fileId = $file['id'];
+                $model->unmapFile($fileId);
+            }
+        }
+        
+        return response()->json([
+            'code'       => 'file_delete',
+            'message'    => 'success',
         ], 200);
 
     }
 
     public function downloadS3File($id)
     {
-
         
         $file      = FileUpload_Files::find($id); 
       

@@ -43,6 +43,34 @@ function isUser($object,$hasRolePermission){
         return false;
 }
 
+function updateModelImage($model,$url,$imageType,$displaySize){
+    //move from temp dir to s3
+    $source   = pathinfo($url);
+    $basename = $source['basename'];
+
+    $currentPath  = public_path() . '/uploads/tmp/' . $basename;
+    if (File::exists($currentPath)) {
+        $uploadedFile = new \Illuminate\Http\UploadedFile($currentPath, $basename);
+
+        $id = $model->uploadImage($uploadedFile, $imageType);
+        $model->remapImages([$id], $imageType);
+
+        $uploadImages = $model->getImages($imageType);
+
+        foreach ($uploadImages as $key => $image) {
+            if (isset($image[$displaySize])) {
+                $url = $image[$displaySize];
+            }
+        }
+
+        //delete temp file
+    
+        File::delete($currentPath);
+    }
+
+    return $url;
+}
+
 /**
 check if provided permission has access to th user
  */
@@ -90,7 +118,7 @@ function getCounty()
 function getDefaultImages($type)
 {
     $url = url('img/dummy/logo.png');
-    if (in_array($type, ['profile_picture'])) {
+    if (in_array($type, ['profile_picture','member_picture'])) {
         $url = url('img/dummy/avatar.png');
     } elseif (in_array($type, ['company_logo', 'firm_logo'])) {
         $url = url('img/dummy/logo.png');
@@ -1727,6 +1755,14 @@ function get_header_page_markup($args){
 
     return $header_footer_start_html;
 
+}
+
+function getbusinessUploadedFileNamesHtml($files,$type,$businessListing){
+    $html ='';
+    if(isset($files[$type]) && !empty($files[$type])){
+        $html = $files[$type]['name'] .' '.' <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="'.$type.'"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="'.$type.'_url" class="image_url" value="'.$files[$type]['url'].'">';
+    }
+    return $html;
 }
 
 function is_in_array($array, $key, $key_value)

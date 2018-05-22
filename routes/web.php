@@ -26,13 +26,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('upload-cropper-image', 'UserController@uploadTempImage');
     Route::post('crop-image', 'UserController@uploadCroppedImage');
     Route::post('delete-image', 'UserController@deleteImage');
+    Route::post('delete-file', 'UserController@deleteFile');
 
     // frontoffice entrepreneurs
     Route::get('/add-business-proposals', 'BusinessListingController@create');
+    Route::post('/business-proposals/add-team-member', 'BusinessListingController@getTeamMemberHtml');
     Route::post('/business-proposals/save', 'BusinessListingController@store');
+    Route::post('/business-proposals/save-all', 'BusinessListingController@saveAll');
     Route::get('/investment-opportunities/{slug}/edit', 'BusinessListingController@create');
 });
-
+ 
 // backoffice
 
 Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffice'], function () {

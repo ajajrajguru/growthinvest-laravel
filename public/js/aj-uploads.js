@@ -1,5 +1,5 @@
 (function() {
-  window.uploadFiles = function(containerId, uploadPath) {
+  window.uploadFiles = function(containerId, uploadPath, type) {
     return $('#' + containerId).pluploadQueue({
       runtimes: 'html5,flash,silverlight,html4',
       url: uploadPath,
@@ -31,9 +31,13 @@
       silverlight_xap_url: '/plupload/js/Moxie.xap',
       init: {
         FileUploaded: function(up, files, xhr) {
-          var fileResponse;
+          var delete_html, fileResponse, filetype;
           fileResponse = JSON.parse(xhr.response);
-          return $('#' + containerId).closest('.upload-files-section').find('.uploaded-file-path').append('<input type="hidden" name="file_path[]" value="' + fileResponse.data.image_path + '">');
+          filetype = $('#' + containerId).attr('file-type');
+          delete_html = '<p class="multi_file_name"> ' + fileResponse.data.file_name + ' <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="' + filetype + '"><i class="fa fa-close" style="color: red"></i></a></p>';
+          delete_html += '<div><input type="hidden" name="' + type + '_file_id" class="file_id" value=""></div>';
+          $('#' + containerId).closest('.upload-files-section').find('.uploaded-file-path').append('<input type="hidden" name="' + type + '_file_path[]" value="' + fileResponse.data.image_path + '">');
+          return $('#' + containerId).closest('.upload-files-section').find('.uploaded-files').append(delete_html);
         }
       }
     });
@@ -55,9 +59,6 @@
           {
             title: 'Image files',
             extensions: 'jpg,gif,png'
-          }, {
-            title: 'Zip files',
-            extensions: 'zip'
           }
         ]
       },
@@ -96,6 +97,54 @@
     return uploader.init();
   };
 
+  window.uploadSingleFile = function(containerId, selectFile, uploadPath) {
+    var uploader;
+    uploader = new plupload.Uploader({
+      runtimes: 'html5,flash,silverlight,html4',
+      browse_button: selectFile,
+      container: document.getElementById(containerId),
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: uploadPath,
+      filters: {
+        max_file_size: '10mb',
+        mime_types: [
+          {
+            title: 'Image files',
+            extensions: 'jpg,gif,png,csv,doc,docx,xlsx,txt,zip,pdf'
+          }, {
+            title: 'Zip files',
+            extensions: 'zip'
+          }
+        ]
+      },
+      flash_swf_url: '/plupload/js/Moxie.swf',
+      silverlight_xap_url: '/plupload/js/Moxie.xap',
+      init: {
+        FilesAdded: function(up, files) {
+          uploader.start();
+          false;
+        },
+        FileUploaded: function(up, files, xhr) {
+          var delete_html, fileResponse, objectId, objectType, type;
+          fileResponse = JSON.parse(xhr.response);
+          objectType = $('#' + selectFile).attr('object-type');
+          objectId = $('#' + selectFile).attr('object-id');
+          type = $('#' + selectFile).attr('file-type');
+          $('#' + selectFile).closest('.upload-files-section').find('.uploaded-file-path').val(fileResponse.data.image_path);
+          if (($('#' + selectFile).closest('.upload-files-section').find('.file_name').length)) {
+            delete_html = '<a href="javascript:void(0)" class="delete-uploaded-file" object-type="' + objectType + '" object-id="' + objectId + '" type="' + type + '"><i class="fa fa-close" style="color: red"></i></a>';
+            delete_html += '<input type="hidden" name="' + type + '_url" class="image_url" value="' + fileResponse.data.image_path + '">';
+            $('#' + selectFile).closest('.upload-files-section').find('.file_name').html(fileResponse.data.file_name + ' ' + delete_html);
+          }
+        },
+        Error: function(up, err) {}
+      }
+    });
+    return uploader.init();
+  };
+
   $(document).ready(function() {
     $(document).on('click', '.crop-image', function() {
       var $form;
@@ -111,13 +160,15 @@
           var imageClass;
           imageClass = $form.find('input[name="image_class"]').val();
           $("#crop-" + imageClass).modal('hide');
-          console.log(imageClass);
+          if (!data.mapped) {
+            $("." + imageClass).closest('div').find('.cropped_image_url').val(data.image_path);
+          }
           $("." + imageClass).attr('src', data.image_path);
           return $("." + imageClass).closest('div').find('.delete-image').removeClass('d-none');
         }
       });
     });
-    return $(document).on('click', '.delete-image', function() {
+    $(document).on('click', '.delete-image', function() {
       var btnObj, imageClass, objectId, objectType, type;
       if (!confirm('Are you sure you want to delete this image?')) {
         return;
@@ -139,8 +190,41 @@
           'image_type': type
         },
         success: function(data) {
+          if (($("." + imageClass).closest('div').find('.cropped_image_url').length)) {
+            $("." + imageClass).closest('div').find('.cropped_image_url').val('-1');
+          }
           $("." + imageClass).attr('src', data.image_path);
           return btnObj.addClass('d-none');
+        }
+      });
+    });
+    return $(document).on('click', '.delete-uploaded-file', function() {
+      var btnObj, objectId, objectType, type;
+      if (!confirm('Are you sure you want to delete this file?')) {
+        return;
+      }
+      btnObj = $(this);
+      objectType = $(this).attr('object-type');
+      objectId = $(this).attr('object-id');
+      type = $(this).attr('type');
+      return $.ajax({
+        type: 'post',
+        url: '/delete-file',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+          'object_type': objectType,
+          'object_id': objectId,
+          'file_type': type
+        },
+        success: function(data) {
+          if ((btnObj.closest('.multi_file_name').length)) {
+            btnObj.closest('.multi_file_name').remove();
+          }
+          if ((btnObj.closest('.upload-files-section').find('.file_name').length)) {
+            return btnObj.closest('.upload-files-section').find('.file_name').html('');
+          }
         }
       });
     });

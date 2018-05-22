@@ -5,7 +5,7 @@ return [
 	'base_root_path' => '',
 	'default_base_path' => 'other_files',
 	'valid_image_formats' => ['jpg', 'png', 'jpeg', 'gif'],
-	'valid_file_formats' => ['jpg', 'jpeg', 'doc', 'docx', 'xls', 'xlsx', 'png', 'pdf', 'ppt', 'pptx', 'pps', 'ppsx'],
+	'valid_file_formats' => ['jpg', 'jpeg', 'doc', 'docx', 'xls', 'xlsx', 'png', 'pdf', 'ppt', 'pptx', 'pps', 'ppsx','txt'],
 	'sizes' => [
 		'thumb_1x1' => [
 			'width' => 150,
@@ -59,6 +59,12 @@ return [
 		'App\BusinessListing' => [
 			'base_path' => 'business',
 			'slug_column' => 'gi_code',
+			'sizes' => 
+			[
+				'team_member_picture' =>['thumb_1x1','medium_1x1','large_1x1'],
+				'business_logo' =>['thumb_1x1','medium_1x1','large_1x1'],
+				'business_background_image' =>['thumb_2_58x1','medium_2_58x1','large_2_58x1'],
+			]
 			
 		],
 	],

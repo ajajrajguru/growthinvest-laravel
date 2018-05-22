@@ -158,9 +158,9 @@ class TransferAssetController extends Controller
         $transferAsset->status      = '';
         $transferAsset->save();
 
-        if (isset($requestData['file_path']) && !empty($requestData['file_path'])) {
+        if (isset($requestData['transferasset_file_path']) && !empty($requestData['transferasset_file_path'])) {
 
-            $files = $requestData['file_path'];
+            $files = $requestData['transferasset_file_path'];
             foreach ($files as $key => $file) {
 
                 $source   = pathinfo($file);

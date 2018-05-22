@@ -30,7 +30,7 @@
 <script type="text/javascript" src="{{ asset('js/aj-uploads.js') }}"></script>
 <script type="text/javascript">
    $(document).ready(function() {
-       uploadFiles('uploader','{{ url("upload-files") }}');
+       uploadFiles('uploader','{{ url("upload-files") }}','transferasset');
    });
 </script>
 @endsection

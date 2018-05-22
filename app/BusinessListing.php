@@ -58,6 +58,21 @@ class BusinessListing extends Model
         return ['url'=>$businessLogo,'hasImage'=>$hasImage]; 
     }
 
+    public Function getBusinessBackgroundImage($type){
+        $hasImage = false;
+        $backgroundImage  = getDefaultImages('background_image');
+        $backgroundImages = $this->getImages('business_background_image'); 
+        foreach ($backgroundImages as $key => $image) { 
+            if(isset($image[$type])) {
+                $backgroundImage = $image[$type];
+                $hasImage = true;
+            }
+        }
+
+
+        return ['url'=>$backgroundImage,'hasImage'=>$hasImage]; 
+    }
+
     public function owner()
     {
         return $this->belongsTo('App\User', 'owner_id');
@@ -319,6 +334,69 @@ class BusinessListing extends Model
 
     public function getFinancials(){
        return $this->businessListingData()->where('data_key','financials')->first(); 
+    }
+
+    public function getTeamMembers(){
+       return $this->businessListingData()->where('data_key','team_members')->first(); 
+    }
+
+    public function getTeamMemberDetails(){
+       return $this->businessListingData()->where('data_key','team_members')->first(); 
+    }
+
+    public function getCompanyDetails(){
+       return $this->businessListingData()->where('data_key','company_details')->first(); 
+    }
+
+    public function getDocumentUpload(){
+       return $this->businessListingData()->where('data_key','document_upload')->first(); 
+    }
+
+    public function getDueDeligence(){
+       return $this->businessListingData()->where('data_key','due_deligence')->first(); 
+    }
+
+
+    public Function getMemberPicture($member,$type){
+        $hasImage = false;
+        $profilePic  = getDefaultImages('member_picture');
+        $profilePicImages = $this->getImages($member); 
+        foreach ($profilePicImages as $key => $image) { 
+            if(isset($image[$type])) {
+                $profilePic = $image[$type];
+                $hasImage = true;
+            }
+        }
+
+        return ['url'=>$profilePic,'hasImage'=>$hasImage];
+    }
+
+
+
+
+    public Function getBusinessMultipleFile($type){
+        $hasFile = false;
+        $files = $this->getFiles($type); 
+        $fileUrl =  '';
+        $fileid =  '';
+        $filesData = [];
+        foreach ($files as $key => $file) { 
+            $fileid = $file['id'];
+            $filename = $file['name'];
+            $fileUrl = $file['url'];
+            $hasFile = true;
+            $filesData[] = ['url'=>$fileUrl,'name'=>$filename,'fileid'=>$fileid,'hasFile'=>$hasFile]; 
+             
+        }
+
+        return $filesData;
+    }
+
+    public Function getAllBusinessFile(){
+
+        $files = $this->getAllFilesByType();  
+        
+        return $files;
     }
  
  
