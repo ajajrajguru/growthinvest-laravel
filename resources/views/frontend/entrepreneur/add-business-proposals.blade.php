@@ -114,10 +114,10 @@
                         </span>
                         <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_1'])){{ $sectionStatus['section_status_1'] }}@else Not Started @endif</small>
                             <i class="fa fa-lg fa-plus-square-o"></i>
                             <i class="fa fa-lg fa-minus-square-o"></i>
-                            <input type="hidden" name="section_status[1]" class="section1-status-input sectionstatus-input" value="">
+                            <input type="hidden" name="section_status_1" class="section1-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_1'])){{ $sectionStatus['section_status_1'] }}@else Not Started @endif">
                         </span>
                     </a>
                 </div>
@@ -193,10 +193,10 @@
                         </span>
                         <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section2-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_2'])){{ $sectionStatus['section_status_2'] }}@else Not Started @endif</small>
                             <i class="fa fa-lg fa-plus-square-o"></i>
                             <i class="fa fa-lg fa-minus-square-o"></i>
-                            <input type="hidden" name="section_status[1]" class="section1-status-input sectionstatus-input" value="">
+                            <input type="hidden" name="section_status_2" class="section2-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_2'])){{ $sectionStatus['section_status_2'] }}@else Not Started @endif">
                         </span>
                     </a>
                 </div>
@@ -210,7 +210,7 @@
 
                                 <div class="form-group">
                                     <label>Trading Name<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="title" placeholder="" data-parsley-required data-parsley-required-message="Please enter the trading name." value="{{ $businessListing->title }}">
+                                    <input type="text" class="form-control text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="title" placeholder="" data-parsley-required data-parsley-required-message="Please enter the trading name." value="{{ $businessListing->title }}">
                                      
                                     <small class="form-text text-muted">This is the name under which you market your company and the display name of a proposal - Eg. GrowthInvest</small>
                                     
@@ -221,7 +221,7 @@
                                 @endphp
                                 <div class="form-group">
                                     <label>Business Proposal Round<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                   <select type="text" name="proposal_round" id="proposal_round" placeholder="" class="form-control completion_status" data-parsley-required data-parsley-required-message="Please select business proposal round." >                         
+                                   <select type="text" name="proposal_round" id="proposal_round" placeholder="" class="form-control valid_input completion_status" data-parsley-required data-parsley-required-message="Please select business proposal round." >                         
 	                                   	<option value=""> Select Business Proposal  Round  </option>                                                                 
 	                                    @foreach($proposalRounds as $key=> $proposalRound)
                                             <option value="{{ $key }}" @if($key == $businessListing->round) selected @endif>{{ $proposalRound }}</option>     
@@ -247,13 +247,13 @@
 
                                 <div class="form-group">
                                     <label>Registered Address<span class="text-danger editmode  @if($mode=='view') d-none @endif">*</span></label>
-                                    <textarea class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="address" placeholder="" data-parsley-required data-parsley-required-message="Please enter registred address." >@if(!empty($businessProposalDetails) && isset($businessProposalDetails['address'])){{ $businessProposalDetails['address'] }}@endif</textarea>
+                                    <textarea class="form-control completion_status valid_input text-input-status editmode @if($mode=='view') d-none @endif" name="address" placeholder="" data-parsley-required data-parsley-required-message="Please enter registred address." >@if(!empty($businessProposalDetails) && isset($businessProposalDetails['address'])){{ $businessProposalDetails['address'] }}@endif</textarea>
                                     <small class="form-text text-muted">Eg: 28 Highgrove Avenue, Ascot, Berkshire.</small>
                                     
                                 </div>
                                 <div class="form-group">
                                     <label>Postcode<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="postcode" placeholder="" data-parsley-required data-parsley-required-message="Please enter the postcode." data-parsley-required data-parsley-required-message="Please enter postcode."  value="@if(!empty($businessProposalDetails) && isset($businessProposalDetails['postcode'])){{ $businessProposalDetails['postcode'] }}@endif">
+                                    <input type="text" class="form-control text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="postcode" placeholder="" data-parsley-required data-parsley-required-message="Please enter the postcode." data-parsley-required data-parsley-required-message="Please enter postcode."  value="@if(!empty($businessProposalDetails) && isset($businessProposalDetails['postcode'])){{ $businessProposalDetails['postcode'] }}@endif">
                                     <small class="form-text text-muted">Eg: SL5 7HR.</small>
                                     
                                 </div>
@@ -329,7 +329,7 @@
 
                                 <div class="form-group">
                                     <label>HMRC Approval Status</label>
-                                    <select type="text" name="hmrc_status" id="hmrc_status" placeholder="" class="form-control" >                         
+                                    <select type="text" name="hmrc_status" id="hmrc_status" placeholder="" class="form-control completion_status" >                         
 	                                   	<option @if($businessHmrcStatus == 'Application under review') selected @endif>Application under review </option>  
 	                                   	<option @if($businessHmrcStatus == 'Approved') selected @endif>Approved</option>  
 	                                   	<option @if($businessHmrcStatus == 'Application not submitted') selected @endif>Application not submitted</option>                                                                              
@@ -341,7 +341,7 @@
 									<label>Business Sector</label>
 									@foreach($sectors as $sector)
                                     <div class="custom-control custom-checkbox">
-                                      <input type="checkbox" class="custom-control-input  disabledInput" @if($mode=='view') disabled @endif value="{{ $sector->id }}" id="ch{{ $sector->id }}" name="tags_input" @if(!empty($defaultIds) && in_array($sector->id,$defaultIds)) checked @endif>
+                                      <input type="checkbox" class="custom-control-input completion_status disabledInput" @if($mode=='view') disabled @endif value="{{ $sector->id }}" id="ch{{ $sector->id }}" name="tags_input" @if(!empty($defaultIds) && in_array($sector->id,$defaultIds)) checked @endif>
                                       <label class="custom-control-label" for="ch{{ $sector->id }}">{{ $sector->name }}</label>
                                     </div>
                                     @endforeach
@@ -386,10 +386,10 @@
                         </span>
                         <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section3-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_3'])){{ $sectionStatus['section_status_3'] }}@else Not Started @endif</small>
                             <i class="fa fa-lg fa-plus-square-o"></i>
                             <i class="fa fa-lg fa-minus-square-o"></i>
-                            <input type="hidden" name="section_status[3]" class="section1-status-input sectionstatus-input" value="">
+                            <input type="hidden" name="section_status_3" class="section3-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_3'])){{ $sectionStatus['section_status_3'] }}@else Not Started @endif">
                         </span>
                     </a>
                 </div>
@@ -415,23 +415,68 @@
                                      
                                     
                                 </div>
-<!-- no-of-shares-issue
-no-of-new-shares-issue
-share-price-curr-inv-round
-share-class-issued
-nominal-value-share -->
+
+                                <div class="not-calculated-share-checked @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')) d-none @endif">
+                                    <div class="form-group">
+                                        <label>Number of Shares in Issue<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                        <input type="number" class="form-control text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="no-of-shares-issue" id="no-of-shares-issue" placeholder="" data-parsley-required data-parsley-required-message="Please enter the number of shares in issue." value="@if(isset($fundingRequirement['no-of-shares-issue'])){{ $fundingRequirement['no-of-shares-issue'] }}@endif">
+                                         
+                                        <small class="form-text text-muted">Eg. 2000</small>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Number of New Shares to be Issued<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                        <input type="number" class="form-control text-input-status valid_input share-price-change completion_status editmode @if($mode=='view') d-none @endif" name="no-of-new-shares-issue" id="no-of-new-shares-issue" placeholder="" data-parsley-required data-parsley-required-message="Please enter number of new shares to issues." value="@if(isset($fundingRequirement['no-of-new-shares-issue'])){{ $fundingRequirement['no-of-new-shares-issue'] }}@endif">
+                                         
+                                        <small class="form-text text-muted">Eg. 1000</small>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Share Price for Current Investment Round<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                        <input type="number" class="form-control share-price-change text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="share-price-curr-inv-round" id="share-price-curr-inv-round" placeholder="" data-parsley-required data-parsley-required-message="Please enter share price for current investment round." value="@if(isset($fundingRequirement['share-price-curr-inv-round'])){{ $fundingRequirement['share-price-curr-inv-round'] }}@endif">
+                                         
+                                        <small class="form-text text-muted">E.g. £1.00</small>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Share Class of Shares to be Issued<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                        <input type="text" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="share-class-issued" id="share-class-issued" placeholder="" data-parsley-required data-parsley-required-message="Please enter share class of share to be issued." value="@if(isset($fundingRequirement['share-class-issued'])){{ $fundingRequirement['share-class-issued'] }}@endif">
+                                         
+                                        <small class="form-text text-muted">E.g. Ordinary, Ordinary A.</small>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nominal Value of Shares<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                        <input type="number" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="nominal-value-share" id="nominal-value-share" placeholder="" data-parsley-required data-parsley-required-message="Please enter nominal value of share." value="@if(isset($fundingRequirement['nominal-value-share'])){{ $fundingRequirement['nominal-value-share'] }}@endif">
+                                         
+                                        <small class="form-text text-muted">E.g. £0.01, 1 pence.</small>
+                                        
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
-                                    <label>Targeted Raise<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="investment-sought" id="investment-sought" placeholder="" data-parsley-required data-parsley-required-message="Please enter the target raised." value="@if(isset($fundingRequirement['investment-sought'])){{ $fundingRequirement['investment-sought'] }}@endif">
+                                    <label id="target-raised-label">
+                                    @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')
+                                       Targeted Raise
+                                    @else
+                                       Raise Amount
+                                    @endif
+                                        <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
+                                    <input type="number" class="form-control text-input-status money-valuation-change valid_input completion_status editmode @if($mode=='view') d-none @endif" name="investment-sought" id="investment-sought" placeholder="" data-parsley-required data-parsley-required-message="Please enter the target raised." value="@if(isset($fundingRequirement['investment-sought'])){{ $fundingRequirement['investment-sought'] }}@endif" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1') @else readonly @endif>
                                      
-                                    <small class="form-text text-muted">Eg: £17,500.</small>
+                                    <small class="form-text text-muted" id="target-raised-helper">
+                                      @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')
+                                       Eg: £17,500.
+                                    @else
+                                      This field is auto-calculated.
+                                    @endif  
+                                    </small>
                                     
                                 </div>
 
                                 <div class="form-group">
                                     <label>Minimum Investment<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="minimum-investment" placeholder="" data-parsley-required data-parsley-required-message="Please enter the minimum investment." value="@if(isset($fundingRequirement['minimum-investment'])){{ $fundingRequirement['minimum-investment'] }}@endif">
+                                    <input type="number" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="minimum-investment" placeholder="" data-parsley-required data-parsley-required-message="Please enter the minimum investment." value="@if(isset($fundingRequirement['minimum-investment'])){{ $fundingRequirement['minimum-investment'] }}@endif">
                                      
                                     <small class="form-text text-muted">Enter amount above £2000.</small>
                                     
@@ -439,7 +484,7 @@ nominal-value-share -->
 
                                 <div class="form-group">
                                     <label>Minimum Raise</label>
-                                    <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="minimum-raise" placeholder="" value="@if(isset($fundingRequirement['minimum-raise'])){{ $fundingRequirement['minimum-raise'] }}@endif">
+                                    <input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="minimum-raise" placeholder="" value="@if(isset($fundingRequirement['minimum-raise'])){{ $fundingRequirement['minimum-raise'] }}@endif">
                                      
                                     <small class="form-text text-muted">This should be the minimum amount of funding you require to achieve your next funding milestones.</small>
                                     
@@ -447,28 +492,40 @@ nominal-value-share -->
 
                                 <div class="form-group">
                                     <label>Post-money Valuation</label>
-                                    <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="post-money-valuation" placeholder="" value="@if(isset($fundingRequirement['post-money-valuation'])){{ $fundingRequirement['post-money-valuation'] }}@endif">
-                 
+                                    <input type="number" class="form-control money-valuation-change completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="post-money-valuation" id="post-money-valuation" placeholder="" value="@if(isset($fundingRequirement['post-money-valuation'])){{ $fundingRequirement['post-money-valuation'] }}@endif" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1') @else readonly @endif>
+
+                                    <small class="form-text text-muted" id="post-money-valuation-helper">
+                                     @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')
+                                        This field is auto-calculated.
+                                    @else
+                                       
+                                    @endif    
+                                    </small>
                                     
                                 </div>
 
                                 <div class="form-group">
                                     <label>Pre-money Valuation</label>
-                                    <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="pre-money-valuation" placeholder="" readonly value="@if(isset($fundingRequirement['pre-money-valuation'])){{ $fundingRequirement['pre-money-valuation'] }}@endif" id="pre-money-valuation">
-                                     <small class="form-text text-muted"> This field is auto-calculated</small>
-                                    
-                                   
+                                    <input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="pre-money-valuation" placeholder=""  value="@if(isset($fundingRequirement['pre-money-valuation'])){{ $fundingRequirement['pre-money-valuation'] }}@endif" id="pre-money-valuation"   readonly >
+
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Post-investment % shareholding to be issued</label>
-                                    <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="percentage-giveaway" placeholder="" id="percentage-giveaway" readonly value="@if(isset($fundingRequirement['percentage-giveaway'])){{ $fundingRequirement['percentage-giveaway'] }}@endif">
-                                     <small class="form-text text-muted"> This field is auto-calculated</small>
+                                    <label id="post-money-valuation-label">
+                                    @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')
+                                        Post-investment % shareholding to be issued
+                                    @else
+                                        Post-Investment % Equity Offer
+                                    @endif
+                                </label>
+                                    <input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="percentage-giveaway" placeholder="" id="percentage-giveaway"   value="@if(isset($fundingRequirement['percentage-giveaway'])){{ $fundingRequirement['percentage-giveaway'] }}@endif"  readonly  >
+                                     <small class="form-text text-muted" >
+                                      This field is auto-calculated</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Deadline date for subscription<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="text" class="form-control text-input-status completion_status datepicker editmode @if($mode=='view') d-none @endif" name="deadline-subscription" placeholder="" data-parsley-required data-parsley-required-message="Please enter the deadline date of subscription." value="@if(isset($fundingRequirement['deadline-subscription'])){{ $fundingRequirement['deadline-subscription'] }}@endif">
+                                    <input type="text" class="form-control text-input-status completion_status valid_input datepicker editmode @if($mode=='view') d-none @endif" name="deadline-subscription" placeholder="" data-parsley-required data-parsley-required-message="Please enter the deadline date of subscription." value="@if(isset($fundingRequirement['deadline-subscription'])){{ $fundingRequirement['deadline-subscription'] }}@endif">
                                      
                                     <small class="form-text text-muted">This is the deadline date for submission of subscription form.</small>
                                     
@@ -516,10 +573,10 @@ nominal-value-share -->
                         </span>
                         <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                            <small class="mr-sm-3 mr-0 d-block d-md-inline-block section4-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_4'])){{ $sectionStatus['section_status_4'] }}@else Not Started @endif</small>
                             <i class="fa fa-lg fa-plus-square-o"></i>
                             <i class="fa fa-lg fa-minus-square-o"></i>
-                            <input type="hidden" name="section_status[4]" class="section1-status-input sectionstatus-input" value="">
+                            <input type="hidden" name="section_status_4" class="section4-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_4'])){{ $sectionStatus['section_status_4'] }}@else Not Started @endif">
                         </span>
                     </a>
                 </div>
@@ -542,27 +599,27 @@ nominal-value-share -->
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">SALES</div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="revenue_year1" placeholder="" id="revenue_year1" value="@if(isset($financials['revenue_year1'])){{ $financials['revenue_year1'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="revenue_year2" placeholder="" id="revenue_year2" value="@if(isset($financials['revenue_year2'])){{ $financials['revenue_year2'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="revenue_year3" placeholder="" id="revenue_year3" value="@if(isset($financials['revenue_year3'])){{ $financials['revenue_year3'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="revenue_year1" placeholder="" id="revenue_year1" value="@if(isset($financials['revenue_year1'])){{ $financials['revenue_year1'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="revenue_year2" placeholder="" id="revenue_year2" value="@if(isset($financials['revenue_year2'])){{ $financials['revenue_year2'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="revenue_year3" placeholder="" id="revenue_year3" value="@if(isset($financials['revenue_year3'])){{ $financials['revenue_year3'] }}@endif"></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">COST OF SALES</div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="sale_year1" placeholder="" id="sale_year1" value="@if(isset($financials['sale_year1'])){{ $financials['sale_year1'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="sale_year2" placeholder="" id="sale_year2" value="@if(isset($financials['sale_year2'])){{ $financials['sale_year2'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="sale_year3" placeholder="" id="sale_year3" value="@if(isset($financials['sale_year3'])){{ $financials['sale_year3'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="sale_year1" placeholder="" id="sale_year1" value="@if(isset($financials['sale_year1'])){{ $financials['sale_year1'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="sale_year2" placeholder="" id="sale_year2" value="@if(isset($financials['sale_year2'])){{ $financials['sale_year2'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="sale_year3" placeholder="" id="sale_year3" value="@if(isset($financials['sale_year3'])){{ $financials['sale_year3'] }}@endif"></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">EXPENSES</div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="expences_year1" placeholder="" id="expences_year1" value="@if(isset($financials['expences_year1'])){{ $financials['expences_year1'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="expences_year2" placeholder="" id="expences_year2" value="@if(isset($financials['expences_year2'])){{ $financials['expences_year2'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="expences_year3" placeholder="" id="expences_year3" value="@if(isset($financials['expences_year3'])){{ $financials['expences_year3'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="expences_year1" placeholder="" id="expences_year1" value="@if(isset($financials['expences_year1'])){{ $financials['expences_year1'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="expences_year2" placeholder="" id="expences_year2" value="@if(isset($financials['expences_year2'])){{ $financials['expences_year2'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="expences_year3" placeholder="" id="expences_year3" value="@if(isset($financials['expences_year3'])){{ $financials['expences_year3'] }}@endif"></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">NET INCOME</div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="ebitda_year_1" placeholder="" id="ebitda_year_1" value="@if(isset($financials['ebitda_year_1'])){{ $financials['ebitda_year_1'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="ebitda_year_2" placeholder="" id="ebitda_year_2" value="@if(isset($financials['ebitda_year_2'])){{ $financials['ebitda_year_2'] }}@endif"></div>
-                                            <div class="col-sm-3"><input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="ebitda_year_3" placeholder="" id="ebitda_year_3" value="@if(isset($financials['ebitda_year_3'])){{ $financials['ebitda_year_3'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="ebitda_year_1" placeholder="" id="ebitda_year_1" value="@if(isset($financials['ebitda_year_1'])){{ $financials['ebitda_year_1'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="ebitda_year_2" placeholder="" id="ebitda_year_2" value="@if(isset($financials['ebitda_year_2'])){{ $financials['ebitda_year_2'] }}@endif"></div>
+                                            <div class="col-sm-3"><input type="number" class="form-control  completion_status text-input-status editmode @if($mode=='view') d-none @endif" name="ebitda_year_3" placeholder="" id="ebitda_year_3" value="@if(isset($financials['ebitda_year_3'])){{ $financials['ebitda_year_3'] }}@endif"></div>
                                         </div>
 
                                     
@@ -585,10 +642,10 @@ nominal-value-share -->
                             </span>
                             <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section5-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_5'])){{ $sectionStatus['section_status_5'] }}@else Not Started @endif</small>
                                 <i class="fa fa-lg fa-plus-square-o"></i>
                                 <i class="fa fa-lg fa-minus-square-o"></i>
-                                <input type="hidden" name="section_status[5]" class="section1-status-input sectionstatus-input" value="">
+                                <input type="hidden" name="section_status_5" class="section5-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_5'])){{ $sectionStatus['section_status_5'] }}@else Not Started @endif">
                             </span>
                         </a>
                     </div>
@@ -614,6 +671,7 @@ nominal-value-share -->
                                         @endphp
                                         <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif add-team-member" >Add team member</button>
                                         <input type="hidden" class="member-counter" name="member_counter" value="{{ $memberCounter }}">
+                                        <input type="hidden" class="completion_status" name="member_data" value="">
                                     </div>
                                     
                                     
@@ -633,10 +691,10 @@ nominal-value-share -->
                             </span>
                             <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section6-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_6'])){{ $sectionStatus['section_status_6'] }}@else Not Started @endif</small>
                                 <i class="fa fa-lg fa-plus-square-o"></i>
                                 <i class="fa fa-lg fa-minus-square-o"></i>
-                                <input type="hidden" name="section_status[5]" class="section1-status-input sectionstatus-input" value="">
+                                <input type="hidden" name="section_status_6" class="section6-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_6'])){{ $sectionStatus['section_status_6'] }}@else Not Started @endif">
                             </span>
                         </a>
                     </div>
@@ -650,61 +708,61 @@ nominal-value-share -->
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label>Company Number</label>
-                                            <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_number" placeholder=""   value="@if(isset($companyDetails['detail_number'])){{ $companyDetails['detail_number'] }}@endif" >
+                                            <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_number" placeholder=""   value="@if(isset($companyDetails['detail_number'])){{ $companyDetails['detail_number'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Company Type</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_type" placeholder=""   value="@if(isset($companyDetails['detail_type'])){{ $companyDetails['detail_type'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_type" placeholder=""   value="@if(isset($companyDetails['detail_type'])){{ $companyDetails['detail_type'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Telephone No.</label>
-                                            <input type="number" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_telephone" placeholder=""   value="@if(isset($companyDetails['detail_telephone'])){{ $companyDetails['detail_telephone'] }}@endif" >
+                                            <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_telephone" placeholder=""   value="@if(isset($companyDetails['detail_telephone'])){{ $companyDetails['detail_telephone'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>SIC 2003</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_sic2003" placeholder=""   value="@if(isset($companyDetails['detail_sic2003'])){{ $companyDetails['detail_sic2003'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_sic2003" placeholder=""   value="@if(isset($companyDetails['detail_sic2003'])){{ $companyDetails['detail_sic2003'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Types of Accounts</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_typeofaccount" placeholder=""   value="@if(isset($companyDetails['detail_typeofaccount'])){{ $companyDetails['detail_typeofaccount'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_typeofaccount" placeholder=""   value="@if(isset($companyDetails['detail_typeofaccount'])){{ $companyDetails['detail_typeofaccount'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Latest Annual Returns</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualreturns" placeholder=""   value="@if(isset($companyDetails['detail_latestannualreturns'])){{ $companyDetails['detail_latestannualreturns'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualreturns" placeholder=""   value="@if(isset($companyDetails['detail_latestannualreturns'])){{ $companyDetails['detail_latestannualreturns'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Next Annual Returns Due</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualreturnsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualreturnsdue'])){{ $companyDetails['detail_nextannualreturnsdue'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualreturnsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualreturnsdue'])){{ $companyDetails['detail_nextannualreturnsdue'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Latest Annual Accounts</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualaccounts" placeholder=""   value="@if(isset($companyDetails['detail_latestannualaccounts'])){{ $companyDetails['detail_latestannualaccounts'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualaccounts" placeholder=""   value="@if(isset($companyDetails['detail_latestannualaccounts'])){{ $companyDetails['detail_latestannualaccounts'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Next Annual Accounts Due</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualaccountsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualaccountsdue'])){{ $companyDetails['detail_nextannualaccountsdue'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualaccountsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualaccountsdue'])){{ $companyDetails['detail_nextannualaccountsdue'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>SIC 2007</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif" name="detail_sic2007" placeholder=""   value="@if(isset($companyDetails['detail_sic2007'])){{ $companyDetails['detail_sic2007'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_sic2007" placeholder=""   value="@if(isset($companyDetails['detail_sic2007'])){{ $companyDetails['detail_sic2007'] }}@endif" >
 
                                         </div>  
 
@@ -717,7 +775,7 @@ nominal-value-share -->
 
                                         <div class="form-group">
                                             <label>Incorporation Date</label>
-                                            <input type="text" class="form-control text-input-status editmode @if($mode=='view') d-none @endif datepicker" name="detail_incorporationdate" placeholder=""   value="@if(isset($companyDetails['detail_incorporationdate'])){{ $companyDetails['detail_incorporationdate'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_incorporationdate" placeholder=""   value="@if(isset($companyDetails['detail_incorporationdate'])){{ $companyDetails['detail_incorporationdate'] }}@endif" >
 
                                         </div>  
             
@@ -745,10 +803,10 @@ nominal-value-share -->
                             </span>
                             <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section7-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_7'])){{ $sectionStatus['section_status_7'] }}@else Not Started @endif</small>
                                 <i class="fa fa-lg fa-plus-square-o"></i>
                                 <i class="fa fa-lg fa-minus-square-o"></i>
-                                <input type="hidden" name="section_status[7]" class="section1-status-input sectionstatus-input" value="">
+                                <input type="hidden" name="section_status_7" class="section7-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_7'])){{ $sectionStatus['section_status_7'] }}@else Not Started @endif">
                             </span>
                         </a>
                     </div>
@@ -916,10 +974,10 @@ nominal-value-share -->
                             </span>
                             <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section8-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_8'])){{ $sectionStatus['section_status_8'] }}@else Not Started @endif</small>
                                 <i class="fa fa-lg fa-plus-square-o"></i>
                                 <i class="fa fa-lg fa-minus-square-o"></i>
-                                <input type="hidden" name="section_status[7]" class="section1-status-input sectionstatus-input" value="">
+                                <input type="hidden" name="section_status_8" class="section8-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_8'])){{ $sectionStatus['section_status_8'] }}@else Not Started @endif">
                             </span>
                         </a>
                     </div>
@@ -1214,10 +1272,10 @@ nominal-value-share -->
                             </span>
                             <span class="text-md-right text-center px-0 col-md-2 col-4">
 
-                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section1-status"></small>
+                                <small class="mr-sm-3 mr-0 d-block d-md-inline-block section9-status">@if(!empty($sectionStatus) && isset($sectionStatus['section_status_9'])){{ $sectionStatus['section_status_9'] }}@else Not Started @endif</small>
                                 <i class="fa fa-lg fa-plus-square-o"></i>
                                 <i class="fa fa-lg fa-minus-square-o"></i>
-                                <input type="hidden" name="section_status[7]" class="section1-status-input sectionstatus-input" value="">
+                                <input type="hidden" name="section_status_9" class="section9-status-input sectionstatus-input" value="@if(!empty($sectionStatus) && isset($sectionStatus['section_status_9'])){{ $sectionStatus['section_status_9'] }}@else Not Started @endif">
                             </span>
                         </a>
                     </div>
@@ -1234,7 +1292,8 @@ nominal-value-share -->
                                                  
                                                 <img src="{{ $businessLogo }}" alt="..." class="img-thumbnail business-logo-img">
                                                 <input type="hidden" name="logo_cropped_image_url" class="cropped_image_url">
-                                                <input type="hidden" name="logo_image_url" class="image_url" value="{{ $businessLogo }}"> 
+                                                <input type="hidden" name="logo_image_url" class="image_url " value="{{ $businessLogo }}"> 
+                                                <input type="hidden" class="completion_status" value="@if($hasBusinessLogo) 1 @endif"> 
 
                                                 <div class="action-btn"> 
                                                 <button type="button" id="pickfiles" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBusinessLogo) d-none @endif" object-type="App\BusinessListing" object-id="" type="business_logo" image-class="business-logo-img"><i class="fa fa-trash text-danger editmode "></i></a>
@@ -1251,7 +1310,8 @@ nominal-value-share -->
                                         <div class="col-md-9" id="business-background-cont">
                                             <img src="{{ $backgroundImage }}" alt="..." class="img-thumbnail business-background-img">
                                                <input type="hidden" name="background_cropped_image_url" class="cropped_image_url">
-                                                <input type="hidden" name="background_url" class="image_url" value="{{ $backgroundImage }}">   
+                                                <input type="hidden" name="background_url" class="image_url " value="{{ $backgroundImage }}">   
+                                                <input type="hidden" class="completion_status" value="@if($hasBackgroundImage) 1 @endif"> 
                                                 <div class="action-btn"> 
                                                 <button type="button" id="pickbackground" class="btn btn-primary btn-sm mt-2  editmode @if($mode=='view') d-none @endif"><i class="fa fa-camera"></i> Select Image</button>   <a href="javascript:void(0)" class="delete-image @if(!$hasBackgroundImage) d-none @endif" object-type="App\BusinessListing" object-id="" type="business_background_image" image-class="business-background-img"><i class="fa fa-trash text-danger editmode "></i></a>
                                                 </div>

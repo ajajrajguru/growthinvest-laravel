@@ -145,8 +145,10 @@ $mediaLinks = (isset($teamMemberDetail['socialmedia-link'])) ? $teamMemberDetail
 		@endif
 
 
+
 		<button type="button" class="btn btn-primary text-right editmode add-social-link" >Add Social Media Link</button>
-		<input type="hidden" name="socialmedia_link_counter_{{ $memberCount }}" value="{{ $sm }}">
+		<input type="hidden" name="socialmedia_link_counter_{{ $memberCount }}" class="completion_status" value="{{ $sm }}">
+		<button type="button" class="btn btn-primary text-right editmode delete-team-member" >Delete member</button>
 	</div>
 	</fieldset>
 </div>

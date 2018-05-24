@@ -6,6 +6,7 @@
   });
 
   $(document).ready(function() {
+    var calculateFundRaised, calculateTargetRaised;
     $('.save-business-proposal').click(function() {
       var btnObj, form_data, hrefId, isValidTab, save_type, title, titleInvalidTabHeadObj;
       btnObj = $(this);
@@ -24,12 +25,13 @@
       isValidTab = 0;
       if (save_type === 'submit') {
         $('form').find('.parent-tabpanel').each(function() {
-          var invalidTabHeadObj;
+          var invalidTabHeadObj, isComplete, sectionCount;
           hrefId = $(this).attr('id');
+          sectionCount = $(this).attr('data-section');
           invalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
           invalidTabHeadObj.removeClass('border border-danger');
           invalidTabHeadObj.find('.has-invalid-data').addClass('d-none');
-          return $(this).find('.completion_status').each(function() {
+          $(this).find('.valid_input').each(function() {
             if (!$(this).parsley().isValid()) {
               $(this).parsley().validate();
               isValidTab++;
@@ -39,6 +41,20 @@
               }
             }
           });
+          console.log(sectionCount);
+          isComplete = 0;
+          $(this).find('.completion_status').each(function() {
+            if ($(this).val() === '') {
+              return isComplete++;
+            }
+          });
+          if (isComplete === 0) {
+            $('input[name="section_status_' + sectionCount + '"]').val('Complete');
+            return $('.section' + sectionCount + '-status').text('Complete');
+          } else {
+            $('input[name="section_status_' + sectionCount + '"]').val('Incomplete');
+            return $('.section' + sectionCount + '-status').text('Incomplete');
+          }
         });
       }
       if (title !== '' && isValidTab === 0) {
@@ -52,7 +68,7 @@
           },
           success: function(data) {
             if (save_type === 'submit') {
-              window.location.href = "/investment-opportunities/" + data.business_slug;
+              window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.business_slug;
             }
             if (data.redirect) {
               return window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.gi_code + "/edit";
@@ -64,7 +80,7 @@
       }
     });
     $('.save-section').click(function() {
-      var btnObj, form_data, hrefId, invalidTabHeadObj, isValidTab, submitType, title, titleInvalidTabHeadObj;
+      var btnObj, form_data, hrefId, invalidTabHeadObj, isComplete, isValidTab, sectionCount, submitType, title, titleInvalidTabHeadObj;
       btnObj = $(this);
       title = $('input[name="title"]').val();
       submitType = btnObj.attr('submit-type');
@@ -83,7 +99,7 @@
       invalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
       invalidTabHeadObj.removeClass('border border-danger');
       invalidTabHeadObj.find('.has-invalid-data').addClass('d-none');
-      btnObj.closest('.parent-tabpanel').find('.completion_status').each(function() {
+      btnObj.closest('.parent-tabpanel').find('.valid_input').each(function() {
         if (!$(this).parsley().isValid()) {
           $(this).parsley().validate();
           isValidTab++;
@@ -93,6 +109,21 @@
           }
         }
       });
+      isComplete = 0;
+      sectionCount = btnObj.closest('.parent-tabpanel').attr('data-section');
+      console.log(sectionCount);
+      btnObj.closest('.parent-tabpanel').find('.completion_status').each(function() {
+        if ($(this).val() === '') {
+          return isComplete++;
+        }
+      });
+      if (isComplete === 0) {
+        $('input[name="section_status_' + sectionCount + '"]').val('Complete');
+        $('.section' + sectionCount + '-status').text('Complete');
+      } else {
+        $('input[name="section_status_' + sectionCount + '"]').val('Incomplete');
+        $('.section' + sectionCount + '-status').text('Incomplete');
+      }
       if (title !== '' && isValidTab === 0) {
         form_data = btnObj.closest('form').serializeArray();
         return $.ajax({
@@ -112,15 +143,81 @@
         });
       }
     });
-    $(document).on('change', 'input[name="post-money-valuation"]', function() {
+    $(document).on('change', 'input[name="not-calculated-share"]', function() {
+      if ($(this).is(':checked')) {
+        $("#target-raised-label").text("Targeted Raise");
+        $("#target-raised-helper").text("Eg: £17,500.");
+        $("#post-money-valuation-helper").text("");
+        $("#post-money-valuation-label").text("Post-investment % shareholding to be issued");
+        calculateTargetRaised();
+        $('#investment-sought').removeAttr('readonly');
+        $('#post-money-valuation').removeAttr('readonly');
+        $('.not-calculated-share-checked').addClass('d-none');
+        $('#no-of-shares-issue').attr('data-parsley-required', false);
+        $('#no-of-new-shares-issue').attr('data-parsley-required', false);
+        $('#share-price-curr-inv-round').attr('data-parsley-required', false);
+        $('#share-class-issued').attr('data-parsley-required', false);
+        return $('#nominal-value-share').attr('data-parsley-required', false);
+      } else {
+        $("#target-raised-label").text("Raise Amount");
+        $("#target-raised-helper").text("This field is auto-calculated");
+        $("#post-money-valuation-helper").text("This field is auto-calculated.");
+        $("#post-money-valuation-label").text("Post-Investment % Equity Offer");
+        calculateFundRaised();
+        $('#investment-sought').attr('readonly', 'readonly');
+        $('#post-money-valuation').attr('readonly', 'readonly');
+        $('.not-calculated-share-checked').removeClass('d-none');
+        $('#no-of-shares-issue').attr('data-parsley-required', true);
+        $('#no-of-new-shares-issue').attr('data-parsley-required', true);
+        $('#share-price-curr-inv-round').attr('data-parsley-required', true);
+        $('#share-class-issued').attr('data-parsley-required', true);
+        return $('#nominal-value-share').attr('data-parsley-required', true);
+      }
+    });
+    calculateFundRaised = function() {
+      var newpostmoneyval, newpremoneyval, newraiseamount, newsharepricewocomma, nosharepricewocomma, post_equity, postmoneyval, premoneyval, raiseamount, sharepricewocomma;
+      if ($('#no-of-new-shares-issue').val() !== '' && $('#share-price-curr-inv-round').val() !== '') {
+        sharepricewocomma = $('#share-price-curr-inv-round').val();
+        newsharepricewocomma = $('#no-of-new-shares-issue').val();
+        raiseamount = parseFloat(newsharepricewocomma) * parseFloat(sharepricewocomma);
+        newraiseamount = parseFloat(raiseamount.toFixed(2));
+        $('#investment-sought').val(newraiseamount);
+        $('#investment-sought').attr('readonly', 'readonly');
+      }
+      if ($('#no-of-shares-issue').val() !== '' && $('#share-price-curr-inv-round').val() !== '') {
+        sharepricewocomma = $('#share-price-curr-inv-round').val();
+        nosharepricewocomma = $('#no-of-shares-issue').val();
+        premoneyval = parseFloat(nosharepricewocomma) * parseFloat(sharepricewocomma);
+        newpremoneyval = parseFloat(premoneyval.toFixed(2));
+        $('#pre-money-valuation').val(newpremoneyval);
+      }
+      if ($('#no-of-new-shares-issue').val() !== '' && $('#no-of-new-shares-issue').val() !== '' && $('#share-price-curr-inv-round').val() !== '') {
+        sharepricewocomma = $('#share-price-curr-inv-round').val();
+        newsharepricewocomma = $('#no-of-new-shares-issue').val();
+        nosharepricewocomma = $('#no-of-shares-issue').val();
+        postmoneyval = (parseFloat(nosharepricewocomma) + parseFloat(newsharepricewocomma)) * parseFloat(sharepricewocomma);
+        newpostmoneyval = parseFloat(postmoneyval.toFixed(2));
+        $('#post-money-valuation').val(newpostmoneyval);
+        $('#post-money-valuation').attr('readonly', 'readonly');
+      }
+      if ($('#no-of-new-shares-issue').val() !== '' && $('#no-of-shares-issue').val() !== '') {
+        newsharepricewocomma = $('#no-of-new-shares-issue').val();
+        nosharepricewocomma = $('#no-of-shares-issue').val();
+        post_equity = parseFloat(newsharepricewocomma) / (parseFloat(newsharepricewocomma) + parseFloat(nosharepricewocomma)) * 100;
+        $('#percentage-giveaway').val(post_equity.toFixed(2));
+      }
+    };
+    calculateTargetRaised = function() {
       var investment_sought, percentage_giveaway, post_money_valuation, pre_money_valuation;
       investment_sought = $('#investment-sought').val();
+      console.log(investment_sought);
       if (isNaN(investment_sought) || investment_sought === '') {
         investment_sought = 0;
       } else {
         investment_sought = parseFloat(investment_sought);
       }
-      post_money_valuation = $(this).val();
+      post_money_valuation = $('#post-money-valuation').val();
+      console.log(post_money_valuation);
       if (isNaN(post_money_valuation) || post_money_valuation === '') {
         post_money_valuation = 0;
       } else {
@@ -135,6 +232,12 @@
       }
       $('#percentage-giveaway').val(percentage_giveaway);
       $('#pre-money-valuation').val(pre_money_valuation);
+    };
+    $(document).on('keyup', '.money-valuation-change', function() {
+      return calculateTargetRaised();
+    });
+    $(document).on('keyup', '.share-price-change', function() {
+      return calculateFundRaised();
     });
     $(document).on('click', '.delete_funds_row', function() {
       if (confirm('Are you sure you want to delete this Fund from your List?')) {
@@ -160,11 +263,16 @@
           $("#crop-modal-container").append(data.cropModal);
           $btnObj.before(data.memberHtml);
           $('.member-counter').val(data.memberCount);
-          return uploadCropImage(data.containerId, data.pickFile, data.imageCLass, data.postUrl);
+          uploadCropImage(data.containerId, data.pickFile, data.imageCLass, data.postUrl);
+          return $('input[name="member_data"]').val('1');
         }
       });
     });
     $(document).on('click', '.delete-team-member', function() {
+      console.log($('input[name="member_counter"]').val());
+      if (($('.team-member').length)) {
+        $('input[name="member_data"]').val('');
+      }
       return $(this).closest('.team-member').remove();
     });
     $(document).on('click', '.add-social-link', function() {

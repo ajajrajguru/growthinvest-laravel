@@ -1702,6 +1702,7 @@ class BusinessListingController extends Controller
             $businessListing = BusinessListing::where('gi_code', $giCode)->first();
         }
 
+        $sectionStatus           = $businessListing->getBusinessSectionStatus(); 
         $businessIdeas           = $businessListing->getBusinessIdeas();
         $businessProposalDetails = $businessListing->getBusinessProposalDetails();
         $fundingRequirement      = $businessListing->getFundingRequirement();
@@ -1737,6 +1738,7 @@ class BusinessListingController extends Controller
         $data['companyDetails']          = (!empty($companyDetails)) ? unserialize($companyDetails->data_value) : [];
         $data['teamMemberDetails']       = (!empty($teamMemberDetails)) ? unserialize($teamMemberDetails->data_value) : [];
         $data['dueDeligence']            = (!empty($dueDeligence)) ? unserialize($dueDeligence->data_value) : [];
+        $data['sectionStatus']            = (!empty($sectionStatus)) ? unserialize($sectionStatus->data_value) : [];
         $data['milestones']              = $milestones;
         $data['businessLogo']            = $profilePic['url'];
         $data['hasBusinessLogo']         = $profilePic['hasImage'];
@@ -1796,6 +1798,8 @@ class BusinessListingController extends Controller
         $businessListing->title = $submitData['title'];
         $businessListing->save();
 
+        $this->saveBusinessSectionStatus($businessListing, $submitData);
+        
         if ($submitType == 'business_idea') {
             $this->saveBusinessIdeas($businessListing, $submitData);
         } elseif ($submitType == 'business_proposal_details') {
@@ -1810,9 +1814,10 @@ class BusinessListingController extends Controller
             $this->saveCompanyDetails($businessListing, $submitData);
         }
 
-        if ($type == 'proposal') {
+        $businessListingType = 'single-company';
+        if ($businessListing->type == 'proposal') {
             $businessListingType = 'single-company';
-        } elseif ($type == 'funds') {
+        } elseif ($businessListing->type == 'funds') {
             $businessListingType = 'fund';
         } 
 
@@ -1867,6 +1872,7 @@ class BusinessListingController extends Controller
         $businessListing->title = $submitData['title'];
         $businessListing->save();
 
+        $this->saveBusinessSectionStatus($businessListing, $submitData);
         $this->saveBusinessIdeas($businessListing, $submitData);
         $this->saveBusinessProposalDetails($businessListing, $submitData);
         $this->saveFundingRequirement($businessListing, $submitData);
@@ -1886,6 +1892,22 @@ class BusinessListingController extends Controller
         );
 
         return response()->json($json_data);
+
+    }
+
+    public function saveBusinessSectionStatus($businessListing, $submitData)
+    {
+        $data = ['section_status_1' => $submitData['section_status_1'],'section_status_2' => $submitData['section_status_2'],'section_status_3' => $submitData['section_status_3'],'section_status_4' => $submitData['section_status_4'],'section_status_5' => $submitData['section_status_5'],'section_status_6' => $submitData['section_status_6'],'section_status_7' => $submitData['section_status_7'],'section_status_8' => $submitData['section_status_8'],'section_status_9' => $submitData['section_status_9']];
+
+        $businessIdeas = $businessListing->getBusinessSectionStatus();
+        if (empty($businessIdeas)) {
+            $businessIdeas              = new BusinessListingData;
+            $businessIdeas->business_id = $businessListing->id;
+            $businessIdeas->data_key    = 'business_section_status';
+        }
+
+        $businessIdeas->data_value = serialize($data);
+        $businessIdeas->save();
 
     }
 
@@ -1978,9 +2000,15 @@ class BusinessListingController extends Controller
 
     public function saveFundingRequirement($businessListing, $submitData)
     {
-        $notSureRaise       = (isset($submitData['not-sure-raise'])) ? $submitData['not-sure-raise'] : '';
-        $notCalculatedShare = (isset($submitData['not-calculated-share'])) ? $submitData['not-calculated-share'] : '';
-        $data               = ['not-sure-raise' => $notSureRaise, 'not-calculated-share' => $notCalculatedShare, 'investment-sought' => $submitData['investment-sought'], 'minimum-investment' => $submitData['minimum-investment'], 'minimum-raise' => $submitData['minimum-raise'], 'post-money-valuation' => $submitData['post-money-valuation'], 'pre-money-valuation' => $submitData['pre-money-valuation'], 'percentage-giveaway' => $submitData['percentage-giveaway'], 'deadline-subscription' => $submitData['deadline-subscription']];
+        $notSureRaise       = (isset($submitData['not-sure-raise'])) ? $submitData['not-sure-raise'] : '0';
+        $notCalculatedShare = (isset($submitData['not-calculated-share'])) ? $submitData['not-calculated-share'] : '0';
+        $noofsharesissue = (isset($submitData['no-of-shares-issue'])) ? $submitData['no-of-shares-issue'] : '';
+        $noofnewsharesissue = (isset($submitData['no-of-new-shares-issue'])) ? $submitData['no-of-new-shares-issue'] : '';
+        $sharepricecurrinvround = (isset($submitData['share-price-curr-inv-round'])) ? $submitData['share-price-curr-inv-round'] : '';
+        $shareclassissued = (isset($submitData['share-class-issued'])) ? $submitData['share-class-issued'] : '';
+        $nominalvalueshare = (isset($submitData['nominal-value-share'])) ? $submitData['nominal-value-share'] : '';
+   
+        $data               = ['no-of-shares-issue' =>$noofsharesissue ,'no-of-new-shares-issue'=>$noofnewsharesissue ,'share-price-curr-inv-round'=>$sharepricecurrinvround ,'share-class-issued'=>$shareclassissued ,'nominal-value-share'=>$nominalvalueshare ,'not-sure-raise' => $notSureRaise, 'not-calculated-share' => $notCalculatedShare, 'investment-sought' => $submitData['investment-sought'], 'minimum-investment' => $submitData['minimum-investment'], 'minimum-raise' => $submitData['minimum-raise'], 'post-money-valuation' => $submitData['post-money-valuation'], 'pre-money-valuation' => $submitData['pre-money-valuation'], 'percentage-giveaway' => $submitData['percentage-giveaway'], 'deadline-subscription' => $submitData['deadline-subscription']];
 
         $data['use_of_funds'] = [];
         $amount               = $submitData['use_of_funds_amount'];
@@ -2005,11 +2033,7 @@ class BusinessListingController extends Controller
 
     public function saveFinancials($businessListing, $submitData)
     {
-//         no-of-shares-issue
-        // no-of-new-shares-issue
-        // share-price-curr-inv-round
-        // share-class-issued
-        // nominal-value-share
+
 
         $data = ['revenue_year1' => $submitData['revenue_year1'], 'revenue_year2' => $submitData['revenue_year2'], 'revenue_year3' => $submitData['revenue_year3'], 'sale_year1' => $submitData['sale_year1'], 'sale_year2' => $submitData['sale_year2'], 'sale_year3' => $submitData['sale_year3'], 'expences_year1' => $submitData['expences_year1'], 'expences_year2' => $submitData['expences_year2'], 'expences_year3' => $submitData['expences_year3'], 'ebitda_year_1' => $submitData['ebitda_year_1'], 'ebitda_year_2' => $submitData['ebitda_year_2'], 'ebitda_year_3' => $submitData['ebitda_year_3']];
 

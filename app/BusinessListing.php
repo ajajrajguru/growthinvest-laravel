@@ -322,9 +322,15 @@ class BusinessListing extends Model
     /**
     get business data  
      */
-    public function getBusinessIdeas(){
+
+    public function getBusinessSectionStatus(){
+       return $this->businessListingData()->where('data_key','business_section_status')->first(); 
+    }
+
+     public function getBusinessIdeas(){
        return $this->businessListingData()->where('data_key','business_ideas')->first(); 
     }
+
 
     public function getBusinessProposalDetails(){
        return $this->businessListingData()->where('data_key','business_proposal_details')->first(); 
