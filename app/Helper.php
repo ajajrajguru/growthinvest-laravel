@@ -36,19 +36,23 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
 
 }
 
-function isUser($object,$hasRolePermission){
-    if($object->hasAnyRole($hasRolePermission))
+function isUser($object, $hasRolePermission)
+{
+    if ($object->hasAnyRole($hasRolePermission)) {
         return true;
-    else
+    } else {
         return false;
+    }
+
 }
 
-function updateModelImage($model,$url,$imageType,$displaySize){
+function updateModelImage($model, $url, $imageType, $displaySize)
+{
     //move from temp dir to s3
     $source   = pathinfo($url);
     $basename = $source['basename'];
 
-    $currentPath  = public_path() . '/uploads/tmp/' . $basename;
+    $currentPath = public_path() . '/uploads/tmp/' . $basename;
     if (File::exists($currentPath)) {
         $uploadedFile = new \Illuminate\Http\UploadedFile($currentPath, $basename);
 
@@ -64,7 +68,7 @@ function updateModelImage($model,$url,$imageType,$displaySize){
         }
 
         //delete temp file
-    
+
         File::delete($currentPath);
     }
 
@@ -118,7 +122,7 @@ function getCounty()
 function getDefaultImages($type)
 {
     $url = url('img/dummy/logo.png');
-    if (in_array($type, ['profile_picture','member_picture'])) {
+    if (in_array($type, ['profile_picture', 'member_picture'])) {
         $url = url('img/dummy/avatar.png');
     } elseif (in_array($type, ['company_logo', 'firm_logo'])) {
         $url = url('img/dummy/logo.png');
@@ -401,9 +405,9 @@ function getCountrycodeAlpha2ToAlpha3()
 
 };
 
-function durationType($type='all')
+function durationType($type = 'all')
 {
-    if($type=='all'){
+    if ($type == 'all') {
         $duration = [
             "today"        => "Today",
             "last7d"       => "Last 7 Days",
@@ -416,22 +420,20 @@ function durationType($type='all')
             "yeartodate"   => 'Year to Date',
             "last12month"  => 'Last 12 Months',
         ];
-    }
-    else{
+    } else {
         $duration = [
-            "thisquater"   => 'This Quarter',
-            "lastquater"   => 'Last Quarter',
-            "yeartodate"   => 'Year to Date',
-            "last12month"  => 'Last 12 Months',
+            "thisquater"  => 'This Quarter',
+            "lastquater"  => 'Last Quarter',
+            "yeartodate"  => 'Year to Date',
+            "last12month" => 'Last 12 Months',
         ];
     }
-    
 
     return $duration;
 
 }
 
-function getDateByPeriod($period,$arg=[])
+function getDateByPeriod($period, $arg = [])
 {
     $fromDate = '';
     $toDate   = '';
@@ -502,14 +504,13 @@ function getDateByPeriod($period,$arg=[])
     } elseif ($period == 'last12month') {
         $fromDate = date('Y-m-d', strtotime('- 12 months'));
         $toDate   = date('Y-m-d');
-    }
-    elseif ($period == 'financialyr') {
-        $year = $arg['year'];
-        $splitDate=explode('-', $year);
-        $startDate = strtotime('6-April-'.$splitDate[0]);  // timestamp or 1-Januray 12:00:00 AM
-        $endDate = strtotime('5-April-'.$splitDate[1]);
-        $fromDate=date("Y-m-d", $startDate);
-        $toDate=date("Y-m-d",  $endDate);
+    } elseif ($period == 'financialyr') {
+        $year      = $arg['year'];
+        $splitDate = explode('-', $year);
+        $startDate = strtotime('6-April-' . $splitDate[0]); // timestamp or 1-Januray 12:00:00 AM
+        $endDate   = strtotime('5-April-' . $splitDate[1]);
+        $fromDate  = date("Y-m-d", $startDate);
+        $toDate    = date("Y-m-d", $endDate);
     }
 
     return ['fromDate' => $fromDate, 'toDate' => $toDate];
@@ -1204,7 +1205,7 @@ function getSectors()
 
 function custodyType()
 {
-    return ['aic'=>'Custody', 'ainc'=>'Non-Custody'];
+    return ['aic' => 'Custody', 'ainc' => 'Non-Custody'];
 }
 
 function getBusinessSectors()
@@ -1222,7 +1223,8 @@ function aicSectors()
         'specialist_infrastructure' => 'Specialist: Infrastructure'];
 }
 
-function getDefaultValues($type){
+function getDefaultValues($type)
+{
     return \App\Defaults::where('type', $type)->where('status', '1')->get();
 }
 
@@ -1242,6 +1244,11 @@ function getStageOfBusiness()
     })->where('defaults.type', 'stage_of_business')->where('defaults.status', '1')->groupby('business_has_defaults.default_id')->select('defaults.*')->get();
 
     // return \App\Defaults::where('type', 'stage_of_business')->where('status', '1')->get();
+}
+
+function businessRounds()
+{
+    return ["1" => "1st Round", "2" => "2nd Round", "3" => "3rd Round", "4" => "4th Round", "5" => "5th Round", "6" => "6th Round", "7" => "7th Round", "8" => "8th Round", "9" => "9th Round", "10" => "10th Round"];
 }
 
 /**
@@ -1269,26 +1276,26 @@ function get_ordinal_number($number)
 
 }
 
-function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd){
-    $date = strtotime($inputDate);
-    $inputyear = strftime('%Y',$date);
+function calculateFiscalYearForDate($inputDate, $fyStart, $fyEnd)
+{
+    $date      = strtotime($inputDate);
+    $inputyear = strftime('%Y', $date);
 
-    $fystartdate = strtotime($fyStart.'/'.$inputyear);
-    $fyenddate = strtotime($fyEnd.'/'.$inputyear);
+    $fystartdate = strtotime($fyStart . '/' . $inputyear);
+    $fyenddate   = strtotime($fyEnd . '/' . $inputyear);
 
-    if($date < $fyenddate){
-       $fy = intval($inputyear);
-       $prevyr = intval(intval($inputyear) - 1);
-       $fyear=$prevyr.'-'.substr($fy, 2,4);
-    }else{
-       $fy = intval(intval($inputyear) + 1);
-       $fyear=$inputyear.'-'.substr($fy, 2,4);
+    if ($date < $fyenddate) {
+        $fy     = intval($inputyear);
+        $prevyr = intval(intval($inputyear) - 1);
+        $fyear  = $prevyr . '-' . substr($fy, 2, 4);
+    } else {
+        $fy    = intval(intval($inputyear) + 1);
+        $fyear = $inputyear . '-' . substr($fy, 2, 4);
     }
 
     return $fyear;
 
 }
-
 
 function check_null($num)
 {
@@ -1339,13 +1346,14 @@ function getObjectComments($objectType, $objectId, $parent)
 
 }
 
-function getFinancialYears($endYear=2011){
+function getFinancialYears($endYear = 2011)
+{
     $currYear = date('Y');
-    $years = [];
-    for ($i=$endYear; $i <= $currYear ; $i++) { 
-        $j = $i-1;
-        
-        $years[] = $j.'-'.substr($i, -2);
+    $years    = [];
+    for ($i = $endYear; $i <= $currYear; $i++) {
+        $j = $i - 1;
+
+        $years[] = $j . '-' . substr($i, -2);
     }
     krsort($years);
     return $years;
@@ -1705,50 +1713,48 @@ function activityQueryBuilder()
     }
 }
 
-function get_header_page_markup($args){
+function get_header_page_markup($args)
+{
 
-     
-    $backtop = isset($args['backtop'])?$args['backtop']:"25mm";    
-    $backbottom = isset($args['backbottom'])?$args['backbottom']:"14mm";
-    $backleft = isset($args['backleft'])?$args['backleft']:"14mm";
-    $backright = isset($args['backright'])?$args['backright']:"14mm";
-    $headerimg = isset($args['headerimg'])?$args['headerimg']:public_path("img/pdf/header-edge-main.png");
-    $footerimg = isset($args['footerimg'])?$args['footerimg']:public_path("img/pdf/footer_ta_pdf-min.png");
-    $header_txt = isset($args['headertxt'])?$args['headertxt']:"Transfer Asset PDF";
+    $backtop    = isset($args['backtop']) ? $args['backtop'] : "25mm";
+    $backbottom = isset($args['backbottom']) ? $args['backbottom'] : "14mm";
+    $backleft   = isset($args['backleft']) ? $args['backleft'] : "14mm";
+    $backright  = isset($args['backright']) ? $args['backright'] : "14mm";
+    $headerimg  = isset($args['headerimg']) ? $args['headerimg'] : public_path("img/pdf/header-edge-main.png");
+    $footerimg  = isset($args['footerimg']) ? $args['footerimg'] : public_path("img/pdf/footer_ta_pdf-min.png");
+    $header_txt = isset($args['headertxt']) ? $args['headertxt'] : "Transfer Asset PDF";
 
-
-    $header_footer_start_html ='<page  ';
-    if(isset($args['hideheader'])){
-        $header_footer_start_html.='  hideheader="'.$args['hideheader'].'" ';
+    $header_footer_start_html = '<page  ';
+    if (isset($args['hideheader'])) {
+        $header_footer_start_html .= '  hideheader="' . $args['hideheader'] . '" ';
     }
 
-
-    if(isset($args['hidefooter'])){
-        $header_footer_start_html.='  hidefooter="'.$args['hidefooter'].'" ';
+    if (isset($args['hidefooter'])) {
+        $header_footer_start_html .= '  hidefooter="' . $args['hidefooter'] . '" ';
     }
 
-    $header_footer_start_html.='backimgx="0px" backimgy="0px" backimgw="100%" backimg="'.$headerimg.'" backtop="'.$backtop.'" backbottom="'.$backbottom.'" backleft="'.$backleft.'"  backright="'.$backleft.'" style="font-size: 12pt">
+    $header_footer_start_html .= 'backimgx="0px" backimgy="0px" backimgw="100%" backimg="' . $headerimg . '" backtop="' . $backtop . '" backbottom="' . $backbottom . '" backleft="' . $backleft . '"  backright="' . $backleft . '" style="font-size: 12pt">
     <page_header > ';
 
-    if($header_txt!=""){
-        $header_footer_start_html.='<table style="border: none; background-color:#FFF; margin-top:100px; margin-left:'.$backleft.'"  class="w50per"  >
+    if ($header_txt != "") {
+        $header_footer_start_html .= '<table style="border: none; background-color:#FFF; margin-top:100px; margin-left:' . $backleft . '"  class="w50per"  >
             <tr>
                 <td style="text-align: left;"  class="w100per">
-                   <h3 style="font-weight:500; color: grey;">'.$header_txt.'</h3> 
-                </td>                 
+                   <h3 style="font-weight:500; color: grey;">' . $header_txt . '</h3>
+                </td>
             </tr>
-        </table>';  
-      }
-    $header_footer_start_html.=' </page_header>
+        </table>';
+    }
+    $header_footer_start_html .= ' </page_header>
     <page_footer>
         <table style="border: none; background-color:#FFF; width: 100%;  "  >
             <tr>
                 <td style="text-align:center;"  class="w100per" >
-                  <img src="'.$footerimg.'" class="w90per"  />
-                </td>                
+                  <img src="' . $footerimg . '" class="w90per"  />
+                </td>
             </tr>
             <tr>
-                <td style="text-align: center;    width: 100%">page [[page_cu]]/[[page_nb]]</td> 
+                <td style="text-align: center;    width: 100%">page [[page_cu]]/[[page_nb]]</td>
             </tr>
         </table>
     </page_footer>';
@@ -1757,10 +1763,72 @@ function get_header_page_markup($args){
 
 }
 
-function getbusinessUploadedFileNamesHtml($files,$type,$businessListing){
-    $html ='';
-    if(isset($files[$type]) && !empty($files[$type])){
-        $html = $files[$type]['name'] .' '.' <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="'.$type.'"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="'.$type.'_url" class="image_url" value="'.$files[$type]['url'].'">';
+function get_section_header_content_seperator($margin = 40)
+{
+
+    $hr_seperator = '<table border="0">
+                  <tr style="line-height: ' . $margin . '%;" >
+                  <td></td>
+                  </tr>
+                  </table>';
+    return $hr_seperator;
+}
+
+function get_input_box_style($input_element_value, $type_input = "text", $cols = 0, $rows = 0, $prefix = "", $postfix = "")
+{
+
+    $input_box_style = "";
+    switch ($type_input) {
+        case 'textarea':
+            $rows_br = "";
+            for ($i = 0; $i < $rows; $i++) {
+                $rows_br .= "<br/>";
+            }
+            $input_box_style = '<table    cellpadding="0" cellspacing="0" style="border:1px solid #666;background-color:#fff">
+                      <tr>
+                        <td > &nbsp;' . $input_element_value . $rows_br . ' </td>
+                        </tr>
+                    </table>';
+            break;
+
+        case 'text':
+            $input_box_style = '<table cellpadding="0" cellspacing="0" style="border:1px solid #666; background-color:#fff">
+                      <tr>
+                        <td > &nbsp;' . $prefix . $input_element_value . $postfix . ' </td>
+                        </tr>
+                    </table>';
+            break;
+
+    }
+
+    return $input_box_style;
+
+}
+
+function get_checkbox_html2($name, $checked, $label_first=false)
+{
+
+    $checkbox_html = " &nbsp;  &nbsp;  ";
+
+    $checked_unchecked_image = '<img src="' . public_path("img/pdf/checkbox_unticked-blue.jpg") . '" width="15" height="15"/>';
+    if ($checked == true) {
+        $checked_unchecked_image = '<img src="' . public_path("img/pdf/checkbox-blue.jpg") . '" width="15" height="15"/>';
+    }
+
+    if ($label_first == true) {
+        $checkbox_html .= $name . "  &nbsp; " . $checked_unchecked_image;
+    } else {
+        $checkbox_html .= $checked_unchecked_image . " &nbsp; " . $name;
+    }
+
+    return $checkbox_html;
+}
+
+function getbusinessUploadedFileNamesHtml($files, $type, $businessListing)
+{
+    $html = '';
+    if (isset($files[$type]) && !empty($files[$type])) {
+        $html = $files[$type]['name'] . ' ' . ' <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="' . $type . '"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="' . $type . '_url" class="image_url" value="' . $files[$type]['url'] . '">';
     }
     return $html;
 }

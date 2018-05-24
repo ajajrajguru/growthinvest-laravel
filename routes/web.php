@@ -29,11 +29,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-file', 'UserController@deleteFile');
 
     // frontoffice entrepreneurs
-    Route::get('/add-business-proposals', 'BusinessListingController@create');
+    Route::get('/add-business-proposals/{type}', 'BusinessListingController@create');
     Route::post('/business-proposals/add-team-member', 'BusinessListingController@getTeamMemberHtml');
     Route::post('/business-proposals/save', 'BusinessListingController@store');
     Route::post('/business-proposals/save-all', 'BusinessListingController@saveAll');
-    Route::get('/investment-opportunities/{slug}/edit', 'BusinessListingController@create');
+    Route::get('/investment-opportunities/{type}/{gicode}/edit', 'BusinessListingController@create');
+    Route::get('/download-business-proposals/{gicode}', 'BusinessListingController@generateBusinessProposalPdf');
 });
  
 // backoffice

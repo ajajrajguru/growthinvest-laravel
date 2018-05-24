@@ -4,6 +4,7 @@ $(document).ready ->
   $('.save-business-proposal').click ->
     btnObj = $(this)
     title = $('input[name="title"]').val()
+    save_type = btnObj.attr('save-type')
 
     hrefId = $('input[name="title"]').closest('.parent-tabpanel').attr('id')
     titleInvalidTabHeadObj = $('a[href="#'+hrefId+'"]').closest('.card-header') 
@@ -16,20 +17,21 @@ $(document).ready ->
       titleInvalidTabHeadObj.find('.has-invalid-data').addClass('d-none')
 
     isValidTab = 0
-    $('form').find('.parent-tabpanel').each ->     
-      hrefId = $(this).attr('id') 
+    if save_type == 'submit'      
+      $('form').find('.parent-tabpanel').each ->     
+        hrefId = $(this).attr('id') 
 
-      invalidTabHeadObj = $('a[href="#'+hrefId+'"]').closest('.card-header')  
-      invalidTabHeadObj.removeClass('border border-danger')
-      invalidTabHeadObj.find('.has-invalid-data').addClass('d-none')
+        invalidTabHeadObj = $('a[href="#'+hrefId+'"]').closest('.card-header')  
+        invalidTabHeadObj.removeClass('border border-danger')
+        invalidTabHeadObj.find('.has-invalid-data').addClass('d-none')
 
-      $(this).find('.completion_status').each ->
-        if(!$(this).parsley().isValid())
-          $(this).parsley().validate()   
-          isValidTab++
-          if(isValidTab>0)
-            invalidTabHeadObj.addClass('border border-danger')
-            invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none')
+        $(this).find('.completion_status').each ->
+          if(!$(this).parsley().isValid())
+            $(this).parsley().validate()   
+            isValidTab++
+            if(isValidTab>0)
+              invalidTabHeadObj.addClass('border border-danger')
+              invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none')
 
     if(title!='' && isValidTab==0)
       form_data = $('form').serializeArray()
@@ -41,10 +43,13 @@ $(document).ready ->
           'form_data': form_data  
           
         success: (data) ->
+          if save_type == 'submit' 
+            window.location.href="/investment-opportunities/"+data.business_slug;
+
           if(data.redirect)
-            window.location.href="/investment-opportunities/"+data.gi_code+"/edit";
+            window.location.href="/investment-opportunities/"+data.business_type+"/"+data.gi_code+"/edit";
           else
-            console.log data.gi_code
+            console.log data.gi_code 
 
   $('.save-section').click ->
     btnObj = $(this)
@@ -152,7 +157,7 @@ $(document).ready ->
     memberCounter = $('.member-counter').val()
     linkCounter = $('input[name="socialmedia_link_counter_'+memberCounter+'"]').val()
     linkCount = parseInt(linkCounter)+1
-    html = '<div class="row social-link-row">                    
+    html = '<div class="row social-link-row div-row-container">                    
               <div class="col-sm-4 text-center">
                       <label>Social Media Link '+linkCount+'</label>
                       <input type="text" name="social_link_'+memberCounter+'_'+linkCount+'" class="form-control editmode">   
@@ -168,15 +173,15 @@ $(document).ready ->
                       </select>
                   </div> 
                   <div class="col-sm-2 text-center">
-                <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                <a href="javascript:void(0)" class="btn btn-default remove-social-link remove-row"><i class="fa fa-trash"></i></a> 
                   </div>                   
                
             </div>'
     $('input[name="socialmedia_link_counter_'+memberCounter+'"]').val(linkCount)
     $btnObj.before html
 
-  $(document).on 'click', '.remove-social-link', ->
-    $(this).closest('.social-link-row').remove()
+  $(document).on 'click', '.remove-row', ->
+    $(this).closest('.div-row-container').remove()
 
   $(document).on 'click', '.add-external-links ', ->
     $btnObj = $(this)
@@ -185,7 +190,7 @@ $(document).ready ->
     linkCounter = $('input[name="'+type+'-counter"]').val()
     linkCount = parseInt(linkCounter)+1
     console.log linkCount
-    html = '<div class="row social-link-row">                    
+    html = '<div class="row div-row-container">                    
               <div class="col-sm-4 text-center">
                       <input type="text" placeholder="Add File Title" name="'+type+'_title_'+linkCount+'" class="form-control editmode">   
                   </div> 
@@ -193,13 +198,84 @@ $(document).ready ->
                       <input type="text" placeholder="Add File Path" name="'+type+'_path_'+linkCount+'" class="form-control editmode">   
                   </div> 
                   <div class="col-sm-2 text-center">
-                <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
                   </div>                   
                
             </div>'
     $('input[name="'+type+'-counter"]').val(linkCount)
     $('.'+type+'-external-links').append html
 
+  $(document).on 'click', '.save-business-video', ->
+    video_name = $('input[name="video_name"]').val()
+    embed_code = $('textarea[name="embed_code"]').val()
+    edit_container_count = $('input[name="edit_container_count"]').val()
+ 
+    if($('input[name="feedback"]').is(":checked"))
+      feedback = 'yes'
+      feedbackHtml = '<span class="fa fa-commenting  fa-2x" aria-hidden="true"></span>'
+    else
+      feedback = 'no'
+      feedbackHtml = '-'
 
-       
+      
+    video_counter = $('input[name="video_counter"]').val()
+
+    if(edit_container_count!='')
+      counter = edit_container_count
+    else
+      counter = parseInt(video_counter)+1
+    html = ''
+    if(edit_container_count=='')  
+      html = '<div class="row div-row-container" video-container-count="'+counter+'">' 
+
+    html +=   '<div class="col-sm-3 text-center">
+                  <input type="hidden" class="video_name" name="video_name_'+counter+'" value="'+video_name+'"> '+video_name+'  
+              </div> 
+              <div class="col-sm-5 text-center">
+                  <textarea name="embed_code_'+counter+'" class="d-none embed_code"> '+embed_code+'    </textarea> <div height="200">'+embed_code+' </div>
+              </div> 
+              <div class="col-sm-2 text-center">
+                  <input type="hidden" class="feedback" name="feedback_'+counter+'" value="'+feedback+'"> '+feedbackHtml+'  
+              </div>
+              <div class="col-sm-2 text-center">
+                  <button type="button" class="edit-video" >edit</button>
+                  <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
+              </div>'  
+
+    if(edit_container_count=='')           
+      html += '</div>'
+
+    if(edit_container_count=='')
+      $('input[name="video_counter"]').val(counter)
+      $('.proposal-video-container').append html
+    else
+      $('div[video-container-count="'+edit_container_count+'"]').html(html) 
+
+    $("#addVideos").modal('hide')
+    $('input[name="video_name"]').val('')
+    $('input[name="edit_container_count"]').val('')
+    $('textarea[name="embed_code"]').val('')
+    $('input[name="edit_container_count"]').val('')
+    $('input[name="feedback"]').prop("checked",false)
+
+  $(document).on 'click', '.edit-video', ->
+    video_name = $(this).closest('.video-container').find('.video_name').val()
+    embed_code = $(this).closest('.video-container').find('.embed_code').val()
+    feedback = $(this).closest('.video-container').find('.feedback').val()
+    count = $(this).closest('.video-container').attr('video-container-count')
+
+    $('input[name="edit_container_count"]').val(count)
+    $('input[name="video_name"]').val(video_name)
+    $('textarea[name="embed_code"]').val(embed_code)
+    if(feedback=='yes')
+      $('input[name="feedback"]').prop("checked",true)
+    else
+      $('input[name="feedback"]').prop("checked",false)
+
+    $("#addVideos").modal('show')
+
+
+
+
+      
 

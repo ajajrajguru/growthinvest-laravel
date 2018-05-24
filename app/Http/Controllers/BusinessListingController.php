@@ -6,6 +6,8 @@ use App\BusinessHasDefault;
 use App\BusinessInvestment;
 use App\BusinessListing;
 use App\BusinessListingData;
+use App\BusinessPdfHtml;
+use App\BusinessVideo;
 use App\Commission;
 use App\Firm;
 use App\InvestorPdfHtml;
@@ -1680,8 +1682,16 @@ class BusinessListingController extends Controller
  *
  * @return \Illuminate\Http\Response
  */
-    public function create($giCode = '')
+    public function create($type, $giCode = '')
     {
+        if ($type == 'single-company') {
+            $businessListingType = 'proposal';
+        } elseif ($type == 'funds') {
+            $businessListingType = 'fund';
+        } elseif ($type == 'vct') {
+            $businessListingType = 'vct';
+        }
+
         $sectors         = getDefaultValues('business-sector');
         $stageOfBusiness = getDefaultValues('stage_of_business');
         $milestones      = getDefaultValues('milestone');
@@ -1705,8 +1715,9 @@ class BusinessListingController extends Controller
         $publicAdditionalDocs    = $businessListing->getBusinessMultipleFile('public_additional_documents');
         $privateAdditionalDocs   = $businessListing->getBusinessMultipleFile('private_additional_documents');
         $defaultIds              = $businessListing->businessDefaults()->pluck('default_id')->toArray();
-        $profilePic      = $businessListing->getBusinessLogo('medium_1x1');
-        $backgroundImage = $businessListing->getBusinessBackgroundImage('medium_2_58x1');
+        $profilePic              = $businessListing->getBusinessLogo('medium_1x1');
+        $backgroundImage         = $businessListing->getBusinessBackgroundImage('medium_2_58x1');
+        $videos                  = $businessListing->businessVideos()->get();
 
         $data['active_menu']             = 'business-proposals';
         $data['mode']                    = 'edit';
@@ -1727,10 +1738,12 @@ class BusinessListingController extends Controller
         $data['teamMemberDetails']       = (!empty($teamMemberDetails)) ? unserialize($teamMemberDetails->data_value) : [];
         $data['dueDeligence']            = (!empty($dueDeligence)) ? unserialize($dueDeligence->data_value) : [];
         $data['milestones']              = $milestones;
-        $data['businessLogo']           = $profilePic['url'];
-        $data['hasBusinessLogo']        = $profilePic['hasImage'];
-        $data['backgroundImage']    = $backgroundImage['url'];
-        $data['hasBackgroundImage'] = $backgroundImage['hasImage'];
+        $data['businessLogo']            = $profilePic['url'];
+        $data['hasBusinessLogo']         = $profilePic['hasImage'];
+        $data['backgroundImage']         = $backgroundImage['url'];
+        $data['businessListingType']     = $businessListingType;
+        $data['hasBackgroundImage']      = $backgroundImage['hasImage'];
+        $data['videos']                  = $videos;
 
         return view('frontend.entrepreneur.add-business-proposals')->with($data);
     }
@@ -1769,6 +1782,7 @@ class BusinessListingController extends Controller
             $giCode          = generateGICode($businessListing, 'gi_code', $giArgs);
 
             $businessListing->slug                     = str_slug($submitData['title']);
+            $businessListing->type                     = $submitData['business_type'];
             $businessListing->status                   = 'draft';
             $businessListing->gi_code                  = $giCode;
             $businessListing->investment_opportunities = 'no';
@@ -1796,8 +1810,15 @@ class BusinessListingController extends Controller
             $this->saveCompanyDetails($businessListing, $submitData);
         }
 
+        if ($type == 'proposal') {
+            $businessListingType = 'single-company';
+        } elseif ($type == 'funds') {
+            $businessListingType = 'fund';
+        } 
+
         $json_data = array(
             "gi_code"  => $businessListing->gi_code,
+            "business_type"  => $businessListingType,
             "redirect" => $redirect,
             "status"   => true,
         );
@@ -1833,6 +1854,7 @@ class BusinessListingController extends Controller
 
             $businessListing->slug                     = str_slug($submitData['title']);
             $businessListing->status                   = 'draft';
+            $businessListing->type                     = $submitData['business_type'];
             $businessListing->gi_code                  = $giCode;
             $businessListing->investment_opportunities = 'no';
             $businessListing->disp_to_nonloggedin      = 'no';
@@ -1857,9 +1879,10 @@ class BusinessListingController extends Controller
         $this->saveImageVideo($businessListing, $submitData);
 
         $json_data = array(
-            "gi_code"  => $businessListing->gi_code,
-            "redirect" => $redirect,
-            "status"   => true,
+            "gi_code"       => $businessListing->gi_code,
+            "business_slug" => $businessListing->slug,
+            "redirect"      => $redirect,
+            "status"        => true,
         );
 
         return response()->json($json_data);
@@ -1916,7 +1939,7 @@ class BusinessListingController extends Controller
         $businessHmrcStatus->data_value = $hmrcStatus;
         $businessHmrcStatus->save();
 
-        BusinessHasDefault::join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'business-sector')->where('business_has_defaults.business_id', $businessListing->id)->delete();
+        BusinessHasDefault::select('business_has_defaults.*')->join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'business-sector')->where('business_has_defaults.business_id', $businessListing->id)->delete();
         if (!empty($businessSectors)) {
 
             foreach ($businessSectors as $businessSector) {
@@ -1929,7 +1952,7 @@ class BusinessListingController extends Controller
             }
         }
 
-        BusinessHasDefault::join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'milestone')->where('business_has_defaults.business_id', $businessListing->id)->delete();
+        BusinessHasDefault::select('business_has_defaults.*')->join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'milestone')->where('business_has_defaults.business_id', $businessListing->id)->delete();
         if (!empty($milestones)) {
 
             foreach ($milestones as $milestone) {
@@ -1982,6 +2005,12 @@ class BusinessListingController extends Controller
 
     public function saveFinancials($businessListing, $submitData)
     {
+//         no-of-shares-issue
+        // no-of-new-shares-issue
+        // share-price-curr-inv-round
+        // share-class-issued
+        // nominal-value-share
+
         $data = ['revenue_year1' => $submitData['revenue_year1'], 'revenue_year2' => $submitData['revenue_year2'], 'revenue_year3' => $submitData['revenue_year3'], 'sale_year1' => $submitData['sale_year1'], 'sale_year2' => $submitData['sale_year2'], 'sale_year3' => $submitData['sale_year3'], 'expences_year1' => $submitData['expences_year1'], 'expences_year2' => $submitData['expences_year2'], 'expences_year3' => $submitData['expences_year3'], 'ebitda_year_1' => $submitData['ebitda_year_1'], 'ebitda_year_2' => $submitData['ebitda_year_2'], 'ebitda_year_3' => $submitData['ebitda_year_3']];
 
         $data['use_of_funds'] = [];
@@ -2063,7 +2092,7 @@ class BusinessListingController extends Controller
                 if ($croppedImageUrl != '' && $croppedImageUrl != '-1') {
                     $memberImageUrl = updateModelImage($businessListing, $croppedImageUrl, 'team_member_picture', 'medium_1x1');
                 }
-                $memberData['picture'] = ($croppedImageUrl=='-1') ? '' :$memberImageUrl;
+                $memberData['picture'] = ($croppedImageUrl == '-1') ? '' : $memberImageUrl;
 
                 $socialmediaLinkCounter = $submitData['socialmedia_link_counter_' . $i];
                 $socialMediaLinks       = [];
@@ -2272,6 +2301,10 @@ class BusinessListingController extends Controller
         $data = [];
         if ($counter >= 1) {
             for ($i = 1; $i <= $counter; $i++) {
+                if (!isset($submitData[$type . '_title_' . $i])) {
+                    continue;
+                }
+
                 $data[] = ['name' => $submitData[$type . '_title_' . $i], 'url' => $submitData[$type . '_path_' . $i]];
             }
         }
@@ -2303,16 +2336,16 @@ class BusinessListingController extends Controller
 
     public function saveImageVideo($businessListing, $submitData)
     {
-        $logoImageUrl                   = $submitData['logo_cropped_image_url'];
-        $backgroundImageUrl             = $submitData['background_cropped_image_url'];
- 
+        $logoImageUrl       = $submitData['logo_cropped_image_url'];
+        $backgroundImageUrl = $submitData['background_cropped_image_url'];
+
         // $memberData['member-name'] = $submitData['cropped_image_url_'.$i];
         if ($logoImageUrl != '' && $logoImageUrl != '-1') {
             $memberImageUrl = updateModelImage($businessListing, $logoImageUrl, 'business_logo', 'medium_1x1');
-        } 
+        }
 
-        if($logoImageUrl == '-1'){
-            $profilePicImages = $businessListing->getImages('business_logo'); 
+        if ($logoImageUrl == '-1') {
+            $profilePicImages = $businessListing->getImages('business_logo');
             foreach ($profilePicImages as $key => $profilePicImage) {
                 $fileId = $profilePicImage['id'];
                 $businessListing->unmapImage($fileId);
@@ -2323,13 +2356,59 @@ class BusinessListingController extends Controller
             $memberImageUrl = updateModelImage($businessListing, $backgroundImageUrl, 'business_background_image', 'medium_2_58x1');
         }
 
-        if($backgroundImageUrl == '-1'){
+        if ($backgroundImageUrl == '-1') {
             $profilePicImages = $businessListing->getImages('business_background_image');
             foreach ($profilePicImages as $key => $profilePicImage) {
                 $fileId = $profilePicImage['id'];
                 $businessListing->unmapImage($fileId);
             }
         }
+
+        $videoCounter = $submitData['video_counter'];
+        if ($videoCounter >= 1) {
+            $businessListing->businessVideos()->delete();
+
+            for ($i = 1; $i <= $videoCounter; $i++) {
+                if (isset($submitData['video_name_' . $i])) {
+                    $videoName = $submitData['video_name_' . $i];
+                    $embedCode = $submitData['embed_code_' . $i];
+                    $feedback  = $submitData['feedback_' . $i];
+
+                    $businessVideo                = new BusinessVideo;
+                    $businessVideo->business_id   = $businessListing->id;
+                    $businessVideo->name          = $videoName;
+                    $businessVideo->embed_code    = $embedCode;
+                    $businessVideo->is_pitchevent = $feedback;
+                    $businessVideo->save();
+
+                }
+
+            }
+        }
+
+    }
+
+    public function generateBusinessProposalPdf($giCode)
+    {
+        $businessListing = BusinessListing::where('gi_code', $giCode)->first();
+
+        if (empty($businessListing)) {
+            abort(404);
+        }
+
+        $businessPdf = new BusinessPdfHtml();
+
+        $html = $businessPdf->getBusinessProposalHtml($businessListing);
+        // echo $html; exit;
+
+        $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', array(5, 5, 5, 5));
+        $html2pdf->pdf->SetDisplayMode('fullpage');
+
+        $html2pdf->writeHTML($html);
+        $html2pdf->output();
+
+        return true;
+
     }
 
 /**

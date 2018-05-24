@@ -129,7 +129,7 @@
                             <div class="col-sm-12">
                                  
                                 @php
-                                $businessIdeasData = unserialize($businessIdeas->data_value);
+                                $businessIdeasData = (!empty($businessIdeas)) ? unserialize($businessIdeas->data_value) :[];
                                 @endphp
                                 <div class="form-group">
                                     <label>Please describe your business</label>
@@ -217,7 +217,7 @@
                                 </div>
 
                                 @php
-                                $proposalRounds = ["1"=>"1st Round","2"=>"2nd Round","3"=>"3rd Round","4"=>"4th Round","5"=>"5th Round","6"=>"6th Round","7"=>"7th Round","8"=>"8th Round","9"=>"9th Round","10"=>"10th Round"];
+                                $proposalRounds = businessRounds();
                                 @endphp
                                 <div class="form-group">
                                     <label>Business Proposal Round<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
@@ -415,7 +415,11 @@
                                      
                                     
                                 </div>
-
+<!-- no-of-shares-issue
+no-of-new-shares-issue
+share-price-curr-inv-round
+share-class-issued
+nominal-value-share -->
 
                                 <div class="form-group">
                                     <label>Targeted Raise<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
@@ -970,15 +974,15 @@
                                             <button type="button" class="btn btn-primary text-right add-external-links" link-type="hardman" id="" >Add External Link</button>
 
                                             <div class="hardman-external-links">
+                                                @php
+                                                $i=0;
+                                                @endphp
                                                 @if(isset($dueDeligence['hardman-links']))
-                                                    @php
-                                                    $i=0;
-                                                    @endphp
                                                 @foreach($dueDeligence['hardman-links'] as $links)
                                                     @php
                                                     $i++;
                                                     @endphp
-                                                <div class="row social-link-row">                    
+                                                <div class="row div-row-container">                    
                                                   <div class="col-sm-4 text-center">
                                                           <input type="text" placeholder="Add File Title" name="hardman_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
                                                       </div> 
@@ -986,7 +990,7 @@
                                                           <input type="text" placeholder="Add File Path" name="hardman_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
                                                       </div> 
                                                       <div class="col-sm-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
                                                       </div>                   
                                                    
                                                 </div>
@@ -1018,15 +1022,16 @@
                                             <button type="button" class="btn btn-primary text-right add-external-links" link-type="tax-efficient-review" id="" >Add External Link</button>
 
                                             <div class="tax-efficient-review-external-links">
-                                                @if(isset($dueDeligence['tax-efficient-review-links']))
-                                                    @php
+                                                @php
                                                     $i=0;
                                                     @endphp
+                                                @if(isset($dueDeligence['tax-efficient-review-links']))
+                                                    
                                                 @foreach($dueDeligence['tax-efficient-review-links'] as $links)
                                                     @php
                                                     $i++;
                                                     @endphp
-                                                <div class="row social-link-row">                    
+                                                <div class="row div-row-container">                    
                                                   <div class="col-sm-4 text-center">
                                                           <input type="text" placeholder="Add File Title" name="tax-efficient-review_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
                                                       </div> 
@@ -1034,7 +1039,7 @@
                                                           <input type="text" placeholder="Add File Path" name="tax-efficient-review_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
                                                       </div> 
                                                       <div class="col-sm-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
                                                       </div>                   
                                                    
                                                 </div>
@@ -1066,15 +1071,16 @@
                                             <button type="button" class="btn btn-primary text-right add-external-links" link-type="allenbridge" id="" >Add External Link</button>
 
                                             <div class="allenbridge-external-links">
+                                                @php
+                                                $i=0;
+                                                @endphp
                                                 @if(isset($dueDeligence['allenbridge-links']))
-                                                    @php
-                                                    $i=0;
-                                                    @endphp
+                                                    
                                                 @foreach($dueDeligence['allenbridge-links'] as $links)
                                                     @php
                                                     $i++;
                                                     @endphp
-                                                <div class="row social-link-row">                    
+                                                <div class="row div-row-container">                    
                                                   <div class="col-sm-4 text-center">
                                                           <input type="text" placeholder="Add File Title" name="allenbridge_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
                                                       </div> 
@@ -1082,7 +1088,7 @@
                                                           <input type="text" placeholder="Add File Path" name="allenbridge_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
                                                       </div> 
                                                       <div class="col-sm-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
                                                       </div>                   
                                                    
                                                 </div>
@@ -1115,15 +1121,16 @@
                                             <button type="button" class="btn btn-primary text-right add-external-links" link-type="micap" id="" >Add External Link</button>
 
                                             <div class="micap-external-links">
+                                                @php
+                                                $i=0;
+                                                @endphp
                                                 @if(isset($dueDeligence['micap-links']))
-                                                    @php
-                                                    $i=0;
-                                                    @endphp
+                                                    
                                                 @foreach($dueDeligence['micap-links'] as $links)
                                                     @php
                                                     $i++;
                                                     @endphp
-                                                <div class="row social-link-row">                    
+                                                <div class="row div-row-container">                    
                                                   <div class="col-sm-4 text-center">
                                                           <input type="text" placeholder="Add File Title" name="micap_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
                                                       </div> 
@@ -1131,7 +1138,7 @@
                                                           <input type="text" placeholder="Add File Path" name="micap_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
                                                       </div> 
                                                       <div class="col-sm-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
                                                       </div>                   
                                                    
                                                 </div>
@@ -1164,15 +1171,16 @@
                                             <button type="button" class="btn btn-primary text-right add-external-links" link-type="all-street" id="" >Add External Link</button>
 
                                             <div class="all-street-external-links">
+                                                @php
+                                                $i=0;
+                                                @endphp
                                                 @if(isset($dueDeligence['all-street-links']))
-                                                    @php
-                                                    $i=0;
-                                                    @endphp
+                                                    
                                                 @foreach($dueDeligence['all-street-links'] as $links)
                                                     @php
                                                     $i++;
                                                     @endphp
-                                                <div class="row social-link-row">                    
+                                                <div class="row div-row-container">                    
                                                   <div class="col-sm-4 text-center">
                                                           <input type="text" placeholder="Add File Title" name="all-street_title_{{ $i }}" class="form-control editmode" value="{{ $links['name'] }}">   
                                                       </div> 
@@ -1180,7 +1188,7 @@
                                                           <input type="text" placeholder="Add File Path" name="all-street_path_{{ $i }}" class="form-control editmode" value="{{ $links['url'] }}">   
                                                       </div> 
                                                       <div class="col-sm-2 text-center">
-                                                    <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> 
+                                                    <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
                                                       </div>                   
                                                    
                                                 </div>
@@ -1249,6 +1257,44 @@
                                                 </div>
                                         </div>
                                     </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-12">
+                                            <label>Proposal Video</label> 
+                                            <a href="javascript:void(0)" class="btn btn-primary" data-toggle="modal" data-target="#addVideos">Add Video</a>   
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                         <hr>
+                                         <br>
+                                         <div class="row proposal-video-container">
+                                        @foreach($videos as $key=> $video)
+                                        <div class="row div-row-container video-container" video-container-count="{{ ($key+1)}}">
+
+                                          <div class="col-sm-3 text-center">
+                                              <input type="hidden" name="video_name_{{ ($key+1)}}" class="video_name" value="{{ $video->name }}"> {{ $video->name }}
+                                          </div> 
+                                          <div class="col-sm-5 text-center">
+                                              <textarea name="embed_code_{{ ($key+1)}}" class="d-none embed_code"> {{ $video->embed_code }}    </textarea> <div height="200">{!! $video->embed_code !!}  </div>
+                                          </div> 
+                                          <div class="col-sm-2 text-center">
+                                              <input type="hidden" name="feedback_{{ ($key+1)}}" class="feedback" value="{{ $video->is_pitchevent }}"> 
+                                              @if($video->is_pitchevent=='yes')
+                                              <span class="fa fa-commenting  fa-2x" aria-hidden="true"></span>
+                                              @else
+                                              -
+                                              @endif
+                                          </div>
+                                              <div class="col-sm-2 text-center">
+                                                <button type="button" class="edit-video" >edit</button>
+                                            <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> 
+                                              </div>                   
+                                           
+                                        </div>
+                                        @endforeach
+                                         </div>
+                                         <input type="hidden" name="video_counter" value="{{ count($videos) }}">
+                                    </div>
                              
                                      
                                 </div>
@@ -1261,9 +1307,16 @@
         </div>
 
         <div class="d-md-flex justify-content-md-between ">
-	        <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" >Save</button>
+            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="save" >Save</button>
+	        <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="submit" >Submit</button>
+            @if($businessListing->id)
+            <a href="{{ url('/download-business-proposals/'.$businessListing->gi_code.'/') }}" class="btn btn-primary" target="_blank"  ><i class="fa fa-download" ></i></a>
+            @endif
+
 	        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-	        <input type="hidden" name="section">
+            <input type="hidden" name="section">
+	        <input type="hidden" name="business_type" value="{{ $businessListingType }}">
+
 			<input type="hidden" name="gi_code" value="{{ $businessListing->gi_code }}">
  		</div>
         </form>     
@@ -1310,5 +1363,43 @@ $cropModalData = ['objectType'=>'App\BusinessListing','objectId'=>'','aspectRati
 {!! View::make('includes.crop-modal')->with($cropModalData)->render() !!}
 
 </div>
+
+ <!-- Modal -->
+    <div class="modal fade" id="addVideos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Business proposal Video</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body m-auto d-block">
+            <div>
+               <div class="form-group">
+                    <label>Video Name</label>
+                    <input type="text" class="form-control text-input-status editmode " name="video_name" placeholder=""  value="">
+                    
+                </div>
+
+                <div class="form-group">
+                    <label>Embed code</label>
+                    <textarea class="form-control text-input-status completion_status editmode " name="embed_code" placeholder="" ></textarea>
+                </div>
+                                    
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" value="yes" id="ch_dwn" name="feedback" >
+                  <label class="custom-control-label" for="ch_dwn">Feedback</label>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="edit_container_count">
+            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            <button type="button" class="btn btn-primary save-business-video">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
 @include('includes.footer')
 @endsection

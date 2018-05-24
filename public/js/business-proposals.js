@@ -7,9 +7,10 @@
 
   $(document).ready(function() {
     $('.save-business-proposal').click(function() {
-      var btnObj, form_data, hrefId, isValidTab, title, titleInvalidTabHeadObj;
+      var btnObj, form_data, hrefId, isValidTab, save_type, title, titleInvalidTabHeadObj;
       btnObj = $(this);
       title = $('input[name="title"]').val();
+      save_type = btnObj.attr('save-type');
       hrefId = $('input[name="title"]').closest('.parent-tabpanel').attr('id');
       titleInvalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
       if (title === '') {
@@ -21,23 +22,25 @@
         titleInvalidTabHeadObj.find('.has-invalid-data').addClass('d-none');
       }
       isValidTab = 0;
-      $('form').find('.parent-tabpanel').each(function() {
-        var invalidTabHeadObj;
-        hrefId = $(this).attr('id');
-        invalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
-        invalidTabHeadObj.removeClass('border border-danger');
-        invalidTabHeadObj.find('.has-invalid-data').addClass('d-none');
-        return $(this).find('.completion_status').each(function() {
-          if (!$(this).parsley().isValid()) {
-            $(this).parsley().validate();
-            isValidTab++;
-            if (isValidTab > 0) {
-              invalidTabHeadObj.addClass('border border-danger');
-              return invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none');
+      if (save_type === 'submit') {
+        $('form').find('.parent-tabpanel').each(function() {
+          var invalidTabHeadObj;
+          hrefId = $(this).attr('id');
+          invalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
+          invalidTabHeadObj.removeClass('border border-danger');
+          invalidTabHeadObj.find('.has-invalid-data').addClass('d-none');
+          return $(this).find('.completion_status').each(function() {
+            if (!$(this).parsley().isValid()) {
+              $(this).parsley().validate();
+              isValidTab++;
+              if (isValidTab > 0) {
+                invalidTabHeadObj.addClass('border border-danger');
+                return invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none');
+              }
             }
-          }
+          });
         });
-      });
+      }
       if (title !== '' && isValidTab === 0) {
         form_data = $('form').serializeArray();
         console.log(form_data);
@@ -48,8 +51,11 @@
             'form_data': form_data
           },
           success: function(data) {
+            if (save_type === 'submit') {
+              window.location.href = "/investment-opportunities/" + data.business_slug;
+            }
             if (data.redirect) {
-              return window.location.href = "/investment-opportunities/" + data.gi_code + "/edit";
+              return window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.gi_code + "/edit";
             } else {
               return console.log(data.gi_code);
             }
@@ -167,14 +173,14 @@
       memberCounter = $('.member-counter').val();
       linkCounter = $('input[name="socialmedia_link_counter_' + memberCounter + '"]').val();
       linkCount = parseInt(linkCounter) + 1;
-      html = '<div class="row social-link-row"> <div class="col-sm-4 text-center"> <label>Social Media Link ' + linkCount + '</label> <input type="text" name="social_link_' + memberCounter + '_' + linkCount + '" class="form-control editmode"> </div> <div class="col-sm-4 text-center"> <label>Link Type</label> <select type="text" name="link_type_' + memberCounter + '_' + linkCount + '" placeholder="" class="form-control " > <option>--select--</option> <option>Facebook</option> <option>Twitter</option> <option>LinkedIn</option> <option>Other Weblink</option> </select> </div> <div class="col-sm-2 text-center"> <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> </div> </div>';
+      html = '<div class="row social-link-row div-row-container"> <div class="col-sm-4 text-center"> <label>Social Media Link ' + linkCount + '</label> <input type="text" name="social_link_' + memberCounter + '_' + linkCount + '" class="form-control editmode"> </div> <div class="col-sm-4 text-center"> <label>Link Type</label> <select type="text" name="link_type_' + memberCounter + '_' + linkCount + '" placeholder="" class="form-control " > <option>--select--</option> <option>Facebook</option> <option>Twitter</option> <option>LinkedIn</option> <option>Other Weblink</option> </select> </div> <div class="col-sm-2 text-center"> <a href="javascript:void(0)" class="btn btn-default remove-social-link remove-row"><i class="fa fa-trash"></i></a> </div> </div>';
       $('input[name="socialmedia_link_counter_' + memberCounter + '"]').val(linkCount);
       return $btnObj.before(html);
     });
-    $(document).on('click', '.remove-social-link', function() {
-      return $(this).closest('.social-link-row').remove();
+    $(document).on('click', '.remove-row', function() {
+      return $(this).closest('.div-row-container').remove();
     });
-    return $(document).on('click', '.add-external-links ', function() {
+    $(document).on('click', '.add-external-links ', function() {
       var $btnObj, html, linkCount, linkCounter, type;
       $btnObj = $(this);
       type = $btnObj.attr('link-type');
@@ -182,9 +188,64 @@
       linkCounter = $('input[name="' + type + '-counter"]').val();
       linkCount = parseInt(linkCounter) + 1;
       console.log(linkCount);
-      html = '<div class="row social-link-row"> <div class="col-sm-4 text-center"> <input type="text" placeholder="Add File Title" name="' + type + '_title_' + linkCount + '" class="form-control editmode"> </div> <div class="col-sm-4 text-center"> <input type="text" placeholder="Add File Path" name="' + type + '_path_' + linkCount + '" class="form-control editmode"> </div> <div class="col-sm-2 text-center"> <a href="javascript:void(0)" class="btn btn-default remove-social-link"><i class="fa fa-trash"></i></a> </div> </div>';
+      html = '<div class="row div-row-container"> <div class="col-sm-4 text-center"> <input type="text" placeholder="Add File Title" name="' + type + '_title_' + linkCount + '" class="form-control editmode"> </div> <div class="col-sm-4 text-center"> <input type="text" placeholder="Add File Path" name="' + type + '_path_' + linkCount + '" class="form-control editmode"> </div> <div class="col-sm-2 text-center"> <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> </div> </div>';
       $('input[name="' + type + '-counter"]').val(linkCount);
       return $('.' + type + '-external-links').append(html);
+    });
+    $(document).on('click', '.save-business-video', function() {
+      var counter, edit_container_count, embed_code, feedback, feedbackHtml, html, video_counter, video_name;
+      video_name = $('input[name="video_name"]').val();
+      embed_code = $('textarea[name="embed_code"]').val();
+      edit_container_count = $('input[name="edit_container_count"]').val();
+      if ($('input[name="feedback"]').is(":checked")) {
+        feedback = 'yes';
+        feedbackHtml = '<span class="fa fa-commenting  fa-2x" aria-hidden="true"></span>';
+      } else {
+        feedback = 'no';
+        feedbackHtml = '-';
+      }
+      video_counter = $('input[name="video_counter"]').val();
+      if (edit_container_count !== '') {
+        counter = edit_container_count;
+      } else {
+        counter = parseInt(video_counter) + 1;
+      }
+      html = '';
+      if (edit_container_count === '') {
+        html = '<div class="row div-row-container" video-container-count="' + counter + '">';
+      }
+      html += '<div class="col-sm-3 text-center"> <input type="hidden" class="video_name" name="video_name_' + counter + '" value="' + video_name + '"> ' + video_name + '</div> <div class="col-sm-5 text-center"> <textarea name="embed_code_' + counter + '" class="d-none embed_code"> ' + embed_code + '    </textarea> <div height="200">' + embed_code + ' </div> </div> <div class="col-sm-2 text-center"> <input type="hidden" class="feedback" name="feedback_' + counter + '" value="' + feedback + '"> ' + feedbackHtml + '</div> <div class="col-sm-2 text-center"> <button type="button" class="edit-video" >edit</button> <a href="javascript:void(0)" class="btn btn-default remove-row"><i class="fa fa-trash"></i></a> </div>';
+      if (edit_container_count === '') {
+        html += '</div>';
+      }
+      if (edit_container_count === '') {
+        $('input[name="video_counter"]').val(counter);
+        $('.proposal-video-container').append(html);
+      } else {
+        $('div[video-container-count="' + edit_container_count + '"]').html(html);
+      }
+      $("#addVideos").modal('hide');
+      $('input[name="video_name"]').val('');
+      $('input[name="edit_container_count"]').val('');
+      $('textarea[name="embed_code"]').val('');
+      $('input[name="edit_container_count"]').val('');
+      return $('input[name="feedback"]').prop("checked", false);
+    });
+    return $(document).on('click', '.edit-video', function() {
+      var count, embed_code, feedback, video_name;
+      video_name = $(this).closest('.video-container').find('.video_name').val();
+      embed_code = $(this).closest('.video-container').find('.embed_code').val();
+      feedback = $(this).closest('.video-container').find('.feedback').val();
+      count = $(this).closest('.video-container').attr('video-container-count');
+      $('input[name="edit_container_count"]').val(count);
+      $('input[name="video_name"]').val(video_name);
+      $('textarea[name="embed_code"]').val(embed_code);
+      if (feedback === 'yes') {
+        $('input[name="feedback"]').prop("checked", true);
+      } else {
+        $('input[name="feedback"]').prop("checked", false);
+      }
+      return $("#addVideos").modal('show');
     });
   });
 

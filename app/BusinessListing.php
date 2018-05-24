@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Ajency\FileUpload\FileUpload;
+use App\BusinessHasDefault;
 
 class BusinessListing extends Model
 {
@@ -12,7 +13,7 @@ class BusinessListing extends Model
 
     public function getTaxStatusAttribute( $value ) { 
         $value = json_decode( $value );
-        $value = array_map('strtoupper', $value);
+        $value = (!empty($value)) ? array_map('strtoupper', $value) :[];
         return $value;
     }
 
@@ -99,6 +100,11 @@ class BusinessListing extends Model
     public function getBusinessMilestones()
     {
 
+    }
+
+    public function businessVideos()
+    {
+        return $this->hasMany('App\BusinessVideo', 'business_id');
     }
 
     public function getBusinessDefaultsByBizId($business_id = "", $where_args = [])
@@ -354,6 +360,22 @@ class BusinessListing extends Model
 
     public function getDueDeligence(){
        return $this->businessListingData()->where('data_key','due_deligence')->first(); 
+    }
+
+    public function getBusinessSectors(){
+        $businessSectors = BusinessHasDefault::select('business_has_defaults.*')->join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'business-sector')->where('business_has_defaults.business_id', $this->id)->get();
+        return $businessSectors;
+    }
+
+    public function getBusinessMilestone(){  
+        $businessMilestone =BusinessHasDefault::join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'milestone')->where('business_has_defaults.business_id', $this->id)->get();
+        return $businessMilestone;
+    }
+
+    public function getBusinessStage(){      
+        $businessStage = BusinessHasDefault::select('business_has_defaults.*')->join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->where('defaults.type', 'stage_of_business')->where('business_has_defaults.business_id', $this->id)->first();
+
+        return $businessStage;
     }
 
 
