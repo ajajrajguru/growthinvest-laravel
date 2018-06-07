@@ -33,7 +33,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/business-proposals/add-team-member', 'BusinessListingController@getTeamMemberHtml');
     Route::post('/business-proposals/save', 'BusinessListingController@store');
     Route::post('/business-proposals/save-all', 'BusinessListingController@saveAll');
-    Route::get('/investment-opportunities/{type}/{gicode}/edit', 'BusinessListingController@create');
+    Route::get('/investment-opportunities/{type}/{slug}/edit', 'BusinessListingController@create');
+    Route::get('/investment-opportunities/{type}/{slug}/edit-due-deligence-questionnaire', 'BusinessListingController@editDueDeligenceQuestionnaire');
+    Route::post('/investment-opportunities/save-due-deligence-questionnaire', 'BusinessListingController@saveDueDeligenceQuestionnaire');
+
+    Route::get('/investment-opportunities/{type}/{slug}/edit-tier-1-visa', 'BusinessListingController@editTierVisa');
     Route::get('/download-business-proposals/{gicode}', 'BusinessListingController@generateBusinessProposalPdf');
 });
  

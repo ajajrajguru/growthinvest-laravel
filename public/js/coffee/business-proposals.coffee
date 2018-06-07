@@ -5,6 +5,10 @@ $(document).ready ->
     btnObj = $(this)
     title = $('input[name="title"]').val()
     save_type = btnObj.attr('save-type')
+    if save_type == 'submit' 
+      if !confirm('Are you sure you want to publish this changes?')
+        return
+
 
     hrefId = $('input[name="title"]').closest('.parent-tabpanel').attr('id')
     titleInvalidTabHeadObj = $('a[href="#'+hrefId+'"]').closest('.card-header') 
@@ -34,7 +38,7 @@ $(document).ready ->
               invalidTabHeadObj.addClass('border border-danger')
               invalidTabHeadObj.find('.has-invalid-data').removeClass('d-none')
 
-        console.log sectionCount
+
         isComplete = 0
         $(this).find('.completion_status').each ->
           if($(this).val() == '')
@@ -51,26 +55,30 @@ $(document).ready ->
 
     if(title!='' && isValidTab==0)
       form_data = $('form').serializeArray()
-      console.log form_data
       $.ajax
         type: 'post'
         url: '/business-proposals/save-all'
         data:
           'form_data': form_data  
+          'save_type': save_type
           
         success: (data) ->
+          $('input[name="refernce_id"]').val(data.refernce_id)
+          $('.gi-success').html('Data Successfully Saved in Draft.').removeClass('d-none')
           if save_type == 'submit' 
             window.location.href="/investment-opportunities/"+data.business_type+"/"+data.business_slug;
 
           if(data.redirect)
-            window.location.href="/investment-opportunities/"+data.business_type+"/"+data.gi_code+"/edit";
+            window.location.href="/investment-opportunities/"+data.business_type+"/"+data.business_slug+"/edit";
           else
             console.log data.gi_code 
+
 
   $('.save-section').click ->
     btnObj = $(this)
     title = $('input[name="title"]').val()
     submitType = btnObj.attr('submit-type')
+    save_type = btnObj.attr('save-type')
 
     hrefId = $('input[name="title"]').closest('.parent-tabpanel').attr('id')
     titleInvalidTabHeadObj = $('a[href="#'+hrefId+'"]').closest('.card-header') 
@@ -99,7 +107,6 @@ $(document).ready ->
 
     isComplete = 0
     sectionCount = btnObj.closest('.parent-tabpanel').attr('data-section') 
-    console.log sectionCount
     btnObj.closest('.parent-tabpanel').find('.completion_status').each ->
       if($(this).val() == '')
         isComplete++
@@ -118,14 +125,17 @@ $(document).ready ->
         type: 'post'
         url: '/business-proposals/save'
         data:
+          'save_type': save_type
           'submit_type': submitType
           'form_data': form_data  
           
         success: (data) ->
+          $('input[name="refernce_id"]').val(data.refernce_id)
+          $('#'+submitType+'_msg').removeClass('d-none').delay(5000).fadeOut()
           if(data.redirect)
-            window.location.href="/investment-opportunities/"+data.gi_code+"/edit";
+            window.location.href="/investment-opportunities/"+data.business_type+"/"+data.business_slug+"/edit";
           else
-            console.log data.gi_code
+            console.log data.business_slug
 
 
 

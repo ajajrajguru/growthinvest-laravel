@@ -19,7 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Spipu\Html2Pdf\Html2Pdf;
 use View;
-use Ajency\FileUpload\models\FileUpload_Files;
 
 class BusinessListingController extends Controller
 {
@@ -1693,24 +1692,22 @@ class BusinessListingController extends Controller
             $businessListingType = 'vct';
         }
 
-        $displayMode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
-
         $sectors         = getDefaultValues('business-sector');
         $stageOfBusiness = getDefaultValues('stage_of_business');
         $milestones      = getDefaultValues('milestone');
         $businessStatus  = '';
 
-        $publishedBusiness = BusinessListing::where('slug', $slug)->where('status', 'publish')->first();
-
         if ($slug == '') {
             $businessListing = new BusinessListing;
         } else {
-            if ($displayMode == 'publish') {
-                $businessListing = $publishedBusiness;
-            } else {
-                $businessListing = BusinessListing::where('slug', $slug)->orderBy('updated_at', 'desc')->first();
-            }
+            $businessListing = BusinessListing::where('slug', $slug)->first();
+            $businessStatus  = $businessListing->status;
+        }
 
+        if ($businessStatus == 'publish') {
+            $publishedBusinessListing = $businessListing;
+        } else {
+            $publishedBusinessListing = BusinessListing::where('slug', $slug)->where('status', 'publish')->first();
         }
 
         $sectionStatus           = $businessListing->getBusinessSectionStatus();
@@ -1731,34 +1728,33 @@ class BusinessListingController extends Controller
         $backgroundImage         = $businessListing->getBusinessBackgroundImage('medium_2_58x1');
         $videos                  = $businessListing->businessVideos()->get();
 
-        $data['active_menu']             = 'business-proposals';
-        $data['mode']                    = 'edit';
-        $data['display_mode']                    = $displayMode;
-        $data['businessListing']         = $businessListing;
-        $data['publishedBusiness']       = $publishedBusiness;
-        $data['businessProposalDetails'] = (!empty($businessProposalDetails)) ? unserialize($businessProposalDetails->data_value) : [];
-        $data['businessHmrcStatus']      = (!empty($businessHmrcStatus)) ? $businessHmrcStatus->data_value : '';
-        $data['defaultIds']              = $defaultIds;
-        $data['businessIdeas']           = $businessIdeas;
-        $data['sectors']                 = $sectors;
-        $data['stageOfBusiness']         = $stageOfBusiness;
-        $data['businessFiles']           = $businessFiles;
-        $data['documentUploads']         = (!empty($documentUploads)) ? unserialize($documentUploads->data_value) : [];
-        $data['publicAdditionalDocs']    = $publicAdditionalDocs;
-        $data['privateAdditionalDocs']   = $privateAdditionalDocs;
-        $data['fundingRequirement']      = (!empty($fundingRequirement)) ? unserialize($fundingRequirement->data_value) : [];
-        $data['financials']              = (!empty($financials)) ? unserialize($financials->data_value) : [];
-        $data['companyDetails']          = (!empty($companyDetails)) ? unserialize($companyDetails->data_value) : [];
-        $data['teamMemberDetails']       = (!empty($teamMemberDetails)) ? unserialize($teamMemberDetails->data_value) : [];
-        $data['dueDeligence']            = (!empty($dueDeligence)) ? unserialize($dueDeligence->data_value) : [];
-        $data['sectionStatus']           = (!empty($sectionStatus)) ? unserialize($sectionStatus->data_value) : [];
-        $data['milestones']              = $milestones;
-        $data['businessLogo']            = $profilePic['url'];
-        $data['hasBusinessLogo']         = $profilePic['hasImage'];
-        $data['backgroundImage']         = $backgroundImage['url'];
-        $data['businessListingType']     = $businessListingType;
-        $data['hasBackgroundImage']      = $backgroundImage['hasImage'];
-        $data['videos']                  = $videos;
+        $data['active_menu']              = 'business-proposals';
+        $data['mode']                     = 'edit';
+        $data['businessListing']          = $businessListing;
+        $data['publishedBusinessListing'] = $publishedBusinessListing;
+        $data['businessProposalDetails']  = (!empty($businessProposalDetails)) ? unserialize($businessProposalDetails->data_value) : [];
+        $data['businessHmrcStatus']       = (!empty($businessHmrcStatus)) ? $businessHmrcStatus->data_value : '';
+        $data['defaultIds']               = $defaultIds;
+        $data['businessIdeas']            = $businessIdeas;
+        $data['sectors']                  = $sectors;
+        $data['stageOfBusiness']          = $stageOfBusiness;
+        $data['businessFiles']            = $businessFiles;
+        $data['documentUploads']          = (!empty($documentUploads)) ? unserialize($documentUploads->data_value) : [];
+        $data['publicAdditionalDocs']     = $publicAdditionalDocs;
+        $data['privateAdditionalDocs']    = $privateAdditionalDocs;
+        $data['fundingRequirement']       = (!empty($fundingRequirement)) ? unserialize($fundingRequirement->data_value) : [];
+        $data['financials']               = (!empty($financials)) ? unserialize($financials->data_value) : [];
+        $data['companyDetails']           = (!empty($companyDetails)) ? unserialize($companyDetails->data_value) : [];
+        $data['teamMemberDetails']        = (!empty($teamMemberDetails)) ? unserialize($teamMemberDetails->data_value) : [];
+        $data['dueDeligence']             = (!empty($dueDeligence)) ? unserialize($dueDeligence->data_value) : [];
+        $data['sectionStatus']            = (!empty($sectionStatus)) ? unserialize($sectionStatus->data_value) : [];
+        $data['milestones']               = $milestones;
+        $data['businessLogo']             = $profilePic['url'];
+        $data['hasBusinessLogo']          = $profilePic['hasImage'];
+        $data['backgroundImage']          = $backgroundImage['url'];
+        $data['businessListingType']      = $businessListingType;
+        $data['hasBackgroundImage']       = $backgroundImage['hasImage'];
+        $data['videos']                   = $videos;
 
         return view('frontend.entrepreneur.add-business-proposals')->with($data);
     }
@@ -1772,10 +1768,9 @@ class BusinessListingController extends Controller
     public function store(Request $request)
     {
         $requestData = $request->all();
-        // dd($requestData);
-        $submitType = $requestData['submit_type'];
-        $formData   = $requestData['form_data'];
-        $submitData = [];
+        $submitType  = $requestData['submit_type'];
+        $formData    = $requestData['form_data'];
+        $submitData  = [];
         foreach ($formData as $key => $data) {
             if (in_array($data['name'], ['exp_tax_status', 'tags_input', 'chk_milestones', 'use_of_funds', 'use_of_funds_amount'])) {
                 $submitData[$data['name']][] = $data['value'];
@@ -1786,55 +1781,35 @@ class BusinessListingController extends Controller
 
         }
 
-        $giCode     = $submitData['gi_code'];
-        $refernceId = $submitData['refernce_id'];
+        $giCode     = $submitData['gi_code']; //published gi code
+        $refernceId = $submitData['refernce_id']; //published gi code
+        $redirect   = false;
 
-        $redirect                 = false;
-        $publishedBusinessListing = null;
+        if ($refernceId == '') {
+            $redirect = true;
+        }
+
+        $businessListing                           = new BusinessListing;
 
         if ($giCode != '') {
-            $publishedBusinessListing = BusinessListing::where('gi_code', $giCode)->first();
-            $slug                     = $publishedBusinessListing->slug;
-            $parentId                 = $publishedBusinessListing->id;
-        } else {
-            $businessListing = new BusinessListing;
-            $slug            = getUniqueBusinessSlug($businessListing, $submitData['title']);
-            $parentId        = '';
+            $publishBusinessListing = BusinessListing::where('gi_code', $giCode)->first();
+            $slug = $publishBusinessListing->slug;
+            $parentId = $publishBusinessListing->id;
+        }
+        else{
+            $slug = getUniqueBusinessSlug($businessListing, $submitData['title']);
+            $parentId = '';
         }
 
-        $addBusiness = false;
-
-        if (empty($publishedBusinessListing) && $refernceId == '') {
-            $addBusiness = true;
-        } elseif (empty($publishedBusinessListing) && $refernceId != '') {
-            $addBusiness = false;
-        } elseif (!empty($publishedBusinessListing) && $refernceId != '') {
-            $addBusiness = true;
-        }
-
-        if ($addBusiness) {
-
-            if ($refernceId == '') {
-                $redirect = true;
-            }
-
-            $giArgs = array('prefix' => "GIBP", 'min' => 60000001, 'max' => 70000000);
-
-            $businessListing = new BusinessListing;
-
-            $businessListing->slug                     = $slug;
-            $businessListing->parent                   = $parentId;
-            $businessListing->type                     = $submitData['business_type'];
-            $businessListing->status                   = 'draft';
-            $businessListing->investment_opportunities = 'no';
-            $businessListing->disp_to_nonloggedin      = 'no';
-            $businessListing->owner_id                 = Auth::user()->id;
-
-        } else {
-            $businessListing = BusinessListing::find($refernceId);
-        }
-
-        $businessListing->title = $submitData['title'];
+        
+        $businessListing->parent                   = $parentId;
+        $businessListing->slug                     = $slug
+        $businessListing->type                     = $submitData['business_type'];
+        $businessListing->status                   = 'draft';
+        $businessListing->investment_opportunities = 'no';
+        $businessListing->disp_to_nonloggedin      = 'no';
+        $businessListing->owner_id                 = Auth::user()->id;
+        $businessListing->title                    = $submitData['title'];
         $businessListing->save();
 
         $this->saveBusinessSectionStatus($businessListing, $submitData);
@@ -1861,7 +1836,6 @@ class BusinessListingController extends Controller
         }
 
         $json_data = array(
-            "refernce_id"       => $businessListing->id,
             "gi_code"       => $businessListing->gi_code,
             "business_slug" => $businessListing->slug,
             "business_type" => $businessListingType,
@@ -1876,11 +1850,11 @@ class BusinessListingController extends Controller
     public function saveAll(Request $request)
     {
         $requestData = $request->all();
+        $submitType  = $requestData['submit_type'];
         $formData    = $requestData['form_data'];
-        $saveType    = $requestData['save_type'];
         $submitData  = [];
         foreach ($formData as $key => $data) {
-            if (in_array($data['name'], ['exp_tax_status', 'tags_input', 'chk_milestones', 'use_of_funds', 'use_of_funds_amount', 'public_file_path[]', 'private_file_path[]', 'public_additional_documents_file_id[]', 'private_additional_documents_file_id[]'])) {
+            if (in_array($data['name'], ['exp_tax_status', 'tags_input', 'chk_milestones', 'use_of_funds', 'use_of_funds_amount', 'public_file_path[]', 'private_file_path[]', 'public_additional_documents_file_id', 'private_additional_documents_file_id'])) {
                 $submitData[$data['name']][] = $data['value'];
             } else {
                 $submitData[$data['name']] = $data['value'];
@@ -1888,77 +1862,58 @@ class BusinessListingController extends Controller
             }
 
         }
- 
-        $giCode                   = $submitData['gi_code']; 
-        $refernceId               = $submitData['refernce_id'];
-        $redirect                 = false;
-        $publishedBusinessListing = null;
-        $clearDraft               = false;
-        $copyDocToNewRevision               = false;
-        $publishedId = null;
- 
-        if ($giCode != '') {
-            $publishedBusinessListing = BusinessListing::where('gi_code', $giCode)->first();
-            $publishedId = $publishedBusinessListing->id;
-            $slug                     = $publishedBusinessListing->slug;
-            $parentId                 = $publishedBusinessListing->id;
-        } else {
-            $businessListing = new BusinessListing;
-            $slug            = getUniqueBusinessSlug($businessListing, $submitData['title']);
-            $parentId        = '';
-        }
- 
-        if ($saveType == 'save') {
-            if (!empty($publishedBusinessListing) || $refernceId == ''){
-                if ($refernceId == '') {
-                    $redirect = true;
-                }
+
+        $giCode     = $submitData['gi_code'];
+        $redirect   = false;
+        $clearDraft = false;
+
+        if ($submitType == 'submit') {
+
+            $clearDraft = true;
+            if ($giCode == '') {
+                $redirect = true;
+                $giArgs   = array('prefix' => "GIBP", 'min' => 60000001, 'max' => 70000000);
+
                 $businessListing = new BusinessListing;
-                $businessListing->slug   = $slug;
-                $businessListing->parent = $parentId;
-                $copyDocToNewRevision = true;
-            }
-            elseif($refernceId != ''){
-                $businessListing = BusinessListing::find($refernceId);          
-            }
-             
-        }
-        elseif ($saveType == 'submit') {
-            if (!empty($publishedBusinessListing) && $saveType == 'submit') {
+                $giCode          = generateGICode($businessListing, 'gi_code', $giArgs);
+
+                $businessListing->slug                     = getUniqueBusinessSlug($businessListing, $submitData['title']);
+                $businessListing->type                     = $submitData['business_type'];
+                $businessListing->status                   = 'publish';
+                $businessListing->gi_code                  = $giCode;
+                $businessListing->investment_opportunities = 'no';
+                $businessListing->disp_to_nonloggedin      = 'no';
+                $businessListing->owner_id                 = Auth::user()->id;
+
+            } else {
                 $businessListing = BusinessListing::where('gi_code', $giCode)->first();
-                $copyDocToNewRevision = true;
-                // if($businessListing->id != $refernceId)
-                //     $this->deleteBusiness($businessListing);
-
-                // $businessListing = BusinessListing::find($refernceId);
-                // $businessListing->gi_code = $giCode;
-
-            }elseif (empty($publishedBusinessListing) && $refernceId == ''){
-                $businessListing = new BusinessListing;
-                $giArgs = array('prefix' => "GIBP", 'min' => 60000001, 'max' => 70000000);
-                $giCode                   = generateGICode($businessListing, 'gi_code', $giArgs);
-                $businessListing->slug    = getUniqueBusinessSlug($businessListing, $submitData['title']);
-                $businessListing->gi_code = $giCode;
             }
-            elseif (empty($publishedBusinessListing) && $refernceId != ''){
-                $businessListing = BusinessListing::find($refernceId);
-                $giArgs = array('prefix' => "GIBP", 'min' => 60000001, 'max' => 70000000);
-                $giCode                   = generateGICode($businessListing, 'gi_code', $giArgs);
-                $businessListing->gi_code = $giCode;
+
+        } else {
+            
+            $businessListing                           = new BusinessListing;
+           if ($giCode != '') {
+                $publishBusinessListing = BusinessListing::where('gi_code', $giCode)->first();
+                $slug = $publishBusinessListing->slug;
+                $parentId = $publishBusinessListing->id;
             }
-            $businessListing->parent = '';
+            else{
+                $slug = getUniqueBusinessSlug($businessListing, $submitData['title']);
+                $parentId = '';
+            }
+
+            
+            $businessListing->parent                   = $parentId;
+            $businessListing->slug                     = $slug
+            $businessListing->type                     = $submitData['business_type'];
+            $businessListing->status                   = 'draft';
+            $businessListing->investment_opportunities = 'no';
+            $businessListing->disp_to_nonloggedin      = 'no';
+            $businessListing->owner_id                 = Auth::user()->id;
+
         }
 
-
-        
-
-        $businessListing->title                    = $submitData['title'];
-        $businessListing->type                     = $submitData['business_type'];
-        $businessListing->investment_opportunities = 'no';
-        $businessListing->disp_to_nonloggedin      = 'no';
-        $businessListing->owner_id                 = Auth::user()->id;
-
-        $businessListing->status = ($saveType == 'submit') ? 'publish' : 'draft';
+        $businessListing->title = $submitData['title'];
         $businessListing->save();
 
         $this->saveBusinessSectionStatus($businessListing, $submitData);
@@ -1968,16 +1923,13 @@ class BusinessListingController extends Controller
         $this->saveFinancials($businessListing, $submitData);
         $this->saveTeamMembers($businessListing, $submitData);
         $this->saveCompanyDetails($businessListing, $submitData);
-        if($copyDocToNewRevision){
-            $this->copyDocToNewRevision($businessListing, $refernceId);
-        }
         $this->saveDocumentUpload($businessListing, $submitData);
         $this->saveDueDeligence($businessListing, $submitData);
         $this->deleteDocument($businessListing, $submitData);
         $this->saveImageVideo($businessListing, $submitData);
 
-        if ($saveType == 'submit') {
-            $draftListings = BusinessListing::where('parent', $publishedId)->get();
+        if ($clearDraft) {
+            $draftListings = BusinessListing::where('parent', $businessListing->id)->get(); 
             foreach ($draftListings as $key => $draftListing) {
                 $this->deleteBusiness($draftListing);
             }
@@ -1992,7 +1944,6 @@ class BusinessListingController extends Controller
         }
 
         $json_data = array(
-            "refernce_id"       => $businessListing->id,
             "gi_code"       => $businessListing->gi_code,
             "business_type" => $businessListingType,
             "business_slug" => $businessListing->slug,
@@ -2009,23 +1960,6 @@ class BusinessListingController extends Controller
         $businessData     = BusinessListingData::where('business_id', $businessListing->id)->delete();
         $businessDefaults = BusinessHasDefault::select('business_has_defaults.*')->join('defaults', 'defaults.id', '=', 'business_has_defaults.default_id')->whereIn('defaults.type', ['business-sector', 'milestone', 'stage_of_business'])->where('business_has_defaults.business_id', $businessListing->id)->delete();
         $businessListing->businessVideos()->delete();
-
-        //delete documents
-        $businessFiles   = $businessListing->getAllBusinessFile();
-        $savedDocFileIds = [];
-        if (!empty($businessFiles)) {
-            foreach ($businessFiles as $fileType => $businessFile) {
-                    $savedDocFileIds[] = $businessFile['id'];
-            }
-        }
-
-        if(!empty($savedDocFileIds)){
-            foreach ($savedDocFileIds as $key => $fileId) {
-                $businessListing->unmapFile($fileId);   
-            }
-        }
-
-        $businessListing->delete();
 
     }
 
@@ -2080,7 +2014,7 @@ class BusinessListingController extends Controller
         $hmrcStatus      = $submitData['hmrc_status'];
         $businessSectors = (isset($submitData['tags_input'])) ? $submitData['tags_input'] : [];
         $businessStage   = $submitData['lst_stages_of_business'];
-        $milestones      = (isset($submitData['chk_milestones'])) ? $submitData['chk_milestones'] : [];
+        $milestones      = (isset($submitData['chk_milestones'])) ? $submitData['chk_milestones'] :[];
 
         $businessListing->tax_status = $taxStatus;
         $businessListing->round      = $round;
@@ -2297,19 +2231,6 @@ class BusinessListingController extends Controller
 
     }
 
-    public function copyDocToNewRevision($businessListing, $refernceId){
-        if($businessListing->id != $refernceId){
-            $refBusinessListing = BusinessListing::find($refernceId);
-            $files = $refBusinessListing->media()->where('file_type',FileUpload_Files::class)->get(); 
-             
-            foreach ($files as $key => $file) {
-                $businessListing->mapFile($file->file_id,$file->type);
-            }
-             
-        }
-
-    }
-
     public function saveDocumentUpload($businessListing, $submitData)
     {
         $proposalsummaryoption  = (isset($submitData['proposalsummaryoption'])) ? $submitData['proposalsummaryoption'] : '';
@@ -2325,7 +2246,7 @@ class BusinessListingController extends Controller
         $documentUpload->data_value = serialize($data);
         $documentUpload->save();
 
-         
+        // dd($submitData);
         if (isset($submitData['proposal_summary']) && !empty($submitData['proposal_summary'])) {
             $this->updateUploadedFile($businessListing, $submitData['proposal_summary'], 'proposal_summary');
         }
@@ -2378,7 +2299,6 @@ class BusinessListingController extends Controller
 
     }
 
-
     public function deleteDocument($businessListing, $submitData)
     {
         // check if file is deleted
@@ -2401,18 +2321,15 @@ class BusinessListingController extends Controller
 
         //multiple file delete by id not exist
         // check if submitted file ids exist in saved ids if not unmap
-        $publicAdditionalDocumentsIds  = (isset($submitData['public_additional_documents_file_id[]'])) ? $submitData['public_additional_documents_file_id[]'] : [];
-        $privateAdditionalDocumentsIds = (isset($submitData['private_additional_documents_file_id[]'])) ? $submitData['private_additional_documents_file_id[]'] : [];
+        $publicAdditionalDocumentsIds  = (isset($submitData['public_additional_documents_file_id'])) ? $submitData['public_additional_documents_file_id'] : [];
+        $privateAdditionalDocumentsIds = (isset($submitData['private_additional_documents_file_id'])) ? $submitData['private_additional_documents_file_id'] : [];
         $outputFileIds                 = array_merge($publicAdditionalDocumentsIds, $privateAdditionalDocumentsIds);
 
-        if(!empty($outputFileIds)){
-            foreach ($savedDocFileIds as $key => $fileId) {
-                if (!in_array($fileId, $outputFileIds)) {
-                    $businessListing->unmapFile($fileId);
-                }
+        foreach ($savedDocFileIds as $key => $fileId) {
+            if (!in_array($fileId, $outputFileIds)) {
+                $businessListing->unmapFile($fileId);
             }
         }
-        
     }
 
     public function saveDueDeligence($businessListing, $submitData)
@@ -2494,7 +2411,7 @@ class BusinessListingController extends Controller
         $currentPath  = public_path() . '/uploads/tmp/' . $basename;
         $uploadedFile = new UploadedFile($currentPath, $basename);
 
-        if (in_array($type, ['public_additional_documents', 'private_additional_documents','due_deligence_documents'])) {
+        if (in_array($type, ['public_additional_documents', 'private_additional_documents'])) {
             $id = $object->uploadFile($uploadedFile, false, $basename);
             $object->mapFile($id, $type);
         } else {
@@ -2583,266 +2500,6 @@ class BusinessListingController extends Controller
 
         return true;
 
-    }
-
-    public function editDueDeligenceQuestionnaire($type, $slug)
-    {
-        if ($type == 'single-company') {
-            $businessListingType = 'proposal';
-        } elseif ($type == 'funds') {
-            $businessListingType = 'fund';
-        } elseif ($type == 'vct') {
-            $businessListingType = 'vct';
-        }
-
-        $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
-
-        $businessListing = BusinessListing::where('slug', $slug)->where('status', 'publish')->first();
-
-        if (!empty($publishedBusiness)) {
-            $businessListing = BusinessListing::where('slug', $slug)->orderBy('updated_at', 'desc')->first();
-        }
-
-        $companyDetails           = $businessListing->dueDeligenceCompanyDetails();
-        $shareOwnershipInfo       = $businessListing->shareOwnershipInfo();
-        $companyFinancialSnapshot = $businessListing->companyFinancialSnapshot();
-        $keyFinancialMetrics      = $businessListing->keyFinancialMetrics();
-        $dueDeligenceDocuments    = $businessListing->getBusinessMultipleFile('due_deligence_documents');//dd($dueDeligenceDocuments);
-
-        $data['active_menu']              = 'due-deligence';
-        $data['mode']                     = 'edit';
-        $data['businessListing']          = $businessListing;
-        $data['companyDetails']           = (!empty($companyDetails)) ? unserialize($companyDetails->data_value) : [];
-        $data['shareOwnershipInfo']       = (!empty($shareOwnershipInfo)) ? unserialize($shareOwnershipInfo->data_value) : [];
-        $data['companyFinancialSnapshot'] = (!empty($companyFinancialSnapshot)) ? unserialize($companyFinancialSnapshot->data_value) : [];
-        $data['keyFinancialMetrics']      = (!empty($keyFinancialMetrics)) ? unserialize($keyFinancialMetrics->data_value) : [];
-        $data['businessListingType']      = $businessListingType;
-        $data['dueDeligenceDocuments']    = $dueDeligenceDocuments;
-
-        return view('frontend.entrepreneur.edit-due-deligence-questionnaire')->with($data);
-
-    }
-
-    public function saveDueDeligenceQuestionnaire(Request $request)
-    {
-        $requestData = $request->all();
-        $giCode      = $requestData['gi_code'];
-        $refernceId  = $requestData['refernce_id'];
-        if ($giCode != '') {
-            $businessListing = BusinessListing::where('gi_code', $giCode)->first();
-        } else {
-            $businessListing = BusinessListing::find($refernceId);
-        }
-
-        $this->saveDueDeligenceCompanyDetails($businessListing, $requestData);
-        $this->saveShareOwnershipInfo($businessListing, $requestData);
-        $this->saveCompanyFinancialSnapshot($businessListing, $requestData);
-        $this->dueDeligenceDocuments($businessListing, $requestData);
-        $this->saveKeyFinancialMetrics($businessListing, $requestData);
-
-        $businessListingType = 'single-company';
-        if ($businessListing->type == 'proposal') {
-            $businessListingType = 'single-company';
-        } elseif ($businessListing->type == 'funds') {
-            $businessListingType = 'fund';
-        }
-
-        return redirect(url('/investment-opportunities/' . $businessListingType . '/' . $businessListing->slug));
-
-    }
-
-    public function saveDueDeligenceCompanyDetails($businessListing, $requestData)
-    {
-        $grants = (isset($requestData['grants'])) ? $requestData['grants'] : 'no';
-
-        $data = ["companynumber" => $requestData['companynumber'],
-            "incopdate"              => $requestData['incopdate'],
-            "dirshareholders"        => $requestData['dirshareholders'],
-            "registeredaddress"      => $requestData['registeredaddress'],
-            "grants"                 => $grants,
-            "loansandgrants"         => $requestData['loansandgrants'],
-            "accountdetails"         => $requestData['accountdetails'],
-            "accountingend"          => $requestData['accountingend'],
-            "companybespoke"         => $requestData['companybespoke'],
-            "pendingapplication"     => $requestData['pendingapplication']];
-
-        $companyDetails = $businessListing->dueDeligenceCompanyDetails();
-        if (empty($companyDetails)) {
-            $companyDetails              = new BusinessListingData;
-            $companyDetails->business_id = $businessListing->id;
-            $companyDetails->data_key    = 'due_deligence_company_details';
-        }
-
-        $companyDetails->data_value = serialize($data);
-        $companyDetails->save();
-
-    }
-
-    public function saveShareOwnershipInfo($businessListing, $requestData)
-    {
-
-        $data = ["ownershipstructure" => $requestData['ownershipstructure'],
-            "existingshareholders"        => $requestData['existingshareholders'],
-            "atricleassociation"          => $requestData['atricleassociation'],
-            "externalinvestors"           => $requestData['externalinvestors'],
-            "sharespromised"              => $requestData['sharespromised']];
-
-        $shareOwnershipInfo = $businessListing->shareOwnershipInfo();
-        if (empty($shareOwnershipInfo)) {
-            $shareOwnershipInfo              = new BusinessListingData;
-            $shareOwnershipInfo->business_id = $businessListing->id;
-            $shareOwnershipInfo->data_key    = 'share_structure_and_ownership_info';
-        }
-
-        $shareOwnershipInfo->data_value = serialize($data);
-        $shareOwnershipInfo->save();
-
-    }
-
-    public function saveCompanyFinancialSnapshot($businessListing, $requestData)
-    {
-
-        $data = ["currentassets" => $requestData['currentassets'],
-            "currentliabilities"     => $requestData['currentliabilities'],
-            "currentcash"            => $requestData['currentcash'],
-            "accountspayable"        => $requestData['accountspayable'],
-            "amountreceivable"       => $requestData['amountreceivable'],
-            "interestpayable"        => $requestData['interestpayable'],
-            "preparedexpenses"       => $requestData['preparedexpenses'],
-            "taxespayble"            => $requestData['taxespayble'],
-            "fixedseets"             => $requestData['fixedseets'],
-            "longtermliabilities"    => $requestData['longtermliabilities'],
-            "longterminvestments"    => $requestData['longterminvestments'],
-            "loans"                  => $requestData['loans'],
-            "landndbuild"            => $requestData['landndbuild'],
-            "tradecreditors"         => $requestData['tradecreditors'],
-            "plantequipment"         => $requestData['plantequipment']];
-
-        $companyFinancialSnapshot = $businessListing->companyFinancialSnapshot();
-        if (empty($companyFinancialSnapshot)) {
-            $companyFinancialSnapshot              = new BusinessListingData;
-            $companyFinancialSnapshot->business_id = $businessListing->id;
-            $companyFinancialSnapshot->data_key    = 'company_financial_snapshot';
-        }
-
-        $companyFinancialSnapshot->data_value = serialize($data);
-        $companyFinancialSnapshot->save();
-
-    }
-
-    public function saveKeyFinancialMetrics($businessListing, $requestData)
-    {
-
-        $data = ["sales_m1"  => $requestData['sales_m1'],
-            "sales_m2"           => $requestData['sales_m2'],
-            "sales_m3"           => $requestData['sales_m3'],
-            "sales_m4"           => $requestData['sales_m4'],
-            "sales_m5"           => $requestData['sales_m5'],
-            "sales_m6"           => $requestData['sales_m6'],
-            "cost_of_sales_m1"   => $requestData['cost_of_sales_m1'],
-            "cost_of_sales_m2"   => $requestData['cost_of_sales_m2'],
-            "cost_of_sales_m3"   => $requestData['cost_of_sales_m3'],
-            "cost_of_sales_m4"   => $requestData['cost_of_sales_m4'],
-            "cost_of_sales_m5"   => $requestData['cost_of_sales_m5'],
-            "cost_of_sales_m6"   => $requestData['cost_of_sales_m6'],
-            "sales_overheead_m1" => $requestData['sales_overheead_m1'],
-            "sales_overheead_m2" => $requestData['sales_overheead_m2'],
-            "sales_overheead_m3" => $requestData['sales_overheead_m3'],
-            "sales_overheead_m4" => $requestData['sales_overheead_m4'],
-            "sales_overheead_m5" => $requestData['sales_overheead_m5'],
-            "sales_overheead_m6" => $requestData['sales_overheead_m6'],
-            "nonsoverheads_m1"   => $requestData['nonsoverheads_m1'],
-            "nonsoverheads_m2"   => $requestData['nonsoverheads_m2'],
-            "nonsoverheads_m3"   => $requestData['nonsoverheads_m3'],
-            "nonsoverheads_m4"   => $requestData['nonsoverheads_m4'],
-            "nonsoverheads_m5"   => $requestData['nonsoverheads_m5'],
-            "nonsoverheads_m6"   => $requestData['nonsoverheads_m6']];
-
-        $keyFinancialMetrics = $businessListing->keyFinancialMetrics();
-        if (empty($keyFinancialMetrics)) {
-            $keyFinancialMetrics              = new BusinessListingData;
-            $keyFinancialMetrics->business_id = $businessListing->id;
-            $keyFinancialMetrics->data_key    = 'key_financial_metrics';
-        }
-
-        $keyFinancialMetrics->data_value = serialize($data);
-        $keyFinancialMetrics->save();
-
-    }
-
-    public function dueDeligenceDocuments($businessListing, $requestData)
-    {
-        if (isset($requestData['due_deligence_documents_file_path']) && !empty($requestData['due_deligence_documents_file_path'])) {
-            foreach ($requestData['due_deligence_documents_file_path'] as $key => $dueDeligenceFile) {
-                $this->updateUploadedFile($businessListing, $dueDeligenceFile, 'due_deligence_documents');
-            }
-
-        }
-
-        $savedDocFileIds = [];
-        
-        $businessFiles    = $businessListing->getBusinessMultipleFile('due_deligence_documents'); 
-        if (!empty($businessFiles)) {
-            foreach ($businessFiles as $fileType => $businessFile) {
-                if (in_array($fileType, ['due_deligence_documents'])) {
-                    $savedDocFileIds[] = $businessFile['fileid'];
-                }
-            }
-        }
-
-        //multiple file delete by id not exist
-        // check if submitted file ids exist in saved ids if not unmap
-        $dueDeligenceDocumentsIds  = (isset($requestData['due_deligence_documents_file_id'])) ? $requestData['due_deligence_documents_file_id'] : [];
-       
-        if(!empty($dueDeligenceDocumentsIds)){
-            foreach ($savedDocFileIds as $key => $fileId) {
-                if (!in_array($fileId, $dueDeligenceDocumentsIds)) {
-                    $businessListing->unmapFile($fileId);
-                }
-            }
-        }
-        elseif(empty($dueDeligenceDocumentsIds) && !empty($savedDocFileIds)){
-            foreach ($savedDocFileIds as $key => $fileId) {
-                $businessListing->unmapFile($fileId);     
-            }
-        }
-    }
-
-    public function editTierVisa($type, $slug)
-    {
-        if ($type == 'single-company') {
-            $businessListingType = 'proposal';
-        } elseif ($type == 'funds') {
-            $businessListingType = 'fund';
-        } elseif ($type == 'vct') {
-            $businessListingType = 'vct';
-        }
-
-        $mode = (isset($_GET['mode'])) ? $_GET['mode'] : '';
-
-        $businessListing = BusinessListing::where('slug', $slug)->where('status', 'publish')->first();
-
-        if (!empty($publishedBusiness)) {
-            $businessListing = BusinessListing::where('slug', $slug)->orderBy('updated_at', 'desc')->first();
-        }
-
-        $companyDetails           = $businessListing->dueDeligenceCompanyDetails();
-        $shareOwnershipInfo       = $businessListing->shareOwnershipInfo();
-        $companyFinancialSnapshot = $businessListing->companyFinancialSnapshot();
-        $keyFinancialMetrics      = $businessListing->keyFinancialMetrics();
-        $tier1Document    = $businessListing->getBusinessMultipleFile('tier1_document');//dd($dueDeligenceDocuments);
-
-        $data['active_menu']              = 'tier1-visa';
-        $data['mode']                     = 'edit';
-        $data['businessListing']          = $businessListing;
-        $data['companyDetails']           = (!empty($companyDetails)) ? unserialize($companyDetails->data_value) : [];
-        $data['shareOwnershipInfo']       = (!empty($shareOwnershipInfo)) ? unserialize($shareOwnershipInfo->data_value) : [];
-        $data['companyFinancialSnapshot'] = (!empty($companyFinancialSnapshot)) ? unserialize($companyFinancialSnapshot->data_value) : [];
-        $data['keyFinancialMetrics']      = (!empty($keyFinancialMetrics)) ? unserialize($keyFinancialMetrics->data_value) : [];
-        $data['businessListingType']      = $businessListingType;
-        $data['tier1Document']    = $tier1Document;
-
-        return view('frontend.entrepreneur.edit-tier-visa')->with($data);
     }
 
 /**

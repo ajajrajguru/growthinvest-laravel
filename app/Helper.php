@@ -36,6 +36,23 @@ function getModelList($modelName, $filters = [], $skip = 0, $length = 0, $orderD
 
 }
 
+function getUniqueSlug(\Illuminate\Database\Eloquent\Model $model, $value)
+{
+    $slug = \Illuminate\Support\Str::slug($value);
+    $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$model->id}'")->get());
+
+    return ($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug;
+}
+
+
+function getUniqueBusinessSlug(\Illuminate\Database\Eloquent\Model $model, $value)
+{
+    $slug = \Illuminate\Support\Str::slug($value);
+    $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and status='publish' and id != '{$model->id}'")->get());
+
+    return ($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug;
+}
+
 function isUser($object, $hasRolePermission)
 {
     if ($object->hasAnyRole($hasRolePermission)) {

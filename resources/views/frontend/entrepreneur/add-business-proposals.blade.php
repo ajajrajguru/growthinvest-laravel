@@ -89,7 +89,13 @@
 	<div class="row mt-5">
 		 			
 		<div class="col-sm-3">
-			<h3>Business Proposal</h3>
+            @if(!$businessListing->id)
+			     <h3>Business Proposal</h3>
+            @else
+                <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit') }}" class="">Edit Proposal</a><br>
+                <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit-due-deligence-questionnaire') }}">Edit Due Deligence Questionnaire</a><br>
+                <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit-tier-1-visa') }}">Edit Tier 1 Visa</a><br>
+            @endif
 
            
 
@@ -102,7 +108,11 @@
 		Once we have the information we need, we can kick off the next stage of the process, which is to select an appropriate Due Diligence tier, before your Business proposal goes live.<br>
 
 		If you have any questions or queries, please do not hesitate to contact us at any time on Email support@growthinvest.com, phone 020 7071 3945, or via our online form here</p>
- 		
+
+        <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit?mode=draft') }}">Draft</a> | 
+        <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit?mode=publish') }}">Publish</a>
+
+ 		@include('includes.notification')
  		<form method="post"  data-parsley-validate name="add-business" id="add-business" enctype="multipart/form-data">
 		<div id="" role="tablist" class="gi-collapse">
             <div class="card">
@@ -133,7 +143,7 @@
                                 @endphp
                                 <div class="form-group">
                                     <label>Please describe your business</label>
-                                    <textarea class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="aboutbusiness" placeholder="" >@if(!empty($businessIdeasData) && isset($businessIdeasData['aboutbusiness'])) {{ $businessIdeasData['aboutbusiness'] }}  @endif</textarea>
+                                    <textarea class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="aboutbusiness" placeholder="" >@if(!empty($businessIdeasData) && isset($businessIdeasData['aboutbusiness'])){{ $businessIdeasData['aboutbusiness'] }}@endif</textarea>
                                     <small class="form-text text-muted">Please describe your business in less than 100</small>
                                     
                                 </div>
@@ -178,9 +188,10 @@
                                     
                                 </div>
 
-                                 
+                                @if($display_mode != 'publish') 
                                 <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="business_idea" >Save</button>
-                                
+                                <span id="business_idea_msg" class="text-success d-none">Business idea successfully saved</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -369,9 +380,10 @@
                                     </div>
                                     @endforeach
                                 </div>
-
+                                @if($display_mode != 'publish')
                                <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="business_proposal_details" >Save</button>
-
+                               <span id="business_proposal_details_msg" class="text-success d-none">Business proposal details successfully saved</span>
+                               @endif
                                 
                             </div>
                         </div>
@@ -556,9 +568,10 @@
                                 <small class="form-text text-muted">Please specify, if possible, the equivalent % of the total amounts raised that goes to this particular points<br>
 (Eg: 15% of the fund will be used for marketing)</small>
                                 </div>
-
+                                @if($display_mode != 'publish')
                                <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="funding_requirement" >Save</button>
-
+                               <span id="funding_requirement_msg" class="text-success d-none">Funding requirements successfully saved</span>
+                               @endif
                                 
                             </div>
                         </div>
@@ -627,9 +640,10 @@
                                      
                           
                                 </div>
-
+                                @if($display_mode != 'publish')
                                <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="financials" >Save</button>
-
+                               <span id="financials_msg" class="text-success d-none">Financials successfully saved</span>
+                               @endif
                                 
                             </div>
                         </div>
@@ -676,8 +690,10 @@
                                     
                                     
                                     <br>
-                             
+                                    @if($display_mode != 'publish')
                                     <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="team-members" >Save</button>
+                                    <span id="team-members_msg" class="text-success d-none">Management team successfully saved</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -708,74 +724,74 @@
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label>Company Number</label>
-                                            <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_number" placeholder=""   value="@if(isset($companyDetails['detail_number'])){{ $companyDetails['detail_number'] }}@endif" >
+                                            <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_number" placeholder=""   value="@if(isset($companyDetails['number'])){{ $companyDetails['number'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Company Type</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_type" placeholder=""   value="@if(isset($companyDetails['detail_type'])){{ $companyDetails['detail_type'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_type" placeholder=""   value="@if(isset($companyDetails['type'])){{ $companyDetails['type'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Telephone No.</label>
-                                            <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_telephone" placeholder=""   value="@if(isset($companyDetails['detail_telephone'])){{ $companyDetails['detail_telephone'] }}@endif" >
+                                            <input type="number" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_telephone" placeholder=""   value="@if(isset($companyDetails['telephone'])){{ $companyDetails['telephone'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>SIC 2003</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_sic2003" placeholder=""   value="@if(isset($companyDetails['detail_sic2003'])){{ $companyDetails['detail_sic2003'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_sic2003" placeholder=""   value="@if(isset($companyDetails['sic2003'])){{ $companyDetails['sic2003'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Types of Accounts</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_typeofaccount" placeholder=""   value="@if(isset($companyDetails['detail_typeofaccount'])){{ $companyDetails['detail_typeofaccount'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_typeofaccount" placeholder=""   value="@if(isset($companyDetails['typeofaccount'])){{ $companyDetails['typeofaccount'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Latest Annual Returns</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualreturns" placeholder=""   value="@if(isset($companyDetails['detail_latestannualreturns'])){{ $companyDetails['detail_latestannualreturns'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualreturns" placeholder=""   value="@if(isset($companyDetails['latestannualreturns'])){{ $companyDetails['latestannualreturns'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Next Annual Returns Due</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualreturnsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualreturnsdue'])){{ $companyDetails['detail_nextannualreturnsdue'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualreturnsdue" placeholder=""   value="@if(isset($companyDetails['nextannualreturnsdue'])){{ $companyDetails['nextannualreturnsdue'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Latest Annual Accounts</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualaccounts" placeholder=""   value="@if(isset($companyDetails['detail_latestannualaccounts'])){{ $companyDetails['detail_latestannualaccounts'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_latestannualaccounts" placeholder=""   value="@if(isset($companyDetails['latestannualaccounts'])){{ $companyDetails['latestannualaccounts'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Next Annual Accounts Due</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualaccountsdue" placeholder=""   value="@if(isset($companyDetails['detail_nextannualaccountsdue'])){{ $companyDetails['detail_nextannualaccountsdue'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_nextannualaccountsdue" placeholder=""   value="@if(isset($companyDetails['nextannualaccountsdue'])){{ $companyDetails['nextannualaccountsdue'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>SIC 2007</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_sic2007" placeholder=""   value="@if(isset($companyDetails['detail_sic2007'])){{ $companyDetails['detail_sic2007'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_sic2007" placeholder=""   value="@if(isset($companyDetails['sic2007'])){{ $companyDetails['sic2007'] }}@endif" >
 
                                         </div>  
 
                                         <div class="form-group">
                                             <label>Trading Address</label>
-                                            <textarea class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_tradingaddress" placeholder="" >@if(!empty($companyDetails) && isset($companyDetails['detail_tradingaddress'])) {{ $companyDetails['detail_tradingaddress'] }}  @endif</textarea>
+                                            <textarea class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif" name="detail_tradingaddress" placeholder="" >@if(!empty($companyDetails) && isset($companyDetails['tradingaddress'])) {{ $companyDetails['tradingaddress'] }}  @endif</textarea>
                                            
                                             
                                         </div>
 
                                         <div class="form-group">
                                             <label>Incorporation Date</label>
-                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_incorporationdate" placeholder=""   value="@if(isset($companyDetails['detail_incorporationdate'])){{ $companyDetails['detail_incorporationdate'] }}@endif" >
+                                            <input type="text" class="form-control text-input-status completion_status editmode @if($mode=='view') d-none @endif datepicker" name="detail_incorporationdate" placeholder=""   value="@if(isset($companyDetails['incorporationdate'])){{ $companyDetails['incorporationdate'] }}@endif" >
 
                                         </div>  
             
@@ -787,9 +803,10 @@
                                          
                               
                                     </div>
-
-                                   <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="company-details" >Save</button>
-
+                                    @if($display_mode != 'publish')
+                                       <button type="button" class="btn btn-primary text-right editmode @if($mode=='view') d-none @endif save-section" submit-type="company-details" >Save</button>
+                                       <span id="company-details_msg" class="text-success d-none">Company details successfully saved</span>
+                                    @endif
                                 
                             </div>
                         </div>
@@ -933,7 +950,7 @@
                                                    @if(!empty($publicAdditionalDocs))
                                                     @foreach($publicAdditionalDocs as $publicDocs)
                                                     <div>
-                                                        <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="public_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="public_additional_documents_file_id" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
+                                                        <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="public_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="public_additional_documents_file_id[]" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
                                                     </div>
                                                     @endforeach
                                                    @endif
@@ -952,7 +969,7 @@
                                                    @if(!empty($privateAdditionalDocs))
                                                     @foreach($privateAdditionalDocs as $privateDocs)
                                                     <div>
-                                                       <p class="multi_file_name"> {{ $privateDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="private_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="private_additional_documents_file_id" class="file_id" value="{{ $privateDocs['fileid'] }}"></p>
+                                                       <p class="multi_file_name"> {{ $privateDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="private_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="private_additional_documents_file_id[]" class="file_id" value="{{ $privateDocs['fileid'] }}"></p>
                                                    </div>
                                                     @endforeach
                                                @endif
@@ -1367,17 +1384,22 @@
         </div>
 
         <div class="d-md-flex justify-content-md-between ">
+            @if($display_mode != 'publish')
             <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="save" >Save</button>
-	        <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="submit" >Submit</button>
+	        <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="submit" >Save and publish</button>
+            @else
+            <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="save" >Save as draft</button>
+            @endif
             @if($businessListing->id)
-            <a href="{{ url('/download-business-proposals/'.$businessListing->gi_code.'/') }}" class="btn btn-primary" target="_blank"  ><i class="fa fa-download" ></i></a>
+            <a href="{{ url('/download-business-proposals/'.$businessListing->id.'/') }}" class="btn btn-primary" target="_blank"  ><i class="fa fa-download" ></i></a>
             @endif
 
 	        <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="section">
 	        <input type="hidden" name="business_type" value="{{ $businessListingType }}">
 
-			<input type="hidden" name="gi_code" value="{{ $businessListing->gi_code }}">
+            <input type="hidden" name="gi_code" value="{{ (!empty($publishedBusiness)) ? $publishedBusiness->gi_code:'' }}">
+			<input type="hidden" name="refernce_id" value="{{ (!empty($businessListing)) ? $businessListing->id:'' }}">
  		</div>
         </form>     
 

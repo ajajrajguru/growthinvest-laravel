@@ -6,7 +6,7 @@ class BusinessPdfHtml
 
     public function getBusinessProposalHtml($businessListing)
     {
-        $businessIdeas           = (!empty($businessListing->getBusinessIdeas())) ? $businessListing->getBusinessIdeas()->data_value : [];
+        $businessIdeasData           = (!empty($businessListing->getBusinessIdeas())) ? unserialize($businessListing->getBusinessIdeas()->data_value): [];
         $businessProposalDetails = (!empty($businessListing->getBusinessProposalDetails())) ? unserialize($businessListing->getBusinessProposalDetails()->data_value) : [];
         $fundingRequirement      = (!empty($businessListing->getFundingRequirement())) ? unserialize($businessListing->getFundingRequirement()->data_value) : [];
         $businessHmrcStatus      = (!empty($businessListing->getBusinessHmrcStatus())) ? $businessListing->getBusinessHmrcStatus()->data_value : '';
@@ -622,7 +622,7 @@ class BusinessPdfHtml
 
              
             $nodata = '';
-            if (count($teamMemberDetails['team-members']) == 0) {
+            if ((isset($teamMemberDetails['team-members'])) && count($teamMemberDetails['team-members']) == 0) {
                 $nodata = "(No Data)";
             } else {
                 $html .= '<br pagebreak="true"/>';
@@ -635,7 +635,7 @@ class BusinessPdfHtml
                                     </tr>
                                 </table>';
             $i = 1;
-            if (count($teamMemberDetails['team-members']) > 0) {
+            if ((isset($teamMemberDetails['team-members'])) && count($teamMemberDetails['team-members']) > 0) {
                 foreach ($teamMemberDetails['team-members'] as $teamMemberDetail) {
 
                     /*echo "<pre>";

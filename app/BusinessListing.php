@@ -384,6 +384,22 @@ class BusinessListing extends Model
         return $businessStage;
     }
 
+    public function keyFinancialMetrics(){
+       return $this->businessListingData()->where('data_key','key_financial_metrics')->first(); 
+    }
+
+    public function companyFinancialSnapshot(){
+       return $this->businessListingData()->where('data_key','company_financial_snapshot')->first(); 
+    }
+
+    public function shareOwnershipInfo(){
+       return $this->businessListingData()->where('data_key','share_structure_and_ownership_info')->first(); 
+    }
+
+    public function dueDeligenceCompanyDetails(){
+       return $this->businessListingData()->where('data_key','due_deligence_company_details')->first(); 
+    }
+
 
     public Function getMemberPicture($member,$type){
         $hasImage = false;

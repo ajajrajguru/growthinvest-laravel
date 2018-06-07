@@ -12,6 +12,11 @@
       btnObj = $(this);
       title = $('input[name="title"]').val();
       save_type = btnObj.attr('save-type');
+      if (save_type === 'submit') {
+        if (!confirm('Are you sure you want to publish this changes?')) {
+          return;
+        }
+      }
       hrefId = $('input[name="title"]').closest('.parent-tabpanel').attr('id');
       titleInvalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
       if (title === '') {
@@ -41,7 +46,6 @@
               }
             }
           });
-          console.log(sectionCount);
           isComplete = 0;
           $(this).find('.completion_status').each(function() {
             if ($(this).val() === '') {
@@ -59,19 +63,21 @@
       }
       if (title !== '' && isValidTab === 0) {
         form_data = $('form').serializeArray();
-        console.log(form_data);
         return $.ajax({
           type: 'post',
           url: '/business-proposals/save-all',
           data: {
-            'form_data': form_data
+            'form_data': form_data,
+            'save_type': save_type
           },
           success: function(data) {
+            $('input[name="refernce_id"]').val(data.refernce_id);
+            $('.gi-success').html('Data Successfully Saved in Draft.').removeClass('d-none');
             if (save_type === 'submit') {
               window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.business_slug;
             }
             if (data.redirect) {
-              return window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.gi_code + "/edit";
+              return window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.business_slug + "/edit";
             } else {
               return console.log(data.gi_code);
             }
@@ -80,10 +86,11 @@
       }
     });
     $('.save-section').click(function() {
-      var btnObj, form_data, hrefId, invalidTabHeadObj, isComplete, isValidTab, sectionCount, submitType, title, titleInvalidTabHeadObj;
+      var btnObj, form_data, hrefId, invalidTabHeadObj, isComplete, isValidTab, save_type, sectionCount, submitType, title, titleInvalidTabHeadObj;
       btnObj = $(this);
       title = $('input[name="title"]').val();
       submitType = btnObj.attr('submit-type');
+      save_type = btnObj.attr('save-type');
       hrefId = $('input[name="title"]').closest('.parent-tabpanel').attr('id');
       titleInvalidTabHeadObj = $('a[href="#' + hrefId + '"]').closest('.card-header');
       if (title === '') {
@@ -111,7 +118,6 @@
       });
       isComplete = 0;
       sectionCount = btnObj.closest('.parent-tabpanel').attr('data-section');
-      console.log(sectionCount);
       btnObj.closest('.parent-tabpanel').find('.completion_status').each(function() {
         if ($(this).val() === '') {
           return isComplete++;
@@ -130,14 +136,17 @@
           type: 'post',
           url: '/business-proposals/save',
           data: {
+            'save_type': save_type,
             'submit_type': submitType,
             'form_data': form_data
           },
           success: function(data) {
+            $('input[name="refernce_id"]').val(data.refernce_id);
+            $('#' + submitType + '_msg').removeClass('d-none').delay(5000).fadeOut();
             if (data.redirect) {
-              return window.location.href = "/investment-opportunities/" + data.gi_code + "/edit";
+              return window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.business_slug + "/edit";
             } else {
-              return console.log(data.gi_code);
+              return console.log(data.business_slug);
             }
           }
         });
