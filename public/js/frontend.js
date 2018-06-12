@@ -123,13 +123,39 @@
       window.history.pushState("", "", "?" + urlParams);
       userActivityTable.ajax.reload();
     });
-    return $('body').on('click', '.reset-activity-filters', function() {
+    $('body').on('click', '.reset-activity-filters', function() {
       $('select[name="duration"]').val('lasttwomonth').attr('disabled', false);
       $('input[name="duration_from"]').val('').attr('disabled', false);
       $('input[name="duration_to"]').val('').attr('disabled', false);
       $('select[name="type"]').val('');
       window.history.pushState("", "", "?");
       userActivityTable.ajax.reload();
+    });
+    $(document).on('click', '.editUserBtn', function() {
+      $('.editmode').removeClass('d-none');
+      $('.reqField').removeClass('d-none');
+      $('.viewmode').addClass('d-none');
+      $('.disabledInput').attr('disabled', false);
+      $(this).addClass('d-none');
+      return $('.cancelUpdateBtn').removeClass('d-none');
+    });
+    $(document).on('click', '.cancelUpdateBtn', function() {
+      $('.editmode').addClass('d-none');
+      $('.reqField').addClass('d-none');
+      $('.viewmode').removeClass('d-none');
+      $('.disabledInput').attr('disabled', true);
+      $(this).addClass('d-none');
+      return $('.editUserBtn').removeClass('d-none');
+    });
+    $(document).on('click', '#change_pwd', function() {
+      $(this).addClass('d-none');
+      $('#cancel_pwd').removeClass('d-none');
+      return $('.setpassword-cont').removeClass('d-none');
+    });
+    return $(document).on('click', '#cancel_pwd', function() {
+      $(this).addClass('d-none');
+      $('#change_pwd').removeClass('d-none');
+      return $('.setpassword-cont').addClass('d-none');
     });
   });
 

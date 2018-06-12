@@ -1,5 +1,11 @@
 @extends('layouts.backoffice')
+@section('css')
+  @parent
 
+ 
+    <link  href="{{ asset('bower_components/cropper/dist/cropper.css') }}" rel="stylesheet">
+ 
+@endsection
 @section('js')
   @parent
 

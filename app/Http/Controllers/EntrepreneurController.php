@@ -396,19 +396,89 @@ class EntrepreneurController extends Controller
 
  
         $accountNumber                  = $entrepreneur->userInvestmentAccountNumber();
+        $profilePic             = $entrepreneur->getProfilePicture('medium_1x1');
+        $data['profilePic']     = $profilePic['url'];
+        $data['hasProfilePic']  = $profilePic['hasImage'];
         $data['countyList']              = getCounty();
         $data['countryList']             = getCountry();
         $data['entrepreneur']            = $entrepreneur;
         $data['firms']                   = $firms;
-        $data['breadcrumbs']             = $breadcrumbs;
         $data['accountNumber'] = (!empty($accountNumber)) ? $accountNumber->data_value : '';
         $data['mode']                    = 'view';
-        $data['activeMenu']              = 'my-profile';
+        $data['active_menu']              = 'my-profile';
        
         $additionalInfo         = $entrepreneur->userAdditionalInfo();
         $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
 
         return view('frontend.entrepreneur.my-profile')->with($data);
+
+    }
+
+    public function saveProfile(Request $request)
+    {
+        $requestData = $request->all();
+
+        $firstName    = $requestData['first_name'];
+        $lastName     = $requestData['last_name'];
+        $email        = $requestData['email'];
+        $telephone    = $requestData['telephone'];
+        $password     = $requestData['password'];
+        $addressLine1 = $requestData['address_line_1'];
+        $addressLine2 = $requestData['address_line_2'];
+        $townCity     = $requestData['town_city'];
+        $county       = $requestData['county'];
+        $postcode     = $requestData['postcode'];
+        $country      = $requestData['country'];
+        $firm         = $requestData['firm'];
+        $company      = $requestData['company'];
+        $website      = $requestData['website'];
+        $giCode       = $requestData['gi_code'];
+
+        $userMeta['company'] = $company;
+        $userMeta['website'] = $website;
+
+        
+        $entrepreneur = User::where('gi_code', $giCode)->first();
+         
+
+        $entrepreneur->login_id = $email;
+        $entrepreneur->avatar   = '';
+
+        $entrepreneur->email        = $email;
+        $entrepreneur->first_name   = $firstName;
+        $entrepreneur->last_name    = $lastName;
+        if($password!="")
+            $entrepreneur->password     = Hash::make($password);
+        $entrepreneur->telephone_no = $telephone;
+        $entrepreneur->address_1    = $addressLine1;
+        $entrepreneur->address_2    = $addressLine2;
+        $entrepreneur->city         = $townCity;
+        $entrepreneur->postcode     = $postcode;
+        $entrepreneur->county       = $county;
+        $entrepreneur->country      = $country;
+        $entrepreneur->firm_id      = $firm;
+        $entrepreneur->save();
+
+        $entrepreneurId = $entrepreneur->id;
+
+        $userMeta['company'] = $company;
+        $userMeta['website'] = $website;
+
+        $additionalInfo = $entrepreneur->userAdditionalInfo();
+        if (empty($additionalInfo)) {
+            $additionalInfo           = new UserData;
+            $additionalInfo->user_id  = $entrepreneurId;
+            $additionalInfo->data_key = 'additional_info';
+        }
+
+        $additionalInfo->data_value = $userMeta;
+        $additionalInfo->save();
+
+        //assign role
+ 
+
+        Session::flash('success_message', 'Entrepreneur registered successfully');
+        return redirect(url("user-dashboard/my-profile"));
 
     }
 

@@ -205,6 +205,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function 
     Route::post('/user/get-user-activity', 'ActivityController@getInvestorActivity');
     Route::get('user/export-user-activity', 'ActivityController@exportInvestorsActivity');
     Route::get('user/user-activity-pdf', 'ActivityController@generateInvestorsActivityPdf');
+    Route::get('/my-profile', 'EntrepreneurController@myProfile');
+    Route::post('entrepreneur/save-profile', 'EntrepreneurController@saveProfile');
     
 
 });

@@ -120,6 +120,33 @@ $(document).ready ->
 	    window.history.pushState("", "", "?");
 	    userActivityTable.ajax.reload()
 	    return
+
+	$(document).on 'click', '.editUserBtn', ->
+		$('.editmode').removeClass('d-none');
+		$('.reqField').removeClass('d-none');
+		$('.viewmode').addClass('d-none');
+		$('.disabledInput').attr('disabled',false)
+
+		$(this).addClass('d-none');
+		$('.cancelUpdateBtn').removeClass('d-none');
+
+	$(document).on 'click', '.cancelUpdateBtn', ->
+		$('.editmode').addClass('d-none');
+		$('.reqField').addClass('d-none');
+		$('.viewmode').removeClass('d-none');
+		$('.disabledInput').attr('disabled',true)
+		$(this).addClass('d-none');
+		$('.editUserBtn').removeClass('d-none');
+
+	$(document).on 'click', '#change_pwd', ->
+		$(this).addClass('d-none');
+		$('#cancel_pwd').removeClass('d-none');
+		$('.setpassword-cont').removeClass('d-none');
+
+	$(document).on 'click', '#cancel_pwd', ->
+		$(this).addClass('d-none');
+		$('#change_pwd').removeClass('d-none');
+		$('.setpassword-cont').addClass('d-none');
 			
 
 
