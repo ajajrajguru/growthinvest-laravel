@@ -424,6 +424,7 @@ class ActivityController extends Controller
         $compWhere        = '';
         $mainjoin         = '';
         $typeStr          = '';
+        $typewhere  = '';
 
         if (isset($filters['duration']) && $filters['duration'] != "") {
             $durationDates = getDateByPeriod($filters['duration']);
@@ -676,10 +677,10 @@ class ActivityController extends Controller
 
         $orderDataBy = [$columnName => $orderBy];
 
-        $filterActivityListing = $this->getFilteredActivityListing('list', $filters, 0, 0, $orderDataBy);
+        $filterActivityListing = $this->getFilteredActivityListing('list', $filters, 0, 0, $orderDataBy); 
         $activityListings      = $filterActivityListing['list'];
 
-        $fileName = 'all_investors_as_on_' . date('d-m-Y');
+        $fileName = 'all_activities_as_on_' . date('d-m-Y');
         $header   = ['Platform GI Code', 'Company', 'First Name', 'Last Name', 'Type of User', 'Activity Name', 'Date', 'Email', 'Telephone', 'Description'];
         $userData = [];
 

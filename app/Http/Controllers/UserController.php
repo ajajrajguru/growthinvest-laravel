@@ -617,6 +617,20 @@ class UserController extends Controller
         return view($template)->with($data);
     }
 
+    public function getMyactivity(Request $request){
+        $user = Auth::user();
+        $requestFilters = $request->all();
+
+        $data['activityTypes']    = activityTypeList();
+        $data['durationType']     = durationType();
+        $data['requestFilters']   = $requestFilters;
+        $data['active_menu'] = 'my_activity';
+        $data['user'] = $user;
+
+        return view('frontend.entrepreneur.my-activity')->with($data);
+
+    }
+
     /* Coming soon Dashboard Pages */
     public function showDashboard(\Illuminate\Http\Request $request)
     {

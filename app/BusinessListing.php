@@ -400,6 +400,39 @@ class BusinessListing extends Model
        return $this->businessListingData()->where('data_key','due_deligence_company_details')->first(); 
     }
 
+    public function investmentBusinessQuestionnaire(){
+       return $this->businessListingData()->where('data_key','tier1_investment_business_questionnaire')->first(); 
+    }
+
+    public function tier1CompanyInformation(){
+       return $this->businessListingData()->where('data_key','tier1_company_information')->first(); 
+    }
+
+    public function tier1EmployeeInformation(){
+       return $this->businessListingData()->where('data_key','employee_information')->first(); 
+    }
+
+    public function tier1FinancialInformation(){
+       return $this->businessListingData()->where('data_key','tier1_financial_information')->first(); 
+    }
+
+    public Function getTier1Document(){
+        $hasFile = false;
+        $files = $this->getFiles('tier1_document'); 
+        $fileUrl =  '';
+        $fileid =  '';
+        $filesData = [];
+        foreach ($files as $key => $file) { 
+            $fileid = $file['id'];
+            $filename = $file['name'];
+            $fileUrl = $file['url'];
+            $hasFile = true;
+            $filesData[] = ['url'=>$fileUrl,'name'=>$filename,'fileid'=>$fileid,'hasFile'=>$hasFile]; 
+             
+        }
+
+        return $filesData;
+    }
 
     public Function getMemberPicture($member,$type){
         $hasImage = false;

@@ -199,13 +199,14 @@
       });
     });
     return $(document).on('click', '.delete-uploaded-file', function() {
-      var btnObj, objectId, objectType, type;
+      var btnObj, fileId, objectId, objectType, type;
       if (!confirm('Are you sure you want to delete this file?')) {
         return;
       }
       btnObj = $(this);
       objectType = $(this).attr('object-type');
       objectId = $(this).attr('object-id');
+      fileId = $(this).attr('file-id');
       type = $(this).attr('type');
       return $.ajax({
         type: 'post',
@@ -219,6 +220,9 @@
           'file_type': type
         },
         success: function(data) {
+          if (btnObj.closest('.upload-files-section').find('.deleted_files').length && fileId !== "") {
+            btnObj.closest('.upload-files-section').find('.deleted_files').append('<input type="hidden" name="delete_file[]" value="' + fileId + '">');
+          }
           if ((btnObj.closest('.multi_file_name').length)) {
             btnObj.closest('.multi_file_name').remove();
           }

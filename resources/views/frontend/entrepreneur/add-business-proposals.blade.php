@@ -108,10 +108,10 @@
 		Once we have the information we need, we can kick off the next stage of the process, which is to select an appropriate Due Diligence tier, before your Business proposal goes live.<br>
 
 		If you have any questions or queries, please do not hesitate to contact us at any time on Email support@growthinvest.com, phone 020 7071 3945, or via our online form here</p>
-
+         @if($businessListing->id)
         <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit?mode=draft') }}">Draft</a> | 
         <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit?mode=publish') }}">Publish</a>
-
+        @endif
  		@include('includes.notification')
  		<form method="post"  data-parsley-validate name="add-business" id="add-business" enctype="multipart/form-data">
 		<div id="" role="tablist" class="gi-collapse">
@@ -848,6 +848,8 @@
                                                       {!! getbusinessUploadedFileNamesHtml($businessFiles,'proposal_summary',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                             <br>
@@ -862,6 +864,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'generate_summary',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                        
@@ -871,6 +875,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="information-memorandum" object-type="App\BusinessListing" object-id="" file-type="information_memorandum">Select File</button>
                                                   <input type="hidden" name="information_memorandum" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'information_memorandum',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                       
@@ -880,6 +886,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="kid-document" object-type="App\BusinessListing" object-id="" file-type="kid_document">Select File</button>
                                                   <input type="hidden" name="kid_document" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'kid_document',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 
@@ -893,6 +901,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="application-form-1" object-type="App\BusinessListing" object-id="" file-type="application_form_1">Select File</button>
                                                   <input type="hidden" name="application_form_1" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'application_form_1',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                             <br>
@@ -904,6 +914,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="application-form-2" object-type="App\BusinessListing" object-id="" file-type="application_form_2">Select File</button>
                                                   <input type="hidden" name="application_form_2" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'application_form_2',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                             <br>
@@ -916,6 +928,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="application-form-3" object-type="App\BusinessListing" object-id="" file-type="application_form_3">Select File</button>
                                                   <input type="hidden" name="application_form_3" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'application_form_3',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                        
@@ -925,6 +939,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="presentation" object-type="App\BusinessListing" object-id="" file-type="presentation">Select File</button>
                                                   <input type="hidden" name="presentation" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'presentation',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                  
@@ -934,6 +950,8 @@
                                                   <button type="button" class="btn btn-primary text-right" id="financial-projection" object-type="App\BusinessListing" object-id="" file-type="financial_projection">Select File</button>
                                                   <input type="hidden" name="financial_projection" value="" class="uploaded-file-path">
                                                   <span class="file_name">{!! getbusinessUploadedFileNamesHtml($businessFiles,'financial_projection',$businessListing) !!}</span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 
@@ -950,11 +968,13 @@
                                                    @if(!empty($publicAdditionalDocs))
                                                     @foreach($publicAdditionalDocs as $publicDocs)
                                                     <div>
-                                                        <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="public_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="public_additional_documents_file_id[]" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
+                                                        <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" file-id="{{ $publicDocs['fileid']}}" object-id="" type="public_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="public_additional_documents_file_id[]" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
                                                     </div>
                                                     @endforeach
                                                    @endif
                                                 </div>
+                                                <span class="deleted_files">
+                                                </span>
                                             </div>
 
                                             <p>Private Additional Documents</p>
@@ -969,11 +989,13 @@
                                                    @if(!empty($privateAdditionalDocs))
                                                     @foreach($privateAdditionalDocs as $privateDocs)
                                                     <div>
-                                                       <p class="multi_file_name"> {{ $privateDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="private_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="private_additional_documents_file_id[]" class="file_id" value="{{ $privateDocs['fileid'] }}"></p>
+                                                       <p class="multi_file_name"> {{ $privateDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing"  file-id="{{ $privateDocs['fileid']}}" object-id="" type="private_additional_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="private_additional_documents_file_id[]" class="file_id" value="{{ $privateDocs['fileid'] }}"></p>
                                                    </div>
                                                     @endforeach
                                                @endif
                                                </div>
+                                               <span class="deleted_files">
+                                                </span>
                                             </div>
                                     </fieldset>
                              
@@ -1022,6 +1044,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'due_deligence_report',$businessListing) !!}
 
                                                   </span>
+                                                <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
                                         </div>
@@ -1041,6 +1065,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'hardman_document',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 
@@ -1089,6 +1115,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'tax_efficient_review',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 
@@ -1138,6 +1166,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'allenbridge',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 
@@ -1188,6 +1218,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'micap',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 
@@ -1238,6 +1270,8 @@
                                                        {!! getbusinessUploadedFileNamesHtml($businessFiles,'all_street',$businessListing) !!}
 
                                                   </span>
+                                                  <span class="deleted_files">
+                                                </span>
                                               </div>
                                             </div>
 

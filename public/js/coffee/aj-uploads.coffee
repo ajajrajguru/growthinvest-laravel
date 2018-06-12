@@ -188,6 +188,7 @@ $(document).ready ->
     btnObj = $(this)
     objectType = $(this).attr('object-type') 
     objectId = $(this).attr('object-id')
+    fileId = $(this).attr('file-id')
     type = $(this).attr('type')
     $.ajax
       type: 'post'
@@ -200,11 +201,15 @@ $(document).ready ->
         'file_type': type 
          
       success: (data) ->
-        
+        if(btnObj.closest('.upload-files-section').find('.deleted_files').length && fileId!="")
+          btnObj.closest('.upload-files-section').find('.deleted_files').append('<input type="hidden" name="delete_file[]" value="'+fileId+'">')
+
         if(btnObj.closest('.multi_file_name').length)
           btnObj.closest('.multi_file_name').remove()
 
         if(btnObj.closest('.upload-files-section').find('.file_name').length)
           btnObj.closest('.upload-files-section').find('.file_name').html('')
 
+         
+        
     

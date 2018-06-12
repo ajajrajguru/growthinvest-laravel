@@ -387,6 +387,31 @@ class EntrepreneurController extends Controller
         return view('frontend.entrepreneur.dashboard')->with($data);
     }
 
+    public function myProfile()
+    {
+        $entrepreneur = Auth::user();
+
+        $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+        $firms     = $firmsList['list'];
+
+ 
+        $accountNumber                  = $entrepreneur->userInvestmentAccountNumber();
+        $data['countyList']              = getCounty();
+        $data['countryList']             = getCountry();
+        $data['entrepreneur']            = $entrepreneur;
+        $data['firms']                   = $firms;
+        $data['breadcrumbs']             = $breadcrumbs;
+        $data['accountNumber'] = (!empty($accountNumber)) ? $accountNumber->data_value : '';
+        $data['mode']                    = 'view';
+        $data['activeMenu']              = 'my-profile';
+       
+        $additionalInfo         = $entrepreneur->userAdditionalInfo();
+        $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
+
+        return view('frontend.entrepreneur.my-profile')->with($data);
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

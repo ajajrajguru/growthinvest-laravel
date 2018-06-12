@@ -260,11 +260,13 @@
                                         @if(!empty($dueDeligenceDocuments))
                                             @foreach($dueDeligenceDocuments as $publicDocs)
                                             <div>
-                                                <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="due_deligence_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="due_deligence_documents_file_id[]" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
+                                                <p class="multi_file_name">{{ $publicDocs['name'] }}  <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" file-id="{{ $publicDocs['fileid']}}"  object-id="" type="due_deligence_documents"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="due_deligence_documents_file_id[]" class="image_url" value="{{ $publicDocs['fileid'] }}"></p>
                                             </div>
                                             @endforeach
                                            @endif
                                     </div>
+                                    <span class="deleted_files">
+                                    </span>
                                 </div>
 
                                 <p>This should be an editable excel document that supports your valuation and your projections. Please also clearly detail the assumptions that underpin these projections, with specific reference to sales and customer acquisition.</p>

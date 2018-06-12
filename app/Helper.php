@@ -54,7 +54,7 @@ function getUniqueBusinessSlug(\Illuminate\Database\Eloquent\Model $model, $valu
 }
 
 function isUser($object, $hasRolePermission)
-{
+{  
     if ($object->hasAnyRole($hasRolePermission)) {
         return true;
     } else {
@@ -1842,10 +1842,16 @@ function get_checkbox_html2($name, $checked, $label_first=false)
 }
 
 function getbusinessUploadedFileNamesHtml($files, $type, $businessListing)
-{
+{  
+    $fileId = '';
+    if(isset($files[$type]['fileid']))
+        $fileId = $files[$type]['fileid'];
+    elseif(isset($files[$type]['id']))
+        $fileId = $files[$type]['id'];
+
     $html = '';
     if (isset($files[$type]) && !empty($files[$type])) {
-        $html = $files[$type]['name'] . ' ' . ' <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" type="' . $type . '"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="' . $type . '_url" class="image_url" value="' . $files[$type]['url'] . '">';
+        $html = $files[$type]['name'] . ' ' . ' <a href="javascript:void(0)" class="delete-uploaded-file" object-type="App\BusinessListing" object-id="" file-id="' . $fileId . '" type="' . $type . '"><i class="fa fa-close" style="color: red"></i></a><input type="hidden" name="' . $type . '_url" class="image_url" value="' . $files[$type]['url'] . '">';
     }
     return $html;
 }

@@ -28,7 +28,7 @@
 
             <div class="float-right">
 
-                <a href="{{ url('/add-business-proposals/')}}" class="btn btn-primary">Create new proposal</a>
+                <a href="{{ url('/add-business-proposals/single-company')}}" class="btn btn-primary">Create new proposal</a>
             </div>
 
         </div>

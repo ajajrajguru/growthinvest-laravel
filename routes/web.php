@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/investment-opportunities/save-due-deligence-questionnaire', 'BusinessListingController@saveDueDeligenceQuestionnaire');
 
     Route::get('/investment-opportunities/{type}/{slug}/edit-tier-1-visa', 'BusinessListingController@editTierVisa');
+    Route::post('/investment-opportunities/save-tier-1-visa', 'BusinessListingController@saveTierVisa');
     Route::get('/download-business-proposals/{gicode}', 'BusinessListingController@generateBusinessProposalPdf');
 });
  
@@ -200,7 +201,10 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'investment-opportunities'],
 Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function () {
     Route::get('/', 'UserController@userDashboard');
     Route::get('/business-proposals', 'BusinessListingController@getUserBusinessProposals');
-
+    Route::get('/my-activity', 'UserController@getMyactivity');
+    Route::post('/user/get-user-activity', 'ActivityController@getInvestorActivity');
+    Route::get('user/export-user-activity', 'ActivityController@exportInvestorsActivity');
+    Route::get('user/user-activity-pdf', 'ActivityController@generateInvestorsActivityPdf');
     
 
 });

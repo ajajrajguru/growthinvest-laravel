@@ -16,34 +16,7 @@
 <!-- tabs -->
 <div class="squareline-tabs mt-5">
 
-	<ul class="nav nav-tabs">
- 
-		
-		<li class="nav-item ">
-	   		<a class="nav-link px-sm-5 @if($active_menu == 'dashboard') active @endif"  href="{{ url('/user-dashboard/') }}">Dashboard</a>
-		</li>
-		
- 
-		<li class="nav-item ">
-	    	<a class="nav-link px-sm-5 @if($active_menu == 'business-proposals') active @endif"  href="{{ url('/user-dashboard/business-proposals') }}">Business Proposals</a>
-		</li>
- 
-		<li class="nav-item ">
-	    	<a class="nav-link px-sm-5 @if($active_menu == 'activities') active @endif"  href="{{ url('/user-dashboard/activities') }}">My Activity</a>
- 
-		</li>
-		<li class="nav-item ">
-	    	<a class="nav-link px-sm-5 @if($active_menu == 'profile') active @endif"  href="{{ url('/user-dashboard/my-profile') }}">My Profile</a>
- 
-		</li>
-		<li class="nav-item ">
-	    	<a class="nav-link px-sm-5 @if($active_menu == 'news-updates') active @endif"  href="{{ url('/user-dashboard/news-updates') }}">Latest News/Updates</a>
- 
-		</li>
-		 
-						
-		
-	</ul>
+	@include('frontend.entrepreneur.topmenu')
 </div>
 <!-- /tabs -->
 
@@ -80,7 +53,7 @@
 			Please click on each dashboard, or the links below:<br>
 			<ul class="w-disc">         
 				<li><a href="{{ url('/user-dashboard/business-proposals') }}" class="bold brand-text">Business Proposals</a> : Review or add proposals  onto the site</li>      
-				<li><a href="{{ url('/user-dashboard/activities') }}" class="bold brand-text">Activity</a> : Monitor your own and investor activity on the offers</li>  
+				<li><a href="{{ url('/user-dashboard/my-activity') }}" class="bold brand-text">Activity</a> : Monitor your own and investor activity on the offers</li>  
 				<li><a href="{{ url('/user-dashboard/my-profile') }}" class="bold brand-text">Profile</a> : Review and edit your profile</li>     
 				<li><a href="{{ url('/user-dashboard/news-updates') }}" class="bold brand-text">Latest News/Updates</a> : Keep up to date with the latest platform and industry news.</li>
 			</ul>
