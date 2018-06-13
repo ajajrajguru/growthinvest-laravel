@@ -58,7 +58,7 @@ return [
 		],
 		'App\BusinessListing' => [
 			'base_path' => 'business',
-			'slug_column' => 'gi_code',
+			'slug_column' => 'id',
 			'sizes' => 
 			[
 				'team_member_picture' =>['thumb_1x1','medium_1x1','large_1x1'],

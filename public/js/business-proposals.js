@@ -72,6 +72,9 @@
           },
           success: function(data) {
             $('input[name="refernce_id"]').val(data.refernce_id);
+            if (data.gi_code !== '') {
+              $('.is_published_config').removeClass('d-none');
+            }
             $('.gi-success').html('Data Successfully Saved in Draft.').removeClass('d-none');
             if (save_type === 'submit') {
               window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.business_slug;
@@ -151,6 +154,25 @@
           }
         });
       }
+    });
+    $(document).on('click', '.discard-draft-changes', function() {
+      var gi_code, refernce_id;
+      if (!confirm('Are you sure you want to discard this changes?')) {
+        return;
+      }
+      refernce_id = $('input[name="refernce_id"]').val();
+      gi_code = $('input[name="gi_code"]').val();
+      return $.ajax({
+        type: 'post',
+        url: '/business-proposals/discard-changes',
+        data: {
+          'refernce_id': refernce_id,
+          'gi_code': gi_code
+        },
+        success: function(data) {
+          return window.location.href = "/investment-opportunities/" + data.business_type + "/" + data.business_slug + "/edit";
+        }
+      });
     });
     $(document).on('change', 'input[name="not-calculated-share"]', function() {
       if ($(this).is(':checked')) {

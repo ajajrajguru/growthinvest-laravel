@@ -64,6 +64,10 @@ $(document).ready ->
           
         success: (data) ->
           $('input[name="refernce_id"]').val(data.refernce_id)
+
+          if(data.gi_code!='')
+            $('.is_published_config').removeClass('d-none')
+            
           $('.gi-success').html('Data Successfully Saved in Draft.').removeClass('d-none')
           if save_type == 'submit' 
             window.location.href="/investment-opportunities/"+data.business_type+"/"+data.business_slug;
@@ -136,6 +140,25 @@ $(document).ready ->
             window.location.href="/investment-opportunities/"+data.business_type+"/"+data.business_slug+"/edit";
           else
             console.log data.business_slug
+
+
+
+  $(document).on 'click', '.discard-draft-changes', ->
+    if !confirm('Are you sure you want to discard this changes?')
+        return
+    refernce_id = $('input[name="refernce_id"]').val()
+    gi_code = $('input[name="gi_code"]').val()
+    $.ajax
+      type: 'post'
+      url: '/business-proposals/discard-changes'
+      data:
+        'refernce_id': refernce_id
+        'gi_code': gi_code
+         
+        
+      success: (data) ->
+        window.location.href="/investment-opportunities/"+data.business_type+"/"+data.business_slug+"/edit";
+         
 
 
 

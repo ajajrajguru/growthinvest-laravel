@@ -2000,6 +2000,42 @@ class BusinessListingController extends Controller
 
     }
 
+    public function discardChanges(Request $request){
+        $requestData = $request->all();
+        $refernceId               = $requestData['refernce_id'];
+        $giCode                   = $requestData['gi_code'];
+        $businessListing = BusinessListing::where('gi_code', $giCode)->first();
+        $publishedId              = $businessListing->id;
+
+        //delete all in daft status
+        $draftListings = BusinessListing::where('parent', $publishedId)->get();
+        foreach ($draftListings as $key => $draftListing) {
+            $this->deleteBusiness($draftListing);
+        }
+
+        //delete last revision in daft status
+        //
+        // $businessListing = BusinessListing::find($refernceId);
+        // $this->deleteBusiness($businessListing);
+
+        $slug = $businessListing->slug; 
+        $businessListingType = 'single-company';
+        if ($businessListing->type == 'proposal') {
+            $businessListingType = 'single-company';
+        } elseif ($businessListing->type == 'funds') {
+            $businessListingType = 'fund';
+        }
+
+
+        $json_data = array(
+            "business_type" => $businessListingType,
+            "business_slug" => $slug,
+            "status"        => true,
+        );
+
+        return response()->json($json_data);
+    }
+
     public function deleteBusiness($businessListing)
     {
         $businessData     = BusinessListingData::where('business_id', $businessListing->id)->delete();
@@ -2225,7 +2261,7 @@ class BusinessListingController extends Controller
         $memberCounter = $submitData['member_counter'];
 
         $data = [];
-        if ($memberCounter > 1) {
+        if ($memberCounter >= 1) {
             for ($i = 1; $i <= $memberCounter; $i++) {
                 if (!isset($submitData['member_name_' . $i])) {
                     continue;

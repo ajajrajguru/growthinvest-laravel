@@ -108,10 +108,14 @@
 		Once we have the information we need, we can kick off the next stage of the process, which is to select an appropriate Due Diligence tier, before your Business proposal goes live.<br>
 
 		If you have any questions or queries, please do not hesitate to contact us at any time on Email support@growthinvest.com, phone 020 7071 3945, or via our online form here</p>
-         @if($businessListing->id)
+
+
+       
+        <div class="is_published_config  @if($businessListing->id && (!empty($publishedBusiness))) @else d-none @endif" >
         <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit?mode=draft') }}">Draft</a> | 
         <a href="{{ url('/investment-opportunities/single-company/'.$businessListing->slug.'/edit?mode=publish') }}">Publish</a>
-        @endif
+        </div>
+        
  		@include('includes.notification')
  		<form method="post"  data-parsley-validate name="add-business" id="add-business" enctype="multipart/form-data">
 		<div id="" role="tablist" class="gi-collapse">
@@ -431,35 +435,35 @@
                                 <div class="not-calculated-share-checked @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')) d-none @endif">
                                     <div class="form-group">
                                         <label>Number of Shares in Issue<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                        <input type="number" class="form-control text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="no-of-shares-issue" id="no-of-shares-issue" placeholder="" data-parsley-required data-parsley-required-message="Please enter the number of shares in issue." value="@if(isset($fundingRequirement['no-of-shares-issue'])){{ $fundingRequirement['no-of-shares-issue'] }}@endif">
+                                        <input type="number" class="form-control text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="no-of-shares-issue" id="no-of-shares-issue" placeholder="" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']!='1')) data-parsley-required data-parsley-required-message="Please enter the number of shares in issue." @endif value="@if(isset($fundingRequirement['no-of-shares-issue'])){{ $fundingRequirement['no-of-shares-issue'] }}@endif">
                                          
                                         <small class="form-text text-muted">Eg. 2000</small>
                                         
                                     </div>
                                     <div class="form-group">
                                         <label>Number of New Shares to be Issued<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                        <input type="number" class="form-control text-input-status valid_input share-price-change completion_status editmode @if($mode=='view') d-none @endif" name="no-of-new-shares-issue" id="no-of-new-shares-issue" placeholder="" data-parsley-required data-parsley-required-message="Please enter number of new shares to issues." value="@if(isset($fundingRequirement['no-of-new-shares-issue'])){{ $fundingRequirement['no-of-new-shares-issue'] }}@endif">
+                                        <input type="number" class="form-control text-input-status valid_input share-price-change completion_status editmode @if($mode=='view') d-none @endif" name="no-of-new-shares-issue" id="no-of-new-shares-issue" placeholder="" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']!='1')) data-parsley-required data-parsley-required-message="Please enter number of new shares to issues." @endif value="@if(isset($fundingRequirement['no-of-new-shares-issue'])){{ $fundingRequirement['no-of-new-shares-issue'] }}@endif">
                                          
                                         <small class="form-text text-muted">Eg. 1000</small>
                                         
                                     </div>
                                     <div class="form-group">
                                         <label>Share Price for Current Investment Round<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                        <input type="number" class="form-control share-price-change text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="share-price-curr-inv-round" id="share-price-curr-inv-round" placeholder="" data-parsley-required data-parsley-required-message="Please enter share price for current investment round." value="@if(isset($fundingRequirement['share-price-curr-inv-round'])){{ $fundingRequirement['share-price-curr-inv-round'] }}@endif">
+                                        <input type="number" class="form-control share-price-change text-input-status valid_input completion_status editmode @if($mode=='view') d-none @endif" name="share-price-curr-inv-round" id="share-price-curr-inv-round" placeholder="" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']!='1')) data-parsley-required data-parsley-required-message="Please enter share price for current investment round."  @endif value="@if(isset($fundingRequirement['share-price-curr-inv-round'])){{ $fundingRequirement['share-price-curr-inv-round'] }}@endif">
                                          
                                         <small class="form-text text-muted">E.g. £1.00</small>
                                         
                                     </div>
                                     <div class="form-group">
                                         <label>Share Class of Shares to be Issued<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                        <input type="text" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="share-class-issued" id="share-class-issued" placeholder="" data-parsley-required data-parsley-required-message="Please enter share class of share to be issued." value="@if(isset($fundingRequirement['share-class-issued'])){{ $fundingRequirement['share-class-issued'] }}@endif">
+                                        <input type="text" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="share-class-issued" id="share-class-issued" placeholder="" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']!='1')) data-parsley-required data-parsley-required-message="Please enter share class of share to be issued." @endif value="@if(isset($fundingRequirement['share-class-issued'])){{ $fundingRequirement['share-class-issued'] }}@endif">
                                          
                                         <small class="form-text text-muted">E.g. Ordinary, Ordinary A.</small>
                                         
                                     </div>
                                     <div class="form-group">
                                         <label>Nominal Value of Shares<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                        <input type="number" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="nominal-value-share" id="nominal-value-share" placeholder="" data-parsley-required data-parsley-required-message="Please enter nominal value of share." value="@if(isset($fundingRequirement['nominal-value-share'])){{ $fundingRequirement['nominal-value-share'] }}@endif">
+                                        <input type="number" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="nominal-value-share" id="nominal-value-share" placeholder="" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']!='1')) data-parsley-required data-parsley-required-message="Please enter nominal value of share." @endif value="@if(isset($fundingRequirement['nominal-value-share'])){{ $fundingRequirement['nominal-value-share'] }}@endif">
                                          
                                         <small class="form-text text-muted">E.g. £0.01, 1 pence.</small>
                                         
@@ -474,7 +478,7 @@
                                        Raise Amount
                                     @endif
                                         <span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="number" class="form-control text-input-status money-valuation-change valid_input completion_status editmode @if($mode=='view') d-none @endif" name="investment-sought" id="investment-sought" placeholder="" data-parsley-required data-parsley-required-message="Please enter the target raised." value="@if(isset($fundingRequirement['investment-sought'])){{ $fundingRequirement['investment-sought'] }}@endif" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1') @else readonly @endif>
+                                    <input type="number" class="form-control text-input-status money-valuation-change valid_input completion_status editmode @if($mode=='view') d-none @endif" name="investment-sought" id="investment-sought" placeholder=""  data-parsley-required data-parsley-required-message="Please enter the target raised."  value="@if(isset($fundingRequirement['investment-sought'])){{ $fundingRequirement['investment-sought'] }}@endif" @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1') @else readonly @endif>
                                      
                                     <small class="form-text text-muted" id="target-raised-helper">
                                       @if(isset($fundingRequirement['not-calculated-share']) && $fundingRequirement['not-calculated-share']=='1')
@@ -488,7 +492,7 @@
 
                                 <div class="form-group">
                                     <label>Minimum Investment<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="number" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="minimum-investment" placeholder="" data-parsley-required data-parsley-required-message="Please enter the minimum investment." value="@if(isset($fundingRequirement['minimum-investment'])){{ $fundingRequirement['minimum-investment'] }}@endif">
+                                    <input type="number" class="form-control text-input-status completion_status valid_input editmode @if($mode=='view') d-none @endif" name="minimum-investment" placeholder="" data-parsley-required data-parsley-required-message="Please enter the minimum investment."  value="@if(isset($fundingRequirement['minimum-investment'])){{ $fundingRequirement['minimum-investment'] }}@endif">
                                      
                                     <small class="form-text text-muted">Enter amount above £2000.</small>
                                     
@@ -537,7 +541,7 @@
 
                                 <div class="form-group">
                                     <label>Deadline date for subscription<span class="text-danger editmode @if($mode=='view') d-none @endif">*</span></label>
-                                    <input type="text" class="form-control text-input-status completion_status valid_input datepicker editmode @if($mode=='view') d-none @endif" name="deadline-subscription" placeholder="" data-parsley-required data-parsley-required-message="Please enter the deadline date of subscription." value="@if(isset($fundingRequirement['deadline-subscription'])){{ $fundingRequirement['deadline-subscription'] }}@endif">
+                                    <input type="text" class="form-control text-input-status completion_status valid_input datepicker editmode @if($mode=='view') d-none @endif" name="deadline-subscription" placeholder=""  data-parsley-required data-parsley-required-message="Please enter the deadline date of subscription."   value="@if(isset($fundingRequirement['deadline-subscription'])){{ $fundingRequirement['deadline-subscription'] }}@endif">
                                      
                                     <small class="form-text text-muted">This is the deadline date for submission of subscription form.</small>
                                     
@@ -1421,6 +1425,9 @@
             @if($display_mode != 'publish')
             <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="save" >Save</button>
 	        <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="submit" >Save and publish</button>
+             
+             <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif discard-draft-changes is_published_config @if((!empty($publishedBusiness)) && $businessListing->status=='draft') @else d-none @endif " save-type="save" >Discard Changes</button>
+             
             @else
             <button type="button" class="btn btn-primary editmode @if($mode=='view') d-none @endif save-business-proposal" save-type="save" >Save as draft</button>
             @endif
@@ -1433,7 +1440,7 @@
 	        <input type="hidden" name="business_type" value="{{ $businessListingType }}">
 
             <input type="hidden" name="gi_code" value="{{ (!empty($publishedBusiness)) ? $publishedBusiness->gi_code:'' }}">
-			<input type="hidden" name="refernce_id" value="{{ (!empty($businessListing)) ? $businessListing->id:'' }}">
+			<input type="text" name="refernce_id" value="{{ (!empty($businessListing)) ? $businessListing->id:'' }}">
  		</div>
         </form>     
 
