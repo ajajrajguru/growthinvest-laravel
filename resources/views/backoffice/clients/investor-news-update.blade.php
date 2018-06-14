@@ -35,6 +35,9 @@
     <div class="squareline-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
+                <a class="nav-link d-none d-sm-block"  href="{{ url('backoffice/investor/'.$investor->gi_code.'/portfolio')}}">Invest</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link d-none d-sm-block" href="{{ url('backoffice/investor/'.$investor->gi_code.'/investor-invest')}}">Invest</a>
             </li>
             <li class="nav-item">

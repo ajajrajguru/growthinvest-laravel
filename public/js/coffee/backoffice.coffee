@@ -886,12 +886,12 @@ $(document).ready ->
 				data:
 					'investor_id': investorId
 				success: (data) ->
-					$('.data_container').html(data.businesslisting_html)
+					$('.investor_transfer_asset_list').html(data.businesslisting_html)
 					$('a[part="part-2"]').removeClass('d-none')
 					$('[data-toggle="tooltip"]').tooltip()
 		else
 			$('a[part="part-2"]').addClass('d-none')
-			$('.data_container').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>')
+			$('.investor_transfer_asset_list').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>')
 
 	$('.transfer-asset').on 'click', '.savetransferasset_asset', ->
 		$obj = $(this)
@@ -1092,7 +1092,7 @@ $(document).ready ->
 				rowObj.prop('disabled',true).attr('data-toggle','tooltip').attr('title', typeTxt+' already sent for signature').attr('data-original-title', typeTxt+' already sent for signature').tooltip()
 						 
  
-				
+		
 
 				
 		

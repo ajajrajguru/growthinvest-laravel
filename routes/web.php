@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     Route::post('investor/get-investors', 'InvestorController@getInvestors');
     Route::post('investor/save-registration', 'InvestorController@saveRegistration');
     
+    Route::get('investor/{giCode}/portfolio', 'InvestorController@investorPortfolio');
     Route::get('investor/{giCode}/investor-profile', 'InvestorController@investorProfile');
     Route::get('investor/{giCode}/investor-invest', 'InvestorController@investorInvest');
     Route::get('investor/{giCode}/investor-news-update', 'InvestorController@investorNewsUpdate');
@@ -132,6 +133,10 @@ Route::group(['middleware' => ['auth', 'userPermission'], 'prefix' => 'backoffic
     // portfolio
     Route::get('portfolio', 'PortfolioController@index');
     Route::post('portfolio/get-portfolio-data', 'PortfolioController@getPortfolioData');
+    Route::post('portfolio/get-portfolio-pledge-data', 'PortfolioController@getPortfolioPledgeData');
+    Route::post('portfolio/get-portfolio-watchlist-data', 'PortfolioController@getPortfolioWatchlistData');
+    Route::post('portfolio/get-portfolio-transferasset-data', 'PortfolioController@getPortfolioTransferAssetData');
+    Route::post('portfolio/get-portfolio-cashaccount-data', 'PortfolioController@getPortfolioCashaccountData');
     Route::get('portfolio/export-report', 'PortfolioController@exportPortfolioReportXlsx');
 
 
