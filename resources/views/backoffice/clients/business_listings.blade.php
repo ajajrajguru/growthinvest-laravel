@@ -36,6 +36,18 @@
                     <p>In faucibus tempus ante, et tempor magna luctus id. Ut a maximus ipsum. Duis eu velit nec libero pretium pellentesque. Maecenas auctor hendrerit pulvinar. Donec sed tortor interdum, sodales elit vel, tempor turpis. In tristique vestibulum eros vel congue. Vivamus maximus posuere fringilla. Nullam in est commodo, tristique ligula eu, tincidunt enim. Duis iaculis sodales lectus vitae cursus.</p>
                 </div>
                 <div class="tab-pane fade show active" id="add_clients" role="tabpanel">
+                     <!-- tabs -->
+                    <div class="squareline-tabs mt-3">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link  d-sm-block" href="{{ url('backoffice/investor')}}">Manage Investors</a>
+                            </li>
+                            <li class="nav-item">
+                                <a  class="nav-link active d-sm-block" data-toggle="tab" href="#manage-businesses">Manage Businesses</a>
+                            </li>
+                        </ul>
+                    </div>
+
                      <div class="mt-4 p-2">
 
                         <div class="row ">

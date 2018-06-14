@@ -91,63 +91,16 @@ echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
                      </div>
                   </div>
                </div>
-               
+                
                <div class="table-responsive">
-               <table class="table table-bordered table-striped cust-table" id="view_all_firms_table">
-                  <thead>
-                     <tr class="">
-                        <th width="7.69%">
-                           Type of Assets
-                        </th>
-                        <th  width="7.69%">
-                           Company Name
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Type of Share
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           No of Shares to be transferred
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Current name on share certificate
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Name of Product
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Client Account Number
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Transfer Type
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Custody/Non-Custody
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Amount
-                        </th>
-                        <th class="subheader_cell-cust" width="7.69%">
-                           Documents / Underlying Companies
-                        </th>
-                        <th class="subheader_cell-cust text-center" width="7.69%">
-                           Action
-                        </th>
-                        <th class="subheader_cell-cust text-center" width="7.69%">
-                           Status
-                        </th>
-                        <!--<th class="subheader_cell firm_user_manager ">WM Commission Collected</th>            <th class="subheader_cell firm_user_manager ">Introducer Commission Due</th>            <th class="subheader_cell firm_user_manager ">Introducer Commission Collected</th>-->
-                     </tr>
-                  </thead>
-                  <tbody class="data_container text-nowrap">
-                      <tr><td  colspan="13" class="text-center"> No Data Found</td></tr>
-                  </tbody>
-               </table>
+                  @include('backoffice.transfer-asset.investor-transfer-asset')
                </div>
 
                <div class="text-right">
                   <a href="javascript:void(0)" class="btn btn-outline-primary mt-2 display-section d-none" part="part-2"> Next <i class="fa fa-angle-double-right"></i></a>
                </div>
                
+ 
             </div> 
          </div>
          <!--  -->
