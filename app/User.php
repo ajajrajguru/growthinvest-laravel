@@ -82,6 +82,11 @@ class User extends Authenticatable
         return $this->hasOne('App\NomineeApplication', 'user_id');
     }
 
+    public function cashTransactions()
+    {
+        return $this->hasMany('App\CashTxn', 'user_id');
+    }
+
     public function userAdditionalInfo()
     {
         $userData = $this->userData()->where('data_key','additional_info')->first();
@@ -199,6 +204,14 @@ class User extends Authenticatable
         $userData = $this->userData()->where('data_key','taxstructure_info')->first();
         return $userData;
     }
+
+    public function getCashAmount()
+    {
+        $userData = $this->userData()->where('data_key','cash')->first();
+        return (!empty($userData)) ? $userData->data_value : 0;
+    }
+
+    
 
     public function comments(){
         return $this->morphMany( 'App\Comment', 'object');
@@ -417,6 +430,11 @@ class User extends Authenticatable
 
         return $user_info;
 
+    }
+
+    public function getCashTransactions(){
+        $transactions = $this->cashTransactions()->get();
+        return $transactions;
     }
 
     

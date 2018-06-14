@@ -662,6 +662,11 @@ function generateGICode(\Illuminate\Database\Eloquent\Model $model, $refernceKey
 
 }
 
+function investmentStatus()
+{
+    return ['funded' => 'Funded', 'pledged' => 'Pledged', 'watch_list' => 'Watch List'];
+}
+
 function getRegulationTypes()
 {
     return ['da' => 'Directly Authorised', 'ar' => 'Appointed Representative', 'uo' => 'Unregulated/Other'];
@@ -1228,6 +1233,16 @@ function custodyType()
 function getBusinessSectors()
 {
     return \App\Defaults::where('type', 'business-sector')->where('status', '1')->get();
+}
+
+function cashLastUpdatedDate(){
+    $dateObj =  \App\Defaults::where('type', 'cash_last_updated_date-sector')->first();
+    $date = '';
+    if(!empty($dateObj)){
+        $date = date('d M Y', strtotime($dateObj->meta_data));
+    }
+    
+    return $date;
 }
 
 function aicSectors()

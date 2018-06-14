@@ -45,7 +45,7 @@ class PortfolioController extends Controller
     public function getPortfolioData(Request $request)
     {
         $filters = $request->all();
-
+        $filters['status']        = 'funded';
         $investmentTypeData    = $this->getInvestmentType($filters);
         $sectorAnalysis        = $this->getSectorAnalysis($filters);
         $businessStageAnalysis = $this->getBusinessStageAnalysis($filters);
@@ -53,21 +53,23 @@ class PortfolioController extends Controller
         $investmentTaxByYear   = $this->getInvestmentTaxByYear($filters);
         $portfolioSummary      = $this->portfolioSummary($filters);
         $topInvestments        = $this->getTopInvestments($filters);
-        $investmentHtml        = $this->getInvestmentDetails($filters);
+        $investmentHtml        = $this->getInvestmentDetails($filters); 
 
+       
         $portfolioSummary['investmentTypeData'] = $investmentTypeData['investmentTypeData'];
 
         $json_data = array(
-            "investmentTypeData"    => $investmentTypeData['investmentTypeAmount'],
-            "sectorAnalysis"        => $sectorAnalysis,
-            "businessStageAnalysis" => $businessStageAnalysis['stageData'],
-            "investmentRoute"       => $investmentRoute,
-            "investmentByYear"      => $investmentTaxByYear['investmentByYear'],
-            "investmentTypeByYear"  => $investmentTaxByYear['investmentTypeByYear'],
-            "graph"                 => $investmentTaxByYear['graph'],
-            "portfolioSummary"      => $portfolioSummary,
-            "topInvestmentData"     => $topInvestments,
-            "investmentHtml"        => $investmentHtml['investmentHtml'],
+            "investmentTypeData"       => $investmentTypeData['investmentTypeAmount'],
+            "sectorAnalysis"           => $sectorAnalysis,
+            "businessStageAnalysis"    => $businessStageAnalysis['stageData'],
+            "investmentRoute"          => $investmentRoute,
+            "investmentByYear"         => $investmentTaxByYear['investmentByYear'],
+            "investmentTypeByYear"     => $investmentTaxByYear['investmentTypeByYear'],
+            "graph"                    => $investmentTaxByYear['graph'],
+            "portfolioSummary"         => $portfolioSummary,
+            "topInvestmentData"        => $topInvestments,
+            "investmentHtml"           => $investmentHtml['investmentHtml'],
+            
 
         );
 
@@ -77,6 +79,9 @@ class PortfolioController extends Controller
 
     public function applyFilters($queryObj, $filters)
     {
+        if (isset($filters['status']) && $filters['status'] != "") {
+            $queryObj->where('business_investments.status', $filters['status']);
+        }
 
         if (isset($filters['duration']) && $filters['duration'] != "") {
             $durationDates = getDateByPeriod($filters['duration']);
@@ -121,23 +126,23 @@ class PortfolioController extends Controller
 
     public function getInvestmentType($filters)
     {
-        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) {
-            $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
+        $invStatus          = (isset($filters['status'])) ? $filters['status'] : 'funded';
+        $businessListingQry = BusinessListing::select(\DB::raw('business_listings.*, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_investments', function ($join) use ($invStatus) {
+            $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', $invStatus);
         });
 
         $businessListings = $this->applyFilters($businessListingQry, $filters)->groupBy('business_listings.id')->get();
 
-        $totalSeis       = 0;
-        $totalEis        = 0;
-        $totalVct        = 0;
-        $totalIht        = 0;
-        $totalSeisAmount = 0;
-        $totalEisAmount  = 0;
-        $totalVctAmount  = 0;
-        $totalIhtAmount  = 0;
+        $totalSeis            = 0;
+        $totalEis             = 0;
+        $totalVct             = 0;
+        $totalIht             = 0;
+        $totalSeisAmount      = 0;
+        $totalEisAmount       = 0;
+        $totalVctAmount       = 0;
+        $totalIhtAmount       = 0;
         $investmentTypeAmount = [];
-        if($businessListings->count()){
-
+        if ($businessListings->count()) {
 
             foreach ($businessListings as $key => $businessListing) {
 
@@ -184,11 +189,13 @@ class PortfolioController extends Controller
             $sectorNames[$businessSector->id] = $businessSector->name;
         }
 
+        $invStatus = (isset($filters['status'])) ? $filters['status'] : 'funded';
+
         $sectorIds          = array_keys($sectorNames);
         $businessListingQry = BusinessHasDefault::select(\DB::raw('business_has_defaults.default_id as defaultid, SUM(business_investments.amount) as amount_raised'))->leftjoin('business_listings', function ($join) {
             $join->on('business_has_defaults.business_id', 'business_listings.id')->where('business_listings.status', 'publish');
-        })->leftjoin('business_investments', function ($join) {
-            $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', 'funded');
+        })->leftjoin('business_investments', function ($join) use ($invStatus) {
+            $join->on('business_listings.id', 'business_investments.business_id')->where('business_investments.status', $invStatus);
         })->whereIn('business_has_defaults.default_id', $sectorIds);
 
         $businessListings = $this->applyFilters($businessListingQry, $filters)->groupBy('business_has_defaults.default_id')->orderBy('amount_raised', 'desc')->get();
@@ -392,10 +399,10 @@ class PortfolioController extends Controller
         $businessListingQuery = $this->applyFilters($businessListingQry, $filters)->first();
 
         if (!empty($businessListingQuery)) {
-            $investedCount = (!empty($businessListingQuery->invested_count)) ? $businessListingQuery->invested_count :0;
-            $watchlistCount = (!empty($businessListingQuery->watchlist_count)) ? $businessListingQuery->watchlist_count :0;
-            $pledgedAmt =  (!empty($businessListingQuery->pledged)) ? $businessListingQuery->pledged :0;
-            $invested =  (!empty($businessListingQuery->invested)) ? $businessListingQuery->invested :0;
+            $investedCount  = (!empty($businessListingQuery->invested_count)) ? $businessListingQuery->invested_count : 0;
+            $watchlistCount = (!empty($businessListingQuery->watchlist_count)) ? $businessListingQuery->watchlist_count : 0;
+            $pledgedAmt     = (!empty($businessListingQuery->pledged)) ? $businessListingQuery->pledged : 0;
+            $invested       = (!empty($businessListingQuery->invested)) ? $businessListingQuery->invested : 0;
             return ['cash_amount' => 0, 'invested_count' => $investedCount, 'watchlist_count' => $watchlistCount, 'invested' => format_amount($invested, 0, true), 'pledged' => format_amount($pledgedAmt, 0, true)];
         } else {
             return false;
@@ -431,7 +438,8 @@ class PortfolioController extends Controller
 
     public function getInvestmentDetails($filters)
     {
-        $businessInvestmentQry = BusinessInvestment::select(\DB::raw('business_listings.title as investmentname,business_listings.gi_code as investmentgicode,business_investments.amount as investmentamount, business_investments.amount,business_investments.additional_details as investment_additional_details,CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.gi_code as investorgicode'))->leftjoin('business_listings', function ($join) {
+        $statusFilter = (isset($filters['status']) && $filters['status'] != "") ? $filters['status'] : 'funded';
+        $businessInvestmentQry = BusinessInvestment::select(\DB::raw('business_listings.id as business_id,business_listings.title as investmentname,business_listings.valuation as valuation,business_listings.gi_code as investmentgicode,business_investments.amount as investmentamount, business_investments.amount,business_investments.additional_details as investment_additional_details,CONCAT(investor.first_name," ",investor.last_name) as investorname,investor.gi_code as investorgicode,business_investments.status as investment_status,business_investments.created_at as investment_date'))->leftjoin('business_listings', function ($join) {
             $join->on('business_investments.business_id', 'business_listings.id');
         })->leftjoin('users as investor', function ($join) {
             $join->on('business_investments.investor_id', 'investor.id');
@@ -439,65 +447,180 @@ class PortfolioController extends Controller
 
         $businessInvestments = $this->applyFilters($businessInvestmentQry, $filters)->orderBy('business_investments.created_at', 'desc')->get();
 
-        $tdHtml         = '';
-        $grandTotal     = 0;
-        $investmentList = [];
-        foreach ($businessInvestments as $key => $businessInvestment) {
-            $additionalDetails = $businessInvestment->investment_additional_details;
-            $noofShares        = '-';
-            $shareIssuePrice   = '-';
-            $shareIssueDate    = '-';
-            $revaluationDate   = '-';
-            $currSharePrice    = 0;
-            $totalCompanyValue = 0;
-            $subTotal          = 0;
+        $tdHtml           = '';
+        $grandTotal       = 0;
+        $investmentList   = [];
+        $investmentStatus = investmentStatus();
 
-            if (!empty($additionalDetails)) {
-                $additionalDetails = unserialize($additionalDetails);
-                $noofShares        = (isset($additionalDetails['shares']) && $additionalDetails['shares'] != '') ? $additionalDetails['shares'] : '-';
+        if($businessInvestments->count()){
 
-                $shareIssuePrice = (isset($additionalDetails['share_issue_price'])) ? $additionalDetails['share_issue_price'] : '-';
-                $shareIssueDate  = (isset($additionalDetails['share_issue_date']) && !empty($additionalDetails['share_issue_date'])) ? date('d/m/Y', strtotime($additionalDetails['share_issue_date'])) : '-';
-                $revaluationDate = (isset($additionalDetails['revaluation_date']) && !empty($additionalDetails['revaluation_date'])) ? date('d/m/Y', strtotime($additionalDetails['revaluation_date'])) : '-';
+
+            foreach ($businessInvestments as $key => $businessInvestment) {
+                $logo = '';
+                if ($businessInvestment->investment_status == 'pledged') {
+                    $businessListing = BusinessListing::find($businessInvestment->business_id);
+                    $logoUrl            = $businessListing->getBusinessLogo('thumb_1x1');
+                    $logo = '<img src="'.$logoUrl['url'].'" height="100">';
+                }
+
+                $additionalDetails = $businessInvestment->investment_additional_details;
+                $valuation         = $businessInvestment->valuation;
+                $valuation         = (!empty($valuation)) ? json_decode($valuation, true) : [];
+                $noofShares        = '-';
+                $shareIssuePrice   = '-';
+                $shareIssueDate    = '-';
+                $revaluationDate   = '-';
+                $currSharePrice    = (isset($valuation['shareprice'])) ? $valuation['shareprice'] : 0;
+                $totalCompanyValue = (isset($valuation['totalvaluation'])) ? $valuation['totalvaluation'] : 0;
+                $subTotal          = 0;
+
+                if (!empty($additionalDetails)) {
+                    $additionalDetails = unserialize($additionalDetails);
+                    $noofShares        = (isset($additionalDetails['shares']) && $additionalDetails['shares'] != '') ? $additionalDetails['shares'] : '-';
+
+                    $shareIssuePrice = (isset($additionalDetails['share_issue_price'])) ? $additionalDetails['share_issue_price'] : '-';
+                    $shareIssueDate  = (isset($additionalDetails['share_issue_date']) && !empty($additionalDetails['share_issue_date'])) ? date('d/m/Y', strtotime($additionalDetails['share_issue_date'])) : '-';
+                    $revaluationDate = (isset($additionalDetails['revaluation_date']) && !empty($additionalDetails['revaluation_date'])) ? date('d/m/Y', strtotime($additionalDetails['revaluation_date'])) : '-';
+                }
+
+                $noofSharesVal = ($noofShares != '') ? intval($noofShares) : 0;
+                $subTotal      = $noofSharesVal * $currSharePrice;
+
+                $grandTotal = $grandTotal + $subTotal;
+                $investmentDate = date('d/m/Y',strtotime($businessInvestment->investment_date));
+
+                $status = (isset($investmentStatus[$businessInvestment->investment_status])) ? $investmentStatus[$businessInvestment->investment_status] : '';
+                $investmentList[] = [
+                    'logo'              => $logo,
+                    'investorgicode'    => $businessInvestment->investorgicode,
+                    'investorname'      => $businessInvestment->investorname,
+                    'investmentgicode'  => $businessInvestment->investmentgicode,
+                    'investmentname'    => $businessInvestment->investmentname,
+                    'investmentamount'  => $businessInvestment->investmentamount,
+                    'status'            => $status,
+                    'investmentDate'            => $investmentDate,
+                    'noofShares'        => $noofShares,
+                    'shareIssuePrice'   => $shareIssuePrice,
+                    'shareIssueDate'    => $shareIssueDate,
+                    'revaluationDate'   => $revaluationDate,
+                    'currSharePrice'    => $currSharePrice,
+                    'totalCompanyValue' => $totalCompanyValue,
+                    'subTotal'          => $subTotal,
+                ];
+
+                if($businessInvestment->investment_status == 'funded'){
+                    $tdHtml .= '<tr><td>' . $businessInvestment->investmentgicode . '</td>
+                                <td>' . $businessInvestment->investorname . '</td>
+                                <td>' . $businessInvestment->investmentname . '</td>
+                                <td>' . format_amount($businessInvestment->investmentamount, 0, true) . '</td>
+                                <td>' . $noofShares . '</td>
+                                <td>' . $shareIssuePrice . '</td>
+                                <td>' . $shareIssueDate . '</td>
+                                <td>' . $revaluationDate . '</td>
+                                <td>' . $currSharePrice . '</td>
+                                <td>' . $totalCompanyValue . '</td>
+                                <td>' . $subTotal . '</td>
+                            </tr>';
+                }
+                elseif($businessInvestment->investment_status == 'pledged'){
+                    $tdHtml .= '<tr><td>' . $logo . '</td>     
+                                <td>' . $businessInvestment->investmentname . '</td>
+                                <td>' . $status . '</td>
+                                <td>' . $businessInvestment->investorname . '</td>
+                                <td>' . format_amount($businessInvestment->investmentamount, 0, true) . '</td>                           
+                                <td>' . $investmentDate . '</td>
+                                <td><button class="btn editbutton edit-link">Edit</button></td>
+                            </tr>';
+                }
+                
             }
-
-            $noofSharesVal = ($noofShares != '') ? intval($noofShares) : 0;
-            $subTotal      = $noofSharesVal * $currSharePrice;
-
-            $grandTotal = $grandTotal + $subTotal;
-
-            $investmentList[] = [
-                'investorgicode'    => $businessInvestment->investorgicode,
-                'investorname'      => $businessInvestment->investorname,
-                'investmentgicode'  => $businessInvestment->investmentgicode,
-                'investmentname'    => $businessInvestment->investmentname,
-                'investmentamount'  => $businessInvestment->investmentamount,
-                'noofShares'        => $noofShares,
-                'shareIssuePrice'   => $shareIssuePrice,
-                'shareIssueDate'    => $shareIssueDate,
-                'revaluationDate'   => $revaluationDate,
-                'currSharePrice'    => $currSharePrice,
-                'totalCompanyValue' => $totalCompanyValue,
-                'subTotal'          => $subTotal,
-            ];
-
-            $tdHtml .= '<tr><td>' . $businessInvestment->investmentgicode . '</td>
-                            <td>' . $businessInvestment->investorname . '</td>
-                            <td>' . $businessInvestment->investmentname . '</td>
-                            <td>' . format_amount($businessInvestment->investmentamount, 0, true) . '</td>
-                            <td>' . $noofShares . '</td>
-                            <td>' . $shareIssuePrice . '</td>
-                            <td>' . $shareIssueDate . '</td>
-                            <td>' . $revaluationDate . '</td>
-                            <td>' . $currSharePrice . '</td>
-                            <td>' . $totalCompanyValue . '</td>
-                            <td>' . $subTotal . '</td>
-                        </tr>';
+            if($statusFilter == 'funded'){
+                $tdHtml .= '<tr><td  colspan="10">Total:</td><td>' . format_amount($grandTotal, 0, true) . '</td></tr>';
+            }
         }
-
-        $tdHtml .= '<tr><td  colspan="10">Total:</td><td>' . format_amount($grandTotal, 0, true) . '</td></tr>';
+        else
+        {
+            $tdHtml .= '<tr><td  colspan="10" class="text-center">No Data Found</td></tr>';
+        }
+        
 
         return ['investmentHtml' => $tdHtml, 'investmentList' => $investmentList, 'grandTotal' => $grandTotal];
+    }
+
+    public function getPortfolioPledgeData(Request $request)
+    {
+
+        $filters = $request->all();
+
+        $filters['status']        = 'pledged';
+        $investmentTypePledgeData = $this->getInvestmentType($filters);
+        $sectorAnalysisPledge     = $this->getSectorAnalysis($filters);
+        $pledgedInvestmentHtml    = $this->getInvestmentDetails($filters);
+   
+
+        $json_data = array(
+            "investmentTypePledgeData" => $investmentTypePledgeData['investmentTypeAmount'],
+            "sectorAnalysisPledge"     => $sectorAnalysisPledge,
+            "pledgedInvestmentHtml"    => $pledgedInvestmentHtml['investmentHtml'],
+
+        );
+
+        return response()->json($json_data);
+    }
+
+    public function getPortfolioWatchlistData(Request $request)
+    {
+
+        $filters = $request->all();
+        $filters['status']        = 'watch_list';
+        $watchlistInvestmentHtml    = $this->getInvestmentDetails($filters);
+
+        $json_data = array(
+            "watchlistInvestmentHtml"    => $watchlistInvestmentHtml['investmentHtml'],
+
+        );
+
+        return response()->json($json_data);
+
+    }
+
+   
+
+    public function getPortfolioCashaccountData(Request $request)
+    {
+        $requestData = $request->all();
+        $investorId = $requestData['investor_id'];
+        $investor = User::find($investorId);
+
+        $lasUpdatedDate = cashLastUpdatedDate();
+        $cashAmount = $investor->getCashAmount();
+        $transactions = $investor->getCashTransactions();
+        
+        $transactionData = [];
+        $transactionHtml = '';
+        foreach ($transactions as $key => $transaction) {
+           $transactionData[] = [
+                            'TransactionRef'=>$transaction['TransactionRef'],
+                            'TransactionType'=>$transaction['TransactionType'],
+                            'TransactionDate'=>$transaction['TransactionDate'],
+                            'ValueDate'=>$transaction['ValueDate'],
+                            'Amount'=>$transaction['Amount'],
+                            'Narrative'=>$transaction['Narrative'],
+            ];
+            $transactionHtml .= '<tr><td>'.$transaction['TransactionRef'].'</td><td>'.$transaction['TransactionType'].'</td><td>'.$transaction['TransactionDate'].'</td><td>'.$transaction['ValueDate'].'</td><td>'.$transaction['Amount'].'</td><td>'.$transaction['Narrative'].'</td></tr>';
+        }
+
+
+        $json_data = array(
+            "lasUpdatedDate"    => $lasUpdatedDate,
+            "cashAmount"    => $cashAmount,
+            "transaction"    => $transactionData,
+            "transactionHtml"    => $transactionHtml,
+
+        );
+
+        return response()->json($json_data);
+
     }
 
     public function exportPortfolioReportXlsx(Request $request)

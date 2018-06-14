@@ -67,7 +67,7 @@
                                 <a class="nav-link active d-none d-sm-block" data-toggle="tab" href="#manage-investors">Manage Investors</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-none d-sm-block" data-toggle="tab" href="#manage-businesses">Manage Businesses</a>
+                                <a href="{{ url('backoffice/business/all')}}" class="nav-link  d-sm-block" >Manage Businesses</a>
                             </li>
                         </ul>
                     </div>

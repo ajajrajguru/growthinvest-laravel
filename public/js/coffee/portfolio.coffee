@@ -38,6 +38,14 @@ $(document).ready ->
 				dataProvider = data.investmentByYear
 				window.ajPieChartWithLegend('investment_by_tax_pie',dataProvider,'amount','year',false)
 
+				# if($('#investment_type_pledge').length)
+				# 	dataProvider = data.investmentTypePledgeData
+				# 	window.ajPieChartWithLegend('investment_type_pledge',dataProvider,'amount','Investmenttype')
+
+				# if($('#sector_analysis_pledge').length)
+				# 	dataProvider = data.sectorAnalysisPledge
+				# 	window.ajPieChartWithLegend('sector_analysis_pledge',dataProvider,'amount','sectortype')
+
 				portfolioSummary = data.portfolioSummary
 				$('#total_investment').html(portfolioSummary.invested)
 				$('#eis_investment_count').html(portfolioSummary.investmentTypeData.eis_count)
@@ -69,6 +77,18 @@ $(document).ready ->
 
 				$("#top_holdings").html topHoldingHtml
 				$("#investment_details_list").html data.investmentHtml
+
+				$('a[type="portfolio"]').attr('reset-data',false)
+				$('a[type="pledged"]').attr('reset-data',false)
+				$('a[type="watchlist"]').attr('reset-data',false)
+				$('a[type="cashaccount"]').attr('reset-data',false)
+	 
+				# if($('#pledge_investment_details_list').length)
+				# 	$("#pledge_investment_details_list").html data.pledgedInvestmentHtml
+
+				# if($('#watchlist_investment_details_list').length)
+				# 	$("#watchlist_investment_details_list").html data.watchlistInvestmentHtml
+				
 
  
 		return
@@ -113,6 +133,75 @@ $(document).ready ->
 	    getFilteredPortfoilio()
 	    
 	    return 
+
+	$(document).on 'shown.bs.tab', 'a[data-toggle="tab"]', ->
+		type = $(this).attr('type')
+		console.log type
+
+		filters = {}
+		filters.duration = $('select[name="duration"]').val()
+		filters.duration_from = $('input[name="duration_from"]').val()
+		filters.duration_to = $('input[name="duration_to"]').val()
+		filters.tax_year = $('select[name="tax_year"]').val()
+		filters.investor = $('select[name="user"]').val()
+		filters.asset_status = $('select[name="asset_status"]').val()
+		filters.investment_origin = $('select[name="investment_origin"]').val()
+		filters.company = $('select[name="companies"]').val()
+		filters.firmid = $('select[name="firm"]').val()
+		getdata = true;
+ 
+		if($('a[type="'+type+'"]').attr('reset-data') == 'false')
+			getdata = false;
+
+		if(type == 'pledged' && !getdata)
+			$.ajax
+				type: 'post'
+				url: '/backoffice/portfolio/get-portfolio-pledge-data'
+				data:filters
+				success: (data) ->
+					dataProvider = data.investmentTypePledgeData
+					window.ajPieChartWithLegend('investment_type_pledge',dataProvider,'amount','Investmenttype')
+
+					dataProvider = data.sectorAnalysisPledge
+					window.ajPieChartWithLegend('sector_analysis_pledge',dataProvider,'amount','sectortype')
+
+					if($('#pledge_investment_details_list').length)
+						$("#pledge_investment_details_list").html data.pledgedInvestmentHtml
+		else if(type == 'watchlist' && !getdata)
+			$.ajax
+				type: 'post'
+				url: '/backoffice/portfolio/get-portfolio-watchlist-data'
+				data:filters
+				success: (data) ->
+					if($('#watchlist_investment_details_list').length)
+						$("#watchlist_investment_details_list").html data.watchlistInvestmentHtml
+
+		else if(type == 'transferasset' && !getdata)
+			investorId = $('select[name="user"]').val()
+			$.ajax
+				type: 'post'
+				url: '/backoffice/transfer-asset/investor-assets'
+				data:
+					'investor_id': investorId
+				success: (data) ->
+					$('.investor_transfer_asset_list').html(data.businesslisting_html)
+				 
+		else if(type == 'cashaccount' && !getdata)
+			investorId = $('select[name="user"]').val()
+			$.ajax
+				type: 'post'
+				url: '/backoffice/portfolio/get-portfolio-cashaccount-data'
+				data:
+					'investor_id': investorId
+				success: (data) ->
+					$('.cash_balance').html(data.cashAmount)
+					$('.cash_last_updated_date').html(data.lasUpdatedDate)
+					$('.cash_account_investment_list').html(data.transactionHtml)
+
+		$('a[type="'+type+'"]').attr('reset-data',true)
+
+
+
 
 
 	$('body').on 'change', 'select[name="duration"]', ->

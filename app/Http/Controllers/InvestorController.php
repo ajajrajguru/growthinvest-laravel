@@ -1743,6 +1743,41 @@ class InvestorController extends Controller
 
     }
 
+    public function investorPortfolio(Request $request,$giCode)
+    {
+        $investor = User::where('gi_code', $giCode)->first();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $investorCertification = $investor->getActiveCertification();
+        $requestFilters = $request->all();
+ 
+        $breadcrumbs   = [];
+        $breadcrumbs[] = ['url' => url('/backoffice/dashboard'), 'name' => "Dashboard"];
+        $breadcrumbs[] = ['url' => url('/backoffice/investor'), 'name' => 'Manage Clients'];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Manage Investors'];
+        $breadcrumbs[] = ['url' => '', 'name' => $investor->displayName()];
+        $breadcrumbs[] = ['url' => '', 'name' => 'Portfolio'];
+
+        $profilePic                    = $investor->getProfilePicture('thumb_1x1');
+        $businessListing          = BusinessListing::where('status', 'publish')->where('business_status', 'listed')->get();
+        $data['businessListings'] = $businessListing;
+        $data['durationType']     = durationType(1);
+        $data['financialYears']   = getFinancialYears();
+        $data['requestFilters']   = $requestFilters;
+        $data['profilePic']            = $profilePic['url'];
+        $data['investor']              = $investor;
+        $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+       
+        $data['breadcrumbs']           = $breadcrumbs;
+        $data['pageTitle']             = 'Portfolio';
+        $data['activeMenu']            = 'manage_clients';
+
+        return view('backoffice.clients.investor-portfolio')->with($data);
+
+    }
+
     public function investorProfile($giCode)
     {
         $investor = User::where('gi_code', $giCode)->first();

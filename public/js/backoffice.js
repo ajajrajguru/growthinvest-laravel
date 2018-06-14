@@ -968,14 +968,14 @@
             'investor_id': investorId
           },
           success: function(data) {
-            $('.data_container').html(data.businesslisting_html);
+            $('.investor_transfer_asset_list').html(data.businesslisting_html);
             $('a[part="part-2"]').removeClass('d-none');
             return $('[data-toggle="tooltip"]').tooltip();
           }
         });
       } else {
         $('a[part="part-2"]').addClass('d-none');
-        return $('.data_container').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>');
+        return $('.investor_transfer_asset_list').html('<tr><td  colspan="13" class="text-center"> No Data Found</td></tr>');
       }
     });
     $('.transfer-asset').on('click', '.savetransferasset_asset', function() {
