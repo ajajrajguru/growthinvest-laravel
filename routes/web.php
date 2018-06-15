@@ -214,6 +214,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function 
     Route::get('user/user-activity-pdf', 'ActivityController@generateInvestorsActivityPdf');
     Route::get('/my-profile', 'EntrepreneurController@myProfile');
     Route::post('entrepreneur/save-profile', 'EntrepreneurController@saveProfile');
+
+
+    Route::get('/portfolio', 'InvestorController@investorDashboardPortfolio');
     
 
 });

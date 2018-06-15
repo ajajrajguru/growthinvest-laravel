@@ -613,6 +613,13 @@ class UserController extends Controller
 
             $template = 'frontend.entrepreneur.dashboard';
         }
+        elseif(isUser($user,['investor'])){
+            $investorCertification = $user->getActiveCertification();
+            $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+            $data['active_menu'] = 'dashboard';
+
+            $template = 'frontend.investor.dashboard';
+        }
  
         return view($template)->with($data);
     }

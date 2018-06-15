@@ -55,6 +55,7 @@ function getUniqueBusinessSlug(\Illuminate\Database\Eloquent\Model $model, $valu
 
 function isUser($object, $hasRolePermission)
 {  
+     
     if ($object->hasAnyRole($hasRolePermission)) {
         return true;
     } else {

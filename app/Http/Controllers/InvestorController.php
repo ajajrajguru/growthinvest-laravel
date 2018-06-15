@@ -1778,6 +1778,31 @@ class InvestorController extends Controller
 
     }
 
+    // investor dashboard
+    public function investorDashboardPortfolio(Request $request)
+    {
+        $investor = Auth::user();
+         
+        $investorCertification = $investor->getActiveCertification();
+        $requestFilters = $request->all();
+
+        $profilePic                    = $investor->getProfilePicture('thumb_1x1');
+        $businessListing          = BusinessListing::where('status', 'publish')->where('business_status', 'listed')->get();
+        $data['businessListings'] = $businessListing;
+        $data['durationType']     = durationType(1);
+        $data['financialYears']   = getFinancialYears();
+        $data['requestFilters']   = $requestFilters;
+        $data['profilePic']            = $profilePic['url'];
+        $data['investor']              = $investor;
+        $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['pageTitle']             = 'Portfolio';
+         $data['active_menu']            = 'portfolio';
+        
+
+        return view('frontend.investor.portfolio')->with($data);
+
+    }
+
     public function investorProfile($giCode)
     {
         $investor = User::where('gi_code', $giCode)->first();

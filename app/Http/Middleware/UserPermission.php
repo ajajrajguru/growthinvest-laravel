@@ -59,12 +59,11 @@ class UserPermission
                 'backoffice/investment-offers'                                => ['backoffice_access'],
 
                 'backoffice/portfolio'                                        => ['backoffice_access'],
-                'backoffice/portfolio/get-portfolio-data'                     => ['backoffice_access'],
-                'backoffice/portfolio/get-portfolio-pledge-data'                     => ['backoffice_access'],
-                'backoffice/portfolio/get-portfolio-watchlist-data'                     => ['backoffice_access'],
-                'backoffice/portfolio/get-portfolio-transferasset-data'                     => ['backoffice_access'],
-                'backoffice/portfolio/get-portfolio-cashaccount-data'                     => ['backoffice_access'],
-         
+                'backoffice/portfolio/get-portfolio-data'                     => ['backoffice_access','participate_in_business'],
+                'backoffice/portfolio/get-portfolio-pledge-data'              => ['backoffice_access','participate_in_business'],
+                'backoffice/portfolio/get-portfolio-watchlist-data'           => ['backoffice_access','participate_in_business'],
+                'backoffice/portfolio/get-portfolio-transferasset-data'       => ['backoffice_access','participate_in_business'],
+                'backoffice/portfolio/get-portfolio-cashaccount-data'         => ['backoffice_access','participate_in_business'],
 
                 'backoffice/portfolio/export-report'                          => ['backoffice_access'],
 
@@ -80,7 +79,7 @@ class UserPermission
                 'backoffice/transfer-asset/esign-doc'                         => ['transfer_assets', 'transfer_asset_docs_offline_group'],
 
                 'backoffice/investor'                                         => ['view_all_investors', 'investors', 'view_investors'],
-                'backoffice/investor/{giCode}/portfolio'               => ['view_all_investors', 'investors', 'view_investors'],
+                'backoffice/investor/{giCode}/portfolio'                      => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-profile'               => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/{giCode}/investor-invest'                => ['view_all_investors', 'investors', 'view_investors'],
                 'backoffice/investor/get-investor-invest'                     => ['view_all_investors', 'investors', 'view_investors'],
