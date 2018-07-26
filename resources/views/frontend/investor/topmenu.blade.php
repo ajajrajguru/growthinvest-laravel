@@ -10,7 +10,7 @@
 	</li>
 
 	<li class="nav-item ">
-    	<a class="nav-link px-sm-5 @if($active_menu == 'my_activity') active @endif"  href="{{ url('/user-dashboard/my-activity') }}">Investment</a>
+    	<a class="nav-link px-sm-5 @if($active_menu == 'investment') active @endif"  href="{{ url('/user-dashboard/my-investment') }}">Investment</a>
 
 	</li>
 	<li class="nav-item ">

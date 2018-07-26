@@ -634,8 +634,14 @@ class UserController extends Controller
         $data['active_menu'] = 'my_activity';
         $data['user'] = $user;
 
-        return view('frontend.entrepreneur.my-activity')->with($data);
-
+        if(isUser($user,['business_owner'])){
+            $template = 'frontend.entrepreneur.my-activity';
+        }
+        elseif(isUser($user,['investor'])){
+            $template = 'frontend.investor.my-activity';
+        }
+        
+        return view($template)->with($data);
     }
 
     /* Coming soon Dashboard Pages */

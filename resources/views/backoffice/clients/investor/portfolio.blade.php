@@ -139,13 +139,14 @@
 
   </div>
   @if($investor->hasAnyPermission(['backoffice_access']))
+  @endif
   <div class="text-right mt-3 mb-2">
       <div class="">
           <a href="javascript:void(0)" class="btn btn-outline-primary download-portfolio-report-xlsx" report-type="csv">Download XLSX </a>
           <a href="javascript:void(0)" class="btn btn-outline-primary download-portfolio-report-pdf" report-type="pdf"> Download PDF</a>
       </div>
   </div>
-  @endif
+  
   <div>
                   <div class="row">
                     <div class="col-sm-6">

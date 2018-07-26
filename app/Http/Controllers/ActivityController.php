@@ -114,6 +114,7 @@ class ActivityController extends Controller
         $orderDataBy = [$columnName => $orderBy];
 
         $filterActivityListing = $this->getFilteredActivityListing('list', $filters, $skip, $length, $orderDataBy);
+         
 
         $activityListings      = $filterActivityListing['list'];
         $totalActivityListings = $filterActivityListing['totalActivityListings'];
@@ -485,9 +486,7 @@ class ActivityController extends Controller
 
                 if ($actret != "") {
                     $typewhere = " and " . $actret;
-                } else {
-                    return array();
-                }
+                } 
 
             }
         }

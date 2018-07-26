@@ -1879,6 +1879,39 @@ class InvestorController extends Controller
 
     }
 
+    public function investorDashboardInvestment(Request $request){
+        $investor = Auth::user();
+       
+        $requestFilters = $request->all();
+        if (isset($requestFilters['status'])) {
+            $status                   = explode(',', $requestFilters['status']);
+            $requestFilters['status'] = array_filter($status);
+
+        }
+        //dd($requestFilters);
+        $businessListings = new BusinessListing;
+        $companyNames     = $businessListings->getCompanyNames();
+        $sectors          = getBusinessSectors();
+        $managers         = [];
+        if (!empty($companyNames)) {
+            $compManagers = collect($companyNames->toArray());
+            $managers     = $compManagers->pluck('manager')->unique();
+            $managers     = array_filter($managers->toArray());
+        }
+
+         
+        $data['investor']            = $investor;
+        $data['companyNames']        = (!empty($companyNames)) ? $companyNames : [];
+        $data['investmentOfferType'] = investmentOfferType();
+        $data['sectors']             = $sectors;
+        $data['managers']            = $managers;
+        $data['requestFilters']      = $requestFilters;
+        $data['pageTitle']           = 'View Invest Listings';
+        $data['active_menu']          = 'investment';
+
+        return view('frontend.investor.investment')->with($data);
+    }
+
     public function getInvestorInvest(Request $request)
     {
 

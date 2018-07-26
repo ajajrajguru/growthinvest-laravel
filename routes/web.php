@@ -217,6 +217,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function 
 
 
     Route::get('/portfolio', 'InvestorController@investorDashboardPortfolio');
+    Route::get('/my-investment', 'InvestorController@investorDashboardInvestment');
     
 
 });
