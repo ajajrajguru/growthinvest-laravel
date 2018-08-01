@@ -589,14 +589,17 @@ class BusinessListingController extends Controller
         $data         = array_merge($business_ar, $business_data_ar);
         $team_members = [];
 
-        foreach ($data['management_team'] as $member_ar) {
+        if(isset($data['management_team'])){
+            foreach ($data['management_team'] as $member_ar) {
 
-            foreach ($member_ar as $member) {
-                $team[$member['key']] = $member['value'];
+                foreach ($member_ar as $member) {
+                    $team[$member['key']] = $member['value'];
+                }
+                $team_members[] = $team;
+
             }
-            $team_members[] = $team;
-
         }
+        
 
         $round_parent            = ($business_listing->parent == 0) ? $business_listing->id : $business_listing->parent;
         $data['business_rounds'] = $business_listing->getAllNextProposalRounds($business_listing->id, $round_parent);
