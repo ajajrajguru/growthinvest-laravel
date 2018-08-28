@@ -2188,4 +2188,52 @@ class InvestorController extends Controller
 
     }
 
+    // public function myProfile()
+    // {
+    //     $investor = Auth::user();
+    //     if (empty($investor)) {
+    //         abort(404);
+    //     }
+
+    //     $investorCertification = $investor->getActiveCertification();
+    //     $onfidoReportMeta      = $investor->userOnfidoApplicationReports();
+    //     $onfidoReport          = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value : [];
+
+        
+
+    //     $profilePic                    = $investor->getProfilePicture('thumb_1x1');
+    //     $data['profilePic']            = $profilePic['url'];
+    //     $data['investor']              = $investor;
+    //     $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+    //     $data['pageTitle']             = 'My Profile';
+    //     $data['active_menu']            = 'my_profile';
+
+    //     return view('backoffice.clients.investor-profile')->with($data);
+
+    // }
+
+    public function myProfile()
+    {
+        $investor = Auth::user();
+        if (empty($investor)) {
+            abort(404);
+        }
+
+        $investorCertification = $investor->getActiveCertification();
+        $onfidoReportMeta      = $investor->userOnfidoApplicationReports();
+        $onfidoReport          = (!empty($onfidoReportMeta)) ? $onfidoReportMeta->data_value : [];
+
+        
+
+        $profilePic                    = $investor->getProfilePicture('thumb_1x1');
+        $data['profilePic']            = $profilePic['url'];
+        $data['investor']              = $investor;
+        $data['investorCertification'] = (!empty($investorCertification)) ? $investorCertification->certification()->name : '';
+        $data['pageTitle']             = 'My Profile';
+        $data['active_menu']            = 'my_profile';
+
+        return ['blade'=>'backoffice.clients.investor-profile','data'=>$data];
+
+    }
+
 }

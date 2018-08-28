@@ -34,7 +34,9 @@
 
 <div class="container">
     @php
-        echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
+        if(Auth::check() && !Auth::user()->hasRole('investor')){
+            echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs]);
+        }
     @endphp
    <div class="container mt-3">
     <!-- tabs -->
@@ -82,11 +84,23 @@
                 </div>
 
                 <ul class="mt-3 pl-0 investor-keypoints">
-                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/registration')}}">Registration: </a> Key contact and registration details including passwords.</li>
-                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/client-categorisation')}}">Client Categorisation: </a> Amend current investor classification (eg High Net Worth, Sophisticated)</li>
-                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url('backoffice/investor/'.$investor->gi_code.'/additional-information') }}">Additoinal Information: </a> Picture, Social Media and Investment Profile</li>
-                    <li class="list-unstyled"><a class="font-weight-medium text-decoration-none" href="{{  url('backoffice/investor/'.$investor->gi_code.'/investment-account') }}">Investment Account: </a> Full investment and transactional account details</li>
+                    @php
+
+                        if(Auth::check() && !Auth::user()->hasRole('investor')){
+                            $urlStart = 'backoffice/investor/'.$investor->gi_code;
+
+                        }
+                        else{
+                            $urlStart = 'user-dashboard/my-profile';                            
+                        }
+                    @endphp
+
+                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url($urlStart.'/registration')}}">Registration: </a> Key contact and registration details including passwords.</li>
+                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url($urlStart.'/client-categorisation')}}">Client Categorisation: </a> Amend current investor classification (eg High Net Worth, Sophisticated)</li>
+                    <li class="list-unstyled mb-2"><a class="font-weight-medium text-decoration-none" href="{{ url($urlStart.'/additional-information') }}">Additoinal Information: </a> Picture, Social Media and Investment Profile</li>
+                    <li class="list-unstyled"><a class="font-weight-medium text-decoration-none" href="{{  url($urlStart.'/investment-account') }}">Investment Account: </a> Full investment and transactional account details</li>
                 </ul>
+                @if(Auth::check() && !Auth::user()->hasRole('investor'))
                 @php
 
                     $identityReport = '';
@@ -157,6 +171,7 @@
                        <span id="message"></span>
                     </div>
                 </div>
+                @endif
             </div> <!-- /Profile -->
 
             <div class="tab-pane p-3" id="news-updates" role="tabpanel">

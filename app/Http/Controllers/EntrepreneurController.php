@@ -387,6 +387,33 @@ class EntrepreneurController extends Controller
         return view('frontend.entrepreneur.dashboard')->with($data);
     }
 
+    // public function myProfile()
+    // {
+    //     $entrepreneur = Auth::user();
+
+    //     $firmsList = getModelList('App\Firm', [], 0, 0, ['name' => 'asc']);
+    //     $firms     = $firmsList['list'];
+
+ 
+    //     $accountNumber                  = $entrepreneur->userInvestmentAccountNumber();
+    //     $profilePic             = $entrepreneur->getProfilePicture('medium_1x1');
+    //     $data['profilePic']     = $profilePic['url'];
+    //     $data['hasProfilePic']  = $profilePic['hasImage'];
+    //     $data['countyList']              = getCounty();
+    //     $data['countryList']             = getCountry();
+    //     $data['entrepreneur']            = $entrepreneur;
+    //     $data['firms']                   = $firms;
+    //     $data['accountNumber'] = (!empty($accountNumber)) ? $accountNumber->data_value : '';
+    //     $data['mode']                    = 'view';
+    //     $data['active_menu']              = 'my-profile';
+       
+    //     $additionalInfo         = $entrepreneur->userAdditionalInfo();
+    //     $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
+
+    //     return view('frontend.entrepreneur.my-profile')->with($data);
+
+    // }
+
     public function myProfile()
     {
         $entrepreneur = Auth::user();
@@ -410,7 +437,8 @@ class EntrepreneurController extends Controller
         $additionalInfo         = $entrepreneur->userAdditionalInfo();
         $data['additionalInfo'] = (!empty($additionalInfo)) ? $additionalInfo->data_value : [];
 
-        return view('frontend.entrepreneur.my-profile')->with($data);
+        // return view('frontend.entrepreneur.my-profile')->with($data);
+        return ['blade'=>'frontend.entrepreneur.my-profile','data'=>$data];
 
     }
 

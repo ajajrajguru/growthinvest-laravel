@@ -18,6 +18,9 @@ use Ajency\FileUpload\models\FileUpload_Files;
 
 //Enables us to output flash messaging
 use Storage;
+use App\Http\Controllers\InvestorController;
+use App\Http\Controllers\EntrepreneurController;
+ 
 
 class UserController extends Controller
 {
@@ -953,6 +956,30 @@ class UserController extends Controller
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Disposition', "attachment; filename={$filename}")
             ->header('Filename', $filename);
+    }
+
+    // common method for all users
+
+    public function myProfile(){
+
+        if (Auth::check() && Auth::user()->hasRole('business_owner')) 
+        {
+            $entController = new EntrepreneurController;
+            $profile = $entController->myProfile();
+            $blade = $profile['blade'];
+            $data = $profile['data'];
+            
+        } elseif (Auth::check() && Auth::user()->hasRole('investor'))  {
+           
+            $invController = new InvestorController;
+            $profile = $invController->myProfile();
+            $blade = $profile['blade'];
+            $data = $profile['data'];
+            
+        }
+        
+        return view($blade)->with($data);
+
     }
 
 }

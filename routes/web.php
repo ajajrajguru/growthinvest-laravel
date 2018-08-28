@@ -212,15 +212,30 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user-dashboard'], function 
     Route::post('/user/get-user-activity', 'ActivityController@getInvestorActivity');
     Route::get('user/export-user-activity', 'ActivityController@exportInvestorsActivity');
     Route::get('user/user-activity-pdf', 'ActivityController@generateInvestorsActivityPdf');
-    Route::get('/my-profile', 'EntrepreneurController@myProfile');
+
+    // Route::get('/my-profile', 'EntrepreneurController@myProfile');
+
+    Route::get('/my-profile', 'UserController@myProfile'); 
+    Route::get('/my-profile/registration', 'InvestorController@registration'); 
+ 
+    // Route::get('/my-profile', function(){
+
+    //     if (Auth::check() && Auth::user()->hasRole('business_owner')) 
+    //     {
+    //         Route::get('/my-profile', 'EntrepreneurController@myProfile');
+    //     } elseif (Auth::check() && Auth::user()->hasRole('investor'))  {
+           
+    //         Route::get('/', 'InvestorController@myProfile');
+    //     }
+    // });
     Route::post('entrepreneur/save-profile', 'EntrepreneurController@saveProfile');
-
-
     Route::get('/portfolio', 'InvestorController@investorDashboardPortfolio');
     Route::get('/my-investment', 'InvestorController@investorDashboardInvestment');
     
 
 });
+
+ 
 
 
 // webhooks

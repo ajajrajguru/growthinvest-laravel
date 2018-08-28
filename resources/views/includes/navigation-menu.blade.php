@@ -13,7 +13,11 @@
       <ul class="navbar-menu">
 
         <li class="" id="">
-          <a href="{{url('backoffice/dashboard')}}">Dashboard</a>
+          @if(Auth::check() && Auth::user()->hasRole('administrator'))
+            <a href="{{url('backoffice/dashboard')}}">Dashboard</a>
+          @else
+            <a href="{{url('user-dashboard')}}">Dashboard</a>
+          @endif
         </li>
         <li class="has-submenu">
           <a href="#">Investments</a>

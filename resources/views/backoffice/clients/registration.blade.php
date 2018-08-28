@@ -1,5 +1,6 @@
 @extends('layouts.backoffice')
 
+
 @section('js')
   @parent
 
@@ -7,15 +8,21 @@
   <script type="text/javascript" src="{{ asset('js/backoffice-investors.js') }}"></script>
   <script src='https://www.google.com/recaptcha/api.js'></script>
 @endsection
+
 @section('backoffice-content')
+ 
+
 
 <div class="container">
     @php
-        echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs])
+        if(Auth::check() && !Auth::user()->hasRole('investor')){
+            echo View::make('includes.breadcrumb')->with([ "breadcrumbs"=>$breadcrumbs]);
+        }
     @endphp
     <div class="d-flex flex-row mt-5 bg-white border border-gray">
-        @include('includes.side-menu')
-
+        @if(Auth::check() && !Auth::user()->hasRole('investor'))
+            @include('includes.side-menu')
+        @endif
         <div class="tab-content">
             <div class="tab-pane fade" id="home" role="tabpanel">
                 <h1>Lorem</h1>
